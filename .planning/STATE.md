@@ -1,0 +1,68 @@
+# STATE.md — MedStudy Project Memory
+
+## Project Reference
+
+See: `.planning/PROJECT.md` (updated 2026-05-05)
+
+**Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
+**Current focus:** Phase 1 — Monorepo Setup & Infraestrutura Base
+
+---
+
+## Current Status
+
+**Phase:** 1 of 15 — Not Started
+**Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
+**Mode:** Interactive (confirm at each step)
+**Granularity:** Fine (15 phases)
+
+---
+
+## What's Been Done
+
+- [x] Git initialized in `MedStudy/`
+- [x] `.planning/config.json` created
+- [x] `.planning/PROJECT.md` created (synthesized from legacy codebase analysis)
+- [x] `.planning/REQUIREMENTS.md` created (72 v1 requirements, fully mapped)
+- [x] `.planning/ROADMAP.md` created (15 phases, security checklist, architecture overview)
+- [x] `.planning/STATE.md` created
+
+---
+
+## Legacy Codebase Summary
+
+**Repository:** `C:\Users\PC\Documents\GitHub\estudos-lari`
+**Stack:** React 19 + Create React App + Supabase (no auth, open RLS)
+**Modules:** Dashboard, BancoDados, Simulados, PlanoAulas, AnaliseArea, AnaliseTema, Revisão, Flashcards
+**Key schemas extracted:**
+  - `sessoes_estudo`: grande_area, tema, data_sessao, qts_feitas, qts_corretas, instituicao, data_proxima_revisao, revisao_concluida
+  - `plano_aulas`: grande_area, tema, prioridade (Diamante/Alta/Média/Baixa), aula_assistida
+  - `simulados`: nome, data_realizacao + per-area (cm/cir/ped/go/prev)_total/acertos/erros
+  - `flashcards`: grande_area, frente (JSONB), verso (JSONB), proxima_revisao, dificuldade_ultima
+**Business rules:**
+  - 5 áreas: Clínica Médica, Cirurgia, Pediatria, Ginecologia/Obstetrícia, Preventiva
+  - Streak: dias consecutivos com sessão (hoje ou ontem como âncora)
+  - Desempenho: <70% vermelho, 70–80% amarelo, >80% verde
+  - Flashcard scheduling: Fácil +7d, Médio +3d, Difícil +1d
+  - Revisão intervalada: categoriza por data_proxima_revisao vs hoje
+  - Paleta: #430428, #6F0642, #F553B0, #FBBCE0, #18010E
+
+---
+
+## Next Step
+
+Run `/gsd-plan-phase 1` to generate the detailed execution plan for **Phase 1 — Monorepo Setup & Infraestrutura Base**.
+
+---
+
+## Open Questions / Decisions Pending
+
+- [ ] Qual porta usar para o backend Spring Boot? (default: 8080)
+- [ ] Qual porta usar para o Angular dev server? (default: 4200)
+- [ ] Biblioteca de gráficos para o Angular: `ng2-charts` (Chart.js wrapper) ou `ngx-charts` (D3)? Recomendação: ng2-charts (mais simples, mantida)
+- [ ] E-mail para recuperação de senha: usar JavaMailSender com SMTP local (Mailhog) ou mockar para v1?
+- [ ] Nome do package Java: `com.medstudy` — confirmar
+
+---
+*STATE.md created: 2026-05-05*
+*Last updated: 2026-05-05 after initialization*
