@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:${DB_PORT:5432}/${DB_NAME:medstudy}
+    url: jdbc:postgresql://127.0.0.1:${DB_PORT:5433}/${DB_NAME:medstudy}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
   jpa:
@@ -11,5 +11,18 @@ spring:
       hibernate:
         format_sql: true
 
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: ${MAILTRAP_USER:mock_user}
+    password: ${MAILTRAP_PASS:mock_pass}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 jwt:
-  secret: ${JWT_SECRET:super-secreta-chave-jwt-para-medstudy-desenvolvimento}
+  secret: ${JWT_SECRET:YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY=}
+  expiration: 3600000
