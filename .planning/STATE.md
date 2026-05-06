@@ -5,13 +5,13 @@
 See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 1 — Monorepo Setup & Infraestrutura Base
+**Current focus:** Phase 2 — Database Schema & Backend Skeleton
 
 ---
 
 ## Current Status
 
-**Phase:** 1 of 15 — Shipped (Branch pushed to GitHub)
+**Phase:** 2 of 15 — Context Gathered
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -27,6 +27,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 - [x] `.planning/ROADMAP.md` created (15 phases, security checklist, architecture overview)
 - [x] `.planning/STATE.md` created
 - [x] Phase 1 completed, verified, and pushed to GitHub.
+- [x] Phase 2 context gathered.
 
 ---
 
@@ -52,7 +53,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 ## Next Step
 
-Create a PR on GitHub for the `feat/01-monorepo-setup` branch, and merge it when ready. Then run `/gsd-progress` or `/gsd-plan-phase 2` to continue.
+Run `/gsd-plan-phase 2` to generate the detailed execution plan for Phase 2.
 
 ---
 
