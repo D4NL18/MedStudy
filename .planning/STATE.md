@@ -5,13 +5,13 @@
 See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 2 — Database Schema & Backend Skeleton
+**Current focus:** Phase 3 — Auth Backend (Spring Security + JWT)
 
 ---
 
 ## Current Status
 
-**Phase:** 3 of 15 — Database Schema & Backend Skeleton Completed
+**Phase:** 3 of 15 — Context Gathered
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
