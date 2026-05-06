@@ -194,8 +194,8 @@ Angular (Component + NgRx Store)
 ---
 
 ### Phase 8 — Frontend Core: Angular Setup, NgRx, Auth Module
-**Goal:** Projeto Angular configurado com NgRx, interceptors, guards e fluxo de autenticação funcional.
-**Requirements:** AUTH-01..07 (frontend), INFR-06
+**Goal:** Projeto Angular configurado com NgRx, interceptors, guards, fluxo de autenticação funcional e sistema de temas de cores.
+**Requirements:** AUTH-01..07 (frontend), INFR-06, THEM-01..13
 **Deliverables:**
 - Angular 18 com Standalone Components, Signals, RxJS
 - NgRx Store configurado com feature state para `auth`
@@ -208,6 +208,14 @@ Angular (Component + NgRx Store)
 - Tela de Recuperação de Senha
 - `AuthService` (HTTP calls para `/api/auth/**`)
 - Refresh token automático quando access token expira
+- **Design System de Temas:**
+  - `theme.service.ts`: `ThemeService` com Signal `activeTheme`, método `setTheme()`, persistência em `localStorage`
+  - `themes.scss`: 8 temas definidos como data-attributes (`[data-theme="rosa"]`, `[data-theme="escuro"]`, etc.) com CSS Custom Properties
+  - Variáveis definidas por tema: `--color-primary`, `--color-primary-dark`, `--color-primary-light`, `--color-accent`, `--color-bg`, `--color-surface`, `--color-text`, `--color-text-muted`, `--color-border`
+  - 8 temas implementados: `rosa` (padrão), `claro`, `escuro`, `verde`, `azul`, `vermelho`, `roxo`, `laranja`
+  - `ThemeSwitcherComponent`: dropdown/modal na navbar com preview de cor de cada tema (swatches)
+  - Gráficos (ng2-charts/ngx-charts): cores dinâmicas via `ThemeService`
+  - Transição CSS `200ms ease` em todas as variáveis de cor
 **Plans:**
 - [ ] 8.1 — NgRx setup + auth feature state (actions, reducer, selectors)
 - [ ] 8.2 — AuthEffects (login, logout, refresh, token persistence)
@@ -216,6 +224,9 @@ Angular (Component + NgRx Store)
 - [ ] 8.5 — Login page UI (Standalone Component)
 - [ ] 8.6 — Forgot password page UI
 - [ ] 8.7 — App shell layout (header, nav tabs, responsive mobile menu)
+- [ ] 8.8 — ThemeService + themes.scss (CSS Custom Properties para 8 temas)
+- [ ] 8.9 — ThemeSwitcherComponent (seletor na navbar com swatches)
+- [ ] 8.10 — Aplicar tema em todos os components base + integração com gráficos
 
 ---
 
@@ -394,4 +405,4 @@ Angular (Component + NgRx Store)
 
 ---
 *Roadmap created: 2026-05-05*
-*Last updated: 2026-05-05 after initialization*
+*Last updated: 2026-05-05 — added THEM-01..13 to Phase 8 (ThemeService + 8 temas CSS)*

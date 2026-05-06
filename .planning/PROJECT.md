@@ -34,6 +34,7 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 - [ ] Spring Security com proteção OWASP Top 10
 - [ ] NgRx para gerenciamento de estado global no frontend
 - [ ] Guards e Interceptors no Angular (autenticação + tokens)
+- [ ] Sistema de temas de cores (8 temas: Rosa, Claro, Escuro, Verde, Azul, Vermelho, Roxo, Laranja) via CSS Custom Properties com persistência em localStorage
 - [ ] Testes unitários exaustivos: JUnit/Mockito (backend) + Jasmine/Karma (frontend)
 - [ ] Documentação automática com Swagger/OpenAPI
 - [ ] Exceções customizadas com @ControllerAdvice
@@ -91,7 +92,8 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 | JWT com refresh token rotation | Segurança sem sacrificar UX (sessão persistente) | — Pending |
 | MapStruct para Entity→DTO | Compile-time, zero reflection, performático | — Pending |
 | PostgreSQL local via Docker | Reprodutível, sem dependência de BaaS externo | — Pending |
-| Paleta de cores preservada | Manter identidade visual do legado (#430428, #F553B0) | — Pending |
+| Paleta de cores preservada (Rosa como padrão) | Manter identidade visual do legado (#430428, #F553B0) | — Pending |
+| Sistema multi-tema via CSS Custom Properties | Zero hardcode de cores; troca instantânea + persistência | — Pending |
 
 ## Evolution
 
@@ -111,4 +113,4 @@ Este documento evolui a cada transição de fase e milestone.
 4. Atualizar Context com estado atual
 
 ---
-*Last updated: 2026-05-05 after initialization*
+*Last updated: 2026-05-05 — added multi-theme color system requirement (THEM-01..13)*

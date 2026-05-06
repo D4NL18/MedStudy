@@ -120,6 +120,22 @@
 - [ ] **FLSH-07**: Filtrar flashcards por grande_area
 - [ ] **FLSH-08**: Exibir contagem de flashcards por estado (para revisar hoje, atrasados, em dia)
 
+### Theming (Sistema de Temas de Cores)
+
+- [ ] **THEM-01**: Sistema de temas baseado em CSS Custom Properties (variáveis) — nenhum valor de cor hardcoded nos components
+- [ ] **THEM-02**: Tema **Rosa** (padrão) — paleta do legado (`#430428`, `#6F0642`, `#F553B0`, `#FBBCE0`)
+- [ ] **THEM-03**: Tema **Claro** — base branca/cinza clara, acentos neutros e profissionais
+- [ ] **THEM-04**: Tema **Escuro** — dark mode com fundo `#0f1117`, superfícies `#1a1d27`, acentos em índigo/violeta
+- [ ] **THEM-05**: Tema **Verde** — tons de esmeralda/floresta (`#065f46`, `#10b981`), remetendo à área médica
+- [ ] **THEM-06**: Tema **Azul** — azul cobalto/marinho (`#1e40af`, `#3b82f6`), estilo clínico clássico
+- [ ] **THEM-07**: Tema **Vermelho** — vermelho cardinal (`#991b1b`, `#ef4444`), tom de urgência/energia
+- [ ] **THEM-08**: Tema **Roxo** — violeta/lavanda (`#4c1d95`, `#8b5cf6`), estilo moderno e distinto
+- [ ] **THEM-09**: Tema **Laranja** — âmbar/caramelo (`#92400e`, `#f59e0b`), tom caloroso e motivacional
+- [ ] **THEM-10**: Seletor de tema acessível na barra de navegação (ícone de paleta + dropdown/modal)
+- [ ] **THEM-11**: Preferência de tema persistida em `localStorage` — mantida após reload e entre sessões
+- [ ] **THEM-12**: Todos os gráficos (linha, barras, pizza) adaptam suas cores primárias ao tema ativo
+- [ ] **THEM-13**: Transição suave ao trocar de tema (CSS `transition` nas variáveis — `200ms ease`)
+
 ### Tests — Backend
 
 - [ ] **TEST-01**: Cobertura de testes unitários ≥ 80% em todos os Services (JUnit 5 + Mockito)
@@ -212,14 +228,15 @@
 | TEMA-01..03 | Phase 6 | Pending |
 | REVI-01..07 | Phase 7 | Pending |
 | FLSH-01..08 | Phase 7 | Pending |
+| THEM-01..13 | Phase 8 | Pending |
 | TEST-01..04 | Phase 12 | Pending |
 | TEST-05..08 | Phase 13 | Pending |
 
 **Coverage:**
-- v1 requirements: 72 total
-- Mapped to phases: 72
+- v1 requirements: 85 total (+ 13 theming)
+- Mapped to phases: 85
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-05*
-*Last updated: 2026-05-05 after initialization*
+*Last updated: 2026-05-05 — added THEM-01..13 (multi-theme color system)*
