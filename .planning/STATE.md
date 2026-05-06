@@ -11,7 +11,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 ## Current Status
 
-**Phase:** 2 of 15 — Context Gathered
+**Phase:** 3 of 15 — Database Schema & Backend Skeleton Completed
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -27,7 +27,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 - [x] `.planning/ROADMAP.md` created (15 phases, security checklist, architecture overview)
 - [x] `.planning/STATE.md` created
 - [x] Phase 1 completed, verified, and pushed to GitHub.
-- [x] Phase 2 context gathered.
+- [x] Phase 2: Database Schema & Backend Skeleton implemented (Flyway, JPA, DTOs, Mappers).
 
 ---
 
@@ -53,7 +53,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 ## Next Step
 
-Run `/gsd-plan-phase 2` to generate the detailed execution plan for Phase 2.
+Run `/gsd-plan-phase 3` to generate the detailed execution plan for Phase 3 (Auth Service & Security Implementation).
 
 ---
 
