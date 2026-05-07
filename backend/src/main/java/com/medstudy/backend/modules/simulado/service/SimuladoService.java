@@ -60,25 +60,25 @@ public class SimuladoService {
         entity.setDataRealizacao(request.dataRealizacao());
         
         // Update areas
-        entity.setCmTotal(request.cmTotal());
-        entity.setCmAcertos(request.cmAcertos());
-        entity.setCmErros(request.cmErros());
+        entity.setCmTotal(request.cmTotal() != null ? request.cmTotal() : 0);
+        entity.setCmAcertos(request.cmAcertos() != null ? request.cmAcertos() : 0);
+        entity.setCmErros(request.cmErros() != null ? request.cmErros() : 0);
         
-        entity.setCirTotal(request.cirTotal());
-        entity.setCirAcertos(request.cirAcertos());
-        entity.setCirErros(request.cirErros());
+        entity.setCirTotal(request.cirTotal() != null ? request.cirTotal() : 0);
+        entity.setCirAcertos(request.cirAcertos() != null ? request.cirAcertos() : 0);
+        entity.setCirErros(request.cirErros() != null ? request.cirErros() : 0);
         
-        entity.setPedTotal(request.pedTotal());
-        entity.setPedAcertos(request.pedAcertos());
-        entity.setPedErros(request.pedErros());
+        entity.setPedTotal(request.pedTotal() != null ? request.pedTotal() : 0);
+        entity.setPedAcertos(request.pedAcertos() != null ? request.pedAcertos() : 0);
+        entity.setPedErros(request.pedErros() != null ? request.pedErros() : 0);
         
-        entity.setGoTotal(request.goTotal());
-        entity.setGoAcertos(request.goAcertos());
-        entity.setGoErros(request.goErros());
+        entity.setGoTotal(request.goTotal() != null ? request.goTotal() : 0);
+        entity.setGoAcertos(request.goAcertos() != null ? request.goAcertos() : 0);
+        entity.setGoErros(request.goErros() != null ? request.goErros() : 0);
         
-        entity.setPrevTotal(request.prevTotal());
-        entity.setPrevAcertos(request.prevAcertos());
-        entity.setPrevErros(request.prevErros());
+        entity.setPrevTotal(request.prevTotal() != null ? request.prevTotal() : 0);
+        entity.setPrevAcertos(request.prevAcertos() != null ? request.prevAcertos() : 0);
+        entity.setPrevErros(request.prevErros() != null ? request.prevErros() : 0);
 
         calculateAndValidateAreas(entity);
 
@@ -124,15 +124,15 @@ public class SimuladoService {
         s.setPrevTotal(prev.total); s.setPrevAcertos(prev.acertos); s.setPrevErros(prev.erros);
     }
 
-    private AreaResult calculateArea(int total, int acertos, int erros) {
-        int t = total; int a = acertos; int e = erros;
+    private AreaResult calculateArea(Integer total, Integer acertos, Integer erros) {
+        int t = total != null ? total : 0;
+        int a = acertos != null ? acertos : 0;
+        int e = erros != null ? erros : 0;
 
         if (t > 0 && a > 0 && e == 0) e = Math.max(0, t - a);
         else if (t > 0 && e > 0 && a == 0) a = Math.max(0, t - e);
         else if (a > 0 && e > 0 && t == 0) t = a + e;
         else if (t > 0 && a > 0 && e > 0) {
-             // If all provided, prioritize acertos/erros over total if inconsistent?
-             // Or just validate.
              if (a + e != t) {
                  throw new IllegalArgumentException("Soma de acertos e erros não confere com o total");
              }

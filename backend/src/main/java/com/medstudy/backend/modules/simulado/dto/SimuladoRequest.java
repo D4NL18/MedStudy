@@ -9,9 +9,9 @@ public record SimuladoRequest(
 
         @NotNull(message = "Data de realização é obrigatória") LocalDate dataRealizacao,
 
-        int cmTotal, int cmAcertos, int cmErros,
-        int cirTotal, int cirAcertos, int cirErros,
-        int pedTotal, int pedAcertos, int pedErros,
-        int goTotal, int goAcertos, int goErros,
-        int prevTotal, int prevAcertos, int prevErros) {
+        Integer cmTotal, Integer cmAcertos, Integer cmErros,
+        Integer cirTotal, Integer cirAcertos, Integer cirErros,
+        Integer pedTotal, Integer pedAcertos, Integer pedErros,
+        Integer goTotal, Integer goAcertos, Integer goErros,
+        Integer prevTotal, Integer prevAcertos, Integer prevErros) {
 }
