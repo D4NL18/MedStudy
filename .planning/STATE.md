@@ -9,7 +9,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 | Progress | 100% (Backend Phase 7) |
 | Current Phase | Phase 9: Dashboard & Análises |
-| Last Activity | Phase 9 context gathered |
+| Last Activity | Phase 9 UI-SPEC approved |
 
 ---
 
