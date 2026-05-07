@@ -10,7 +10,7 @@ Dashboard com KPIs, gráficos e análises por área e por tema, integrado ao bac
 - **Interatividade dos Gráficos:** Drill-down ativado. Ao clicar na barra ou fatia de um gráfico (ex: "Pediatria"), o sistema redireciona automaticamente o usuário para a tabela de Banco de Questões, já preenchida com o filtro aplicado.
 
 ## Code Context
-- Gráficos devem consumir a paleta legada (`#430428`, `#F553B0`) mapeada via variáveis do `ThemeService` desenvolvido na Fase 8.
+- Gráficos devem consumir a paleta do Tema Verde (`#064e3b`, `#10b981`) mapeada via variáveis do `ThemeService` desenvolvido na Fase 8. O usuário definiu Verde como o novo padrão.
 - Usar Signals nos componentes para ler os Selectors do NgRx.
 - As chamadas de fetch assíncronas do Dashboard e Analytics Features ficarão isoladas via `createEffect`.
 

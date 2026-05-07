@@ -50,13 +50,13 @@ created: 2026-05-07
 
 ---
 
-## Color (Tema Rosa - Padrão)
+## Color (Tema Verde - Padrão)
 
 | Role | Value | Usage |
 |------|-------|-------|
-| Dominant (60%) | #430428 | Fundo principal da página |
-| Secondary (30%) | #6F0642 | Surfaces dos KPI cards e containers de gráficos |
-| Accent (10%) | #F553B0 | Linha de evolução, barras de destaque, bordas ativas |
+| Dominant (60%) | #064e3b | Fundo principal da página (Floresta) |
+| Secondary (30%) | #065f46 | Surfaces dos KPI cards e containers de gráficos |
+| Accent (10%) | #10b981 | Linha de evolução, barras de destaque, bordas ativas (Esmeralda) |
 | Destructive | #ef4444 | Faixas de desempenho crítico (< 70%) |
 
 Accent reserved for: Primary buttons, chart active series, progress bar fill.
