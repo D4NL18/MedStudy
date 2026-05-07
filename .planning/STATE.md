@@ -5,17 +5,17 @@
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 6 — Dashboards & Analytics (Backend)
+**Current focus:** Phase 7 — Revisão & Flashcards (Backend)
 
-| Progress | 100% (Backend Phase 5) |
-| Current Phase | Phase 6: Backend - Dashboards & Analytics |
-| Last Activity | Phase 5 Implementation Complete |
+| Progress | 100% (Backend Phase 6) |
+| Current Phase | Phase 7: Backend - Revisão & Flashcards |
+| Last Activity | Phase 6 Verification Complete |
 
 ---
 
 ## Current Status
 
-**Phase:** 5 of 15 — Shipped (PR Pending)
+**Phase:** 6 of 15 — Shipped (PR Pending)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -35,7 +35,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 3: Auth Backend (Spring Security + JWT) implemented and pushed to GitHub.
 - [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
 - [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
-- [/] Phase 6: Planning Dashboards & Analytics
+- [x] Phase 6: Dashboards & Analytics Implemented [v] Verified
+- [/] Phase 7: Planning Revisão & Flashcards API
 
 ---
 
@@ -61,10 +62,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Next Step
 
-Run `/gsd-plan-phase 6` to generate the detailed execution plan for Phase 6 (Dashboards & Analytics).
+Run `/gsd-plan-phase 7` to generate the detailed execution plan for Phase 7 (Revisão & Flashcards).
 
-| Phase 5: Simulados & Plano de Aula | [x] | Backend CRUD + Logic |
-| Phase 6: Dashboards & Analytics | [/] | KPIs e Agregações |
+| Phase 6: Dashboards & Analytics | [x] | KPIs e Agregações |
+| Phase 7: Revisão & Flashcards | [/] | Spaced Repetition Logic |
 
 ---
 
@@ -77,4 +78,4 @@ Run `/gsd-plan-phase 6` to generate the detailed execution plan for Phase 6 (Das
 - [x] Nome do package Java: `com.medstudy` — confirmado
 
 ---
-*STATE.md updated: 2026-05-07 after Phase 4 Shipped*
+*STATE.md updated: 2026-05-07 after Phase 6 Verified*
