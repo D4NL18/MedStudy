@@ -23,6 +23,7 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 - ✓ Revisão Intervalada baseada em % de acertos — validado no legado
 - ✓ Flashcards com agendamento por dificuldade — validado no legado
 - ✓ Análise por Grande Área e por Tema — validado no legado
+- ✓ [Phase 4] Backend: Banco de Questões (Sessões de Estudo) — CRUD, filtros dinâmicos e métricas.
 
 ### Active
 
@@ -90,10 +91,11 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 | Angular 18 Standalone + Signals | Moderno, evita NgModules legados, reactivity simplificada | — Pending |
 | NgRx para estado global | State centralizado, testável, padrão Redux | — Pending |
 | JWT com refresh token rotation | Segurança sem sacrificar UX (sessão persistente) | — Pending |
-| MapStruct para Entity→DTO | Compile-time, zero reflection, performático | — Pending |
-| PostgreSQL local via Docker | Reprodutível, sem dependência de BaaS externo | — Pending |
+| MapStruct para Entity→DTO | Compile-time, zero reflection, performático | ✓ Shipped (Ph 2) |
+| PostgreSQL local via Docker | Reprodutível, sem dependência de BaaS externo | ✓ Shipped (Ph 1) |
 | Paleta de cores preservada (Rosa como padrão) | Manter identidade visual do legado (#430428, #F553B0) | — Pending |
 | Sistema multi-tema via CSS Custom Properties | Zero hardcode de cores; troca instantânea + persistência | — Pending |
+| JPA Specifications para Filtros Dinâmicos | Permite buscas complexas sem SQL nativo ou JPQL estático | ✓ Shipped (Ph 4) |
 
 ## Evolution
 
@@ -113,4 +115,4 @@ Este documento evolui a cada transição de fase e milestone.
 4. Atualizar Context com estado atual
 
 ---
-*Last updated: 2026-05-05 — added multi-theme color system requirement (THEM-01..13)*
+*Last updated: 2026-05-07 after Phase 4 — Backend Study Sessions complete.*

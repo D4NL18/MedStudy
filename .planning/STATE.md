@@ -2,16 +2,16 @@
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-05)
+See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 3 — Auth Backend (Spring Security + JWT) [COMPLETED]
+**Current focus:** Phase 5 — Simulados & Plano de Aula (Backend)
 
 ---
 
 ## Current Status
 
-**Phase:** 3 of 15 — Completed
+**Phase:** 4 of 15 — Shipped (PR Pending)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -28,7 +28,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 - [x] `.planning/STATE.md` created
 - [x] Phase 1 completed, verified, and pushed to GitHub.
 - [x] Phase 2: Database Schema & Backend Skeleton implemented (Flyway, JPA, DTOs, Mappers).
-- [x] Phase 3: Auth Backend (Spring Security + JWT) implemented with refresh token rotation and password recovery.
+- [x] Phase 3: Auth Backend (Spring Security + JWT) implemented and pushed to GitHub.
+- [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
 
 ---
 
@@ -54,18 +55,17 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 ## Next Step
 
-Run `/gsd-plan-phase 4` to generate the detailed execution plan for Phase 4 (User Management API).
+Run `/gsd-plan-phase 5` to generate the detailed execution plan for Phase 5 (Simulados & Plano de Aula - Backend).
 
 ---
 
 ## Open Questions / Decisions Pending
 
-- [ ] Qual porta usar para o backend Spring Boot? (default: 8080)
-- [ ] Qual porta usar para o Angular dev server? (default: 4200)
+- [x] Qual porta usar para o backend Spring Boot? (8080)
+- [x] Qual porta usar para o Angular dev server? (4200)
 - [ ] Biblioteca de gráficos para o Angular: `ng2-charts` (Chart.js wrapper) ou `ngx-charts` (D3)? Recomendação: ng2-charts (mais simples, mantida)
 - [ ] E-mail para recuperação de senha: usar JavaMailSender com SMTP local (Mailhog) ou mockar para v1?
-- [ ] Nome do package Java: `com.medstudy` — confirmar
+- [x] Nome do package Java: `com.medstudy` — confirmado
 
 ---
-*STATE.md created: 2026-05-05*
-*Last updated: 2026-05-05 after initialization*
+*STATE.md updated: 2026-05-07 after Phase 4 Shipped*
