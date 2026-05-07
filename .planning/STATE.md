@@ -35,7 +35,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 3: Auth Backend (Spring Security + JWT) implemented and pushed to GitHub.
 - [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
 - [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
-- [/] Phase 6: Planning Dashboards & Analytics
+- [x] Phase 6: Dashboards & Analytics Implemented (KPIs, Streak, Trends)
 
 ---
 
