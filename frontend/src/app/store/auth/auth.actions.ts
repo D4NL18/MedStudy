@@ -1,9 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
 export interface AuthResponse {
-  token: string;
-  email: string;
-  nome: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export const login = createAction(

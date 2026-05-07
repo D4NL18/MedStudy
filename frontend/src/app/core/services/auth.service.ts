@@ -11,7 +11,7 @@ export class AuthService {
   private readonly API_URL = '/api/auth';
 
   login(email: string, senha: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login`, { email, senha });
+    return this.http.post<AuthResponse>(`${this.API_URL}/login`, { email, password: senha });
   }
 
   refreshToken(): Observable<{ token: string }> {

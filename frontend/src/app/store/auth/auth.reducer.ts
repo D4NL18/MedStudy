@@ -24,8 +24,8 @@ export const authReducer = createReducer(
   })),
   on(AuthActions.loginSuccess, (state, { response }) => ({
     ...state,
-    token: response.token,
-    user: { email: response.email, nome: response.nome },
+    token: response.accessToken,
+    user: null, // User data needs separate fetch or JWT decode
     loading: false,
     error: null
   })),
