@@ -7,9 +7,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:** Phase 9 — Frontend: Dashboard & Análises
 
-| Progress | 100% (Backend Phase 7) |
+| Progress | 100% (Frontend Phase 9) |
 | Current Phase | Phase 9: Dashboard & Análises |
-| Last Activity | Phase 9 UI-SPEC approved |
+| Last Activity | Phase 9 executed and verified via build |
 
 ---
 
