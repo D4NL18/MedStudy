@@ -10,6 +10,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { themeReducer } from './store/theme/theme.reducer';
 import { authReducer } from './store/auth/auth.reducer';
 import { AuthEffects } from './store/auth/auth.effects';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimations(),
     provideStore({ 
       theme: themeReducer,
       auth: authReducer
