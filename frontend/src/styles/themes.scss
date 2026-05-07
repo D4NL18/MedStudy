@@ -13,22 +13,22 @@ $themes: (
   claro: (
     primary: #F553B0,
     primary-light: #FBBCE0,
-    accent: #430428,
-    accent-light: #6F0642,
-    bg: #FFFFFF,
-    surface: #F8F9FA,
+    accent: #F553B0,
+    accent-light: #FBBCE0,
+    bg: #F8F9FA,
+    surface: #FFFFFF,
     text: #212529,
-    text-muted: #6C757D
+    text-muted: #495057
   ),
   escuro: (
     primary: #F553B0,
     primary-light: #FBBCE0,
-    accent: #FFFFFF,
-    accent-light: #DEE2E6,
-    bg: #121212,
-    surface: #1E1E1E,
-    text: #FFFFFF,
-    text-muted: #ADB5BD
+    accent: #10b981,
+    accent-light: #34d399,
+    bg: #0F172A,
+    surface: #1E293B,
+    text: #F8FAFC,
+    text-muted: #94A3B8
   ),
   verde: (
     primary: #1B4332,
@@ -45,18 +45,18 @@ $themes: (
     primary-light: #023E8A,
     accent: #00B4D8,
     accent-light: #ADE8F4,
-    bg: #000000,
-    surface: #03045E,
-    text: #FFFFFF,
-    text-muted: #CAF0F8
+    bg: #020617,
+    surface: #0F172A,
+    text: #F8FAFC,
+    text-muted: #94A3B8
   ),
   vermelho: (
     primary: #660708,
     primary-light: #A4133C,
     accent: #FF4D6D,
     accent-light: #FFB3C1,
-    bg: #0B090A,
-    surface: #161A1D,
+    bg: #1A0505,
+    surface: #2D0A0A,
     text: #FFFFFF,
     text-muted: #F5F3F4
   ),

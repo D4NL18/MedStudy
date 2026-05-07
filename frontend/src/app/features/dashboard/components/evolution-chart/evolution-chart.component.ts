@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { ThemeService } from '../../../../core/services/theme.service';
@@ -59,19 +59,24 @@ export class EvolutionChartComponent implements OnInit {
     name: 'dynamic',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#10b981'] // Default Emerald for Verde
+    domain: ['#10b981'] // Default emerald
   });
 
-  curve: any; // Can use d3 curve if imported
+  curve: any;
+
+  constructor() {
+    // Re-calculate colors when theme changes
+    effect(() => {
+      this.themeService.activeTheme(); // Dependency
+      setTimeout(() => this.updateColors(), 50);
+    });
+  }
 
   ngOnInit() {
-    // Update colors based on active theme
     this.updateColors();
   }
 
   private updateColors() {
-    // In a real app, we would map all 8 themes to specific colors
-    // For now, let's just react to the theme change
     const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim();
     if (accent) {
       this.colorScheme.set({

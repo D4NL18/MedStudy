@@ -1,6 +1,7 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
+import { ThemeService } from '../../../../core/services/theme.service';
 
 @Component({
   selector: 'app-area-chart',
@@ -32,6 +33,8 @@ import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
   `]
 })
 export class AreaChartComponent {
+  private themeService = inject(ThemeService);
+
   chartData = [
     { name: 'Pediatria', value: 85 },
     { name: 'Cirurgia', value: 72 },
@@ -44,6 +47,24 @@ export class AreaChartComponent {
     name: 'performance',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#52B788', '#2D6A4F', '#1B4332', '#081C15', '#40916c']
+    domain: ['#52B788'] // Default emerald
   });
+
+  constructor() {
+    // Re-calculate colors when theme changes
+    effect(() => {
+      this.themeService.activeTheme(); // Dependency
+      setTimeout(() => this.updateColors(), 50); // Small delay to let CSS variables update
+    });
+  }
+
+  private updateColors() {
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim();
+    if (accent) {
+      this.colorScheme.set({
+        ...this.colorScheme(),
+        domain: [accent, accent + 'CC', accent + '99', accent + '66', accent + '33']
+      });
+    }
+  }
 }
