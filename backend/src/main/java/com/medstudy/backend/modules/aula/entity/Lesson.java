@@ -4,6 +4,8 @@ import com.medstudy.backend.core.entity.BaseEntity;
 import com.medstudy.backend.modules.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,8 +25,9 @@ public class Lesson extends BaseEntity {
     @Column(nullable = false)
     private String tema;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String prioridade; // Diamante/Alta/Média/Baixa
+    private LessonPriority prioridade;
 
     @Column(name = "aula_assistida", nullable = false)
     private Boolean aulaAssistida = false;
@@ -36,8 +39,8 @@ public class Lesson extends BaseEntity {
     public void setGrandeArea(String grandeArea) { this.grandeArea = grandeArea; }
     public String getTema() { return tema; }
     public void setTema(String tema) { this.tema = tema; }
-    public String getPrioridade() { return prioridade; }
-    public void setPrioridade(String prioridade) { this.prioridade = prioridade; }
+    public LessonPriority getPrioridade() { return prioridade; }
+    public void setPrioridade(LessonPriority prioridade) { this.prioridade = prioridade; }
     public Boolean getAulaAssistida() { return aulaAssistida; }
     public void setAulaAssistida(Boolean aulaAssistida) { this.aulaAssistida = aulaAssistida; }
 }

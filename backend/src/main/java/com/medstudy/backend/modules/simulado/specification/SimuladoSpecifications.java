@@ -1,0 +1,22 @@
+package com.medstudy.backend.modules.simulado.specification;
+
+import com.medstudy.backend.modules.simulado.entity.Simulado;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.UUID;
+
+public class SimuladoSpecifications {
+
+    public static Specification<Simulado> hasUserId(UUID userId) {
+        return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+    }
+
+    public static Specification<Simulado> hasNome(String nome) {
+        return (root, query, cb) -> {
+            if (nome == null || nome.isBlank()) {
+                return null;
+            }
+            return cb.like(cb.lower(root.get("nome")), "%" + nome.toLowerCase() + "%");
+        };
+    }
+}
