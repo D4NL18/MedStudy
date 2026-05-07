@@ -93,7 +93,7 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 | JWT com refresh token rotation | Segurança sem sacrificar UX (sessão persistente) | — Pending |
 | MapStruct para Entity→DTO | Compile-time, zero reflection, performático | ✓ Shipped (Ph 2) |
 | PostgreSQL local via Docker | Reprodutível, sem dependência de BaaS externo | ✓ Shipped (Ph 1) |
-| Paleta de cores preservada (Rosa como padrão) | Manter identidade visual do legado (#430428, #F553B0) | — Pending |
+| Paleta de cores (Verde como padrão) | Tons de esmeralda/floresta (#064e3b, #10b981) | — Pending |
 | Sistema multi-tema via CSS Custom Properties | Zero hardcode de cores; troca instantânea + persistência | — Pending |
 | JPA Specifications para Filtros Dinâmicos | Permite buscas complexas sem SQL nativo ou JPQL estático | ✓ Shipped (Ph 4) |
 

@@ -7,7 +7,7 @@ export interface ThemeState {
 }
 
 export const initialState: ThemeState = {
-  activeTheme: (localStorage.getItem('medstudy-theme') as AppTheme) || 'rosa'
+  activeTheme: (localStorage.getItem('medstudy-theme-v2') as AppTheme) || 'verde'
 };
 
 export const themeReducer = createReducer(

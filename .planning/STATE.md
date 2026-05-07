@@ -5,11 +5,11 @@
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 8 — Frontend Core: Angular Setup, NgRx, Auth Module
+**Current focus:** Phase 9 — Frontend: Dashboard & Análises
 
-| Progress | 100% (Backend Phase 7) |
-| Current Phase | Phase 8: Frontend Core + Auth |
-| Last Activity | Phase 7 Verification & Shipping Complete |
+| Progress | 100% (Frontend Phase 9) |
+| Current Phase | Phase 9: Dashboard & Análises |
+| Last Activity | Theme default changed to Verde across the app |
 
 ---
 
@@ -37,7 +37,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
 - [x] Phase 6: Dashboards & Analytics Implemented [v] Verified
 - [x] Phase 7: Revisão & Flashcards Implemented and Shipped.
-- [/] Phase 8: Frontend Core: Angular Setup, NgRx, Auth Module
+- [x] Phase 8: Frontend Core: Angular Setup, NgRx, Auth Module
+- [/] Phase 9: Frontend: Dashboard & Análises
 
 ---
 
@@ -63,10 +64,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Next Step
 
-Run `/gsd-plan-phase 7` to generate the detailed execution plan for Phase 7 (Revisão & Flashcards).
+Run `/gsd-plan-phase 9` to generate the detailed execution plan for Phase 9 (Frontend: Dashboard & Análises).
 
-| Phase 7: Revisão & Flashcards | [x] | Spaced Repetition Logic |
-| Phase 8: Frontend Core + Auth | [/] | Setup, Themes & Security |
+| Phase 8: Frontend Core + Auth | [x] | Setup, Themes & Security |
+| Phase 9: Dashboard & Análises | [/] | KPIs, gráficos, NgRx lazy |
 
 ---
 
@@ -74,7 +75,7 @@ Run `/gsd-plan-phase 7` to generate the detailed execution plan for Phase 7 (Rev
 
 - [x] Qual porta usar para o backend Spring Boot? (8080)
 - [x] Qual porta usar para o Angular dev server? (4200)
-- [ ] Biblioteca de gráficos para o Angular: `ng2-charts` (Chart.js wrapper) ou `ngx-charts` (D3)? Recomendação: ng2-charts (mais simples, mantida)
+- [x] Biblioteca de gráficos para o Angular: `ngx-charts` selecionado na Fase 9.
 - [ ] E-mail para recuperação de senha: usar JavaMailSender com SMTP local (Mailhog) ou mockar para v1?
 - [x] Nome do package Java: `com.medstudy` — confirmado
 

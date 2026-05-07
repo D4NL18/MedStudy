@@ -1,9 +1,9 @@
 package com.medstudy.backend.modules.analytics.dto;
 
 public record AreaAnalyticsResponse(
-    String area,
+    String grandeArea,
     long totalQuestions,
-    double successRate,
-    double trendRate, // Last 7 days
-    String performanceLevel
+    double accuracy,
+    long sessionsCount,
+    double trendRate
 ) {}

@@ -26,19 +26,19 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
     @Query("SELECT DISTINCT s.dataSessao FROM StudySession s WHERE s.user.id = :userId ORDER BY s.dataSessao DESC")
     List<LocalDate> findDistinctSessionDatesByUserId(@Param("userId") UUID userId);
 
-    @Query("SELECT s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas) " +
+    @Query("SELECT s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas), COUNT(s) " +
            "FROM StudySession s WHERE s.user.id = :userId AND s.dataSessao >= :since GROUP BY s.grandeArea")
     List<Object[]> aggregateByAreaSince(@Param("userId") UUID userId, @Param("since") LocalDate since);
 
-    @Query("SELECT s.tema, s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas) " +
+    @Query("SELECT s.tema, s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas), COUNT(s) " +
            "FROM StudySession s WHERE s.user.id = :userId AND s.dataSessao >= :since GROUP BY s.tema, s.grandeArea")
     List<Object[]> aggregateByTopicSince(@Param("userId") UUID userId, @Param("since") LocalDate since);
 
-    @Query("SELECT s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas) " +
+    @Query("SELECT s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas), COUNT(s) " +
            "FROM StudySession s WHERE s.user.id = :userId GROUP BY s.grandeArea")
     List<Object[]> aggregateByAreaTotal(@Param("userId") UUID userId);
 
-    @Query("SELECT s.tema, s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas) " +
+    @Query("SELECT s.tema, s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas), COUNT(s) " +
            "FROM StudySession s WHERE s.user.id = :userId GROUP BY s.tema, s.grandeArea")
     List<Object[]> aggregateByTopicTotal(@Param("userId") UUID userId);
 

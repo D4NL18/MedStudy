@@ -4,7 +4,7 @@ public record TopicAnalyticsResponse(
     String tema,
     String grandeArea,
     long totalQuestions,
-    double successRate,
-    double trendRate,
-    String performanceLevel
+    double accuracy,
+    long sessionsCount,
+    double trendRate
 ) {}

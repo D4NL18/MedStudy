@@ -11,12 +11,12 @@ export type AppTheme = 'rosa' | 'claro' | 'escuro' | 'verde' | 'azul' | 'vermelh
   providedIn: 'root'
 })
 export class ThemeService {
-  private readonly THEME_KEY = 'medstudy-theme';
+  private readonly THEME_KEY = 'medstudy-theme-v2';
   private store = inject(Store);
   
   // Convert Store observable to Signal
   activeTheme = toSignal(this.store.select(selectActiveTheme), { 
-    initialValue: (localStorage.getItem('medstudy-theme') as AppTheme) || 'rosa' 
+    initialValue: (localStorage.getItem('medstudy-theme-v2') as AppTheme) || 'verde' 
   });
 
   constructor(@Inject(DOCUMENT) private document: Document) {
@@ -34,7 +34,7 @@ export class ThemeService {
 
   private getInitialTheme(): AppTheme {
     const saved = localStorage.getItem(this.THEME_KEY) as AppTheme;
-    return saved || 'rosa';
+    return saved || 'verde';
   }
 
   private applyTheme(theme: AppTheme) {
