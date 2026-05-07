@@ -1,14 +1,16 @@
 package com.medstudy.backend.modules.flashcard.dto;
 
+import com.medstudy.backend.modules.flashcard.entity.FlashcardDifficulty;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.UUID;
 
 public record FlashcardResponse(
     UUID id,
     String grandeArea,
-    Map<String, Object> frente,
-    Map<String, Object> verso,
+    Object frente,
+    Object verso,
     LocalDate proximaRevisao,
-    String dificuldadeUltima
+    FlashcardDifficulty dificuldadeUltima,
+    Integer intervaloAtual
 ) {}
+

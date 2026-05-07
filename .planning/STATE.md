@@ -36,7 +36,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
 - [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
 - [x] Phase 6: Dashboards & Analytics Implemented [v] Verified
-- [/] Phase 7: Planning Revisão & Flashcards API
+- [x] Phase 7: Revisão & Flashcards Implemented (SM-2, JSONB)
+- [/] Phase 8: Frontend Setup & Shared Module (Rebuilding UI)
 
 ---
 
