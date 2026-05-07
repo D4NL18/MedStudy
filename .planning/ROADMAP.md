@@ -132,11 +132,11 @@ Angular (Component + NgRx Store)
 - Endpoint de métricas: GET `/api/study-sessions/metrics` (totais, média de acertos, revisões críticas)
 - Testes unitários do Service (JUnit 5 + Mockito)
 **Plans:**
-- [ ] 4.1 — StudySessionController (CRUD endpoints)
-- [ ] 4.2 — StudySessionService (business logic + validation)
-- [ ] 4.3 — Repository: filtros dinâmicos (JPA Specification ou JPQL)
-- [ ] 4.4 — Metrics endpoint
-- [ ] 4.5 — Unit tests for StudySessionService
+- [x] 4.1 — StudySessionController (CRUD endpoints)
+- [x] 4.2 — StudySessionService (business logic + validation)
+- [x] 4.3 — Repository: filtros dinâmicos (JPA Specification ou JPQL)
+- [x] 4.4 — Metrics endpoint
+- [x] 4.5 — Unit tests for StudySessionService
 
 ---
 
@@ -370,10 +370,10 @@ Angular (Component + NgRx Store)
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| Phase 1 — Monorepo Setup | ⬜ Not Started | |
-| Phase 2 — Database Schema | ⬜ Not Started | |
-| Phase 3 — Auth Backend | ⬜ Not Started | |
-| Phase 4 — Banco de Questões API | ⬜ Not Started | |
+| Phase 1 — Monorepo Setup | ✅ Complete | 2026-05-05 |
+| Phase 2 — Database Schema | ✅ Complete | 2026-05-06 |
+| Phase 3 — Auth Backend | ✅ Complete | 2026-05-06 |
+| Phase 4 — Banco de Questões API | ✅ Complete | 2026-05-07 |
 | Phase 5 — Simulados & Aulas API | ⬜ Not Started | |
 | Phase 6 — Analytics API | ⬜ Not Started | |
 | Phase 7 — Revisão & Flashcards API | ⬜ Not Started | |

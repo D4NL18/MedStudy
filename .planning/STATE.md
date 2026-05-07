@@ -5,13 +5,13 @@
 See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 3 — Auth Backend (Spring Security + JWT) [COMPLETED]
+**Current focus:** Phase 5 — Simulados & Plano de Aula (Backend)
 
 ---
 
 ## Current Status
 
-**Phase:** 3 of 15 — Completed
+**Phase:** 4 of 15 — Completed (Shipped)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -28,7 +28,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 - [x] `.planning/STATE.md` created
 - [x] Phase 1 completed, verified, and pushed to GitHub.
 - [x] Phase 2: Database Schema & Backend Skeleton implemented (Flyway, JPA, DTOs, Mappers).
-- [x] Phase 3: Auth Backend (Spring Security + JWT) implemented with refresh token rotation and password recovery.
+- [x] Phase 3: Auth Backend (Spring Security + JWT) implemented and pushed to GitHub.
+- [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
 
 ---
 
@@ -54,7 +55,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-05)
 
 ## Next Step
 
-Run `/gsd-plan-phase 4` to generate the detailed execution plan for Phase 4 (User Management API).
+Run `/gsd-plan-phase 5` to generate the detailed execution plan for Phase 5 (Simulados & Plano de Aula - Backend).
 
 ---
 
@@ -68,4 +69,4 @@ Run `/gsd-plan-phase 4` to generate the detailed execution plan for Phase 4 (Use
 
 ---
 *STATE.md created: 2026-05-05*
-*Last updated: 2026-05-05 after initialization*
+*Last updated: 2026-05-06 after Phase 4 context gathering*
