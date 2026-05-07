@@ -9,7 +9,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 | Progress | 100% (Frontend Phase 9) |
 | Current Phase | Phase 9: Dashboard & Análises |
-| Last Activity | Phase 9 executed and verified via build |
+| Last Activity | Theme default changed to Verde across the app |
 
 ---
 
