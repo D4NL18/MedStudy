@@ -2,6 +2,8 @@ import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { ThemeService } from '../../../../core/services/theme.service';
+// @ts-ignore
+import * as shape from 'd3-shape';
 
 @Component({
   selector: 'app-evolution-chart',
@@ -9,7 +11,7 @@ import { ThemeService } from '../../../../core/services/theme.service';
   imports: [CommonModule, NgxChartsModule],
   template: `
     <div class="chart-container" #containerRef>
-      <ngx-charts-line-chart
+      <ngx-charts-line-chart *ngIf="containerRef.offsetWidth > 0"
         [view]="[containerRef.offsetWidth, 300]"
         [scheme]="colorScheme()"
         [results]="chartData"
@@ -33,8 +35,9 @@ import { ThemeService } from '../../../../core/services/theme.service';
       height: 300px;
     }
     :host ::ng-deep .ngx-charts {
-      text { fill: var(--color-text); opacity: 0.7; font-size: 12px; }
-      .gridline-path { stroke: rgba(255, 255, 255, 0.05); }
+      text { fill: var(--color-text) !important; opacity: 0.8; font-size: 12px; }
+      .gridline-path { stroke: var(--color-border) !important; opacity: 0.5; }
+      .axis-label { fill: var(--color-text) !important; }
     }
   `]
 })
@@ -62,7 +65,7 @@ export class EvolutionChartComponent implements OnInit {
     domain: ['#10b981'] // Default emerald
   });
 
-  curve: any;
+  curve = shape.curveMonotoneX;
 
   constructor() {
     // Re-calculate colors when theme changes
@@ -81,7 +84,9 @@ export class EvolutionChartComponent implements OnInit {
     let accent = getComputedStyle(root).getPropertyValue('--color-accent').trim();
     const isClaro = this.themeService.activeTheme() === 'claro';
 
-    if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || isClaro) {
+    if (isClaro) {
+      accent = '#10B981';
+    } else if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || !accent) {
       accent = getComputedStyle(root).getPropertyValue('--color-primary').trim();
     }
 

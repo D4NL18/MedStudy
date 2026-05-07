@@ -35,16 +35,17 @@ public class AnalyticsService {
             String area = (String) row[0];
             long totalQuest = row[1] != null ? ((Number) row[1]).longValue() : 0L;
             long totalCorr = row[2] != null ? ((Number) row[2]).longValue() : 0L;
+            long sessions = row[3] != null ? ((Number) row[3]).longValue() : 0L;
             double rate = totalQuest > 0 ? (double) totalCorr / totalQuest * 100 : 0;
 
-            double trend = calculateTrend(area, recent, 1); // Passando offset 1 para áreas
+            double trend = calculateTrend(area, recent, 1);
 
             responses.add(new AreaAnalyticsResponse(
                 area,
                 totalQuest,
                 rate,
-                trend,
-                calculatePerformanceLevel(rate)
+                sessions,
+                trend
             ));
         }
         return responses;
@@ -63,17 +64,18 @@ public class AnalyticsService {
             String area = (String) row[1];
             long totalQuest = row[2] != null ? ((Number) row[2]).longValue() : 0L;
             long totalCorr = row[3] != null ? ((Number) row[3]).longValue() : 0L;
+            long sessions = row[4] != null ? ((Number) row[4]).longValue() : 0L;
             double rate = totalQuest > 0 ? (double) totalCorr / totalQuest * 100 : 0;
 
-            double trend = calculateTrend(tema, recent, 2); // Passando offset 2 para temas
+            double trend = calculateTrend(tema, recent, 2);
 
             responses.add(new TopicAnalyticsResponse(
                 tema,
                 area,
                 totalQuest,
                 rate,
-                trend,
-                calculatePerformanceLevel(rate)
+                sessions,
+                trend
             ));
         }
         return responses;

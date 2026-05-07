@@ -1,17 +1,18 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
+import { ThemeService } from '../../../../core/services/theme.service';
 import { selectAreaAnalytics, selectAnalyticsLoading } from '../../../../store/analytics/analytics.selectors';
-import { loadAreaAnalytics } from '../../../../store/analytics/analytics.actions';
+import { loadAreaAnalytics, AreaAnalytics } from '../../../../store/analytics/analytics.actions';
 
 @Component({
   selector: 'app-analise-area',
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
   template: `
-    <div class="analytics-page">
+    <div class="analytics-page" #containerRef>
       <header>
         <h2>Desempenho por Grande Área</h2>
         <p>Clique em uma área para ver o detalhamento no banco de questões.</p>
@@ -21,21 +22,24 @@ import { loadAreaAnalytics } from '../../../../store/analytics/analytics.actions
         <div class="skeleton-chart glass"></div>
       } @else {
         <div class="chart-wrapper glass">
-          <ngx-charts-bar-horizontal
+          <ngx-charts-bar-horizontal *ngIf="chartData().length > 0 && containerRef.offsetWidth > 0"
+            [view]="[containerRef.offsetWidth - 64, chartHeight()]"
             [results]="chartData()"
             [xAxis]="true"
             [yAxis]="true"
             [legend]="false"
             [showXAxisLabel]="true"
             [xAxisLabel]="'Taxa de Acerto (%)'"
-            [scheme]="colorScheme"
+            [scheme]="colorScheme()"
+            [barPadding]="20"
+            [roundDomains]="true"
             (select)="onSelect($event)"
           >
           </ngx-charts-bar-horizontal>
         </div>
 
         <div class="stats-grid">
-          <div class="stat-card glass" *ngFor="let area of areas()">
+          <div class="stat-card glass" *ngFor="let area of displayAreas()">
             <div class="area-name">{{ area.grandeArea }}</div>
             <div class="area-metrics">
               <span [class]="getPerformanceClass(area.accuracy)">{{ area.accuracy }}%</span>
@@ -54,15 +58,16 @@ import { loadAreaAnalytics } from '../../../../store/analytics/analytics.actions
     h2 { margin: 0; font-size: 1.5rem; }
     
     .chart-wrapper {
-      height: 400px;
+      min-height: 300px;
       padding: 24px;
       border-radius: 20px;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      width: 100%;
     }
 
     .stat-card {
@@ -87,7 +92,14 @@ import { loadAreaAnalytics } from '../../../../store/analytics/analytics.actions
 
     .glass { background: var(--color-surface-glass); backdrop-filter: blur(8px); border: 1px solid var(--color-border); }
     
-    .skeleton-chart { height: 400px; border-radius: 20px; background: rgba(255,255,255,0.05); animation: pulse 1.5s infinite; }
+    :host ::ng-deep .ngx-charts {
+      text { fill: var(--color-text) !important; opacity: 0.8; font-size: 13px; }
+      .gridline-path { stroke: rgba(var(--color-accent-rgb), 0.1) !important; }
+      .tick line { stroke: var(--color-border) !important; }
+      .axis-label { fill: var(--color-text) !important; font-weight: 600; }
+    }
+
+    .skeleton-chart { height: 400px; border-radius: 20px; background: var(--color-border); animation: pulse 1.5s infinite; }
     @keyframes pulse { 50% { opacity: 0.3; } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   `]
@@ -99,17 +111,89 @@ export class AnaliseAreaComponent implements OnInit {
   areas = this.store.selectSignal(selectAreaAnalytics);
   loading = this.store.selectSignal(selectAnalyticsLoading);
 
-  colorScheme = {
+  private themeService = inject(ThemeService);
+
+  colorScheme = signal<any>({
     name: 'performance',
     selectable: true,
-    group: 'Ordinal' as any,
+    group: ScaleType.Ordinal,
     domain: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444']
-  };
+  });
 
-  chartData = () => this.areas().map(a => ({
-    name: a.grandeArea,
-    value: a.accuracy
-  }));
+  constructor() {
+    effect(() => {
+      this.themeService.activeTheme();
+      setTimeout(() => this.updateColors(), 50);
+    });
+  }
+
+  private updateColors() {
+    const root = document.documentElement;
+    let accent = getComputedStyle(root).getPropertyValue('--color-accent').trim();
+    const isClaro = this.themeService.activeTheme() === 'claro';
+    
+    if (isClaro) {
+      accent = '#10B981';
+    } else if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || !accent) {
+      accent = getComputedStyle(root).getPropertyValue('--color-primary').trim();
+    }
+
+    if (accent) {
+      // If the browser returns rgb(), we should ideally convert or just use the base color.
+      // For ngx-charts to show multiple bars, we can just repeat the accent or use a static palette if it fails.
+      const domain = [accent];
+      
+      // Add variations if accent is hex
+      if (accent.startsWith('#')) {
+        domain.push(accent + 'CC', accent + '99', accent + '66', accent + '33');
+      } else {
+        // Fallback for rgb() - just use the color for all bars or common emerald shades
+        domain.push('#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5');
+      }
+
+      this.colorScheme.set({
+        ...this.colorScheme(),
+        domain: domain
+      });
+    }
+  }
+
+  private readonly DEFAULT_AREAS = [
+    'Cirurgia',
+    'Clínica Médica',
+    'Ginecologia e Obstetrícia',
+    'Pediatria',
+    'Medicina Preventiva'
+  ];
+
+  chartHeight = computed(() => {
+    const count = Math.max(this.DEFAULT_AREAS.length, this.areas().length);
+    return count * 60 + 100;
+  });
+
+  displayAreas = computed(() => {
+    const apiData = this.areas();
+    return this.DEFAULT_AREAS.map(areaName => {
+      const match = apiData.find(a => a.grandeArea === areaName);
+      if (match) return match;
+      
+      // Return a skeleton object for areas without data
+      return {
+        grandeArea: areaName,
+        totalQuestions: 0,
+        accuracy: 0,
+        sessionsCount: 0,
+        trendRate: 0
+      } as AreaAnalytics;
+    });
+  });
+
+  chartData = computed(() => {
+    return this.displayAreas().map(a => ({
+      name: a.grandeArea,
+      value: a.accuracy || 0
+    }));
+  });
 
   ngOnInit() {
     this.store.dispatch(loadAreaAnalytics());

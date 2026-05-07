@@ -5,80 +5,112 @@ $themes: (
     primary-light: #6F0642,
     accent: #F553B0,
     accent-light: #FBBCE0,
+    accent-rgb: "67, 4, 40",
     bg: #18010E,
     surface: #2D031A,
+    surface-glass: rgba(45, 3, 26, 0.8),
+    border: rgba(245, 83, 176, 0.2),
     text: #FFFFFF,
-    text-muted: #FBBCE0
+    text-muted: #FBBCE0,
+    preview: #F553B0
   ),
   claro: (
-    primary: #F553B0,
-    primary-light: #FBBCE0,
-    accent: #FFFFFF,
-    accent-light: #FBBCE0,
+    primary: #10B981,
+    primary-light: #34D399,
+    accent: #10B981,
+    accent-light: #6EE7B7,
+    accent-rgb: "16, 185, 129",
     bg: #F8F9FA,
     surface: #FFFFFF,
+    surface-glass: rgba(255, 255, 255, 0.8),
+    border: rgba(0, 0, 0, 0.08),
     text: #212529,
-    text-muted: #495057
+    text-muted: #495057,
+    preview: #FFFFFF
   ),
   escuro: (
     primary: #F553B0,
     primary-light: #FBBCE0,
-    accent: #000000,
+    accent: #FBBCE0,
     accent-light: #34d399,
-    bg: #0F172A,
-    surface: #1E293B,
+    accent-rgb: "251, 188, 224",
+    bg: #000000,
+    surface: #121212,
+    surface-glass: rgba(18, 18, 18, 0.8),
+    border: rgba(255, 255, 255, 0.1),
     text: #F8FAFC,
-    text-muted: #94A3B8
+    text-muted: #94A3B8,
+    preview: #000000
   ),
   verde: (
     primary: #1B4332,
     primary-light: #2D6A4F,
     accent: #52B788,
     accent-light: #B7E4C7,
+    accent-rgb: "82, 183, 136",
     bg: #081C15,
     surface: #1B4332,
+    surface-glass: rgba(27, 67, 50, 0.8),
+    border: rgba(82, 183, 136, 0.2),
     text: #FFFFFF,
-    text-muted: #D8F3DC
+    text-muted: #D8F3DC,
+    preview: #52B788
   ),
   azul: (
     primary: #03045E,
     primary-light: #023E8A,
     accent: #00B4D8,
     accent-light: #ADE8F4,
+    accent-rgb: "0, 180, 216",
     bg: #020617,
     surface: #0F172A,
+    surface-glass: rgba(15, 23, 42, 0.8),
+    border: rgba(0, 180, 216, 0.2),
     text: #F8FAFC,
-    text-muted: #94A3B8
+    text-muted: #94A3B8,
+    preview: #00B4D8
   ),
   vermelho: (
     primary: #660708,
     primary-light: #A4133C,
     accent: #FF4D6D,
     accent-light: #FFB3C1,
+    accent-rgb: "255, 77, 109",
     bg: #1A0505,
     surface: #2D0A0A,
+    surface-glass: rgba(45, 10, 10, 0.8),
+    border: rgba(255, 77, 109, 0.2),
     text: #FFFFFF,
-    text-muted: #F5F3F4
+    text-muted: #F5F3F4,
+    preview: #FF4D6D
   ),
   roxo: (
     primary: #240046,
     primary-light: #3C096C,
     accent: #9D4EDD,
     accent-light: #E0AAFF,
+    accent-rgb: "157, 78, 221",
     bg: #10002B,
     surface: #240046,
+    surface-glass: rgba(36, 0, 70, 0.8),
+    border: rgba(157, 78, 221, 0.2),
     text: #FFFFFF,
-    text-muted: #C77DFF
+    text-muted: #C77DFF,
+    preview: #9D4EDD
   ),
   laranja: (
     primary: #762E00,
     primary-light: #B14500,
     accent: #FF8531,
     accent-light: #FFC091,
+    accent-rgb: "255, 133, 49",
     bg: #1F0D00,
     surface: #3D1A00,
+    surface-glass: rgba(61, 26, 0, 0.8),
+    border: rgba(255, 133, 49, 0.2),
     text: #FFFFFF,
-    text-muted: #FFE5D4
+    text-muted: #FFE5D4,
+    preview: #FF8531
   )
 );
 

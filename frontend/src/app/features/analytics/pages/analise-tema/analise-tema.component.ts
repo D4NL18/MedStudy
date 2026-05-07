@@ -9,7 +9,7 @@ import { loadTopicAnalytics } from '../../../../store/analytics/analytics.action
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="analytics-page">
+    <div class="analytics-page" #containerRef>
       <header>
         <h2>Desempenho por Tema</h2>
         <p>Visão granular do seu conhecimento em cada tópico.</p>
@@ -68,14 +68,15 @@ import { loadTopicAnalytics } from '../../../../store/analytics/analytics.action
       color: var(--color-text);
       
       th { text-align: left; padding: 16px; font-size: 0.85rem; opacity: 0.6; font-weight: 600; }
-      td { padding: 16px; border-top: 1px solid rgba(255,255,255,0.05); }
+      td { padding: 16px; border-top: 1px solid var(--color-border); }
       
-      tr:hover td { background: rgba(255,255,255,0.02); }
+      tr:hover td { background: rgba(var(--color-accent-rgb), 0.03); }
     }
 
     .theme-name { font-weight: 600; }
     .badge { 
-      background: rgba(255,255,255,0.05); 
+      background: var(--color-border); 
+      color: var(--color-text);
       padding: 4px 10px; 
       border-radius: 6px; 
       font-size: 0.75rem; 
@@ -83,7 +84,7 @@ import { loadTopicAnalytics } from '../../../../store/analytics/analytics.action
     }
 
     .accuracy-cell { display: flex; align-items: center; gap: 12px; }
-    .progress-bar { width: 100px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .progress-bar { width: 100px; height: 6px; background: var(--color-border); border-radius: 3px; overflow: hidden; }
     .fill { height: 100%; transition: width 1s ease-in-out; }
     
     .bg-high { background: #10b981; }
@@ -106,7 +107,8 @@ export class AnaliseTemaComponent implements OnInit {
     this.store.dispatch(loadTopicAnalytics());
   }
 
-  getAccClass(acc: number) {
+  getAccClass(acc: number | undefined | null) {
+    if (acc === undefined || acc === null) return 'bg-gray-500';
     if (acc >= 80) return 'bg-high';
     if (acc >= 70) return 'bg-mid';
     return 'bg-low';

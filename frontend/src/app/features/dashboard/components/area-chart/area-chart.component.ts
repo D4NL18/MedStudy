@@ -63,8 +63,12 @@ export class AreaChartComponent {
     let accent = getComputedStyle(root).getPropertyValue('--color-accent').trim();
     const isClaro = this.themeService.activeTheme() === 'claro';
     
-    // If accent is white (Claro) or too dark, use primary for better contrast in charts
-    if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || isClaro) {
+    // User requested green bars in light theme
+    if (isClaro) {
+      accent = '#10B981';
+    } 
+    // If accent is white or too dark/missing, use primary for better contrast
+    else if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || !accent) {
       accent = getComputedStyle(root).getPropertyValue('--color-primary').trim();
     }
 

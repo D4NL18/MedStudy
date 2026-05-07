@@ -23,39 +23,18 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     RouterLinkActive
   ],
   template: `
-    <div class="dashboard-shell">
-      <nav class="glass main-nav">
-        <div class="logo">
-          <span class="brand">MedStudy</span>
-          <div class="dot"></div>
+    <div class="dashboard-content fade-in">
+      <header class="page-header">
+        <div class="title-area">
+          <h1>Dashboard de Performance</h1>
+          <p>Seu sistema de estudos inteligente está pronto para hoje.</p>
         </div>
-        <div class="nav-links">
-          <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-          <a routerLink="/banco-questoes">Banco de Dados</a>
-          <a routerLink="/simulados">Simulados</a>
-          <a routerLink="/analytics/area">Análise</a>
+        <div class="progress-indicator glass">
+          <div class="label">Progresso Teórico</div>
+          <div class="value">29.2%</div>
+          <div class="mini-bar"><div class="fill" style="width: 29.2%"></div></div>
         </div>
-        <div class="user-info">
-          <div class="user-avatar">
-            <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
-          </div>
-          <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
-          <button class="btn-logout" (click)="logout()">Sair</button>
-        </div>
-      </nav>
-      
-      <main class="fade-in">
-        <header class="page-header">
-          <div class="title-area">
-            <h1>Dashboard de Performance</h1>
-            <p>Seu sistema de estudos inteligente está pronto para hoje.</p>
-          </div>
-          <div class="progress-indicator glass">
-            <div class="label">Progresso Teórico</div>
-            <div class="value">29.2%</div>
-            <div class="mini-bar"><div class="fill" style="width: 29.2%"></div></div>
-          </div>
-        </header>
+      </header>
 
         @if (loading()) {
           <div class="skeleton-grid">
@@ -142,75 +121,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
             </section>
           </div>
         }
-      </main>
     </div>
   `,
   styles: [`
-    .dashboard-shell { 
-      min-height: 100vh;
-      background: var(--color-bg);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      color: var(--color-text);
-    }
-
-    .main-nav { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-      padding: 16px 40px; 
-      border-radius: 24px;
-      margin-bottom: 8px;
-      border: 1px solid rgba(var(--color-accent-rgb), 0.2);
-      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
-      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
-      
-      .logo {
-        display: flex; align-items: baseline; gap: 4px;
-        .brand { font-size: 1.5rem; font-weight: 800; color: var(--color-text); letter-spacing: -0.5px; }
-        .dot { width: 6px; height: 6px; background: var(--color-accent); border-radius: 50%; box-shadow: 0 0 10px var(--color-accent); }
-      }
-
-      .nav-links {
-        display: flex; gap: 32px;
-        a { 
-          color: var(--color-text); text-decoration: none; font-weight: 700; font-size: 0.95rem; opacity: 0.5;
-          transition: all 0.3s ease;
-          position: relative;
-          &.active, &:hover { 
-            opacity: 1; color: var(--color-accent); 
-            &::after { width: 100%; }
-          }
-          &::after {
-            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-            background: var(--color-accent); transition: width 0.3s ease;
-          }
-        }
-      }
-
-      .user-info {
-        display: flex; align-items: center; gap: 12px;
-        .user-avatar {
-          width: 32px; height: 32px; border-radius: 50%;
-          background: var(--color-accent); display: flex; align-items: center; justify-content: center;
-          .initials { font-weight: 700; font-size: 0.75rem; color: white; }
-        }
-        .user-name { font-size: 0.85rem; font-weight: 500; }
-        .btn-logout {
-          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-          color: var(--color-text); padding: 4px 12px; border-radius: 6px; font-size: 0.75rem;
-          cursor: pointer;
-          &:hover { background: rgba(255, 77, 109, 0.1); color: #FF4D6D; }
-        }
-      }
-    }
-
-    main {
-      max-width: 1600px;
-      margin: 0 auto;
-      width: 100%;
+    .dashboard-content { 
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -306,7 +220,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       color: var(--color-text); cursor: pointer;
       .color-preview { 
         width: 100%; height: 24px; border-radius: 4px; 
-        background: var(--color-accent);
+        background: var(--color-preview);
         border: 1px solid rgba(255,255,255,0.1);
       }
       span { font-size: 0.65rem; font-weight: 600; }
@@ -350,6 +264,6 @@ export class DashboardComponent implements OnInit {
   }
 
   logout() {
-    this.store.dispatch(AuthActions.logout());
+    // Moved to Shell
   }
 }
