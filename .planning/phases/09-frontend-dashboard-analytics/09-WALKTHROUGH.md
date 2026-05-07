@@ -11,14 +11,17 @@
 - Implementados Actions, Reducers, Selectors e Effects para integração com o backend.
 - Configurado `app.routes.ts` para carregar os providers do NgRx apenas quando as rotas são acessadas.
 
-### 3. Interface do Dashboard
-- **KPI Cards**: Implementados com design premium (glassmorphism) exibindo taxa de acertos, volume de questões, streak e pontos fortes.
-- **Gráfico de Evolução**: Componente `EvolutionChartComponent` integrado usando `ngx-charts-line-chart` com cores dinâmicas baseadas no tema ativo.
-- **Theming**: Integração total com o `ThemeService`, permitindo troca de cores instantânea nos gráficos.
+### 3. Interface do Dashboard (Overhaul Completo)
+- **5 KPI Cards**: Taxa Global, Questões (Mês/Ano), Área Mais Forte, Área Mais Fraca, e Streak Atual.
+- **Gráfico de Evolução**: Integrado para exibir o progresso mensal de acertos.
+- **Gráfico de Áreas**: Integrado diretamente no dashboard para visualização rápida de performance por especialidade.
+- **Gráfico de Distribuição**: Novo gráfico de rosca (Donut Chart) mostrando o volume de questões por grande área.
+- **Top 5 Aulas**: Lista de aulas prioritárias não assistidas com badges de prioridade (Diamante/Alta).
+- **Theming**: Integração total com o `ThemeService`, permitindo troca de cores instantânea em todos os 3 gráficos.
 
 ### 4. Análises & Drill-down
-- **Análise por Área**: Gráfico de barras horizontais com redirecionamento (drill-down) para o Banco de Questões ao clicar em uma série.
-- **Análise por Tema**: Tabela detalhada com barras de progresso coloridas por faixa de desempenho.
+- **Páginas Dedicadas**: Mantidas as rotas `/analytics/area` e `/analytics/tema` para visualização tabular e detalhada.
+- **Navegação**: Menu superior e sidebar integrados para acesso rápido a todas as funcionalidades.
 
 ## Verificação Realizada
 
