@@ -34,7 +34,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 2: Database Schema & Backend Skeleton implemented (Flyway, JPA, DTOs, Mappers).
 - [x] Phase 3: Auth Backend (Spring Security + JWT) implemented and pushed to GitHub.
 - [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
-- [x] Phase 5: Backend Simulados & Plano de Aula Complete (Logic, CRUD, Filters)
+- [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
 - [/] Phase 6: Planning Dashboards & Analytics
 
 ---
