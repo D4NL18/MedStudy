@@ -1,0 +1,117 @@
+// MedStudy Design System - 8 Themes
+$themes: (
+  rosa: (
+    primary: #430428,
+    primary-light: #6F0642,
+    accent: #F553B0,
+    accent-light: #FBBCE0,
+    bg: #18010E,
+    surface: #2D031A,
+    text: #FFFFFF,
+    text-muted: #FBBCE0
+  ),
+  claro: (
+    primary: #F553B0,
+    primary-light: #FBBCE0,
+    accent: #430428,
+    accent-light: #6F0642,
+    bg: #FFFFFF,
+    surface: #F8F9FA,
+    text: #212529,
+    text-muted: #6C757D
+  ),
+  escuro: (
+    primary: #F553B0,
+    primary-light: #FBBCE0,
+    accent: #FFFFFF,
+    accent-light: #DEE2E6,
+    bg: #121212,
+    surface: #1E1E1E,
+    text: #FFFFFF,
+    text-muted: #ADB5BD
+  ),
+  verde: (
+    primary: #1B4332,
+    primary-light: #2D6A4F,
+    accent: #52B788,
+    accent-light: #B7E4C7,
+    bg: #081C15,
+    surface: #1B4332,
+    text: #FFFFFF,
+    text-muted: #D8F3DC
+  ),
+  azul: (
+    primary: #03045E,
+    primary-light: #023E8A,
+    accent: #00B4D8,
+    accent-light: #ADE8F4,
+    bg: #000000,
+    surface: #03045E,
+    text: #FFFFFF,
+    text-muted: #CAF0F8
+  ),
+  vermelho: (
+    primary: #660708,
+    primary-light: #A4133C,
+    accent: #FF4D6D,
+    accent-light: #FFB3C1,
+    bg: #0B090A,
+    surface: #161A1D,
+    text: #FFFFFF,
+    text-muted: #F5F3F4
+  ),
+  roxo: (
+    primary: #240046,
+    primary-light: #3C096C,
+    accent: #9D4EDD,
+    accent-light: #E0AAFF,
+    bg: #10002B,
+    surface: #240046,
+    text: #FFFFFF,
+    text-muted: #C77DFF
+  ),
+  laranja: (
+    primary: #762E00,
+    primary-light: #B14500,
+    accent: #FF8531,
+    accent-light: #FFC091,
+    bg: #1F0D00,
+    surface: #3D1A00,
+    text: #FFFFFF,
+    text-muted: #FFE5D4
+  )
+);
+
+@mixin theme-generator($theme-name, $map) {
+  [data-theme="#{$theme-name}"] {
+    @each $key, $value in $map {
+      --color-#{$key}: #{$value};
+    }
+  }
+}
+
+// Global Styles
+:root {
+  // Transitions
+  --transition-speed: 0.3s;
+  --transition-ease: ease-in-out;
+  
+  // Apply Rosa as default if no data-theme is set
+  @each $key, $value in map-get($themes, rosa) {
+    --color-#{$key}: #{$value};
+  }
+}
+
+// Generate all themes
+@each $name, $map in $themes {
+  @include theme-generator($name, $map);
+}
+
+// Glassmorphism Utility
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}

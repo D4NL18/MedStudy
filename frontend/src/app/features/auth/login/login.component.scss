@@ -1,0 +1,246 @@
+.login-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--color-bg);
+}
+
+.mesh-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(at 0% 0%, var(--color-primary) 0, transparent 50%),
+              radial-gradient(at 100% 0%, var(--color-primary-light) 0, transparent 50%),
+              radial-gradient(at 100% 100%, var(--color-primary) 0, transparent 50%),
+              radial-gradient(at 0% 100%, var(--color-primary-light) 0, transparent 50%);
+  filter: blur(100px);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 1;
+  animation: float 20s infinite alternate;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--color-accent);
+  top: -100px;
+  left: -100px;
+  opacity: 0.2;
+}
+
+.blob-2 {
+  width: 300px;
+  height: 300px;
+  background: var(--color-primary-light);
+  bottom: -50px;
+  right: -50px;
+  opacity: 0.3;
+  animation-delay: -5s;
+}
+
+.blob-3 {
+  width: 250px;
+  height: 250px;
+  background: var(--color-accent-light);
+  top: 50%;
+  left: 20%;
+  opacity: 0.15;
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(100px, 100px) scale(1.2); }
+}
+
+.login-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 450px;
+  padding: 48px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  animation: cardFadeIn 0.8s ease-out;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+  text-align: center;
+  
+  .logo {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 24px;
+    
+    .brand {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--color-accent);
+      border-radius: 50%;
+    }
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.error-badge {
+  background: rgba(255, 77, 109, 0.1);
+  border: 1px solid var(--color-vermelho, #FF4D6D);
+  color: #FF4D6D;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-left: 4px;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  
+  input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &.invalid {
+      border-color: #FF4D6D;
+    }
+    
+    &:focus {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+  
+  .btn-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    opacity: 0.6;
+    
+    &:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+    }
+  }
+}
+
+.form-footer {
+  text-align: right;
+  
+  .forgot-link {
+    font-size: 0.8125rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.btn-login {
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 10px 20px -10px var(--color-accent);
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  &:hover:not(:disabled) {
+    box-shadow: 0 15px 30px -10px var(--color-accent);
+  }
+}
+
+.card-footer {
+  text-align: center;
+  font-size: 0.875rem;
+  
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 8px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -5,11 +5,11 @@
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 7 — Revisão & Flashcards (Backend)
+**Current focus:** Phase 8 — Frontend Core: Angular Setup, NgRx, Auth Module
 
-| Progress | 100% (Backend Phase 6) |
-| Current Phase | Phase 7: Backend - Revisão & Flashcards |
-| Last Activity | Phase 6 Verification Complete |
+| Progress | 100% (Backend Phase 7) |
+| Current Phase | Phase 8: Frontend Core + Auth |
+| Last Activity | Phase 7 Verification & Shipping Complete |
 
 ---
 
@@ -36,8 +36,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
 - [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
 - [x] Phase 6: Dashboards & Analytics Implemented [v] Verified
-- [x] Phase 7: Revisão & Flashcards Implemented (SM-2, JSONB)
-- [/] Phase 8: Frontend Setup & Shared Module (Rebuilding UI)
+- [x] Phase 7: Revisão & Flashcards Implemented and Shipped.
+- [/] Phase 8: Frontend Core: Angular Setup, NgRx, Auth Module
 
 ---
 
@@ -65,8 +65,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 Run `/gsd-plan-phase 7` to generate the detailed execution plan for Phase 7 (Revisão & Flashcards).
 
-| Phase 6: Dashboards & Analytics | [x] | KPIs e Agregações |
-| Phase 7: Revisão & Flashcards | [/] | Spaced Repetition Logic |
+| Phase 7: Revisão & Flashcards | [x] | Spaced Repetition Logic |
+| Phase 8: Frontend Core + Auth | [/] | Setup, Themes & Security |
 
 ---
 
