@@ -5,13 +5,17 @@
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 5 — Simulados & Plano de Aula (Backend)
+**Current focus:** Phase 6 — Dashboards & Analytics (Backend)
+
+| Progress | 100% (Backend Phase 5) |
+| Current Phase | Phase 6: Backend - Dashboards & Analytics |
+| Last Activity | Phase 5 Implementation Complete |
 
 ---
 
 ## Current Status
 
-**Phase:** 4 of 15 — Shipped (PR Pending)
+**Phase:** 5 of 15 — Shipped (PR Pending)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -30,6 +34,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 2: Database Schema & Backend Skeleton implemented (Flyway, JPA, DTOs, Mappers).
 - [x] Phase 3: Auth Backend (Spring Security + JWT) implemented and pushed to GitHub.
 - [x] Phase 4: Backend Study Sessions (CRUD, Filters, Metrics, Tests) implemented and verified.
+- [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
+- [/] Phase 6: Planning Dashboards & Analytics
 
 ---
 
@@ -55,7 +61,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Next Step
 
-Run `/gsd-plan-phase 5` to generate the detailed execution plan for Phase 5 (Simulados & Plano de Aula - Backend).
+Run `/gsd-plan-phase 6` to generate the detailed execution plan for Phase 6 (Dashboards & Analytics).
+
+| Phase 5: Simulados & Plano de Aula | [x] | Backend CRUD + Logic |
+| Phase 6: Dashboards & Analytics | [/] | KPIs e Agregações |
 
 ---
 
