@@ -41,4 +41,9 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
     @Query("SELECT s.tema, s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas) " +
            "FROM StudySession s WHERE s.user.id = :userId GROUP BY s.tema, s.grandeArea")
     List<Object[]> aggregateByTopicTotal(@Param("userId") UUID userId);
+
+    long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(UUID userId, LocalDate date);
+    long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(UUID userId, LocalDate date);
+    long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(UUID userId, LocalDate date);
+    long countByUserIdAndRevisaoConcluidaTrue(UUID userId);
 }

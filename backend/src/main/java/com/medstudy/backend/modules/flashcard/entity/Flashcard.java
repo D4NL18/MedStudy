@@ -1,55 +1,76 @@
 package com.medstudy.backend.modules.flashcard.entity;
 
-import com.medstudy.backend.core.entity.BaseEntity;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.medstudy.backend.modules.user.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
-import java.util.Map;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "flashcards")
-public class Flashcard extends BaseEntity {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Flashcard {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "grande_area", nullable = false, length = 100)
+    @Column(name = "grande_area", nullable = false)
     private String grandeArea;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(nullable = false)
-    private Map<String, Object> frente;
+    @Column(name = "frente", nullable = false)
+    private JsonNode frente;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(nullable = false)
-    private Map<String, Object> verso;
+    @Column(name = "verso", nullable = false)
+    private JsonNode verso;
 
-    @Column(name = "proxima_revisao")
+    @Column(name = "proxima_revisao", nullable = false)
     private LocalDate proximaRevisao;
 
-    @Column(name = "dificuldade_ultima", length = 50)
-    private String dificuldadeUltima;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "dificuldade_ultima")
+    private FlashcardDifficulty dificuldadeUltima;
 
-    // Getters and Setters
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-    public String getGrandeArea() { return grandeArea; }
-    public void setGrandeArea(String grandeArea) { this.grandeArea = grandeArea; }
-    public Map<String, Object> getFrente() { return frente; }
-    public void setFrente(Map<String, Object> frente) { this.frente = frente; }
-    public Map<String, Object> getVerso() { return verso; }
-    public void setVerso(Map<String, Object> verso) { this.verso = verso; }
-    public LocalDate getProximaRevisao() { return proximaRevisao; }
-    public void setProximaRevisao(LocalDate proximaRevisao) { this.proximaRevisao = proximaRevisao; }
-    public String getDificuldadeUltima() { return dificuldadeUltima; }
-    public void setDificuldadeUltima(String dificuldadeUltima) { this.dificuldadeUltima = dificuldadeUltima; }
+    @Column(name = "ease_factor")
+    private Double easeFactor;
+
+    @Column(name = "intervalo_atual")
+    private Integer intervaloAtual;
+
+    @Column(name = "created_at")
+    private OffsetDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private OffsetDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = OffsetDateTime.now();
+        updatedAt = OffsetDateTime.now();
+        if (easeFactor == null) easeFactor = 2.5;
+        if (intervaloAtual == null) intervaloAtual = 0;
+        if (proximaRevisao == null) proximaRevisao = LocalDate.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = OffsetDateTime.now();
+    }
 }

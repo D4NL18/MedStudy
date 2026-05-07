@@ -1,17 +1,23 @@
 package com.medstudy.backend.modules.flashcard.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record FlashcardRequest(
-        @NotBlank(message = "Grande área é obrigatória") String grandeArea,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class FlashcardRequest {
+    @NotBlank(message = "Grande área é obrigatória")
+    private String grandeArea;
 
-        @NotNull(message = "Frente é obrigatória") Map<String, Object> frente,
+    @NotNull(message = "Conteúdo da frente é obrigatório")
+    private Object frente;
 
-        @NotNull(message = "Verso é obrigatório") Map<String, Object> verso,
-
-        LocalDate proximaRevisao,
-        String dificuldadeUltima) {
+    @NotNull(message = "Conteúdo do verso é obrigatório")
+    private Object verso;
 }
+
