@@ -77,7 +77,14 @@ export class EvolutionChartComponent implements OnInit {
   }
 
   private updateColors() {
-    const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim();
+    const root = document.documentElement;
+    let accent = getComputedStyle(root).getPropertyValue('--color-accent').trim();
+    const isClaro = this.themeService.activeTheme() === 'claro';
+
+    if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || isClaro) {
+      accent = getComputedStyle(root).getPropertyValue('--color-primary').trim();
+    }
+
     if (accent) {
       this.colorScheme.set({
         ...this.colorScheme(),

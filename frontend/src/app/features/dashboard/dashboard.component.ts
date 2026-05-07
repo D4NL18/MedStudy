@@ -160,20 +160,33 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       display: flex; 
       justify-content: space-between; 
       align-items: center;
-      padding: 12px 32px; 
-      border-radius: 20px;
+      padding: 16px 40px; 
+      border-radius: 24px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
       
       .logo {
-        display: flex; align-items: baseline; gap: 2px;
-        .brand { font-size: 1.25rem; font-weight: 700; color: var(--color-text); }
-        .dot { width: 5px; height: 5px; background: var(--color-accent); border-radius: 50%; }
+        display: flex; align-items: baseline; gap: 4px;
+        .brand { font-size: 1.5rem; font-weight: 800; color: var(--color-text); letter-spacing: -0.5px; }
+        .dot { width: 6px; height: 6px; background: var(--color-accent); border-radius: 50%; box-shadow: 0 0 10px var(--color-accent); }
       }
 
       .nav-links {
-        display: flex; gap: 24px;
+        display: flex; gap: 32px;
         a { 
-          color: var(--color-text); text-decoration: none; font-weight: 600; font-size: 0.9rem; opacity: 0.6;
-          &.active, &:hover { opacity: 1; color: var(--color-accent); }
+          color: var(--color-text); text-decoration: none; font-weight: 700; font-size: 0.95rem; opacity: 0.5;
+          transition: all 0.3s ease;
+          position: relative;
+          &.active, &:hover { 
+            opacity: 1; color: var(--color-accent); 
+            &::after { width: 100%; }
+          }
+          &::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+            background: var(--color-accent); transition: width 0.3s ease;
+          }
         }
       }
 
@@ -291,7 +304,11 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
       border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px;
       color: var(--color-text); cursor: pointer;
-      .color-preview { width: 100%; height: 24px; border-radius: 4px; background: var(--color-accent); }
+      .color-preview { 
+        width: 100%; height: 24px; border-radius: 4px; 
+        background: var(--color-accent);
+        border: 1px solid rgba(255,255,255,0.1);
+      }
       span { font-size: 0.65rem; font-weight: 600; }
       &.active { border-color: var(--color-accent); background: rgba(var(--color-accent-rgb), 0.05); }
     }

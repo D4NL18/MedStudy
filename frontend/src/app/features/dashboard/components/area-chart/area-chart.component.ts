@@ -59,7 +59,15 @@ export class AreaChartComponent {
   }
 
   private updateColors() {
-    const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim();
+    const root = document.documentElement;
+    let accent = getComputedStyle(root).getPropertyValue('--color-accent').trim();
+    const isClaro = this.themeService.activeTheme() === 'claro';
+    
+    // If accent is white (Claro) or too dark, use primary for better contrast in charts
+    if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || isClaro) {
+      accent = getComputedStyle(root).getPropertyValue('--color-primary').trim();
+    }
+
     if (accent) {
       this.colorScheme.set({
         ...this.colorScheme(),
