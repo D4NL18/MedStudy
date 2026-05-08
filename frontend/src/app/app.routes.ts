@@ -60,6 +60,14 @@ export const routes: Routes = [
             loadComponent: () => import('./features/analytics/pages/analise-tema/analise-tema.component').then(m => m.AnaliseTemaComponent) 
           }
         ]
+      },
+      {
+        path: 'aulas',
+        loadComponent: () => import('./features/aulas/pages/aulas-list/aulas-list.component').then(m => m.AulasListComponent)
+      },
+      {
+        path: 'revisoes',
+        loadComponent: () => import('./features/revisao/pages/revisao-list/revisao-list.component').then(m => m.RevisaoListComponent)
       }
     ]
   },
