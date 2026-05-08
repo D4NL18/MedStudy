@@ -73,8 +73,8 @@
       <tbody>
         <tr *ngFor="let card of cards$ | async">
           <td><span class="area-badge">{{ card.grandeArea }}</span></td>
-          <td class="preview">{{ card.frente }}</td>
-          <td class="preview">{{ card.verso }}</td>
+          <td class="preview">{{ formatPreview(card.frente) }}</td>
+          <td class="preview">{{ formatPreview(card.verso) }}</td>
           <td>
             <span class="status" [class.available]="true">Disponível</span>
           </td>

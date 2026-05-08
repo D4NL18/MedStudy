@@ -52,4 +52,10 @@ export class FlashcardsListComponent implements OnInit {
   getDifficultyClass(difficulty: string): string {
     return difficulty?.toLowerCase() || '';
   }
+
+  formatPreview(content: any): string {
+    if (!content) return '';
+    const text = typeof content === 'string' ? content : JSON.stringify(content);
+    return text.replace(/!\[image\]\(.*?\)/g, '🖼️');
+  }
 }
