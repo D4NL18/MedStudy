@@ -43,6 +43,9 @@ public class StudySession extends BaseEntity {
     @Column(name = "revisao_concluida", nullable = false)
     private Boolean revisaoConcluida = false;
 
+    @Column(columnDefinition = "TEXT")
+    private String observacoes;
+
     // Getters and Setters
     public User getUser() {
         return user;
@@ -114,5 +117,13 @@ public class StudySession extends BaseEntity {
 
     public void setRevisaoConcluida(Boolean revisaoConcluida) {
         this.revisaoConcluida = revisaoConcluida;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 }

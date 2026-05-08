@@ -1,0 +1,1 @@
+ALTER TABLE simulados ADD COLUMN ano INTEGER;

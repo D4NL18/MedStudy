@@ -1,0 +1,9 @@
+.chart-container {
+  width: 100%;
+  height: 300px;
+}
+:host ::ng-deep .ngx-charts {
+  text { fill: var(--color-text) !important; opacity: 0.8; font-size: 12px; }
+  .gridline-path { stroke: var(--color-border) !important; opacity: 0.5; }
+  .axis-label { fill: var(--color-text) !important; }
+}

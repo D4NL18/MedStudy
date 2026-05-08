@@ -8,6 +8,10 @@ import { dashboardReducer } from './store/dashboard/dashboard.reducer';
 import { DashboardEffects } from './store/dashboard/dashboard.effects';
 import { analyticsReducer } from './store/analytics/analytics.reducer';
 import { AnalyticsEffects } from './store/analytics/analytics.effects';
+import { bancoReducer } from './store/banco/banco.reducer';
+import { BancoEffects } from './store/banco/banco.effects';
+import { simuladosReducer } from './store/simulados/simulados.reducer';
+import { SimuladosEffects } from './store/simulados/simulados.effects';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,6 +26,22 @@ export const routes: Routes = [
         providers: [
           provideState('dashboard', dashboardReducer),
           provideEffects(DashboardEffects)
+        ]
+      },
+      {
+        path: 'banco-questoes',
+        loadComponent: () => import('./features/banco/pages/banco-list/banco-list.component').then(m => m.BancoListComponent),
+        providers: [
+          provideState('banco', bancoReducer),
+          provideEffects(BancoEffects)
+        ]
+      },
+      {
+        path: 'simulados',
+        loadComponent: () => import('./features/simulados/pages/simulados-list/simulados-list.component').then(m => m.SimuladosListComponent),
+        providers: [
+          provideState('simulados', simuladosReducer),
+          provideEffects(SimuladosEffects)
         ]
       },
       {

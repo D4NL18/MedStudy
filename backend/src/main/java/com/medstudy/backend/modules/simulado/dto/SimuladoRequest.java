@@ -8,6 +8,8 @@ public record SimuladoRequest(
         @NotBlank(message = "Nome é obrigatório") String nome,
 
         @NotNull(message = "Data de realização é obrigatória") LocalDate dataRealizacao,
+        String instituicao,
+        Integer ano,
 
         Integer cmTotal, Integer cmAcertos, Integer cmErros,
         Integer cirTotal, Integer cirAcertos, Integer cirErros,

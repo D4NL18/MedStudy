@@ -9,37 +9,8 @@ import * as shape from 'd3-shape';
   selector: 'app-evolution-chart',
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
-  template: `
-    <div class="chart-container" #containerRef>
-      <ngx-charts-line-chart *ngIf="containerRef.offsetWidth > 0"
-        [view]="[containerRef.offsetWidth, 300]"
-        [scheme]="colorScheme()"
-        [results]="chartData"
-        [gradient]="true"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legend]="false"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        [xAxisLabel]="'Meses'"
-        [yAxisLabel]="'% Acerto'"
-        [autoScale]="true"
-        [curve]="curve"
-      >
-      </ngx-charts-line-chart>
-    </div>
-  `,
-  styles: [`
-    .chart-container {
-      width: 100%;
-      height: 300px;
-    }
-    :host ::ng-deep .ngx-charts {
-      text { fill: var(--color-text) !important; opacity: 0.8; font-size: 12px; }
-      .gridline-path { stroke: var(--color-border) !important; opacity: 0.5; }
-      .axis-label { fill: var(--color-text) !important; }
-    }
-  `]
+  templateUrl: './evolution-chart.component.html',
+  styleUrl: './evolution-chart.component.scss'
 })
 export class EvolutionChartComponent implements OnInit {
   public themeService = inject(ThemeService);

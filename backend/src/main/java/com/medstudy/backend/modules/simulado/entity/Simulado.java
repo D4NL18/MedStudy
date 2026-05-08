@@ -25,6 +25,12 @@ public class Simulado extends BaseEntity {
     @Column(name = "data_realizacao", nullable = false)
     private LocalDate dataRealizacao;
 
+    @Column(name = "instituicao")
+    private String instituicao;
+
+    @Column(name = "ano")
+    private Integer ano;
+
     // Clínica Médica
     @Column(name = "cm_total", nullable = false)
     private Integer cmTotal = 0;
@@ -72,6 +78,10 @@ public class Simulado extends BaseEntity {
     public void setNome(String nome) { this.nome = nome; }
     public LocalDate getDataRealizacao() { return dataRealizacao; }
     public void setDataRealizacao(LocalDate dataRealizacao) { this.dataRealizacao = dataRealizacao; }
+    public String getInstituicao() { return instituicao; }
+    public void setInstituicao(String instituicao) { this.instituicao = instituicao; }
+    public Integer getAno() { return ano; }
+    public void setAno(Integer ano) { this.ano = ano; }
     public Integer getCmTotal() { return cmTotal; }
     public void setCmTotal(Integer cmTotal) { this.cmTotal = cmTotal; }
     public Integer getCmAcertos() { return cmAcertos; }

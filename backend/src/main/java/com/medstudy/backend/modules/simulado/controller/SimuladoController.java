@@ -54,4 +54,10 @@ public class SimuladoController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/template")
+    public ResponseEntity<SimuladoResponse> getLatestByInstituicao(@RequestParam String instituicao) {
+        SimuladoResponse response = service.findLatestByInstituicao(instituicao);
+        return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+    }
 }

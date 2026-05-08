@@ -1,0 +1,26 @@
+<div class="app-shell">
+  <nav class="glass main-nav">
+    <div class="logo" routerLink="/dashboard">
+      <span class="brand">MedStudy</span>
+      <div class="dot"></div>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/banco-questoes" routerLinkActive="active">Banco de Dados</a>
+      <a routerLink="/simulados" routerLinkActive="active">Simulados</a>
+      <a routerLink="/analytics/area" routerLinkActive="active">Análise Área</a>
+      <a routerLink="/analytics/tema" routerLinkActive="active">Análise Tema</a>
+    </div>
+    <div class="user-info">
+      <div class="user-avatar">
+        <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+      </div>
+      <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
+      <button class="btn-logout" (click)="logout()">Sair</button>
+    </div>
+  </nav>
+  
+  <main class="content-area">
+    <router-outlet></router-outlet>
+  </main>
+</div>

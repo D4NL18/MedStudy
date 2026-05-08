@@ -8,10 +8,12 @@ import com.medstudy.backend.modules.sessao.mapper.StudySessionMapper;
 import com.medstudy.backend.modules.sessao.repository.StudySessionRepository;
 import com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications;
 import com.medstudy.backend.modules.user.entity.User;
+import com.medstudy.backend.modules.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,29 +28,58 @@ import java.util.UUID;
 public class StudySessionService {
 
     private final StudySessionRepository repository;
+    private final UserRepository userRepository;
     private final StudySessionMapper mapper;
 
-    public StudySessionService(StudySessionRepository repository, StudySessionMapper mapper) {
+    public StudySessionService(StudySessionRepository repository, UserRepository userRepository, StudySessionMapper mapper) {
         this.repository = repository;
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
+    private User getCurrentUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new RuntimeException("Sessão expirada ou usuário não autenticado");
+        }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            return (User) principal;
+        }
+        String email;
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof String) {
+            email = (String) principal;
+        } else {
+            throw new RuntimeException("Tipo de principal inválido: " + principal.getClass().getName());
+        }
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado no banco de dados"));
+    }
+
     public StudySessionResponse createSession(StudySessionRequest request) {
+        System.out.println("DEBUG: Iniciando createSession com request: " + request);
         validateSession(request);
 
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
+        System.out.println("DEBUG: Usuário atual: " + currentUser.getEmail());
+        
         StudySession entity = mapper.toEntity(request);
+        System.out.println("DEBUG: Entidade mapeada: Tema=" + entity.getTema() + ", Área=" + entity.getGrandeArea());
+        
         entity.setUser(currentUser);
         
         // Automated Logic: Calculate next revision
         entity.setDataProximaRevisao(calculateNextRevision(request.qtsCorretas(), request.qtsFeitas(), request.dataSessao()));
 
         StudySession saved = repository.save(entity);
+        System.out.println("DEBUG: Entidade salva com ID: " + saved.getId() + " e Tema: " + saved.getTema());
+        
         return mapper.toResponse(saved);
     }
 
     public Page<StudySessionResponse> findAll(String grandeArea, String tema, String instituicao, Boolean revisaoConcluida, Double minRate, Double maxRate, Pageable pageable) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         
         Specification<StudySession> spec = Specification.where(StudySessionSpecifications.hasUserId(currentUser.getId()))
                 .and(StudySessionSpecifications.hasGrandeArea(grandeArea))
@@ -76,6 +107,7 @@ public class StudySessionService {
         entity.setQtsFeitas(request.qtsFeitas());
         entity.setQtsCorretas(request.qtsCorretas());
         entity.setInstituicao(request.instituicao());
+        entity.setObservacoes(request.observacoes());
         entity.setRevisaoConcluida(request.revisaoConcluida());
         
         // Recalculate revision date on update
@@ -91,7 +123,7 @@ public class StudySessionService {
     }
 
     public StudySessionMetricsResponse getMetrics() {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         List<StudySession> sessions = repository.findAll(StudySessionSpecifications.hasUserId(currentUser.getId()));
 
         long totalSessoes = sessions.size();
@@ -116,7 +148,7 @@ public class StudySessionService {
     }
 
     private StudySession getSessionAndVerifyOwnership(UUID id) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         StudySession entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada"));
 
