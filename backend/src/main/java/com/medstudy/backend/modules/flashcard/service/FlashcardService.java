@@ -15,7 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -71,8 +71,9 @@ public class FlashcardService {
     @Transactional(readOnly = true)
     public List<FlashcardResponse> getTodayQueue() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LocalDate today = LocalDate.now();
         return repository.findAllByUserId(user.getId()).stream()
-            .filter(f -> f.getProximaRevisao() == null || f.getProximaRevisao().isBefore(LocalDateTime.now()))
+            .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
             .map(mapper::toResponse)
             .collect(Collectors.toList());
     }
@@ -81,10 +82,11 @@ public class FlashcardService {
     public Map<String, Object> getSummary() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Flashcard> cards = repository.findAllByUserId(user.getId());
+        LocalDate today = LocalDate.now();
         
         long total = cards.size();
         long disponiveis = cards.stream()
-            .filter(f -> f.getProximaRevisao() == null || f.getProximaRevisao().isBefore(LocalDateTime.now()))
+            .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
             .count();
         long concluidosHoje = 0;
 
