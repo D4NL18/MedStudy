@@ -5,11 +5,11 @@
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 9 — Frontend: Dashboard & Análises
+**Current focus:** Phase 11 — Frontend: Plano de Aulas, Revisão & Flashcards
 
-| Progress | 66% (Phase 10 Shipped) |
-| Current Phase | Phase 11: Frontend: Simulados (Integrated) |
-| Last Activity | Phase 10 finalized and pushed to branch feat/10-frontend-banco-simulados |
+- **Current Phase:** Phase 11: Frontend: Plano de Aulas, Revisão & Flashcards (Complete)
+- **Status:** All Wave 1-4 objectives delivered. Infrastructure, UI, and Study Mode functional.
+- **Next Steps:** Proceed to Phase 12 (Backend/Frontend: Metrics, Analytics & Dashboard Polish).
 
 ---
 

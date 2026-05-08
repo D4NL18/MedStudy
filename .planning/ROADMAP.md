@@ -380,7 +380,7 @@ Angular (Component + NgRx Store)
 | Phase 8 — Frontend Core + Auth | ✅ Complete | 2026-05-07 |
 | Phase 9 — Dashboard & Análises UI | ✅ Complete | 2026-05-07 |
 | Phase 10 — Banco & Simulados UI | ✅ Complete | 2026-05-07 |
-| Phase 11 — Aulas, Revisão & Flashcards UI | 🚧 In Progress | Planning & UI-SPEC done |
+| Phase 11 — Aulas, Revisão & Flashcards UI | ✅ Complete | 2026-05-08 |
 | Phase 12 — Backend Tests | ⬜ Not Started | |
 | Phase 13 — Frontend Tests | ⬜ Not Started | |
 | Phase 14 — Security Hardening | ⬜ Not Started | |
@@ -405,4 +405,4 @@ Angular (Component + NgRx Store)
 
 ---
 *Roadmap created: 2026-05-05*
-*Last updated: 2026-05-05 — added THEM-01..13 to Phase 8 (ThemeService + 8 temas CSS)*
+*Last updated: 2026-05-08 — Phase 11 Shipped (Plano de Aulas, Revisão & Flashcards)*
