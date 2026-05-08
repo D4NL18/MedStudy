@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, X, RotateCw, Check, Clock, AlertTriangle } from 'lucide-angular';
 import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
 import { selectQueue, selectCurrentIndex, selectStudyModeActive } from '../../../../store/flashcards/flashcards.reducer';
 import { FlashcardDifficulty } from '../../../../core/models/flashcard.model';
@@ -10,7 +10,11 @@ import { MarkdownRendererComponent } from '../../../../shared/components/markdow
 @Component({
   selector: 'app-flashcards-study',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, MarkdownRendererComponent],
+  imports: [
+    CommonModule, 
+    LucideAngularModule.pick({ X, RotateCw, Check, Clock, AlertTriangle }), 
+    MarkdownRendererComponent
+  ],
   templateUrl: './flashcards-study.component.html',
   styleUrl: './flashcards-study.component.scss'
 })

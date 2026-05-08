@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, Calendar, Clock, CheckCircle, Play, AlertCircle } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import { RevisionActions } from '../../../../store/revision/revision.actions';
 import { selectSessions, selectSummary, selectLoading } from '../../../../store/revision/revision.reducer';
@@ -12,7 +12,11 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
 @Component({
   selector: 'app-revisao-list',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, RouterLink],
+  imports: [
+    CommonModule, 
+    LucideAngularModule.pick({ Calendar, Clock, CheckCircle, Play, AlertCircle }), 
+    RouterLink
+  ],
   templateUrl: './revisao-list.component.html',
   styleUrl: './revisao-list.component.scss'
 })
