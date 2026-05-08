@@ -11,6 +11,7 @@
     </button>
   </div>
 
+  <!-- Card State -->
   <div class="card-container" *ngIf="currentCard$ | async as card">
     <div class="flashcard" [class.is-flipped]="isFlipped()" (click)="flip()">
       <div class="card-face front">
@@ -32,8 +33,8 @@
     </div>
   </div>
 
-  <!-- Step 1: Result Selection (Show when flipped but no result yet) -->
-  <div class="actions result-step" *ngIf="isFlipped() && !hasResult()">
+  <!-- Actions -->
+  <div class="actions result-step" *ngIf="(currentCard$ | async) && isFlipped() && !hasResult()">
     <button class="result-btn wrong" (click)="setResult(true)">
       <lucide-icon name="x-circle" [size]="32"></lucide-icon>
       <span>Errei</span>
@@ -44,8 +45,7 @@
     </button>
   </div>
 
-  <!-- Step 2: Difficulty Selection (Show when result is set) -->
-  <div class="actions difficulty-step" *ngIf="hasResult()">
+  <div class="actions difficulty-step" *ngIf="(currentCard$ | async) && hasResult()">
     <button class="diff-btn hard" (click)="rate('HARD')">
       <lucide-icon name="alert-triangle" [size]="24"></lucide-icon>
       <span>Difícil</span>
@@ -60,9 +60,17 @@
     </button>
   </div>
 
-  <div class="no-cards" *ngIf="(queue$ | async)?.length === 0 && !(loading$ | async)">
+  <!-- Empty State -->
+  <div class="no-cards" *ngIf="isEmpty$ | async">
+    <h3>Nada por aqui!</h3>
+    <p>Você não tem cards para revisar hoje. Ótimo trabalho!</p>
+    <button class="finish-btn" (click)="close()">Voltar</button>
+  </div>
+
+  <!-- Finished State -->
+  <div class="no-cards" *ngIf="isSessionOver$ | async">
     <h3>Sessão Finalizada!</h3>
-    <p>Você revisou todos os cartões de hoje com sucesso.</p>
+    <p>Você revisou todos os cartões desta sessão.</p>
     <button class="finish-btn" (click)="close()">Concluir</button>
   </div>
 

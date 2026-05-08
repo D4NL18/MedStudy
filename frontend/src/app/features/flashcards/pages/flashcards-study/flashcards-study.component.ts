@@ -26,10 +26,23 @@ export class FlashcardsStudyComponent {
   currentIndex$ = this.store.select(selectCurrentIndex);
   loading$ = this.store.select(selectLoading);
   
+  isSessionOver$ = this.store.select(state => {
+    const queue = selectQueue(state);
+    const index = selectCurrentIndex(state);
+    const loading = selectLoading(state);
+    return !loading && (queue.length > 0 && index >= queue.length);
+  });
+
+  isEmpty$ = this.store.select(state => {
+    const queue = selectQueue(state);
+    const loading = selectLoading(state);
+    return !loading && queue.length === 0;
+  });
+
   currentCard$ = this.store.select(state => {
     const queue = selectQueue(state);
     const index = selectCurrentIndex(state);
-    return queue[index];
+    return index < queue.length ? queue[index] : null;
   });
 
   isFlipped = signal(false);
