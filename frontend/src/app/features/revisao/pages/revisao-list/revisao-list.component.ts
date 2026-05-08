@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { LucideAngularModule, Calendar, Clock, CheckCircle, Play, AlertCircle } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import { RevisionActions } from '../../../../store/revision/revision.actions';
 import { selectSessions, selectSummary, selectLoading } from '../../../../store/revision/revision.reducer';
@@ -14,7 +14,7 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
   standalone: true,
   imports: [
     CommonModule, 
-    LucideAngularModule.pick({ Calendar, Clock, CheckCircle, Play, AlertCircle }), 
+    LucideAngularModule, 
     RouterLink
   ],
   templateUrl: './revisao-list.component.html',
@@ -69,5 +69,23 @@ export class RevisaoListComponent implements OnInit {
 
   startRevision(sessionId: string) {
     this.store.dispatch(FlashcardsActions.loadStudyQueue());
+  }
+
+  getTabIcon(tab: RevisionTab): string {
+    switch(tab) {
+      case 'ATRASADAS': return 'alert-circle';
+      case 'HOJE': return 'clock';
+      case 'FUTURAS': return 'calendar';
+      case 'CONCLUIDAS': return 'check-circle';
+    }
+  }
+
+  getTabLabel(tab: RevisionTab): string {
+    switch(tab) {
+      case 'ATRASADAS': return 'Revisões Atrasadas';
+      case 'HOJE': return 'Para Revisar Hoje';
+      case 'FUTURAS': return 'Revisões Futuras';
+      case 'CONCLUIDAS': return 'Realizadas';
+    }
   }
 }

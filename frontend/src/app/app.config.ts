@@ -19,6 +19,8 @@ import { revisionFeature } from './store/revision/revision.reducer';
 import { RevisionEffects } from './store/revision/revision.effects';
 import { flashcardsFeature } from './store/flashcards/flashcards.reducer';
 import { FlashcardsEffects } from './store/flashcards/flashcards.effects';
+import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Trash2 } from 'lucide-angular';
+import { importProvidersFrom } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +28,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),
+    importProvidersFrom(LucideAngularModule.pick({ 
+      Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle,
+      Plus, Search, Filter, Edit, Trash2
+    })),
     provideStore({ 
       theme: themeReducer,
       auth: authReducer,

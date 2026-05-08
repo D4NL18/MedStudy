@@ -4,6 +4,8 @@ import { FlashcardsActions } from './flashcards.actions';
 
 export interface FlashcardsState {
   queue: Flashcard[];
+  allCards: Flashcard[];
+  summary: any | null;
   currentIndex: number;
   loading: boolean;
   error: string | null;
@@ -12,6 +14,8 @@ export interface FlashcardsState {
 
 export const initialState: FlashcardsState = {
   queue: [],
+  allCards: [],
+  summary: null,
   currentIndex: 0,
   loading: false,
   error: null,
@@ -38,6 +42,19 @@ export const flashcardsFeature = createFeature({
       loading: false,
       error
     })),
+    on(FlashcardsActions.loadFlashcards, (state) => ({
+      ...state,
+      loading: true
+    })),
+    on(FlashcardsActions.loadFlashcardsSuccess, (state, { flashcards }) => ({
+      ...state,
+      allCards: flashcards,
+      loading: false
+    })),
+    on(FlashcardsActions.loadSummarySuccess, (state, { summary }) => ({
+      ...state,
+      summary
+    })),
     on(FlashcardsActions.setCurrentCard, (state, { cardIndex }) => ({
       ...state,
       currentIndex: cardIndex
@@ -60,6 +77,8 @@ export const {
   reducer,
   selectFlashcardsState,
   selectQueue,
+  selectAllCards,
+  selectSummary,
   selectCurrentIndex,
   selectLoading,
   selectError,

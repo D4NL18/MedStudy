@@ -31,4 +31,8 @@ export class FlashcardService {
   updateFlashcard(id: string, flashcard: any): Observable<Flashcard> {
     return this.http.put<Flashcard>(`${this.apiUrl}/${id}`, flashcard);
   }
+
+  getSummary(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/summary`);
+  }
 }

@@ -40,7 +40,34 @@ export class FlashcardsEffects {
   refreshSummary$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FlashcardsActions.rateFlashcardSuccess),
-      map(() => RevisionActions.loadSummary())
+      mergeMap(() => [
+        RevisionActions.loadSummary(),
+        FlashcardsActions.loadSummary()
+      ])
+    )
+  );
+
+  loadAll$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FlashcardsActions.loadFlashcards),
+      mergeMap(() =>
+        this.flashcardService.getFlashcards(0, 100).pipe(
+          map(response => FlashcardsActions.loadFlashcardsSuccess({ flashcards: response.content })),
+          catchError(error => of(FlashcardsActions.loadFlashcardsFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  loadSummary$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FlashcardsActions.loadSummary),
+      mergeMap(() =>
+        this.flashcardService.getSummary().pipe(
+          map(summary => FlashcardsActions.loadSummarySuccess({ summary })),
+          catchError(error => of(FlashcardsActions.loadSummaryFailure({ error: error.message })))
+        )
+      )
     )
   );
 }

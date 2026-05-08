@@ -1,69 +1,92 @@
 <div class="revisao-container">
   <div class="header">
-    <div class="title-row">
-      <h1>Minhas Revisões</h1>
-      <button class="create-btn" routerLink="/flashcards/novo">
-        <span>+ Novo Flashcard</span>
-      </button>
-    </div>
-    <p>Mantenha seu conhecimento fresco com a técnica de repetição espaçada.</p>
+    <h1>Revisão Intervalada</h1>
+    <p>Sistema de repetição espaçada baseado em desempenho</p>
   </div>
 
-  <div class="tabs-wrapper" *ngIf="summary$ | async as summary">
-    <div class="tabs">
-      <button *ngFor="let tab of tabs" 
-              [class.active]="activeTab === tab.id"
-              (click)="setActiveTab(tab.id)">
-        <span>{{ tab.label }}</span>
-        <span class="badge" [class.pulse]="tab.id === 'ATRASADAS' && summary.atrasadas > 0"
-              [ngClass]="tab.id.toLowerCase()">
-          {{ getCount(tab.id, summary) }}
-        </span>
-      </button>
+  <div class="stats-row" *ngIf="summary$ | async as summary">
+    <div class="stat-card atrasadas" [class.active]="activeTab === 'ATRASADAS'" (click)="setActiveTab('ATRASADAS')">
+      <div class="card-header">
+        <lucide-icon name="alert-circle" [size]="20"></lucide-icon>
+        <span>Revisões Atrasadas</span>
+      </div>
+      <span class="value">{{ summary.atrasadas || 0 }}</span>
     </div>
-    <div class="tab-indicator" [style.left.%]="getIndicatorPos()"></div>
+
+    <div class="stat-card hoje" [class.active]="activeTab === 'HOJE'" (click)="setActiveTab('HOJE')">
+      <div class="card-header">
+        <lucide-icon name="clock" [size]="20"></lucide-icon>
+        <span>Para Revisar Hoje</span>
+      </div>
+      <span class="value">{{ summary.hoje || 0 }}</span>
+    </div>
+
+    <div class="stat-card futuras" [class.active]="activeTab === 'FUTURAS'" (click)="setActiveTab('FUTURAS')">
+      <div class="card-header">
+        <lucide-icon name="calendar" [size]="20"></lucide-icon>
+        <span>Revisões Futuras</span>
+      </div>
+      <span class="value">{{ summary.futuras || 0 }}</span>
+    </div>
+
+    <div class="stat-card concluidas" [class.active]="activeTab === 'CONCLUIDAS'" (click)="setActiveTab('CONCLUIDAS')">
+      <div class="card-header">
+        <lucide-icon name="check-circle" [size]="20"></lucide-icon>
+        <span>Realizadas</span>
+      </div>
+      <span class="value">{{ summary.concluidas || 0 }}</span>
+    </div>
   </div>
 
-  <div class="sessions-list" *ngIf="!(loading$ | async); else loading">
-    <div class="session-card" *ngFor="let session of sessions$ | async">
-      <div class="session-info">
-        <span class="area">{{ session.grandeArea }}</span>
-        <h3>{{ session.tema }}</h3>
-        <div class="meta">
-          <span><lucide-icon name="calendar" [size]="14"></lucide-icon> {{ session.dataSessao | date:'dd/MM' }}</span>
-          <span><lucide-icon name="clock" [size]="14"></lucide-icon> Próxima: {{ session.dataProximaRevisao | date:'dd/MM' }}</span>
-        </div>
+  <div class="list-section" [ngClass]="activeTab.toLowerCase()">
+    <div class="list-header">
+      <div class="header-left">
+        <lucide-icon [name]="getTabIcon(activeTab)" [size]="20"></lucide-icon>
+        <span>{{ getTabLabel(activeTab) }}</span>
+      </div>
+      <div class="header-right">
+        <span class="badge">{{ (sessions$ | async)?.length }}</span>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="revisao-table">
+        <thead>
+          <tr>
+            <th>Tema</th>
+            <th>Área</th>
+            <th>Última Resolução</th>
+            <th>Revisão Programada</th>
+            <th>% Último Acerto</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let session of sessions$ | async">
+            <td class="tema">{{ session.tema }}</td>
+            <td>{{ session.grandeArea }}</td>
+            <td>{{ session.dataSessao | date:'dd/MM/yyyy' }}</td>
+            <td>{{ session.dataProximaRevisao | date:'dd/MM/yyyy' }}</td>
+            <td>{{ getAccuracy(session) }}%</td>
+            <td class="action-cell">
+              <button class="action-btn" (click)="startRevision(session.id)" 
+                      [disabled]="session.revisaoConcluida">
+                <lucide-icon [name]="session.revisaoConcluida ? 'check-circle' : 'play'" [size]="20"></lucide-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="(sessions$ | async)?.length === 0 && !(loading$ | async)">
+        <lucide-icon name="check-circle" [size]="48"></lucide-icon>
+        <h3>Tudo em dia!</h3>
+        <p>Você não tem revisões nesta categoria.</p>
       </div>
 
-      <div class="stats">
-        <div class="stat">
-          <span class="val">{{ session.qtsFeitas }}</span>
-          <span class="lab">Questões</span>
-        </div>
-        <div class="stat">
-          <span class="val">{{ getAccuracy(session) }}%</span>
-          <span class="lab">Acerto</span>
-        </div>
+      <div class="loading-state" *ngIf="loading$ | async">
+        <div class="spinner"></div>
       </div>
-
-      <button class="action-btn" (click)="startRevision(session.id)" 
-              [disabled]="session.revisaoConcluida">
-        <lucide-icon [name]="session.revisaoConcluida ? 'check-circle' : 'play'" [size]="18"></lucide-icon>
-        <span>{{ session.revisaoConcluida ? 'Concluída' : 'Revisar Agora' }}</span>
-      </button>
-    </div>
-
-    <div class="empty-state" *ngIf="(sessions$ | async)?.length === 0">
-      <lucide-icon name="alert-circle" [size]="48"></lucide-icon>
-      <h3>Nada para revisar por aqui!</h3>
-      <p>Que tal iniciar uma nova sessão de estudos ou adicionar novos flashcards?</p>
     </div>
   </div>
-
-  <ng-template #loading>
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Carregando revisões...</p>
-    </div>
-  </ng-template>
 </div>
