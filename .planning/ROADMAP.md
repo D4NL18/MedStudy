@@ -378,9 +378,9 @@ Angular (Component + NgRx Store)
 | Phase 6 — Analytics API | ✅ Complete | 2026-05-07 |
 | Phase 7 — Revisão & Flashcards API | ✅ Complete | 2026-05-07 |
 | Phase 8 — Frontend Core + Auth | ✅ Complete | 2026-05-07 |
-| Phase 9 — Dashboard & Análises UI | ⬜ Not Started | |
-| Phase 10 — Banco & Simulados UI | ⬜ Not Started | |
-| Phase 11 — Aulas, Revisão & Flashcards UI | ⬜ Not Started | |
+| Phase 9 — Dashboard & Análises UI | ✅ Complete | 2026-05-07 |
+| Phase 10 — Banco & Simulados UI | ✅ Complete | 2026-05-07 |
+| Phase 11 — Aulas, Revisão & Flashcards UI | 🚧 In Progress | Planning & UI-SPEC done |
 | Phase 12 — Backend Tests | ⬜ Not Started | |
 | Phase 13 — Frontend Tests | ⬜ Not Started | |
 | Phase 14 — Security Hardening | ⬜ Not Started | |
