@@ -4,37 +4,37 @@
     <p>Sistema de repetição espaçada baseado em desempenho</p>
   </div>
 
-  <div class="stats-row" *ngIf="summary$ | async as summary">
-    <div class="stat-card atrasadas" [class.active]="activeTab === 'ATRASADAS'" (click)="setActiveTab('ATRASADAS')">
+  <div class="stats-row">
+    <div class="stat-card glass atrasadas" [class.active]="activeTab === 'ATRASADAS'" (click)="setActiveTab('ATRASADAS')">
       <div class="card-header">
         <lucide-icon name="alert-circle" [size]="20"></lucide-icon>
         <span>Revisões Atrasadas</span>
       </div>
-      <span class="value">{{ summary.atrasadas || 0 }}</span>
+      <span class="value">{{ (summary$ | async)?.atrasadas || 0 }}</span>
     </div>
 
-    <div class="stat-card hoje" [class.active]="activeTab === 'HOJE'" (click)="setActiveTab('HOJE')">
+    <div class="stat-card glass hoje" [class.active]="activeTab === 'HOJE'" (click)="setActiveTab('HOJE')">
       <div class="card-header">
         <lucide-icon name="clock" [size]="20"></lucide-icon>
         <span>Para Revisar Hoje</span>
       </div>
-      <span class="value">{{ summary.hoje || 0 }}</span>
+      <span class="value">{{ (summary$ | async)?.hoje || 0 }}</span>
     </div>
 
-    <div class="stat-card futuras" [class.active]="activeTab === 'FUTURAS'" (click)="setActiveTab('FUTURAS')">
+    <div class="stat-card glass futuras" [class.active]="activeTab === 'FUTURAS'" (click)="setActiveTab('FUTURAS')">
       <div class="card-header">
         <lucide-icon name="calendar" [size]="20"></lucide-icon>
         <span>Revisões Futuras</span>
       </div>
-      <span class="value">{{ summary.futuras || 0 }}</span>
+      <span class="value">{{ (summary$ | async)?.futuras || 0 }}</span>
     </div>
 
-    <div class="stat-card concluidas" [class.active]="activeTab === 'CONCLUIDAS'" (click)="setActiveTab('CONCLUIDAS')">
+    <div class="stat-card glass concluidas" [class.active]="activeTab === 'CONCLUIDAS'" (click)="setActiveTab('CONCLUIDAS')">
       <div class="card-header">
         <lucide-icon name="check-circle" [size]="20"></lucide-icon>
         <span>Realizadas</span>
       </div>
-      <span class="value">{{ summary.concluidas || 0 }}</span>
+      <span class="value">{{ (summary$ | async)?.concluidas || 0 }}</span>
     </div>
   </div>
 
