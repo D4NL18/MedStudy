@@ -58,4 +58,12 @@ export class FlashcardsListComponent implements OnInit {
     const text = typeof content === 'string' ? content : JSON.stringify(content);
     return text.replace(/!\[image\]\(.*?\)/g, '🖼️');
   }
+
+  isAvailable(card: any): boolean {
+    if (!card.proximaRevisao) return true;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const revisionDate = new Date(card.proximaRevisao);
+    return revisionDate <= today;
+  }
 }

@@ -65,6 +65,7 @@ public class FlashcardService {
     public FlashcardResponse study(FlashcardStudyRequest request) {
         Flashcard flashcard = findByIdAndValidateUser(request.flashcardId());
         srService.calculateNextRevision(flashcard, request.dificuldade());
+        flashcard.setLastStudiedAt(LocalDate.now());
         return mapper.toResponse(repository.save(flashcard));
     }
 
@@ -90,10 +91,7 @@ public class FlashcardService {
             .count();
         
         long concluidosHoje = cards.stream()
-            .filter(f -> f.getUpdatedAt() != null && 
-                        f.getUpdatedAt().toLocalDate().equals(today) && 
-                        f.getProximaRevisao() != null && 
-                        f.getProximaRevisao().isAfter(today))
+            .filter(f -> f.getLastStudiedAt() != null && f.getLastStudiedAt().equals(today))
             .count();
 
         return Map.of(

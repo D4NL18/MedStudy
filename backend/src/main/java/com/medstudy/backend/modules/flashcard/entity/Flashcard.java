@@ -54,6 +54,9 @@ public class Flashcard {
     @Column(name = "intervalo_atual")
     private Integer intervaloAtual;
 
+    @Column(name = "last_studied_at")
+    private LocalDate lastStudiedAt;
+
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
