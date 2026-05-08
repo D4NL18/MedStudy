@@ -68,6 +68,10 @@ export const routes: Routes = [
       {
         path: 'revisoes',
         loadComponent: () => import('./features/revisao/pages/revisao-list/revisao-list.component').then(m => m.RevisaoListComponent)
+      },
+      {
+        path: 'flashcards/novo',
+        loadComponent: () => import('./features/flashcards/pages/flashcard-form/flashcard-form.component').then(m => m.FlashcardFormComponent)
       }
     ]
   },

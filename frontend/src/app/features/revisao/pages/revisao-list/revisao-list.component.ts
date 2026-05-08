@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule, Calendar, Clock, CheckCircle, Play, AlertCircle } from 'lucide-angular';
+import { RouterLink } from '@angular/router';
 import { RevisionActions } from '../../../../store/revision/revision.actions';
 import { selectSessions, selectSummary, selectLoading } from '../../../../store/revision/revision.reducer';
 import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
@@ -11,11 +12,16 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
 @Component({
   selector: 'app-revisao-list',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, RouterLink],
   template: `
     <div class="revisao-container">
       <div class="header">
-        <h1>Minhas Revisões</h1>
+        <div class="title-row">
+          <h1>Minhas Revisões</h1>
+          <button class="create-btn" routerLink="/flashcards/novo">
+            <span>+ Novo Flashcard</span>
+          </button>
+        </div>
         <p>Mantenha seu conhecimento fresco com a técnica de repetição espaçada.</p>
       </div>
 
@@ -94,6 +100,24 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
         color: var(--color-text);
       }
       p { color: var(--color-text-secondary); }
+
+      .title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .create-btn {
+        background: var(--color-primary-soft);
+        color: var(--color-primary);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        &:hover { background: var(--color-primary); color: white; }
+      }
     }
 
     .tabs-wrapper {
