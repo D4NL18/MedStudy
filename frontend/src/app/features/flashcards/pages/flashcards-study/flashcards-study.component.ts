@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
 import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
-import { selectQueue, selectCurrentIndex, selectStudyModeActive } from '../../../../store/flashcards/flashcards.reducer';
+import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '../../../../store/flashcards/flashcards.reducer';
 import { FlashcardDifficulty } from '../../../../core/models/flashcard.model';
 import { MarkdownRendererComponent } from '../../../../shared/components/markdown-renderer/markdown-renderer.component';
 
@@ -24,6 +24,7 @@ export class FlashcardsStudyComponent {
   active$ = this.store.select(selectStudyModeActive);
   queue$ = this.store.select(selectQueue);
   currentIndex$ = this.store.select(selectCurrentIndex);
+  loading$ = this.store.select(selectLoading);
   
   currentCard$ = this.store.select(state => {
     const queue = selectQueue(state);
