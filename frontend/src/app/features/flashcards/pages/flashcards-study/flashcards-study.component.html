@@ -1,0 +1,51 @@
+<div class="study-overlay" *ngIf="active$ | async">
+  <div class="header">
+    <div class="progress-info">
+      <span class="count">{{ (currentIndex$ | async)! + 1 }} / {{ (queue$ | async)?.length }}</span>
+      <div class="progress-bar">
+        <div class="fill" [style.width.%]="getProgress((currentIndex$ | async)!, (queue$ | async)?.length || 0)"></div>
+      </div>
+    </div>
+    <button class="close-btn" (click)="close()">
+      <lucide-icon name="x" [size]="24"></lucide-icon>
+    </button>
+  </div>
+
+  <div class="card-container" *ngIf="currentCard$ | async as card">
+    <div class="flashcard" [class.is-flipped]="isFlipped()" (click)="flip()">
+      <div class="card-face front">
+        <div class="card-label">FRENTE</div>
+        <app-markdown-renderer [data]="card.frente"></app-markdown-renderer>
+        <div class="flip-hint">
+          <lucide-icon name="rotate-cw" [size]="16"></lucide-icon>
+          Clique para girar
+        </div>
+      </div>
+      <div class="card-face back">
+        <div class="card-label">VERSO</div>
+        <app-markdown-renderer [data]="card.verso"></app-markdown-renderer>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions" *ngIf="isFlipped()">
+    <button class="diff-btn easy" (click)="rate('EASY')">
+      <lucide-icon name="check" [size]="24"></lucide-icon>
+      <span>Fácil</span>
+    </button>
+    <button class="diff-btn medium" (click)="rate('MEDIUM')">
+      <lucide-icon name="clock" [size]="24"></lucide-icon>
+      <span>Médio</span>
+    </button>
+    <button class="diff-btn hard" (click)="rate('HARD')">
+      <lucide-icon name="alert-triangle" [size]="24"></lucide-icon>
+      <span>Difícil</span>
+    </button>
+  </div>
+
+  <div class="no-cards" *ngIf="(queue$ | async)?.length === 0">
+    <h3>Sessão Finalizada!</h3>
+    <p>Você revisou todos os cartões de hoje.</p>
+    <button class="finish-btn" (click)="close()">Voltar</button>
+  </div>
+</div>

@@ -9,56 +9,8 @@ import { ImagePasteDirective } from '../../../../shared/directives/image-paste.d
   selector: 'app-flashcard-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ImagePasteDirective],
-  template: `
-    <div class="form-container">
-      <h1>Criar Novo Flashcard</h1>
-      
-      <div class="editor-section">
-        <label>Frente (Markdown)</label>
-        <textarea [(ngModel)]="frente" 
-                  appImagePaste 
-                  (imagePasted)="onImagePasted($event, 'frente')"
-                  placeholder="Digite o texto ou cole uma imagem..."></textarea>
-      </div>
-
-      <div class="editor-section">
-        <label>Verso (Markdown)</label>
-        <textarea [(ngModel)]="verso" 
-                  appImagePaste 
-                  (imagePasted)="onImagePasted($event, 'verso')"
-                  placeholder="Digite a resposta ou cole uma imagem..."></textarea>
-      </div>
-
-      <div class="actions">
-        <button (click)="save()" [disabled]="!frente || !verso">Salvar Flashcard</button>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .form-container { padding: 2rem; max-width: 800px; margin: 0 auto; }
-    .editor-section { margin-bottom: 2rem; }
-    label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-    textarea { 
-      width: 100%; 
-      height: 200px; 
-      padding: 1rem; 
-      border-radius: 8px; 
-      background: var(--color-surface); 
-      color: white; 
-      border: 1px solid rgba(255,255,255,0.1); 
-      font-family: monospace;
-    }
-    .actions { text-align: right; }
-    button { 
-      padding: 1rem 2rem; 
-      background: var(--color-primary); 
-      color: white; 
-      border: none; 
-      border-radius: 8px; 
-      cursor: pointer;
-      &:disabled { opacity: 0.5; cursor: not-allowed; }
-    }
-  `]
+  templateUrl: './flashcard-form.component.html',
+  styleUrl: './flashcard-form.component.scss'
 })
 export class FlashcardFormComponent {
   private flashcardService = inject(FlashcardService);

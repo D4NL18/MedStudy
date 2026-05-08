@@ -1,0 +1,49 @@
+<div class="aulas-container">
+  <div class="header">
+    <h1>Plano de Aulas</h1>
+    <p>Acompanhe seu progresso e priorize os temas mais importantes.</p>
+  </div>
+
+  <div class="stats-row" *ngIf="lessons$ | async as lessons">
+    <div class="stat-card">
+      <span class="label">Total de Temas</span>
+      <span class="value">{{ lessons.length }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="label">Assistidas</span>
+      <span class="value">{{ getAssistedCount(lessons) }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="label">Progresso</span>
+      <span class="value">{{ getProgress(lessons) }}%</span>
+    </div>
+  </div>
+
+  <div class="lessons-grid">
+    <div class="lesson-card" *ngFor="let lesson of lessons$ | async" 
+         [class.assisted]="lesson.aulaAssistida"
+         [class.priority-diamante]="lesson.prioridade === 'DIAMANTE'">
+      
+      <div class="priority-indicator" [ngClass]="lesson.prioridade.toLowerCase()">
+        <lucide-icon [name]="lesson.prioridade === 'DIAMANTE' ? 'diamond' : 'chevron-right'" 
+                    [size]="16"></lucide-icon>
+        <span>{{ lesson.prioridade }}</span>
+      </div>
+
+      <div class="content">
+        <span class="area">{{ lesson.grandeArea }}</span>
+        <h3 class="tema">{{ lesson.tema }}</h3>
+      </div>
+
+      <button class="status-btn" (click)="toggleAssisted(lesson.id)" 
+              [class.active]="lesson.aulaAssistida">
+        <lucide-icon name="check-circle" [size]="20"></lucide-icon>
+        <span>{{ lesson.aulaAssistida ? 'Assistida' : 'Marcar Assistida' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-overlay" *ngIf="loading$ | async">
+    <div class="spinner"></div>
+  </div>
+</div>
