@@ -29,7 +29,7 @@ export class FlashcardsEffects {
       ofType(FlashcardsActions.rateFlashcard),
       mergeMap(({ rating }) =>
         this.flashcardService.rateFlashcard(rating).pipe(
-          map(flashcard => FlashcardsActions.rateFlashcardSuccess({ flashcard })),
+          map(flashcard => FlashcardsActions.rateFlashcardSuccess({ flashcard, missed: rating.missed })),
           catchError(error => of(FlashcardsActions.rateFlashcardFailure({ error: error.message })))
         )
       )

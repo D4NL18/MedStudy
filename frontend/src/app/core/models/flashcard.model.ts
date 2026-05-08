@@ -17,4 +17,5 @@ export interface Flashcard {
 export interface FlashcardStudyRating {
   flashcardId: string;
   dificuldade: FlashcardDifficulty;
+  missed?: boolean;
 }

@@ -21,9 +21,10 @@ export const FlashcardsActions = createActionGroup({
     'Delete Flashcard Failure': props<{ error: string }>(),
 
     'Rate Flashcard': props<{ rating: FlashcardStudyRating }>(),
-    'Rate Flashcard Success': props<{ flashcard: Flashcard }>(),
+    'Rate Flashcard Success': props<{ flashcard: Flashcard; missed?: boolean }>(),
     'Rate Flashcard Failure': props<{ error: string }>(),
     'Set Current Card': props<{ cardIndex: number }>(),
+    'Move Current Card To Back': emptyProps(),
     'Close Study Mode': emptyProps(),
   }
 });

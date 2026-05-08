@@ -63,10 +63,21 @@ export const flashcardsFeature = createFeature({
       ...state,
       currentIndex: cardIndex
     })),
-    on(FlashcardsActions.rateFlashcardSuccess, (state) => ({
-      ...state,
-      currentIndex: state.currentIndex + 1
-    })),
+    on(FlashcardsActions.rateFlashcardSuccess, (state, { flashcard, missed }) => {
+      if (missed) {
+        const newQueue = [...state.queue];
+        newQueue.splice(state.currentIndex, 1);
+        newQueue.push(flashcard);
+        return {
+          ...state,
+          queue: newQueue
+        };
+      }
+      return {
+        ...state,
+        currentIndex: state.currentIndex + 1
+      };
+    }),
     on(FlashcardsActions.closeStudyMode, (state) => ({
       ...state,
       studyModeActive: false,

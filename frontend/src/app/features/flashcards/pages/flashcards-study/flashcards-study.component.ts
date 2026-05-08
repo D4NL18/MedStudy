@@ -33,25 +33,44 @@ export class FlashcardsStudyComponent {
   });
 
   isFlipped = signal(false);
+  hasResult = signal(false);
+  lastResultMissed = signal(false);
 
   flip() {
-    this.isFlipped.set(!this.isFlipped());
+    if (!this.isFlipped()) {
+      this.isFlipped.set(true);
+    }
+  }
+
+  setResult(missed: boolean) {
+    this.lastResultMissed.set(missed);
+    this.hasResult.set(true);
   }
 
   rate(difficulty: 'EASY' | 'MEDIUM' | 'HARD') {
     this.currentCard$.subscribe(card => {
       if (card) {
         this.store.dispatch(FlashcardsActions.rateFlashcard({
-          rating: { flashcardId: card.id, dificuldade: difficulty as FlashcardDifficulty }
+          rating: { 
+            flashcardId: card.id, 
+            dificuldade: difficulty as FlashcardDifficulty,
+            missed: this.lastResultMissed()
+          }
         }));
-        this.isFlipped.set(false);
+        this.resetState();
       }
     }).unsubscribe();
   }
 
+  private resetState() {
+    this.isFlipped.set(false);
+    this.hasResult.set(false);
+    this.lastResultMissed.set(false);
+  }
+
   close() {
     this.store.dispatch(FlashcardsActions.closeStudyMode());
-    this.isFlipped.set(false);
+    this.resetState();
   }
 
   getProgress(index: number, total: number): number {

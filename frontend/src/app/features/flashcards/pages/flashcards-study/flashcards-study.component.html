@@ -32,7 +32,20 @@
     </div>
   </div>
 
-  <div class="actions" *ngIf="isFlipped()">
+  <!-- Step 1: Result Selection (Show when flipped but no result yet) -->
+  <div class="actions result-step" *ngIf="isFlipped() && !hasResult()">
+    <button class="result-btn wrong" (click)="setResult(true)">
+      <lucide-icon name="x-circle" [size]="32"></lucide-icon>
+      <span>Errei</span>
+    </button>
+    <button class="result-btn correct" (click)="setResult(false)">
+      <lucide-icon name="check-circle" [size]="32"></lucide-icon>
+      <span>Acertei</span>
+    </button>
+  </div>
+
+  <!-- Step 2: Difficulty Selection (Show when result is set) -->
+  <div class="actions difficulty-step" *ngIf="hasResult()">
     <button class="diff-btn hard" (click)="rate('HARD')">
       <lucide-icon name="alert-triangle" [size]="24"></lucide-icon>
       <span>Difícil</span>

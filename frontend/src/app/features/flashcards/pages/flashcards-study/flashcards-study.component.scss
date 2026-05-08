@@ -160,6 +160,36 @@
   width: 100%;
 }
 
+.result-btn {
+  flex: 1;
+  max-width: 250px;
+  height: 120px;
+  border-radius: 24px;
+  border: none;
+  color: white;
+  font-weight: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  span { font-size: 1.2rem; }
+
+  &:hover { transform: scale(1.05); }
+
+  &.wrong { 
+    background: #DC2626; 
+    box-shadow: 0 15px 30px rgba(220, 38, 38, 0.3);
+  }
+  &.correct { 
+    background: #059669; 
+    box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
+  }
+}
+
 .diff-btn {
   flex: 1;
   max-width: 200px;
