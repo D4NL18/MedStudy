@@ -6,7 +6,12 @@ import java.util.UUID;
 public record LessonResponse(
     UUID id,
     String grandeArea,
+    String subArea,
     String tema,
     LessonPriority prioridade,
-    boolean aulaAssistida
+    boolean aulaAssistida,
+    java.time.LocalDate dataAula,
+    Integer percentAcerto,
+    boolean reforco,
+    boolean revisao
 ) {}

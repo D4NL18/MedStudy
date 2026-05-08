@@ -19,7 +19,7 @@ import { revisionFeature } from './store/revision/revision.reducer';
 import { RevisionEffects } from './store/revision/revision.effects';
 import { flashcardsFeature } from './store/flashcards/flashcards.reducer';
 import { FlashcardsEffects } from './store/flashcards/flashcards.effects';
-import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Trash2 } from 'lucide-angular';
+import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle } from 'lucide-angular';
 import { importProvidersFrom } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     importProvidersFrom(LucideAngularModule.pick({ 
       Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle,
-      Plus, Search, Filter, Edit, Trash2
+      Plus, Search, Filter, Edit, Edit2, Trash2, Circle
     })),
     provideStore({ 
       theme: themeReducer,

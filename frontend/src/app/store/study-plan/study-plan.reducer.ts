@@ -33,6 +33,28 @@ export const studyPlanFeature = createFeature({
       loading: false,
       error
     })),
+    on(StudyPlanActions.createLesson, (state) => ({
+      ...state,
+      loading: true
+    })),
+    on(StudyPlanActions.createLessonSuccess, (state, { lesson }) => ({
+      ...state,
+      lessons: [lesson, ...state.lessons],
+      loading: false
+    })),
+    on(StudyPlanActions.createLessonFailure, (state, { error }) => ({
+      ...state,
+      loading: false,
+      error
+    })),
+    on(StudyPlanActions.updateLessonSuccess, (state, { lesson }) => ({
+      ...state,
+      lessons: state.lessons.map(l => l.id === lesson.id ? lesson : l)
+    })),
+    on(StudyPlanActions.deleteLessonSuccess, (state, { id }) => ({
+      ...state,
+      lessons: state.lessons.filter(l => l.id !== id)
+    })),
     on(StudyPlanActions.toggleLessonAssistedSuccess, (state, { lesson }) => ({
       ...state,
       lessons: state.lessons.map(l => l.id === lesson.id ? lesson : l)

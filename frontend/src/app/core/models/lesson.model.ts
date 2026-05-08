@@ -8,7 +8,12 @@ export enum LessonPriority {
 export interface Lesson {
   id: string;
   grandeArea: string;
+  subArea?: string;
   tema: string;
   prioridade: LessonPriority;
   aulaAssistida: boolean;
+  dataAula?: string;
+  percentAcerto?: number;
+  reforco: boolean;
+  revisao: boolean;
 }

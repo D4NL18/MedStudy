@@ -1,47 +1,129 @@
 <div class="aulas-container">
   <div class="header">
-    <h1>Plano de Aulas</h1>
-    <p>Acompanhe seu progresso e priorize os temas mais importantes.</p>
+    <div class="title-section">
+      <h1>Plano de Aulas</h1>
+      <p>Rastreador estratégico de conteúdo teórico</p>
+    </div>
+    <button class="btn-primary" (click)="createLesson()">
+      <lucide-icon name="plus" [size]="18"></lucide-icon>
+      Nova Aula
+    </button>
   </div>
 
-  <div class="stats-row" *ngIf="lessons$ | async as lessons">
-    <div class="stat-card">
-      <span class="label">Total de Temas</span>
-      <span class="value">{{ lessons.length }}</span>
-    </div>
-    <div class="stat-card">
-      <span class="label">Assistidas</span>
-      <span class="value">{{ getAssistedCount(lessons) }}</span>
-    </div>
-    <div class="stat-card">
-      <span class="label">Progresso</span>
-      <span class="value">{{ getProgress(lessons) }}%</span>
-    </div>
-  </div>
-
-  <div class="lessons-grid">
-    <div class="lesson-card" *ngFor="let lesson of lessons$ | async" 
-         [class.assisted]="lesson.aulaAssistida"
-         [class.priority-diamante]="lesson.prioridade === 'DIAMANTE'">
-      
-      <div class="priority-indicator" [ngClass]="lesson.prioridade.toLowerCase()">
-        <lucide-icon [name]="lesson.prioridade === 'DIAMANTE' ? 'diamond' : 'chevron-right'" 
-                    [size]="16"></lucide-icon>
-        <span>{{ lesson.prioridade }}</span>
+  <ng-container *ngIf="lessons$ | async as lessons; else loadingTpl">
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="label">Total de Aulas</span>
+        <span class="value">{{ lessons.length }}</span>
       </div>
-
-      <div class="content">
-        <span class="area">{{ lesson.grandeArea }}</span>
-        <h3 class="tema">{{ lesson.tema }}</h3>
+      <div class="stat-card">
+        <span class="label">Aulas Assistidas</span>
+        <span class="value">{{ getAssistedCount(lessons) }}</span>
       </div>
-
-      <button class="status-btn" (click)="toggleAssisted(lesson.id)" 
-              [class.active]="lesson.aulaAssistida">
-        <lucide-icon name="check-circle" [size]="20"></lucide-icon>
-        <span>{{ lesson.aulaAssistida ? 'Assistida' : 'Marcar Assistida' }}</span>
-      </button>
+      <div class="stat-card">
+        <span class="label">Pendentes</span>
+        <span class="value">{{ getPendingCount(lessons) }}</span>
+      </div>
+      <div class="stat-card highlight">
+        <span class="label">Prioridade Diamante Pendente</span>
+        <span class="value">{{ getDiamondPendingCount(lessons) }}</span>
+      </div>
     </div>
-  </div>
+
+    <div class="filters-bar">
+      <div class="search-input">
+        <lucide-icon name="search" [size]="18"></lucide-icon>
+        <input type="text" placeholder="Buscar tema ou subárea..." (input)="onSearch($any($event.target).value)">
+      </div>
+      <select (change)="onFilterChange('grandeArea', $any($event.target).value)">
+        <option value="">Todas as Áreas</option>
+        <option value="Clínica Médica">Clínica Médica</option>
+        <option value="Cirurgia">Cirurgia</option>
+        <option value="Pediatria">Pediatria</option>
+        <option value="Ginecologia/Obstetrícia">Ginecologia/Obstetrícia</option>
+        <option value="Preventiva">Preventiva</option>
+      </select>
+      <select (change)="onFilterChange('status', $any($event.target).value)">
+        <option value="">Todos os Status</option>
+        <option value="concluido">Concluído</option>
+        <option value="pendente">Não iniciado</option>
+      </select>
+      <select (change)="onFilterChange('reforco', $any($event.target).value)">
+        <option value="">Todo Reforço</option>
+        <option value="true">Precisa Reforço</option>
+        <option value="false">Não Precisa</option>
+      </select>
+      <select (change)="onFilterChange('prioridade', $any($event.target).value)">
+        <option value="">Todas as Prioridades</option>
+        <option value="DIAMANTE">Diamante</option>
+        <option value="ALTA">Alta</option>
+        <option value="MEDIA">Média</option>
+        <option value="BAIXA">Baixa</option>
+      </select>
+    </div>
+
+    <div class="table-container card">
+      <table>
+        <thead>
+          <tr>
+            <th>Área</th>
+            <th>Subárea</th>
+            <th>Tema</th>
+            <th>Prioridade</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>% Acerto</th>
+            <th>Reforço?</th>
+            <th>Revisão?</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lesson of lessons">
+            <td>{{ lesson.grandeArea }}</td>
+            <td>{{ lesson.subArea || '—' }}</td>
+            <td><strong>{{ lesson.tema }}</strong></td>
+            <td>
+              <span class="badge-priority" [ngClass]="lesson.prioridade.toLowerCase()">
+                <lucide-icon [name]="lesson.prioridade === 'DIAMANTE' ? 'diamond' : 'circle'" [size]="12"></lucide-icon>
+                {{ lesson.prioridade }}
+              </span>
+            </td>
+            <td>
+              <span class="badge-status" [class.assisted]="lesson.aulaAssistida" (click)="toggleAssisted(lesson.id)" style="cursor: pointer">
+                {{ lesson.aulaAssistida ? 'Concluída' : 'Não iniciada' }}
+              </span>
+            </td>
+            <td>{{ lesson.dataAula || '—' }}</td>
+            <td>{{ lesson.percentAcerto !== undefined && lesson.percentAcerto !== null ? lesson.percentAcerto + '%' : '—' }}</td>
+            <td>{{ lesson.reforco ? 'Sim' : '—' }}</td>
+            <td>{{ lesson.revisao ? 'Sim' : '—' }}</td>
+            <td class="actions">
+              <button class="btn-icon" (click)="editLesson(lesson)"><lucide-icon name="edit-2" [size]="16"></lucide-icon></button>
+              <button class="btn-icon delete" (click)="deleteLesson(lesson)"><lucide-icon name="trash-2" [size]="16"></lucide-icon></button>
+            </td>
+          </tr>
+          <tr *ngIf="lessons.length === 0">
+            <td colspan="10" class="empty-state">Nenhuma aula encontrada. Clique em "Nova Aula" para começar.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="loading-state" *ngIf="loading$ | async; else errorTpl">
+      <div class="spinner"></div>
+      <p>Carregando plano de aulas...</p>
+    </div>
+  </ng-template>
+
+  <ng-template #errorTpl>
+    <div class="error-state">
+      <lucide-icon name="alert-circle" [size]="48"></lucide-icon>
+      <p>Erro ao carregar aulas. Verifique sua conexão.</p>
+    </div>
+  </ng-template>
 
   <div class="loading-overlay" *ngIf="loading$ | async">
     <div class="spinner"></div>

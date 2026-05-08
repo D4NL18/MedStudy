@@ -15,5 +15,8 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, UUID>, Jpa
     Page<Flashcard> findAllByUserId(UUID userId, Pageable pageable);
     java.util.List<Flashcard> findAllByUserId(UUID userId);
     
-    long countByUserIdAndProximaRevisaoLessThanEqual(UUID userId, LocalDate date);
+    long countByUserIdAndProximaRevisaoBefore(UUID userId, LocalDate date);
+    long countByUserIdAndProximaRevisao(UUID userId, LocalDate date);
+    long countByUserIdAndProximaRevisaoAfter(UUID userId, LocalDate date);
+    long countByUserIdAndLastStudiedAt(UUID userId, LocalDate date);
 }

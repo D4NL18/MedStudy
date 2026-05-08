@@ -34,6 +34,11 @@ public class LessonService {
         Lesson entity = mapper.toEntity(request);
         entity.setUser(currentUser);
         
+        // Ensure defaults for mandatory fields
+        if (entity.getAulaAssistida() == null) entity.setAulaAssistida(false);
+        if (entity.getReforco() == null) entity.setReforco(false);
+        if (entity.getRevisao() == null) entity.setRevisao(false);
+        
         Lesson saved = repository.save(entity);
         return mapper.toResponse(saved);
     }
@@ -59,9 +64,15 @@ public class LessonService {
         Lesson entity = getLessonAndVerifyOwnership(id);
 
         entity.setGrandeArea(request.grandeArea());
+        entity.setSubArea(request.subArea());
         entity.setTema(request.tema());
         entity.setPrioridade(request.prioridade());
-        entity.setAulaAssistida(request.aulaAssistida());
+        
+        if (request.aulaAssistida() != null) entity.setAulaAssistida(request.aulaAssistida());
+        if (request.dataAula() != null) entity.setDataAula(request.dataAula());
+        if (request.percentAcerto() != null) entity.setPercentAcerto(request.percentAcerto());
+        if (request.reforco() != null) entity.setReforco(request.reforco());
+        if (request.revisao() != null) entity.setRevisao(request.revisao());
 
         Lesson saved = repository.save(entity);
         return mapper.toResponse(saved);
