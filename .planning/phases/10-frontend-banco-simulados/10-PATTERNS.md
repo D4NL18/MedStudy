@@ -8,7 +8,8 @@ Components must be standalone and use the modern `inject()` pattern for dependen
   selector: 'app-feature-list',
   standalone: true,
   imports: [CommonModule, MatTableModule, MatDialogModule],
-  template: `...`
+  templateUrl: './feature-list.component.html',
+  styleUrl: './feature-list.component.scss'
 })
 export class FeatureListComponent {
   private store = inject(Store);

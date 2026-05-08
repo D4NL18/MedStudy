@@ -11,6 +11,7 @@ public record StudySessionResponse(
     int qtsFeitas,
     int qtsCorretas,
     String instituicao,
+    String observacoes,
     LocalDate dataProximaRevisao,
     boolean revisaoConcluida
 ) {}

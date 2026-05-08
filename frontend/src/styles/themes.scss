@@ -20,12 +20,12 @@ $themes: (
     accent: #10B981,
     accent-light: #6EE7B7,
     accent-rgb: "16, 185, 129",
-    bg: #F8F9FA,
+    bg: #FFFFFF,
     surface: #FFFFFF,
-    surface-glass: rgba(255, 255, 255, 0.8),
-    border: rgba(0, 0, 0, 0.08),
-    text: #212529,
-    text-muted: #495057,
+    surface-glass: rgba(255, 255, 255, 0.95),
+    border: rgba(0, 0, 0, 0.05),
+    text: #0F172A,
+    text-muted: #64748B,
     preview: #FFFFFF
   ),
   escuro: (
@@ -141,9 +141,9 @@ $themes: (
 
 // Glassmorphism Utility
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-surface-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }

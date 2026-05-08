@@ -1,0 +1,42 @@
+<div class="analytics-page" #containerRef>
+  <header>
+    <h2>Desempenho por Tema</h2>
+    <p>Visão granular do seu conhecimento em cada tópico.</p>
+  </header>
+
+  <div class="table-container glass">
+    <table>
+      <thead>
+        <tr>
+          <th>Tema</th>
+          <th>Área</th>
+          <th>Questões</th>
+          <th>Acerto (%)</th>
+          <th>Sessões</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr *ngFor="let i of [1,2,3,4,5]">
+            <td colspan="5"><div class="skeleton-row"></div></td>
+          </tr>
+        } @else {
+          <tr *ngFor="let topic of topics()">
+            <td class="theme-name">{{ topic.tema }}</td>
+            <td><span class="badge">{{ topic.grandeArea }}</span></td>
+            <td>{{ topic.totalQuestions }}</td>
+            <td>
+              <div class="accuracy-cell">
+                <div class="progress-bar">
+                  <div class="fill" [style.width.%]="topic.accuracy" [class]="getAccClass(topic.accuracy)"></div>
+                </div>
+                <span>{{ topic.accuracy }}%</span>
+              </div>
+            </td>
+            <td>{{ topic.sessionsCount }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

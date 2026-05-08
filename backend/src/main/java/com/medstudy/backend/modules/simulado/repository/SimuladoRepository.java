@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -15,4 +16,6 @@ public interface SimuladoRepository extends JpaRepository<Simulado, UUID>, JpaSp
 
     @Query("SELECT s FROM Simulado s WHERE s.user.id = :userId")
     List<Simulado> findAllByUserId(@Param("userId") UUID userId);
+
+    Optional<Simulado> findFirstByUserIdAndInstituicaoIgnoreCaseOrderByCreatedAtDesc(UUID userId, String instituicao);
 }

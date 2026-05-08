@@ -1,0 +1,61 @@
+<app-modal-layout 
+  title="Registrar Sessão de Questões" 
+  [loading]="loading()"
+  (close)="onClose()"
+  (save)="onSave()">
+  
+  <form [formGroup]="sessionForm" class="session-form">
+    <div class="form-group">
+      <label>Grande Área</label>
+      <select formControlName="grandeArea" class="glass-input">
+        <option value="" disabled>Selecione a área...</option>
+        <option *ngFor="let area of areas" [value]="area">{{ area }}</option>
+      </select>
+      <div class="error" *ngIf="sessionForm.get('grandeArea')?.touched && sessionForm.get('grandeArea')?.errors?.['required']">
+        Campo obrigatório.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Tema / Tópico</label>
+      <input type="text" formControlName="tema" placeholder="Ex: Trauma Abdominal" class="glass-input">
+      <div class="error" *ngIf="sessionForm.get('tema')?.touched && sessionForm.get('tema')?.errors?.['required']">
+        Campo obrigatório.
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Total de Questões</label>
+        <input type="number" formControlName="totalQuestoes" placeholder="0" class="glass-input">
+        <div class="error" *ngIf="sessionForm.get('totalQuestoes')?.touched && sessionForm.get('totalQuestoes')?.errors?.['required']">
+          Obrigatório.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Acertos</label>
+        <input type="number" formControlName="acertos" placeholder="0" class="glass-input">
+        <div class="error" *ngIf="sessionForm.get('acertos')?.touched && (sessionForm.get('acertos')?.errors?.['required'] || sessionForm.errors?.['acertosInvalidos'])">
+          {{ sessionForm.errors?.['acertosInvalidos'] ? 'Acertos > Total' : 'Obrigatório' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Data da Sessão</label>
+        <input type="date" formControlName="data" class="glass-input">
+        <div class="error" *ngIf="sessionForm.get('data')?.touched && sessionForm.get('data')?.errors?.['futureDate']">
+          ⚠️ Não é permitido datas futuras.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Observações</label>
+      <textarea formControlName="observacoes" placeholder="Notas sobre o seu desempenho..." class="glass-input"></textarea>
+    </div>
+  </form>
+
+</app-modal-layout>

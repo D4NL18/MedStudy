@@ -1,0 +1,69 @@
+<div class="page-container fade-in">
+  <header class="page-header">
+    <div class="title-area">
+      <h1>Banco de Dados</h1>
+      <p>Gerencie suas sessões de estudo e acompanhe seu progresso detalhado.</p>
+    </div>
+    <button class="btn-add glass" (click)="openCreateModal()">
+      <span class="icon">+</span> Nova Sessão
+    </button>
+  </header>
+
+  <div class="filters-bar glass">
+    <div class="search-box">
+      <input type="text" placeholder="Filtrar por tema ou área..." (input)="onSearch($event)">
+    </div>
+    <div class="filter-actions">
+      <span class="results-count">{{ totalCount() }} sessões encontradas</span>
+    </div>
+  </div>
+
+  <div class="table-wrapper glass">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Grande Área</th>
+          <th>Tema</th>
+          <th class="text-center">Questões</th>
+          <th class="text-center">Acertos</th>
+          <th class="text-center">Performance</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let session of sessions()" class="session-row">
+          <td class="date-cell">{{ session.dataSessao | date:'dd/MM/yyyy' }}</td>
+          <td><span class="area-badge">{{ session.grandeArea }}</span></td>
+          <td class="theme-cell">{{ session.tema }}</td>
+          <td class="text-center font-bold">{{ session.qtsFeitas }}</td>
+          <td class="text-center font-bold">{{ session.qtsCorretas }}</td>
+          <td class="text-center">
+            <div class="performance-indicator" [class]="getPerformanceClass(session.qtsFeitas > 0 ? (session.qtsCorretas / session.qtsFeitas * 100) : 0)">
+              {{ session.qtsFeitas > 0 ? (session.qtsCorretas / session.qtsFeitas * 100 | number:'1.0-0') : 0 }}%
+            </div>
+          </td>
+          <td class="actions-cell">
+            <button class="btn-icon edit" (click)="openEditModal(session)" title="Editar">✏️</button>
+            <button class="btn-icon delete" (click)="onDelete(session.id)" title="Excluir">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="loading-overlay" *ngIf="loading() && sessions().length === 0">
+      <div class="spinner"></div>
+      <span>Carregando sessões...</span>
+    </div>
+
+    <app-sentinel 
+      *ngIf="hasMore()" 
+      [disabled]="loading()" 
+      (intersect)="onScroll()">
+    </app-sentinel>
+
+    <div class="end-of-list" *ngIf="!hasMore() && sessions().length > 0">
+      🎉 Você chegou ao fim da lista!
+    </div>
+  </div>
+</div>

@@ -7,15 +7,15 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:** Phase 9 — Frontend: Dashboard & Análises
 
-| Progress | 100% (Frontend Phase 9) |
-| Current Phase | Phase 9: Dashboard & Análises |
-| Last Activity | Theme default changed to Verde across the app |
+| Progress | 60% (Frontend Phase 9) |
+| Current Phase | Phase 10: Frontend: Banco de Dados |
+| Last Activity | Phase 9 finalized and committed to branch feat/09-frontend-dashboard-analytics |
 
 ---
 
 ## Current Status
 
-**Phase:** 6 of 15 — Shipped (PR Pending)
+**Phase:** 9 of 15 — Shipped (Branch feat/09-frontend-dashboard-analytics)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -37,8 +37,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 5: Backend Simulados & Plano de Aula Complete [v] Verified
 - [x] Phase 6: Dashboards & Analytics Implemented [v] Verified
 - [x] Phase 7: Revisão & Flashcards Implemented and Shipped.
-- [x] Phase 8: Frontend Core: Angular Setup, NgRx, Auth Module
-- [/] Phase 9: Frontend: Dashboard & Análises
+- [x] Phase 8: Frontend Core: Angular Setup, NgRx, Auth Module [v] Verified
+- [x] Phase 9: Frontend: Dashboard & Análises [v] Verified & Shipped
 
 ---
 
@@ -64,10 +64,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Next Step
 
-Run `/gsd-plan-phase 9` to generate the detailed execution plan for Phase 9 (Frontend: Dashboard & Análises).
+Run `/gsd-plan-phase 10` to generate the detailed execution plan for Phase 10 (Frontend: Banco de Dados).
 
-| Phase 8: Frontend Core + Auth | [x] | Setup, Themes & Security |
-| Phase 9: Dashboard & Análises | [/] | KPIs, gráficos, NgRx lazy |
+| Phase 9: Dashboard & Análises | [x] | KPIs, gráficos, NgRx lazy |
+| Phase 10: Banco de Dados      | [/] | Listagem, busca, filtros |
 
 ---
 
@@ -80,4 +80,4 @@ Run `/gsd-plan-phase 9` to generate the detailed execution plan for Phase 9 (Fro
 - [x] Nome do package Java: `com.medstudy` — confirmado
 
 ---
-*STATE.md updated: 2026-05-07 after Phase 6 Verified*
+*STATE.md updated: 2026-05-07 after Phase 9 Shipped*

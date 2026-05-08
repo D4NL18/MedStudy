@@ -7,10 +7,12 @@ import com.medstudy.backend.modules.simulado.mapper.SimuladoMapper;
 import com.medstudy.backend.modules.simulado.repository.SimuladoRepository;
 import com.medstudy.backend.modules.simulado.specification.SimuladoSpecifications;
 import com.medstudy.backend.modules.user.entity.User;
+import com.medstudy.backend.modules.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +23,37 @@ import java.util.UUID;
 public class SimuladoService {
 
     private final SimuladoRepository repository;
+    private final UserRepository userRepository;
     private final SimuladoMapper mapper;
 
-    public SimuladoService(SimuladoRepository repository, SimuladoMapper mapper) {
+    public SimuladoService(SimuladoRepository repository, UserRepository userRepository, SimuladoMapper mapper) {
         this.repository = repository;
+        this.userRepository = userRepository;
         this.mapper = mapper;
     }
 
+    private User getCurrentUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new RuntimeException("Sessão expirada ou usuário não autenticado");
+        }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            return (User) principal;
+        }
+        String email;
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof String) {
+            email = (String) principal;
+        } else {
+            throw new RuntimeException("Tipo de principal inválido: " + principal.getClass().getName());
+        }
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado no banco de dados"));
+    }
+
     public SimuladoResponse create(SimuladoRequest request) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         Simulado entity = mapper.toEntity(request);
         entity.setUser(currentUser);
         
@@ -40,7 +64,7 @@ public class SimuladoService {
     }
 
     public Page<SimuladoResponse> findAll(String nome, Pageable pageable) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         
         Specification<Simulado> spec = Specification.where(SimuladoSpecifications.hasUserId(currentUser.getId()))
                 .and(SimuladoSpecifications.hasNome(nome));
@@ -58,6 +82,8 @@ public class SimuladoService {
 
         entity.setNome(request.nome());
         entity.setDataRealizacao(request.dataRealizacao());
+        entity.setInstituicao(request.instituicao());
+        entity.setAno(request.ano());
         
         // Update areas
         entity.setCmTotal(request.cmTotal() != null ? request.cmTotal() : 0);
@@ -91,8 +117,15 @@ public class SimuladoService {
         repository.delete(entity);
     }
 
+    public SimuladoResponse findLatestByInstituicao(String instituicao) {
+        User currentUser = getCurrentUser();
+        return repository.findFirstByUserIdAndInstituicaoIgnoreCaseOrderByCreatedAtDesc(currentUser.getId(), instituicao)
+                .map(mapper::toResponse)
+                .orElse(null);
+    }
+
     private Simulado getSimuladoAndVerifyOwnership(UUID id) {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = getCurrentUser();
         Simulado entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Simulado não encontrado"));
 

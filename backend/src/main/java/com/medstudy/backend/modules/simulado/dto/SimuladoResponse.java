@@ -7,6 +7,8 @@ public record SimuladoResponse(
     UUID id,
     String nome,
     LocalDate dataRealizacao,
+    String instituicao,
+    Integer ano,
     int cmTotal, int cmAcertos, int cmErros,
     int cirTotal, int cirAcertos, int cirErros,
     int pedTotal, int pedAcertos, int pedErros,

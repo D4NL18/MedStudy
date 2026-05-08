@@ -14,6 +14,7 @@ public record StudySessionRequest(
         int qtsFeitas,
         int qtsCorretas,
         String instituicao,
+        String observacoes,
         LocalDate dataProximaRevisao,
         boolean revisaoConcluida) {
 }

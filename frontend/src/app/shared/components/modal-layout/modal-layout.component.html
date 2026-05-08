@@ -1,0 +1,19 @@
+<div class="modal-wrapper glass">
+  <header class="modal-header">
+    <h2>{{ title }}</h2>
+    <button class="btn-close" (click)="close.emit()" [disabled]="loading">
+      <span class="icon">✕</span>
+    </button>
+  </header>
+
+  <div class="modal-content custom-scrollbar">
+    <ng-content></ng-content>
+  </div>
+
+  <footer class="modal-footer">
+    <button class="btn-secondary" (click)="close.emit()" [disabled]="loading">Cancelar</button>
+    <button class="btn-primary" (click)="save.emit()" [disabled]="loading">
+      {{ loading ? 'Salvando...' : 'Salvar Registro' }}
+    </button>
+  </footer>
+</div>

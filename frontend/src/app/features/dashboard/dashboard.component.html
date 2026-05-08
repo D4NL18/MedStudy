@@ -1,0 +1,99 @@
+<div class="dashboard-content fade-in">
+  <header class="page-header">
+    <div class="title-area">
+      <h1>Dashboard de Performance</h1>
+      <p>Seu sistema de estudos inteligente está pronto para hoje.</p>
+    </div>
+    <div class="progress-indicator glass">
+      <div class="label">Progresso Teórico</div>
+      <div class="value">29.2%</div>
+      <div class="mini-bar"><div class="fill" style="width: 29.2%"></div></div>
+    </div>
+  </header>
+
+    @if (loading()) {
+      <div class="skeleton-grid">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5]"></div>
+      </div>
+    } @else if (kpis()) {
+      <div class="kpi-grid">
+        <div class="kpi-card glass highlight">
+          <div class="kpi-label">Taxa Global</div>
+          <div class="kpi-value text-accent">{{ kpis()?.sessions?.accuracy || 0 }}%</div>
+        </div>
+        <div class="kpi-card glass">
+          <div class="kpi-label">Questões (Mês/Ano)</div>
+          <div class="kpi-value">{{ kpis()?.sessions?.completed || 0 }} <span class="divider">/</span> 1581</div>
+        </div>
+        <div class="kpi-card glass">
+          <div class="kpi-label">Área Mais Forte</div>
+          <div class="kpi-value small text-success">{{ kpis()?.strongArea || 'Pediatria' }}</div>
+        </div>
+        <div class="kpi-card glass">
+          <div class="kpi-label">Área Mais Fraca</div>
+          <div class="kpi-value small text-error">{{ kpis()?.weakArea || 'GO' }}</div>
+        </div>
+        <div class="kpi-card glass">
+          <div class="kpi-label">Streak</div>
+          <div class="kpi-value">🔥 {{ kpis()?.currentStreak || 0 }}</div>
+        </div>
+      </div>
+
+      <div class="charts-layout">
+        <section class="chart-box glass">
+          <div class="box-header">
+            <h3>📈 Evolução Mensal (%)</h3>
+          </div>
+          <app-evolution-chart></app-evolution-chart>
+        </section>
+
+        <section class="chart-box glass">
+          <div class="box-header">
+            <h3>📊 Desempenho por Área (%)</h3>
+          </div>
+          <app-area-chart></app-area-chart>
+        </section>
+      </div>
+
+      <div class="bottom-layout">
+        <section class="chart-box glass distribution">
+          <div class="box-header">
+            <h3>⭕ Distribuição de Questões</h3>
+          </div>
+          <app-distribution-chart></app-distribution-chart>
+        </section>
+
+        <section class="lessons-box glass">
+          <div class="box-header">
+            <h3>🚨 Top 5 Aulas Prioritárias</h3>
+          </div>
+          <div class="lessons-list">
+            <div class="lesson-item" *ngFor="let lesson of topLessons">
+              <div class="lesson-info">
+                <span class="lesson-name">{{ lesson.tema }}</span>
+                <span class="lesson-area">{{ lesson.grandeArea }}</span>
+              </div>
+              <span class="priority-badge" [attr.data-priority]="lesson.prioridade">
+                {{ lesson.prioridade }}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section class="theme-box glass">
+          <div class="box-header">
+            <h3>🎨 Personalização</h3>
+          </div>
+          <div class="theme-grid">
+            <button *ngFor="let t of themes" 
+                    class="theme-card"
+                    [class.active]="themeService.activeTheme() === t"
+                    (click)="changeTheme(t)">
+              <div class="color-preview" [attr.data-theme]="t"></div>
+              <span>{{ t | titlecase }}</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+</div>
