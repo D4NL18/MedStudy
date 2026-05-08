@@ -1,5 +1,5 @@
 ---
-status: testing
+status: passed
 phase: 11-frontend-plano-revisao-flashcards
 source: 01-01-SUMMARY.md, 02-01-SUMMARY.md, 03-01-SUMMARY.md, 04-01-SUMMARY.md
 started: 2026-05-08T15:00:00Z
