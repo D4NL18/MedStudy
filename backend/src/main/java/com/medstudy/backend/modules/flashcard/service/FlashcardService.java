@@ -88,7 +88,13 @@ public class FlashcardService {
         long disponiveis = cards.stream()
             .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
             .count();
-        long concluidosHoje = 0;
+        
+        long concluidosHoje = cards.stream()
+            .filter(f -> f.getUpdatedAt() != null && 
+                        f.getUpdatedAt().toLocalDate().equals(today) && 
+                        f.getProximaRevisao() != null && 
+                        f.getProximaRevisao().isAfter(today))
+            .count();
 
         return Map.of(
             "total", total,
