@@ -13,6 +13,7 @@ import java.util.UUID;
 @Repository
 public interface FlashcardRepository extends JpaRepository<Flashcard, UUID>, JpaSpecificationExecutor<Flashcard> {
     Page<Flashcard> findAllByUserId(UUID userId, Pageable pageable);
+    java.util.List<Flashcard> findAllByUserId(UUID userId);
     
     long countByUserIdAndProximaRevisaoLessThanEqual(UUID userId, LocalDate date);
 }
