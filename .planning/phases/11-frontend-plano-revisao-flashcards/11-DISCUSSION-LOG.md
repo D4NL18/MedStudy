@@ -24,8 +24,8 @@
 ### 4. Flashcard Editing
 - **Options presented:** Markdown, Plain Text, Structured Fields.
 - **Selection:** Markdown.
-- **User Constraint:** Must allow images embedded in the text (URLs/Base64).
-- **Notes:** Implementation will use a Markdown library with image support.
+- **User Constraint:** Must allow images embedded in the text. **Essential for v1:** support for pasting images directly via **Ctrl+V**.
+- **Notes:** Implementation will use a Markdown library with image support and a custom paste event listener.
 
 ## Deferred Ideas
 - *None in this session.*

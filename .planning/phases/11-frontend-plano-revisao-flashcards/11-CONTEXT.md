@@ -25,7 +25,7 @@ Implementation of the education planning, revision management, and flashcard stu
 
 ### 4. Content & Editing
 - **Markdown Support:** Both Flashcards (Front/Back) and Lesson notes will support Markdown rendering.
-- **Rich Media:** Markdown implementation must support embedded images (via URLs or standard Markdown syntax) to allow for medical diagrams, anatomy charts, etc.
+- **Rich Media & Ctrl+V:** Markdown implementation **MUST** support embedded images. Crucially, the editor must allow **pasting images directly (Ctrl+V)**, converting them to inline Markdown (Base64) to allow fast card creation without manual URL handling.
 - **Forms:** Use Modals for creating/editing lessons and flashcards, following the pattern established in Phase 10.
 
 ## Canonical Refs
