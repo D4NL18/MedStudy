@@ -1,14 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { LucideAngularModule, Diamond, ChevronRight, CheckCircle } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 import { StudyPlanActions } from '../../../../store/study-plan/study-plan.actions';
 import { selectLessons, selectLoading } from '../../../../store/study-plan/study-plan.reducer';
 
 @Component({
   selector: 'app-aulas-list',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule.pick({ Diamond, ChevronRight, CheckCircle })],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './aulas-list.component.html',
   styleUrl: './aulas-list.component.scss'
 })

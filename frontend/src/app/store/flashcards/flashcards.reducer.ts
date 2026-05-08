@@ -55,6 +55,10 @@ export const flashcardsFeature = createFeature({
       ...state,
       summary
     })),
+    on(FlashcardsActions.deleteFlashcardSuccess, (state, { id }) => ({
+      ...state,
+      allCards: state.allCards.filter(c => c.id !== id)
+    })),
     on(FlashcardsActions.setCurrentCard, (state, { cardIndex }) => ({
       ...state,
       currentIndex: cardIndex

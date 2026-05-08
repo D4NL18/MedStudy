@@ -29,6 +29,12 @@ export class FlashcardsListComponent implements OnInit {
     this.store.dispatch(FlashcardsActions.loadStudyQueue());
   }
 
+  deleteCard(id: string) {
+    if (confirm('Tem certeza que deseja excluir este flashcard?')) {
+      this.store.dispatch(FlashcardsActions.deleteFlashcard({ id }));
+    }
+  }
+
   getDifficultyClass(difficulty: string): string {
     return difficulty?.toLowerCase() || '';
   }

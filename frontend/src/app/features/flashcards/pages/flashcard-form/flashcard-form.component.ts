@@ -19,13 +19,25 @@ export class FlashcardFormComponent {
   frente = '';
   verso = '';
 
-  onImagePasted(base64: string, field: 'frente' | 'verso') {
-    const markdown = `![image](${base64})\n`;
+  onImagePasted(base64: string, field: 'frente' | 'verso', textarea: HTMLTextAreaElement) {
+    const markdown = `\n![image](${base64})\n`;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = field === 'frente' ? this.frente : this.verso;
+    
+    const newText = text.substring(0, start) + markdown + text.substring(end);
+    
     if (field === 'frente') {
-      this.frente += markdown;
+      this.frente = newText;
     } else {
-      this.verso += markdown;
+      this.verso = newText;
     }
+
+    // Optional: reset cursor position after change
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = start + markdown.length;
+      textarea.focus();
+    });
   }
 
   save() {

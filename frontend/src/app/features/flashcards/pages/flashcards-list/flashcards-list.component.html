@@ -86,7 +86,9 @@
           </td>
           <td class="actions-cell">
             <button class="icon-btn"><lucide-icon name="edit" [size]="16"></lucide-icon></button>
-            <button class="icon-btn delete"><lucide-icon name="trash-2" [size]="16"></lucide-icon></button>
+            <button class="icon-btn delete" (click)="deleteCard(card.id)">
+              <lucide-icon name="trash-2" [size]="16"></lucide-icon>
+            </button>
           </td>
         </tr>
       </tbody>

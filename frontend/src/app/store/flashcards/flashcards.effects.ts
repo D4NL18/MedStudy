@@ -70,4 +70,16 @@ export class FlashcardsEffects {
       )
     )
   );
+
+  deleteFlashcard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FlashcardsActions.deleteFlashcard),
+      mergeMap(({ id }) =>
+        this.flashcardService.deleteFlashcard(id).pipe(
+          map(() => FlashcardsActions.deleteFlashcardSuccess({ id })),
+          catchError(error => of(FlashcardsActions.deleteFlashcardFailure({ error: error.message })))
+        )
+      )
+    )
+  );
 }

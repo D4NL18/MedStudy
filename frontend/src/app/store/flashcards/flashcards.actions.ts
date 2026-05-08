@@ -16,6 +16,10 @@ export const FlashcardsActions = createActionGroup({
     'Load Summary Success': props<{ summary: any }>(),
     'Load Summary Failure': props<{ error: string }>(),
 
+    'Delete Flashcard': props<{ id: string }>(),
+    'Delete Flashcard Success': props<{ id: string }>(),
+    'Delete Flashcard Failure': props<{ error: string }>(),
+
     'Rate Flashcard': props<{ rating: FlashcardStudyRating }>(),
     'Rate Flashcard Success': props<{ flashcard: Flashcard }>(),
     'Rate Flashcard Failure': props<{ error: string }>(),

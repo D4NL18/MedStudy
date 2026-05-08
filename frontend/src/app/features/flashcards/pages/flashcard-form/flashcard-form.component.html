@@ -3,17 +3,19 @@
   
   <div class="editor-section">
     <label>Frente (Markdown)</label>
-    <textarea [(ngModel)]="frente" 
+    <textarea #frenteInput 
+              [(ngModel)]="frente" 
               appImagePaste 
-              (imagePasted)="onImagePasted($event, 'frente')"
+              (imagePasted)="onImagePasted($event, 'frente', frenteInput)"
               placeholder="Digite o texto ou cole uma imagem..."></textarea>
   </div>
 
   <div class="editor-section">
     <label>Verso (Markdown)</label>
-    <textarea [(ngModel)]="verso" 
+    <textarea #versoInput
+              [(ngModel)]="verso" 
               appImagePaste 
-              (imagePasted)="onImagePasted($event, 'verso')"
+              (imagePasted)="onImagePasted($event, 'verso', versoInput)"
               placeholder="Digite a resposta ou cole uma imagem..."></textarea>
   </div>
 

@@ -32,6 +32,10 @@ export class FlashcardService {
     return this.http.put<Flashcard>(`${this.apiUrl}/${id}`, flashcard);
   }
 
+  deleteFlashcard(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
   getSummary(): Observable<any> {
     return this.http.get(`${this.apiUrl}/summary`);
   }

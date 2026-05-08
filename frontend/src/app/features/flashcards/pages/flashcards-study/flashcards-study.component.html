@@ -43,9 +43,14 @@
     </button>
   </div>
 
-  <div class="no-cards" *ngIf="(queue$ | async)?.length === 0">
+  <div class="no-cards" *ngIf="(queue$ | async)?.length === 0 && !(loading$ | async)">
     <h3>Sessão Finalizada!</h3>
     <p>Você revisou todos os cartões de hoje.</p>
     <button class="finish-btn" (click)="close()">Voltar</button>
+  </div>
+
+  <div class="loading-state" *ngIf="loading$ | async">
+    <div class="spinner"></div>
+    <p>Carregando sua sessão de hoje...</p>
   </div>
 </div>
