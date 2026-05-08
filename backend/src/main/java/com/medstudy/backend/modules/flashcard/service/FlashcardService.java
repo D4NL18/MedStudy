@@ -9,17 +9,17 @@ import com.medstudy.backend.modules.flashcard.repository.FlashcardRepository;
 import com.medstudy.backend.modules.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +86,7 @@ public class FlashcardService {
         long disponiveis = cards.stream()
             .filter(f -> f.getProximaRevisao() == null || f.getProximaRevisao().isBefore(LocalDateTime.now()))
             .count();
-        long concluidosHoje = 0; // Needs history tracking or field
+        long concluidosHoje = 0;
 
         return Map.of(
             "total", total,
