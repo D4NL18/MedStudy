@@ -79,10 +79,10 @@
             <span class="status" [class.available]="true">Disponível</span>
           </td>
           <td>
-             <span class="difficulty" *ngIf="card.ultimaDificuldade">
-               {{ card.ultimaDificuldade }}
+             <span class="difficulty" *ngIf="card.dificuldadeUltima">
+               {{ card.dificuldadeUltima }}
              </span>
-             <span *ngIf="!card.ultimaDificuldade">—</span>
+             <span *ngIf="!card.dificuldadeUltima">—</span>
           </td>
           <td class="actions-cell">
             <button class="icon-btn"><lucide-icon name="edit" [size]="16"></lucide-icon></button>
