@@ -7,9 +7,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:** Phase 9 — Frontend: Dashboard & Análises
 
-| Progress | 60% (Frontend Phase 9) |
-| Current Phase | Phase 10: Frontend: Banco de Dados |
-| Last Activity | Phase 9 finalized and committed to branch feat/09-frontend-dashboard-analytics |
+| Progress | 66% (Phase 10 Shipped) |
+| Current Phase | Phase 11: Frontend: Simulados (Integrated) |
+| Last Activity | Phase 10 finalized and pushed to branch feat/10-frontend-banco-simulados |
 
 ---
 
@@ -39,6 +39,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 7: Revisão & Flashcards Implemented and Shipped.
 - [x] Phase 8: Frontend Core: Angular Setup, NgRx, Auth Module [v] Verified
 - [x] Phase 9: Frontend: Dashboard & Análises [v] Verified & Shipped
+- [x] Phase 10: Frontend: Banco de Dados & Simulados [v] Verified & Shipped
 
 ---
 
@@ -64,10 +65,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Next Step
 
-Run `/gsd-plan-phase 10` to generate the detailed execution plan for Phase 10 (Frontend: Banco de Dados).
+Run `/gsd-plan-phase 11` to generate the detailed execution plan for Phase 11 (Frontend: Simulados Integrated).
 
-| Phase 9: Dashboard & Análises | [x] | KPIs, gráficos, NgRx lazy |
-| Phase 10: Banco de Dados      | [/] | Listagem, busca, filtros |
+| Phase 10: Banco de Dados      | [x] | Listagem, busca, filtros |
+| Phase 11: Frontend: Simulados | [/] | Histórico, templates, UAT |
 
 ---
 
