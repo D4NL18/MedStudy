@@ -1,25 +1,64 @@
-<div class="form-container">
-  <h1>Criar Novo Flashcard</h1>
-  
-  <div class="editor-section">
-    <label>Frente (Markdown)</label>
-    <textarea #frenteInput 
-              [(ngModel)]="frente" 
-              appImagePaste 
-              (imagePasted)="onImagePasted($event, 'frente', frenteInput)"
-              placeholder="Digite o texto ou cole uma imagem..."></textarea>
-  </div>
+<div class="form-overlay">
+  <div class="form-modal glass">
+    <div class="modal-header">
+      <h2>Novo Flashcard</h2>
+      <button class="close-btn" (click)="cancel()">
+        <lucide-icon name="x" [size]="24"></lucide-icon>
+      </button>
+    </div>
 
-  <div class="editor-section">
-    <label>Verso (Markdown)</label>
-    <textarea #versoInput
-              [(ngModel)]="verso" 
-              appImagePaste 
-              (imagePasted)="onImagePasted($event, 'verso', versoInput)"
-              placeholder="Digite a resposta ou cole uma imagem..."></textarea>
-  </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label>Grande Área</label>
+        <select [(ngModel)]="grandeArea">
+          <option *ngFor="let area of areas" [value]="area">{{ area }}</option>
+        </select>
+      </div>
 
-  <div class="actions">
-    <button (click)="save()" [disabled]="!frente || !verso">Salvar Flashcard</button>
+      <div class="editors-grid">
+        <div class="editor-column">
+          <div class="label-row">
+            <span class="dot blue"></span>
+            <label>Frente (Pergunta)</label>
+          </div>
+          <div class="rich-editor" 
+               #frenteEditor
+               contenteditable="true"
+               appImagePaste
+               (imagePasted)="onImagePasted($event, 'frente')"
+               placeholder="Digite o texto ou cole uma imagem...">
+          </div>
+          <button class="btn-action" (click)="triggerImageUpload('frente')">
+            <lucide-icon name="image" [size]="18"></lucide-icon>
+            Inserir Imagem
+          </button>
+          <p class="hint">💡 Ou cole com Ctrl+V / arraste uma imagem</p>
+        </div>
+
+        <div class="editor-column">
+          <div class="label-row">
+            <span class="dot green"></span>
+            <label>Verso (Resposta)</label>
+          </div>
+          <div class="rich-editor" 
+               #versoEditor
+               contenteditable="true"
+               appImagePaste
+               (imagePasted)="onImagePasted($event, 'verso')"
+               placeholder="Digite a resposta ou cole uma imagem...">
+          </div>
+          <button class="btn-action" (click)="triggerImageUpload('verso')">
+            <lucide-icon name="image" [size]="18"></lucide-icon>
+            Inserir Imagem
+          </button>
+          <p class="hint">💡 Ou cole com Ctrl+V / arraste uma imagem</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cancel()">Cancelar</button>
+      <button class="btn-save" (click)="save()">Salvar</button>
+    </div>
   </div>
 </div>

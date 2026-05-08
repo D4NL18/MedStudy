@@ -9,6 +9,12 @@ import com.medstudy.backend.modules.flashcard.repository.FlashcardRepository;
 import com.medstudy.backend.modules.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,10 +64,38 @@ public class FlashcardService {
     }
 
     @Transactional
-    public FlashcardResponse study(UUID id, FlashcardStudyRequest request) {
-        Flashcard flashcard = findByIdAndValidateUser(id);
+    public FlashcardResponse study(FlashcardStudyRequest request) {
+        Flashcard flashcard = findByIdAndValidateUser(request.flashcardId());
         srService.calculateNextRevision(flashcard, request.dificuldade());
         return mapper.toResponse(repository.save(flashcard));
+    }
+
+    @Transactional(readOnly = true)
+    public List<FlashcardResponse> getTodayQueue() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return repository.findAllByUserId(user.getId()).stream()
+            .filter(f -> f.getProximaRevisao() == null || f.getProximaRevisao().isBefore(LocalDateTime.now()))
+            .map(mapper::toResponse)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getSummary() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Flashcard> cards = repository.findAllByUserId(user.getId());
+        
+        long total = cards.size();
+        long disponiveis = cards.stream()
+            .filter(f -> f.getProximaRevisao() == null || f.getProximaRevisao().isBefore(LocalDateTime.now()))
+            .count();
+        long concluidosHoje = 0; // Needs history tracking or field
+
+        return Map.of(
+            "total", total,
+            "disponiveisHoje", disponiveis,
+            "metaDiaria", 20,
+            "concluidosHoje", concluidosHoje
+        );
     }
 
     private Flashcard findByIdAndValidateUser(UUID id) {

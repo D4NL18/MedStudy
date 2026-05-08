@@ -3,18 +3,21 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
 import { selectAllCards, selectSummary, selectLoading } from '../../../../store/flashcards/flashcards.reducer';
 
 @Component({
   selector: 'app-flashcards-list',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, RouterLink],
+  imports: [CommonModule, LucideAngularModule, RouterLink, MatDialogModule],
   templateUrl: './flashcards-list.component.html',
   styleUrl: './flashcards-list.component.scss'
 })
 export class FlashcardsListComponent implements OnInit {
   private store = inject(Store);
+  private dialog = inject(MatDialog);
   
   cards$ = this.store.select(selectAllCards);
   summary$ = this.store.select(selectSummary);
@@ -30,9 +33,20 @@ export class FlashcardsListComponent implements OnInit {
   }
 
   deleteCard(id: string) {
-    if (confirm('Tem certeza que deseja excluir este flashcard?')) {
-      this.store.dispatch(FlashcardsActions.deleteFlashcard({ id }));
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Excluir Flashcard',
+        message: 'Tem certeza que deseja excluir este flashcard permanentemente?',
+        confirmText: 'Excluir',
+        isDelete: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.dispatch(FlashcardsActions.deleteFlashcard({ id }));
+      }
+    });
   }
 
   getDifficultyClass(difficulty: string): string {

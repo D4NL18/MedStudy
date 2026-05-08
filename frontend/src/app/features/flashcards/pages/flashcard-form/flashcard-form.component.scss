@@ -1,44 +1,171 @@
-.form-container { 
-  padding: 2rem; 
-  max-width: 800px; 
-  margin: 0 auto; 
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-xl);
 }
 
-.editor-section { 
-  margin-bottom: 2rem; 
+.form-modal {
+  width: 100%;
+  max-width: 1000px;
+  background: var(--color-surface-glass);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
 }
 
-label { 
-  display: block; 
-  margin-bottom: 0.5rem; 
-  font-weight: bold; 
+.modal-header {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+
+  h2 { font-size: 1.5rem; color: var(--color-text); }
+  .close-btn { background: none; border: none; color: var(--color-text-muted); cursor: pointer; }
 }
 
-textarea { 
-  width: 100%; 
-  height: 200px; 
-  padding: 1rem; 
-  border-radius: 8px; 
-  background: var(--color-surface); 
-  color: white; 
-  border: 1px solid rgba(255,255,255,0.1); 
-  font-family: monospace;
+.modal-body {
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
 }
 
-.actions { 
-  text-align: right; 
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label { font-weight: 600; color: var(--color-text-muted); font-size: 0.9rem; }
+  select {
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 1rem;
+    outline: none;
+    &:focus { border-color: var(--color-accent); }
+  }
 }
 
-button { 
-  padding: 1rem 2rem; 
-  background: var(--color-primary); 
-  color: white; 
-  border: none; 
-  border-radius: 8px; 
+.editors-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+}
+
+.editor-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .blue { background: #3B82F6; }
+    .green { background: #10B981; }
+  }
+}
+
+.rich-editor {
+  min-height: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 16px;
+  background: white;
+  color: #1a1a1a;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  outline: none;
+  font-size: 1rem;
+  line-height: 1.6;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: #E91E63; // Pink border as requested/shown
+    box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1);
+  }
+
+  &:empty:before {
+    content: attr(placeholder);
+    color: #94a3b8;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    margin: 12px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+}
+
+.btn-action {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  
-  &:disabled { 
-    opacity: 0.5; 
-    cursor: not-allowed; 
+  &:hover { background: rgba(255, 255, 255, 0.1); }
+}
+
+.hint { font-size: 0.8rem; color: var(--color-text-muted); margin: 0; }
+
+.modal-footer {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.1);
+
+  button {
+    padding: 12px 32px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-cancel {
+    background: white;
+    color: #333;
+    border: 1px solid #ddd;
+    &:hover { background: #f5f5f5; }
+  }
+
+  .btn-save {
+    background: #880E4F; // Dark pink/maroon as shown
+    color: white;
+    &:hover { filter: brightness(1.2); }
   }
 }
