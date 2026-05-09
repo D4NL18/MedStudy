@@ -5,17 +5,18 @@
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 11 — Frontend: Plano de Aulas, Revisão & Flashcards
+**Current focus:** Phase 12 — Backend Tests
 
-- **Current Phase:** Phase 11: Frontend: Plano de Aulas, Revisão & Flashcards (Complete)
-- **Status:** All Wave 1-4 objectives delivered. Infrastructure, UI, and Study Mode functional.
-- **Next Steps:** Proceed to Phase 12 (Backend/Frontend: Metrics, Analytics & Dashboard Polish).
+- **Current Phase:** Phase 12: Backend Tests
+- **Status:** Phase 11 Shipped. Phase 12 Context gathered.
+- **Next Steps:** Proceed to /gsd-plan-phase 12.
+
 
 ---
 
 ## Current Status
 
-**Phase:** 9 of 15 — Shipped (Branch feat/09-frontend-dashboard-analytics)
+**Phase:** 11 of 15 — Shipped (Branch feat/11-frontend-plano-revisao-flashcards)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -40,6 +41,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 8: Frontend Core: Angular Setup, NgRx, Auth Module [v] Verified
 - [x] Phase 9: Frontend: Dashboard & Análises [v] Verified & Shipped
 - [x] Phase 10: Frontend: Banco de Dados & Simulados [v] Verified & Shipped
+- [x] Phase 11: Frontend: Plano de Aulas, Revisão & Flashcards [v] Verified & Shipped
 
 ---
 
@@ -65,10 +67,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Next Step
 
-Run `/gsd-plan-phase 11` to generate the detailed execution plan for Phase 11 (Frontend: Simulados Integrated).
+Run `/gsd-plan-phase 12` to generate the detailed execution plan for Phase 12 (Backend Tests).
 
-| Phase 10: Banco de Dados      | [x] | Listagem, busca, filtros |
-| Phase 11: Frontend: Simulados | [/] | Histórico, templates, UAT |
+| Phase 11: Frontend Core       | [x] | Plano de Aulas, Revisão, Flashcards |
+| Phase 12: Backend Tests       | [/] | Contexto coletado, JaCoCo, Factory |
+
 
 ---
 
