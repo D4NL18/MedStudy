@@ -1,0 +1,74 @@
+<div class="login-container">
+  <!-- Animated Background Mesh -->
+  <div class="mesh-gradient"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="login-card glass">
+    <div class="card-header">
+      <div class="logo">
+        <span class="brand">MedStudy</span>
+        <div class="dot"></div>
+      </div>
+      <h1>Bem-vindo de volta</h1>
+      <p>Continue sua jornada para a residência médica.</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Error Message -->
+      @if (error()) {
+        <div class="error-badge">
+          <i class="icon-error"></i>
+          <span>{{ error() }}</span>
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="seu@email.com"
+            [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <div class="input-wrapper">
+          <input 
+            [type]="showPassword() ? 'text' : 'password'" 
+            id="senha" 
+            formControlName="senha" 
+            placeholder="••••••••"
+            [class.invalid]="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched"
+          >
+          <button type="button" class="btn-toggle" (click)="togglePassword()">
+            {{ showPassword() ? '🙈' : '👁️' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <a href="#" class="forgot-link">Esqueceu a senha?</a>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loginForm.invalid || loading()">
+        @if (loading()) {
+          <span class="spinner"></span>
+        } @else {
+          Acessar Plataforma
+        }
+      </button>
+    </form>
+
+    <div class="card-footer">
+      <span>Não tem uma conta?</span>
+      <a href="#">Fale com um consultor</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE refresh_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    expiry_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE study_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    grande_area VARCHAR(100) NOT NULL,
+    tema VARCHAR(255) NOT NULL,
+    data_sessao DATE NOT NULL,
+    qts_feitas INTEGER NOT NULL DEFAULT 0,
+    qts_corretas INTEGER NOT NULL DEFAULT 0,
+    instituicao VARCHAR(255),
+    data_proxima_revisao DATE,
+    revisao_concluida BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE simulados (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    nome VARCHAR(255) NOT NULL,
+    data_realizacao DATE NOT NULL,
+    cm_total INTEGER NOT NULL DEFAULT 0,
+    cm_acertos INTEGER NOT NULL DEFAULT 0,
+    cm_erros INTEGER NOT NULL DEFAULT 0,
+    cir_total INTEGER NOT NULL DEFAULT 0,
+    cir_acertos INTEGER NOT NULL DEFAULT 0,
+    cir_erros INTEGER NOT NULL DEFAULT 0,
+    ped_total INTEGER NOT NULL DEFAULT 0,
+    ped_acertos INTEGER NOT NULL DEFAULT 0,
+    ped_erros INTEGER NOT NULL DEFAULT 0,
+    go_total INTEGER NOT NULL DEFAULT 0,
+    go_acertos INTEGER NOT NULL DEFAULT 0,
+    go_erros INTEGER NOT NULL DEFAULT 0,
+    prev_total INTEGER NOT NULL DEFAULT 0,
+    prev_acertos INTEGER NOT NULL DEFAULT 0,
+    prev_erros INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE lessons (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    grande_area VARCHAR(100) NOT NULL,
+    tema VARCHAR(255) NOT NULL,
+    prioridade VARCHAR(50) NOT NULL,
+    aula_assistida BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE flashcards (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    grande_area VARCHAR(100) NOT NULL,
+    frente JSONB NOT NULL,
+    verso JSONB NOT NULL,
+    proxima_revisao DATE,
+    dificuldade_ultima VARCHAR(50),
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+);

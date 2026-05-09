@@ -1,0 +1,37 @@
+import { createAction, props } from '@ngrx/store';
+
+export interface AreaAnalytics {
+  grandeArea: string;
+  totalQuestions: number;
+  accuracy: number;
+  sessionsCount: number;
+  trendRate: number;
+}
+
+export interface TopicAnalytics {
+  tema: string;
+  grandeArea: string;
+  totalQuestions: number;
+  accuracy: number;
+  sessionsCount: number;
+}
+
+export const loadAreaAnalytics = createAction('[Analytics] Load Area Analytics');
+export const loadAreaAnalyticsSuccess = createAction(
+  '[Analytics] Load Area Analytics Success',
+  props<{ areas: AreaAnalytics[] }>()
+);
+export const loadAreaAnalyticsFailure = createAction(
+  '[Analytics] Load Area Analytics Failure',
+  props<{ error: any }>()
+);
+
+export const loadTopicAnalytics = createAction('[Analytics] Load Topic Analytics');
+export const loadTopicAnalyticsSuccess = createAction(
+  '[Analytics] Load Topic Analytics Success',
+  props<{ topics: TopicAnalytics[] }>()
+);
+export const loadTopicAnalyticsFailure = createAction(
+  '[Analytics] Load Topic Analytics Failure',
+  props<{ error: any }>()
+);

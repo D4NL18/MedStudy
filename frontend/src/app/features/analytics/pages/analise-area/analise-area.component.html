@@ -1,0 +1,40 @@
+<div class="analytics-page" #containerRef>
+  <header>
+    <h2>Desempenho por Grande Área</h2>
+    <p>Clique em uma área para ver o detalhamento no banco de questões.</p>
+  </header>
+
+  @if (loading()) {
+    <div class="skeleton-chart glass"></div>
+  } @else {
+    <div class="chart-wrapper glass">
+      <ngx-charts-bar-horizontal *ngIf="chartData().length > 0 && containerRef.offsetWidth > 0"
+        [view]="[containerRef.offsetWidth - 64, chartHeight()]"
+        [results]="chartData()"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="false"
+        [showXAxisLabel]="true"
+        [xAxisLabel]="'Taxa de Acerto (%)'"
+        [scheme]="colorScheme()"
+        [barPadding]="20"
+        [roundDomains]="true"
+        (select)="onSelect($event)"
+      >
+      </ngx-charts-bar-horizontal>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card glass" *ngFor="let area of displayAreas()">
+        <div class="area-name">{{ area.grandeArea }}</div>
+        <div class="area-metrics">
+          <span [class]="getPerformanceClass(area.accuracy)">{{ area.accuracy }}%</span>
+          <span class="count">{{ area.totalQuestions }} questões</span>
+        </div>
+        <div class="trend" [class.up]="area.trendRate > 0" [class.down]="area.trendRate < 0">
+          {{ area.trendRate > 0 ? '↑' : '↓' }} {{ area.trendRate }}% vs média
+        </div>
+      </div>
+    </div>
+  }
+</div>
