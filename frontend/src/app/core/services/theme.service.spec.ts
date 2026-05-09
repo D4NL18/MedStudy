@@ -46,10 +46,8 @@ describe('ThemeService', () => {
   });
 
   it('should apply theme to document element', () => {
-    // Manually trigger the effect by updating the store/signal
-    // In Angular 16/17+, effect() is async and needs to be flushed
-    // But we can check if it was called during initialization
-    expect(document.documentElement.getAttribute('data-theme')).toBe('verde');
+    // The initial theme is 'rosa' because of the localStorage stub
+    expect(document.documentElement.getAttribute('data-theme')).toBe('rosa');
   });
 
   it('should update localStorage when theme changes', () => {
