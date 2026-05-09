@@ -8,8 +8,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 **Current focus:** Phase 12 — Backend Tests
 
 - **Current Phase:** Phase 12: Backend Tests
-- **Status:** Phase 11 Shipped. Phase 12 Context gathered.
-- **Next Steps:** Proceed to /gsd-plan-phase 12.
+- **Status:** Phase 11 Shipped. Phase 12 Planning complete.
+- **Next Steps:** Proceed to /gsd-execute-phase 12.
+
 
 
 ---
@@ -67,10 +68,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Next Step
 
-Run `/gsd-plan-phase 12` to generate the detailed execution plan for Phase 12 (Backend Tests).
+Run `/gsd-execute-phase 12` to execute the detailed plan for Phase 12 (Backend Tests).
 
 | Phase 11: Frontend Core       | [x] | Plano de Aulas, Revisão, Flashcards |
-| Phase 12: Backend Tests       | [/] | Contexto coletado, JaCoCo, Factory |
+| Phase 12: Backend Tests       | [/] | Plano pronto, pronto para execução |
+
 
 
 ---
