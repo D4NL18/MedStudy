@@ -49,7 +49,14 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    <div class="empty-state" *ngIf="!loading() && sessions().length === 0">
+      <div class="empty-icon">📂</div>
+      <h3>Nenhuma sessão encontrada</h3>
+      <p>Você ainda não registrou seus estudos. Comece agora para acompanhar seu desempenho!</p>
+      <button class="btn-cta" (click)="openCreateModal()">Registrar Primeira Sessão</button>
+    </div>
+  </div>
+</div>
 
     <div class="loading-overlay" *ngIf="loading() && sessions().length === 0">
       <div class="spinner"></div>

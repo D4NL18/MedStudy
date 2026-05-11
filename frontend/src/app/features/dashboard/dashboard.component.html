@@ -18,11 +18,17 @@
     } @else if (kpis()) {
       <div class="kpi-grid">
         <div class="kpi-card glass highlight">
-          <div class="kpi-label">Taxa Global</div>
+          <div class="kpi-label">
+            Taxa Global
+            <lucide-icon name="info" class="info-icon" title="Média de acerto calculada sobre todas as sessões de estudo realizadas."></lucide-icon>
+          </div>
           <div class="kpi-value text-accent">{{ kpis()?.sessions?.accuracy || 0 }}%</div>
         </div>
         <div class="kpi-card glass">
-          <div class="kpi-label">Questões (Mês/Ano)</div>
+          <div class="kpi-label">
+            Questões (Mês/Ano)
+            <lucide-icon name="info" class="info-icon" title="Volume total de questões respondidas no mês atual versus o ano vigente."></lucide-icon>
+          </div>
           <div class="kpi-value">{{ kpis()?.sessions?.completed || 0 }} <span class="divider">/</span> 1581</div>
         </div>
         <div class="kpi-card glass">
@@ -34,7 +40,10 @@
           <div class="kpi-value small text-error">{{ kpis()?.weakArea || 'GO' }}</div>
         </div>
         <div class="kpi-card glass">
-          <div class="kpi-label">Streak</div>
+          <div class="kpi-label">
+            Streak
+            <lucide-icon name="info" class="info-icon" title="Dias consecutivos em que você realizou pelo menos uma sessão de estudo."></lucide-icon>
+          </div>
           <div class="kpi-value">🔥 {{ kpis()?.currentStreak || 0 }}</div>
         </div>
       </div>

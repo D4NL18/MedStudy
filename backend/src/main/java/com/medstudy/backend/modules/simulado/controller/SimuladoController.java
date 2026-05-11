@@ -3,6 +3,7 @@ package com.medstudy.backend.modules.simulado.controller;
 import com.medstudy.backend.modules.simulado.dto.SimuladoRequest;
 import com.medstudy.backend.modules.simulado.dto.SimuladoResponse;
 import com.medstudy.backend.modules.simulado.service.SimuladoService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
@@ -25,11 +26,13 @@ public class SimuladoController {
         this.service = service;
     }
 
+    @Operation(summary = "Criar novo simulado")
     @PostMapping
     public ResponseEntity<SimuladoResponse> create(@RequestBody @Valid SimuladoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
     }
 
+    @Operation(summary = "Listar simulados (paginado)")
     @GetMapping
     public ResponseEntity<Page<SimuladoResponse>> findAll(
             @RequestParam(required = false) String nome,
@@ -55,6 +58,7 @@ public class SimuladoController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Obter template (último simulado) por instituição")
     @GetMapping("/template")
     public ResponseEntity<SimuladoResponse> getLatestByInstituicao(@RequestParam String instituicao) {
         SimuladoResponse response = service.findLatestByInstituicao(instituicao);
