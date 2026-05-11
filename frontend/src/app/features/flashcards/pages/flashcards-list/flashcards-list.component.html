@@ -5,9 +5,9 @@
       <p>Seu deck pessoal com repetição espaçada</p>
     </div>
     <div class="actions">
-      <button class="btn-outline">
+      <button class="btn-outline" (click)="resetProgress()">
         <lucide-icon name="rotate-cw" [size]="18"></lucide-icon>
-        Resetar Testes
+        Resetar Progresso
       </button>
       <button class="btn-primary" routerLink="/flashcards/novo">
         <lucide-icon name="plus" [size]="18"></lucide-icon>

@@ -82,4 +82,23 @@ export class FlashcardsEffects {
       )
     )
   );
+
+  resetProgress$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FlashcardsActions.resetProgress),
+      mergeMap(({ grandeArea }) =>
+        this.flashcardService.resetProgress(grandeArea).pipe(
+          map(() => FlashcardsActions.resetProgressSuccess()),
+          catchError(error => of(FlashcardsActions.resetProgressFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  onResetSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FlashcardsActions.resetProgressSuccess),
+      map(() => FlashcardsActions.loadSummary())
+    )
+  );
 }

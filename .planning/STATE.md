@@ -1,3 +1,18 @@
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Legacy Convergence
+current_phase: "Phase 17: Sincronização de Regras & Normalização"
+status: completed
+last_updated: "2026-05-11T19:18:36.103Z"
+progress:
+  total_phases: 17
+  completed_phases: 12
+  total_plans: 21
+  completed_plans: 17
+  percent: 71
+---
+
 # STATE.md — MedStudy Project Memory
 
 ## Project Reference
@@ -5,11 +20,11 @@
 See: `.planning/PROJECT.md` (updated 2026-05-11)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 16 — Refinamento de Analytics & Tendências
+**Current focus:** Phase 17 — Sincronização de Regras & Normalização
 
-- **Current Phase:** Phase 16: Refinamento de Analytics & Tendências
-- **Status:** Shipped (Pushed to Remote)
-- **Next Steps:** Create PR manually on GitHub using the provided description.
+- **Current Phase:** Phase 17: Sincronização de Regras & Normalização
+- **Status:** Phase 17 complete
+- **Next Steps:** Start implementing Task 1.1 (StringNormalizer).
 
 ---
 
