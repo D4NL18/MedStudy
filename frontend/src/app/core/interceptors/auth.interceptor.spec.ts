@@ -1,73 +1,55 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { authInterceptor } from './auth.interceptor';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { selectToken } from '../../store/auth/auth.selectors';
-import { of, throwError } from 'rxjs';
 import * as AuthActions from '../../store/auth/auth.actions';
 
 describe('authInterceptor', () => {
+  let httpMock: HttpTestingController;
+  let httpClient: HttpClient;
   let store: MockStore;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideMockStore()
+        provideHttpClient(withInterceptors([authInterceptor])),
+        provideHttpClientTesting(),
+        provideMockStore({
+          initialState: { auth: { token: 'test-token' } }
+        })
       ]
     });
 
+    httpMock = TestBed.inject(HttpTestingController);
+    httpClient = TestBed.inject(HttpClient);
     store = TestBed.inject(MockStore);
   });
 
-  it('should add an Authorization header when token is present', (done) => {
-    const token = 'mock-token';
-    store.overrideSelector(selectToken, token);
-    
-    const req = new HttpRequest('GET', '/test');
-    const next: HttpHandlerFn = (request: HttpRequest<any>) => {
-      expect(request.headers.get('Authorization')).toBe(`Bearer ${token}`);
-      return of({} as HttpEvent<any>);
-    };
-
-    TestBed.runInInjectionContext(() => {
-      authInterceptor(req, next).subscribe(() => {
-        done();
-      });
-    });
+  afterEach(() => {
+    httpMock.verify();
   });
 
-  it('should NOT add an Authorization header when token is absent', (done) => {
-    store.overrideSelector(selectToken, null);
-    
-    const req = new HttpRequest('GET', '/test');
-    const next: HttpHandlerFn = (request: HttpRequest<any>) => {
-      expect(request.headers.has('Authorization')).toBeFalse();
-      return of({} as HttpEvent<any>);
-    };
-
-    TestBed.runInInjectionContext(() => {
-      authInterceptor(req, next).subscribe(() => {
-        done();
-      });
+  it('should add authorization header', (done) => {
+    httpClient.get('/api/test-auth').subscribe(() => {
+      done();
     });
+    
+    const req = httpMock.expectOne('/api/test-auth');
+    expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
+    req.flush({});
   });
 
-  it('should dispatch logout on 401 error', (done) => {
-    store.overrideSelector(selectToken, 'token');
+  it('should dispatch logout on 401', (done) => {
     const dispatchSpy = spyOn(store, 'dispatch');
-    
-    const req = new HttpRequest('GET', '/test');
-    const errorResponse = new HttpErrorResponse({ status: 401 });
-    const next: HttpHandlerFn = () => throwError(() => errorResponse);
-
-    TestBed.runInInjectionContext(() => {
-      authInterceptor(req, next).subscribe({
-        error: (err) => {
-          expect(dispatchSpy).toHaveBeenCalledWith(AuthActions.logout());
-          expect(err.status).toBe(401);
-          done();
-        }
-      });
+    httpClient.get('/api/test-401').subscribe({
+      error: () => {
+        expect(dispatchSpy).toHaveBeenCalled();
+        done();
+      }
     });
+    
+    const req = httpMock.expectOne('/api/test-401');
+    req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
   });
 });

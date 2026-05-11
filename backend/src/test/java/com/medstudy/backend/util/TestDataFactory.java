@@ -1,5 +1,7 @@
 package com.medstudy.backend.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.medstudy.backend.modules.aula.entity.Lesson;
 import com.medstudy.backend.modules.aula.entity.LessonPriority;
 import com.medstudy.backend.modules.flashcard.entity.Flashcard;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class TestDataFactory {
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static User createUser() {
         User user = new User();
@@ -68,8 +72,8 @@ public class TestDataFactory {
         lesson.setUser(user);
         lesson.setGrandeArea("PEDIATRIA");
         lesson.setTema("Neonatologia");
-        lesson.setPriority(LessonPriority.ALTA);
-        lesson.setWatched(false);
+        lesson.setPrioridade(LessonPriority.ALTA);
+        lesson.setAulaAssistida(false);
         return lesson;
     }
 
@@ -78,9 +82,8 @@ public class TestDataFactory {
         flashcard.setId(UUID.randomUUID());
         flashcard.setUser(user);
         flashcard.setGrandeArea("GINECOLOGIA");
-        flashcard.setTema("Obstetrícia");
-        flashcard.setFront("Pergunta de teste?");
-        flashcard.setBack("Resposta de teste.");
+        flashcard.setFrente(new TextNode("Pergunta de teste?"));
+        flashcard.setVerso(new TextNode("Resposta de teste."));
         flashcard.setProximaRevisao(LocalDate.now());
         return flashcard;
     }

@@ -19,4 +19,13 @@ public class SimuladoSpecifications {
             return cb.like(cb.lower(root.get("nome")), "%" + nome.toLowerCase() + "%");
         };
     }
+
+    public static Specification<Simulado> hasInstituicao(String instituicao) {
+        return (root, query, cb) -> {
+            if (instituicao == null || instituicao.isBlank()) {
+                return null;
+            }
+            return cb.equal(cb.lower(root.get("instituicao")), instituicao.toLowerCase());
+        };
+    }
 }

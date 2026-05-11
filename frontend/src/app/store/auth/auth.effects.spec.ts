@@ -5,87 +5,83 @@ import { AuthEffects } from './auth.effects';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import * as AuthActions from './auth.actions';
-import { mockAuthResponse } from '../../testing/fixtures/auth.fixture';
-import { hot, cold } from 'jasmine-marbles';
 
 describe('AuthEffects', () => {
   let actions$: Observable<any>;
   let effects: AuthEffects;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
-  let routerSpy: jasmine.SpyObj<Router>;
+  let authService: jasmine.SpyObj<AuthService>;
+  let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    const authSpy = jasmine.createSpyObj('AuthService', ['login']);
-    const rSpy = jasmine.createSpyObj('Router', ['navigate']);
+    authService = jasmine.createSpyObj('AuthService', ['login']);
+    router = jasmine.createSpyObj('Router', ['navigate']);
 
     TestBed.configureTestingModule({
       providers: [
         AuthEffects,
         provideMockActions(() => actions$),
-        { provide: AuthService, useValue: authSpy },
-        { provide: Router, useValue: rSpy }
+        { provide: AuthService, useValue: authService },
+        { provide: Router, useValue: router }
       ]
     });
 
     effects = TestBed.inject(AuthEffects);
-    authServiceSpy = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    spyOn(localStorage, 'setItem');
+    spyOn(localStorage, 'removeItem');
   });
 
-  describe('login$', () => {
-    it('should return loginSuccess on successful login', () => {
-      const email = 'test@test.com';
-      const senha = '123';
-      const response = { accessToken: 'token', refreshToken: 'refresh' };
-      const action = AuthActions.login({ email, senha });
-      const completion = AuthActions.loginSuccess({ response });
+  it('should login successfully', (done) => {
+    const response = { accessToken: 'token', refreshToken: 'refresh' } as any;
+    authService.login.and.returnValue(of(response));
+    actions$ = of(AuthActions.login({ email: 'test@test.com', senha: 'password' }));
 
-      actions$ = hot('-a', { a: action });
-      authServiceSpy.login.and.returnValue(of(response));
-      const expected = cold('-b', { b: completion });
-
-      expect(effects.login$).toBeObservable(expected);
-    });
-
-    it('should return loginFailure on failed login', () => {
-      const email = 'test@test.com';
-      const senha = '123';
-      const error = { error: { message: 'Erro' } };
-      const action = AuthActions.login({ email, senha });
-      const completion = AuthActions.loginFailure({ error: 'Erro' });
-
-      actions$ = hot('-a', { a: action });
-      authServiceSpy.login.and.returnValue(throwError(() => error));
-      const expected = cold('-b', { b: completion });
-
-      expect(effects.login$).toBeObservable(expected);
+    effects.login$.subscribe(action => {
+      expect(action).toEqual(AuthActions.loginSuccess({ response }));
+      done();
     });
   });
 
-  describe('loginSuccess$', () => {
-    it('should navigate to dashboard and save tokens', () => {
-      const response = { accessToken: 'token', refreshToken: 'refresh' };
-      const action = AuthActions.loginSuccess({ response });
+  it('should handle login success', (done) => {
+    const response = { accessToken: 'token', refreshToken: 'refresh' } as any;
+    actions$ = of(AuthActions.loginSuccess({ response }));
 
-      actions$ = of(action);
-
-      effects.loginSuccess$.subscribe();
-
-      expect(localStorage.getItem('token')).toBe('token');
-      expect(localStorage.getItem('refreshToken')).toBe('refresh');
-      expect(routerSpy.navigate).toHaveBeenCalledWith(['/dashboard']);
+    effects.loginSuccess$.subscribe(() => {
+      expect(localStorage.setItem).toHaveBeenCalledWith('token', 'token');
+      expect(localStorage.setItem).toHaveBeenCalledWith('refreshToken', 'refresh');
+      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+      done();
     });
   });
 
-  describe('logout$', () => {
-    it('should navigate to login and remove tokens', () => {
-      const action = AuthActions.logout();
-      actions$ = of(action);
+  it('should navigate to login on logout', (done) => {
+    actions$ = of(AuthActions.logout());
 
-      effects.logout$.subscribe();
+    effects.logout$.subscribe(() => {
+      expect(localStorage.removeItem).toHaveBeenCalledWith('token');
+      expect(localStorage.removeItem).toHaveBeenCalledWith('user');
+      expect(router.navigate).toHaveBeenCalledWith(['/login']);
+      done();
+    });
+  });
 
-      expect(localStorage.getItem('token')).toBeNull();
-      expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+  it('should handle login failure with error message', (done) => {
+    const errorResponse = { error: { message: 'Invalid credentials' } };
+    authService.login.and.returnValue(throwError(() => errorResponse));
+    actions$ = of(AuthActions.login({ email: 'test@test.com', senha: 'password' }));
+
+    effects.login$.subscribe(action => {
+      expect(action).toEqual(AuthActions.loginFailure({ error: 'Invalid credentials' }));
+      done();
+    });
+  });
+
+  it('should handle login failure without error message', (done) => {
+    authService.login.and.returnValue(throwError(() => ({})));
+    actions$ = of(AuthActions.login({ email: 'test@test.com', senha: 'password' }));
+
+    effects.login$.subscribe(action => {
+      expect(action).toEqual(AuthActions.loginFailure({ error: 'Erro ao realizar login. Verifique suas credenciais.' }));
+      done();
     });
   });
 });

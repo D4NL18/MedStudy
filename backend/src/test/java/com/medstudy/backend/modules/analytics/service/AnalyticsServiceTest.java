@@ -9,16 +9,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,38 +27,68 @@ class AnalyticsServiceTest {
     @Mock
     private StudySessionRepository repository;
 
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
+
     @InjectMocks
     private AnalyticsService analyticsService;
 
-    private User testUser;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        testUser = new User();
-        testUser.setId(UUID.randomUUID());
-
-        SecurityContextHolder.getContext().setAuthentication(
-            new UsernamePasswordAuthenticationToken(testUser, null, Collections.emptyList())
-        );
+        user = new User();
+        user.setId(UUID.randomUUID());
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
-    void shouldCalculateAreaAnalyticsWithTrend() {
-        // Mock Total Data: Area, Total Feitas, Total Corretas
-        Object[] totalRow = new Object[]{"Cirurgia", 100L, 70L};
-        List<Object[]> totalList = Collections.singletonList(totalRow);
-        when(repository.aggregateByAreaTotal(any())).thenReturn(totalList);
+    void getAreaAnalytics_ShouldReturnDataWithTrend() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(user);
 
-        // Mock Recent Data (Trend): Area, Total Feitas, Total Corretas
-        Object[] recentRow = new Object[]{"Cirurgia", 10L, 9L}; // 90% trend
-        List<Object[]> recentList = Collections.singletonList(recentRow);
-        when(repository.aggregateByAreaSince(any(), any())).thenReturn(recentList);
+        UUID userId = user.getId();
 
-        List<AreaAnalyticsResponse> results = analyticsService.getAreaAnalytics("TOTAL");
+        List<Object[]> totals = new ArrayList<>();
+        totals.add(new Object[]{"CLINICA_MEDICA", 100L, 80L, 5L});
 
-        assertEquals(1, results.size());
-        assertEquals(70.0, results.get(0).successRate());
-        assertEquals(90.0, results.get(0).trendRate());
-        assertEquals("MEDIUM", results.get(0).performanceLevel());
+        List<Object[]> recent = new ArrayList<>();
+        recent.add(new Object[]{"CLINICA_MEDICA", 20L, 18L});
+
+        when(repository.aggregateByAreaTotal(userId)).thenReturn(totals);
+        when(repository.aggregateByAreaSince(eq(userId), any())).thenReturn(recent);
+
+        List<AreaAnalyticsResponse> result = analyticsService.getAreaAnalytics("TOTAL");
+
+        assertFalse(result.isEmpty());
+        assertEquals("CLINICA_MEDICA", result.get(0).grandeArea());
+        assertEquals(80.0, result.get(0).accuracy());
+        assertEquals(90.0, result.get(0).trendRate()); // 18/20 * 100
+    }
+
+    @Test
+    void getTopicAnalytics_ShouldReturnData() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        UUID userId = user.getId();
+
+        List<Object[]> totals = new ArrayList<>();
+        totals.add(new Object[]{"Pneumo", "CLINICA_MEDICA", 50L, 40L, 3L});
+
+        List<Object[]> recent = new ArrayList<>();
+        recent.add(new Object[]{"Pneumo", "CLINICA_MEDICA", 10L, 9L});
+
+        when(repository.aggregateByTopicTotal(userId)).thenReturn(totals);
+        when(repository.aggregateByTopicSince(eq(userId), any())).thenReturn(recent);
+
+        var result = analyticsService.getTopicAnalytics("TOTAL");
+
+        assertFalse(result.isEmpty());
+        assertEquals("Pneumo", result.get(0).tema());
+        assertEquals(90.0, result.get(0).trendRate());
     }
 }

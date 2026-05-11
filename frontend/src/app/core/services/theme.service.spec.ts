@@ -9,14 +9,21 @@ describe('ThemeService', () => {
   let service: ThemeService;
   let store: MockStore;
   let document: Document;
-  const initialState = { theme: { activeTheme: 'verde' } };
+  let localStorageValue: string | null = null;
 
   beforeEach(() => {
+    localStorageValue = null;
+    spyOn(localStorage, 'getItem').and.callFake((key) => {
+      if (key === 'medstudy-theme-v2') return localStorageValue;
+      return null;
+    });
+    spyOn(localStorage, 'setItem');
+
     TestBed.configureTestingModule({
       providers: [
         ThemeService,
-        provideMockStore({ 
-          initialState,
+        provideMockStore({
+          initialState: { theme: { activeTheme: 'verde' } },
           selectors: [
             { selector: selectActiveTheme, value: 'verde' }
           ]
@@ -24,21 +31,34 @@ describe('ThemeService', () => {
       ]
     });
 
-    service = TestBed.inject(ThemeService);
     store = TestBed.inject(MockStore);
     document = TestBed.inject(DOCUMENT);
-    spyOn(localStorage, 'setItem');
-    spyOn(localStorage, 'getItem').and.callFake((key) => {
-      if (key === 'medstudy-theme-v2') return 'rosa';
-      return null;
-    });
   });
 
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-theme');
+  });
+
+  function setupService(lsValue: string | null, storeValue: AppTheme) {
+    localStorageValue = lsValue;
+    store.overrideSelector(selectActiveTheme, storeValue);
+    store.refreshState();
+    service = TestBed.inject(ThemeService);
+  }
+
   it('should be created', () => {
+    setupService('rosa', 'rosa');
     expect(service).toBeTruthy();
+    expect(service.activeTheme()).toBe('rosa');
+  });
+
+  it('should fallback to default theme if localStorage is empty', () => {
+    setupService(null, 'verde');
+    expect(service.activeTheme()).toBe('verde');
   });
 
   it('should dispatch setTheme action when setTheme is called', () => {
+    setupService('verde', 'verde');
     const dispatchSpy = spyOn(store, 'dispatch');
     const theme: AppTheme = 'escuro';
     service.setTheme(theme);
@@ -46,17 +66,17 @@ describe('ThemeService', () => {
   });
 
   it('should apply theme to document element', () => {
-    // The initial theme is 'rosa' because of the localStorage stub
-    expect(document.documentElement.getAttribute('data-theme')).toBe('rosa');
+    setupService('verde', 'verde');
+    store.overrideSelector(selectActiveTheme, 'azul');
+    store.refreshState();
+    TestBed.flushEffects();
+    expect(document.documentElement.getAttribute('data-theme')).toBe('azul');
   });
 
   it('should update localStorage when theme changes', () => {
-    // This is tested via the effect
-    // We can simulate a store change
+    setupService('verde', 'verde');
     store.overrideSelector(selectActiveTheme, 'rosa');
     store.refreshState();
-    
-    // effect might need a tick
     TestBed.flushEffects();
     expect(localStorage.setItem).toHaveBeenCalledWith('medstudy-theme-v2', 'rosa');
   });

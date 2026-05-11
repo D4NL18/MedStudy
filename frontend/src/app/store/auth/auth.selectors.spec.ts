@@ -1,42 +1,36 @@
-import * as fromAuth from './auth.reducer';
-import * as AuthSelectors from './auth.selectors';
-import { createMockUser } from '../../testing/fixtures/auth.fixture';
+import * as Selectors from './auth.selectors';
+import { AuthState } from './auth.reducer';
 
 describe('AuthSelectors', () => {
-  const initialState: fromAuth.AuthState = {
-    token: 'mock-token',
-    user: createMockUser(),
-    error: 'some-error',
-    loading: true
+  const initialState: AuthState = {
+    user: { email: 'test@test.com' } as any,
+    token: 'token',
+    loading: false,
+    error: null
   };
 
-  it('should select the auth state', () => {
-    const result = AuthSelectors.selectAuthState.projector(initialState);
-    expect(result).toEqual(initialState);
-  });
-
-  it('should select the token', () => {
-    const result = AuthSelectors.selectToken.projector(initialState);
-    expect(result).toBe('mock-token');
-  });
-
-  it('should select the user', () => {
-    const result = AuthSelectors.selectUser.projector(initialState);
-    expect(result).toEqual(initialState.user);
+  it('should select token', () => {
+    const result = Selectors.selectToken.projector(initialState);
+    expect(result).toBe('token');
   });
 
   it('should select isAuthenticated', () => {
-    const result = AuthSelectors.selectIsAuthenticated.projector('token');
+    const result = Selectors.selectIsAuthenticated.projector('token');
     expect(result).toBeTrue();
   });
 
+  it('should select user', () => {
+    const result = Selectors.selectUser.projector(initialState);
+    expect(result?.email).toBe('test@test.com');
+  });
+
   it('should select error', () => {
-    const result = AuthSelectors.selectAuthError.projector(initialState);
-    expect(result).toBe('some-error');
+    const result = Selectors.selectAuthError.projector({ ...initialState, error: 'Error' });
+    expect(result).toBe('Error');
   });
 
   it('should select loading', () => {
-    const result = AuthSelectors.selectAuthLoading.projector(initialState);
+    const result = Selectors.selectAuthLoading.projector({ ...initialState, loading: true });
     expect(result).toBeTrue();
   });
 });

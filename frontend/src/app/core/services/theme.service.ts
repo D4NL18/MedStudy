@@ -16,7 +16,7 @@ export class ThemeService {
   
   // Convert Store observable to Signal
   activeTheme = toSignal(this.store.select(selectActiveTheme), { 
-    initialValue: (localStorage.getItem('medstudy-theme-v2') as AppTheme) || 'verde' 
+    initialValue: this.getInitialTheme() 
   });
 
   constructor(@Inject(DOCUMENT) private document: Document) {

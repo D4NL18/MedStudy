@@ -26,7 +26,7 @@ export class RevisionEffects {
       ofType(RevisionActions.loadSessions),
       mergeMap(({ filter }) =>
         this.revisionService.getSessions(filter).pipe(
-          map(sessions => RevisionActions.loadSessionsSuccess({ sessions, filter })),
+          map(sessions => RevisionActions.loadSessionsSuccess({ sessions })),
           catchError(error => of(RevisionActions.loadSessionsFailure({ error: error.message })))
         )
       )
