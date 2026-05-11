@@ -13,32 +13,31 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 ## Requirements
 
 ### Validated
+ 
+- ✓ Autenticação segura (login + recuperação de senha + JWT com refresh tokens) — v1.0
+- ✓ Monorepo Angular + Spring Boot + PostgreSQL local — v1.0
+- ✓ Backend em camadas: Controller → Service → Repository com DTOs e MapStruct — v1.0
+- ✓ Spring Security com proteção OWASP Top 10 — v1.0 (Phase 14)
+- ✓ NgRx para gerenciamento de estado global no frontend — v1.0
+- ✓ Sistema de temas dinâmico (8 temas) com persistência em localStorage — v1.0
+- ✓ Testes unitários exaustivos (≥ 80% coverage) em backend e frontend — v1.0
+- ✓ Documentação automática com Swagger/OpenAPI — v1.0
+- ✓ Dashboard com KPIs de acertos e evolução mensal — v1.0
+- ✓ Banco de sessões de estudo (CRUD + filtros + ordenação) — v1.0
+- ✓ Simulados por área médica com templates por instituição — v1.0
+- ✓ Plano de Aulas com prioridades e gestão de aulas assistidas — v1.0
+- ✓ Revisão Intervalada e Flashcards com algoritmo de dificuldade — v1.0
+- ✓ Análise detalhada por Grande Área e por Tema — v1.0
+- ✓ Segurança: HttpOnly Cookies, CSRF Double Submit, Mascara de Logs — v1.0 (Phase 14)
+- ✓ Documentação Final: README Visual, Walkthrough, Security Policy — v1.0 (Phase 15)
 
-<!-- Nenhuma ainda — sistema novo. Legado tem funcionalidades confirmadas como úteis. -->
-
-- ✓ Dashboard com KPIs de acertos e evolução mensal — validado no legado
-- ✓ Banco de sessões de estudo (CRUD + filtros + ordenação) — validado no legado
-- ✓ Simulados por área médica (CM, Cir, Ped, GO, Prev) — validado no legado
-- ✓ Plano de Aulas com prioridades — validado no legado
-- ✓ Revisão Intervalada baseada em % de acertos — validado no legado
-- ✓ Flashcards com agendamento por dificuldade — validado no legado
-- ✓ Análise por Grande Área e por Tema — validado no legado
-- ✓ [Phase 4] Backend: Banco de Questões (Sessões de Estudo) — CRUD, filtros dinâmicos e métricas.
-
-### Active
-
-<!-- Escopo do novo sistema — greenfield rewrite com stack profissional. -->
-
-- [ ] Autenticação segura (login + recuperação de senha + JWT com refresh tokens)
-- [ ] Monorepo Angular + Spring Boot + PostgreSQL local
-- [ ] Backend em camadas: Controller → Service → Repository com DTOs e MapStruct
-- [ ] Spring Security com proteção OWASP Top 10
-- [ ] NgRx para gerenciamento de estado global no frontend
-- [ ] Guards e Interceptors no Angular (autenticação + tokens)
-- [ ] Sistema de temas de cores (8 temas: Rosa, Claro, Escuro, Verde, Azul, Vermelho, Roxo, Laranja) via CSS Custom Properties com persistência em localStorage
-- [ ] Testes unitários exaustivos: JUnit/Mockito (backend) + Jasmine/Karma (frontend)
-- [ ] Documentação automática com Swagger/OpenAPI
-- [ ] Exceções customizadas com @ControllerAdvice
+### Active (v1.1 Planning)
+ 
+- [ ] Exportação de relatórios de desempenho em PDF/CSV
+- [ ] Sistema de notificações in-app para revisões críticas
+- [ ] Gamificação básica (badges por streak e volume de questões)
+- [ ] Integração de PWA (Progressive Web App) para uso mobile básico
+- [ ] Melhoria na performance de carregamento inicial (Lazy Loading de features)
 
 ### Out of Scope
 
@@ -86,15 +85,15 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Monorepo (frontend/ + backend/) | Facilita desenvolvimento local e CI unificado | — Pending |
-| Java 21 + Spring Boot 3 | LTS atual, virtual threads disponíveis, ecossistema maduro | — Pending |
-| Angular 18 Standalone + Signals | Moderno, evita NgModules legados, reactivity simplificada | — Pending |
-| NgRx para estado global | State centralizado, testável, padrão Redux | — Pending |
-| JWT com refresh token rotation | Segurança sem sacrificar UX (sessão persistente) | — Pending |
-| MapStruct para Entity→DTO | Compile-time, zero reflection, performático | ✓ Shipped (Ph 2) |
-| PostgreSQL local via Docker | Reprodutível, sem dependência de BaaS externo | ✓ Shipped (Ph 1) |
-| Paleta de cores (Verde como padrão) | Tons de esmeralda/floresta (#064e3b, #10b981) | — Pending |
-| Sistema multi-tema via CSS Custom Properties | Zero hardcode de cores; troca instantânea + persistência | — Pending |
+| Monorepo (frontend/ + backend/) | Facilita desenvolvimento local e CI unificado | ✓ Good |
+| Java 21 + Spring Boot 3 | LTS atual, virtual threads disponíveis, ecossistema maduro | ✓ Good |
+| Angular 18 Standalone + Signals | Moderno, evita NgModules legados, reactivity simplificada | ✓ Good |
+| NgRx para estado global | State centralizado, testável, padrão Redux | ✓ Good |
+| JWT com refresh token rotation | Segurança sem sacrificar UX (sessão persistente) | ✓ Good |
+| HttpOnly Cookies para Auth | Previne roubo de tokens via XSS (mitigação LocalStorage) | ✓ Good (Ph 14) |
+| MapStruct para Entity→DTO | Compile-time, zero reflection, performático | ✓ Good (Ph 2) |
+| PostgreSQL local via Docker | Reprodutível, sem dependência de BaaS externo | ✓ Good (Ph 1) |
+| Sistema multi-tema via CSS | Zero hardcode de cores; troca instantânea + persistência | ✓ Good (Ph 8) |
 | JPA Specifications para Filtros Dinâmicos | Permite buscas complexas sem SQL nativo ou JPQL estático | ✓ Shipped (Ph 4) |
 
 ## Evolution
@@ -115,4 +114,5 @@ Este documento evolui a cada transição de fase e milestone.
 4. Atualizar Context com estado atual
 
 ---
-*Last updated: 2026-05-07 after Phase 4 — Backend Study Sessions complete.*
+---
+*Last updated: 2026-05-11 after v1.0 milestone completion.*
