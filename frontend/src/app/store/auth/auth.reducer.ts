@@ -9,8 +9,8 @@ export interface AuthState {
 }
 
 export const initialState: AuthState = {
-  token: localStorage.getItem('token'),
-  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null,
+  token: null,
+  user: null,
   error: null,
   loading: false
 };
