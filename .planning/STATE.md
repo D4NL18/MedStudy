@@ -7,9 +7,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:** Phase 14 — Security Hardening & OWASP Audit
 
-- **Current Phase:** Phase 14: Security Hardening & OWASP Audit
-- **Status:** Phase 14 Started (Execution)
-- **Next Steps:** Complete execution waves.
+- **Current Phase:** Phase 15: Final Testing & Deployment
+- **Status:** Phase 14 Shipped (Branch feat/14-security-hardening-owasp-audit)
+- **Next Steps:** Start Phase 15.
 
 
 
@@ -17,7 +17,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Current Status
 
-**Phase:** 11 of 15 — Shipped (Branch feat/11-frontend-plano-revisao-flashcards)
+**Phase:** 14 of 15 — Shipped (Branch feat/14-security-hardening-owasp-audit)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -43,6 +43,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 9: Frontend: Dashboard & Análises [v] Verified & Shipped
 - [x] Phase 10: Frontend: Banco de Dados & Simulados [v] Verified & Shipped
 - [x] Phase 11: Frontend: Plano de Aulas, Revisão & Flashcards [v] Verified & Shipped
+- [x] Phase 14: Security Hardening & OWASP Audit [v] Verified & Shipped
 
 ---
 
@@ -66,9 +67,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ---
 
-## Next Step
-
-Run `/gsd-execute-phase 12` to execute the detailed plan for Phase 12 (Backend Tests).
+Run `/gsd-plan-phase 15` to prepare for the final delivery.
 
 | Phase 11: Frontend Core       | [x] | Plano de Aulas, Revisão, Flashcards |
 | Phase 12: Backend Tests       | [/] | Plano pronto, pronto para execução |
