@@ -15,7 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,10 +62,44 @@ public class FlashcardService {
     }
 
     @Transactional
-    public FlashcardResponse study(UUID id, FlashcardStudyRequest request) {
-        Flashcard flashcard = findByIdAndValidateUser(id);
+    public FlashcardResponse study(FlashcardStudyRequest request) {
+        Flashcard flashcard = findByIdAndValidateUser(request.flashcardId());
         srService.calculateNextRevision(flashcard, request.dificuldade());
+        flashcard.setLastStudiedAt(LocalDate.now());
         return mapper.toResponse(repository.save(flashcard));
+    }
+
+    @Transactional(readOnly = true)
+    public List<FlashcardResponse> getTodayQueue() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LocalDate today = LocalDate.now();
+        return repository.findAllByUserId(user.getId()).stream()
+            .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
+            .map(mapper::toResponse)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getSummary() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Flashcard> cards = repository.findAllByUserId(user.getId());
+        LocalDate today = LocalDate.now();
+        
+        long total = cards.size();
+        long disponiveis = cards.stream()
+            .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
+            .count();
+        
+        long concluidosHoje = cards.stream()
+            .filter(f -> f.getLastStudiedAt() != null && f.getLastStudiedAt().equals(today))
+            .count();
+
+        return Map.of(
+            "total", total,
+            "disponiveisHoje", disponiveis,
+            "metaDiaria", 20,
+            "concluidosHoje", concluidosHoje
+        );
     }
 
     private Flashcard findByIdAndValidateUser(UUID id) {

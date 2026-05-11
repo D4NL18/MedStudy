@@ -49,8 +49,18 @@ public class FlashcardController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/estudar")
-    public ResponseEntity<FlashcardResponse> study(@PathVariable UUID id, @RequestBody @Valid FlashcardStudyRequest request) {
-        return ResponseEntity.ok(service.study(id, request));
+    @PostMapping("/responder")
+    public ResponseEntity<FlashcardResponse> study(@RequestBody @Valid FlashcardStudyRequest request) {
+        return ResponseEntity.ok(service.study(request));
+    }
+
+    @GetMapping("/hoje")
+    public ResponseEntity<java.util.List<FlashcardResponse>> getTodayQueue() {
+        return ResponseEntity.ok(service.getTodayQueue());
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<Object> getSummary() {
+        return ResponseEntity.ok(service.getSummary());
     }
 }

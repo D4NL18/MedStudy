@@ -30,11 +30,16 @@ public class StudySessionService {
     private final StudySessionRepository repository;
     private final UserRepository userRepository;
     private final StudySessionMapper mapper;
+    private final com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository;
 
-    public StudySessionService(StudySessionRepository repository, UserRepository userRepository, StudySessionMapper mapper) {
+    public StudySessionService(StudySessionRepository repository, 
+                               UserRepository userRepository, 
+                               StudySessionMapper mapper,
+                               com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.mapper = mapper;
+        this.lessonRepository = lessonRepository;
     }
 
     private User getCurrentUser() {
@@ -58,22 +63,18 @@ public class StudySessionService {
     }
 
     public StudySessionResponse createSession(StudySessionRequest request) {
-        System.out.println("DEBUG: Iniciando createSession com request: " + request);
         validateSession(request);
 
         User currentUser = getCurrentUser();
-        System.out.println("DEBUG: Usuário atual: " + currentUser.getEmail());
-        
         StudySession entity = mapper.toEntity(request);
-        System.out.println("DEBUG: Entidade mapeada: Tema=" + entity.getTema() + ", Área=" + entity.getGrandeArea());
-        
         entity.setUser(currentUser);
         
-        // Automated Logic: Calculate next revision
         entity.setDataProximaRevisao(calculateNextRevision(request.qtsCorretas(), request.qtsFeitas(), request.dataSessao()));
 
         StudySession saved = repository.save(entity);
-        System.out.println("DEBUG: Entidade salva com ID: " + saved.getId() + " e Tema: " + saved.getTema());
+        
+        // Legacy rule: Update lesson performance
+        updateLessonPerformance(saved.getTema(), currentUser);
         
         return mapper.toResponse(saved);
     }
@@ -160,13 +161,16 @@ public class StudySessionService {
 
     private LocalDate calculateNextRevision(int corretas, int feitas, LocalDate dataSessao) {
         if (feitas == 0) return null;
-        double perc = (double) corretas / feitas * 100;
-        int days;
-        if (perc <= 65) days = 3;
-        else if (perc <= 75) days = 5;
-        else if (perc <= 85) days = 10;
-        else days = 20;
-        return dataSessao.plusDays(days);
+        
+        double percentual = (double) corretas / feitas * 100;
+        int diasParaRevisao;
+
+        if (percentual <= 65) diasParaRevisao = 3;
+        else if (percentual <= 75) diasParaRevisao = 5;
+        else if (percentual <= 85) diasParaRevisao = 10;
+        else diasParaRevisao = 20;
+
+        return dataSessao.plusDays(diasParaRevisao);
     }
 
     private int calculateStreak(List<StudySession> sessions) {
@@ -194,5 +198,32 @@ public class StudySessionService {
             }
         }
         return streak;
+    }
+
+    private void updateLessonPerformance(String tema, User user) {
+        lessonRepository.findByUserAndTema(user, tema).ifPresent(lesson -> {
+            List<StudySession> sessions = repository.findAll(
+                Specification.where(StudySessionSpecifications.hasUserId(user.getId()))
+                .and(StudySessionSpecifications.hasTema(tema))
+            );
+
+            if (!sessions.isEmpty()) {
+                long totalFeitas = sessions.stream().mapToLong(StudySession::getQtsFeitas).sum();
+                long totalCorretas = sessions.stream().mapToLong(StudySession::getQtsCorretas).sum();
+                double percentual = totalFeitas > 0 ? (double) totalCorretas / totalFeitas * 100 : 0;
+
+                lesson.setPercentAcerto((int) percentual);
+                lesson.setDataAula(sessions.stream()
+                        .map(StudySession::getDataSessao)
+                        .max(Comparator.naturalOrder())
+                        .orElse(null));
+                
+                // Legacy rule: < 75% needs reinforcement
+                lesson.setReforco(percentual < 75);
+                lesson.setRevisao(percentual < 85); // Optional: also flag for revision if < 85%
+                
+                lessonRepository.save(lesson);
+            }
+        });
     }
 }

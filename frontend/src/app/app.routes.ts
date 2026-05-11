@@ -60,6 +60,22 @@ export const routes: Routes = [
             loadComponent: () => import('./features/analytics/pages/analise-tema/analise-tema.component').then(m => m.AnaliseTemaComponent) 
           }
         ]
+      },
+      {
+        path: 'aulas',
+        loadComponent: () => import('./features/aulas/pages/aulas-list/aulas-list.component').then(m => m.AulasListComponent)
+      },
+      {
+        path: 'revisoes',
+        loadComponent: () => import('./features/revisao/pages/revisao-list/revisao-list.component').then(m => m.RevisaoListComponent)
+      },
+      {
+        path: 'flashcards',
+        loadComponent: () => import('./features/flashcards/pages/flashcards-list/flashcards-list.component').then(m => m.FlashcardsListComponent)
+      },
+      {
+        path: 'flashcards/novo',
+        loadComponent: () => import('./features/flashcards/pages/flashcard-form/flashcard-form.component').then(m => m.FlashcardFormComponent)
       }
     ]
   },

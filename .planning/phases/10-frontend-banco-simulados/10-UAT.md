@@ -37,7 +37,7 @@ result: [pass] - Validation implemented in SessionModalComponent.
 
 ### 5. Simulado History (Simulados Page)
 expected: Navigate to /simulados. Verify the table renders with exam names, institutions, and total scores (e.g., 80 / 100).
-result: [pending]
+result: [pass]
 
 ### 6. Simulado Multi-Area Registration
 expected: Click "+ Novo Simulado". Verify the modal shows 5 medical areas. Fill acertos/totais for each. The header summary should update automatically (Total Score and %). Save should work.

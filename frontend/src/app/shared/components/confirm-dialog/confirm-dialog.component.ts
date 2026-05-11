@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LucideAngularModule } from 'lucide-angular';
 
 export interface ConfirmDialogData {
   title: string;
@@ -13,12 +14,12 @@ export interface ConfirmDialogData {
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LucideAngularModule],
   template: `
     <div class="confirm-wrapper glass" [class.delete-mode]="data.isDelete">
       <div class="header">
-        <div class="icon">
-          {{ data.isDelete ? '🗑️' : '❓' }}
+        <div class="icon" [class.delete]="data.isDelete">
+          <lucide-icon [name]="data.isDelete ? 'trash-2' : 'alert-triangle'" [size]="48"></lucide-icon>
         </div>
         <h2>{{ data.title }}</h2>
       </div>
@@ -58,8 +59,11 @@ export interface ConfirmDialogData {
       text-align: center;
       
       .icon {
-        font-size: 3rem;
         margin-bottom: 8px;
+        color: var(--color-primary);
+        &.delete {
+          color: #ff5858;
+        }
       }
       
       h2 {

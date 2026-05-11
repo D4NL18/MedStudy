@@ -12,7 +12,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525
@@ -24,6 +27,9 @@ spring:
           auth: true
           starttls:
             enable: true
+
+server:
+  max-http-header-size: 1MB
 
 jwt:
   secret: ${JWT_SECRET:YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY=}
