@@ -69,7 +69,9 @@ public class StudySessionService {
         StudySession entity = mapper.toEntity(request);
         entity.setUser(currentUser);
         
-        entity.setDataProximaRevisao(calculateNextRevision(request.qtsCorretas(), request.qtsFeitas(), request.dataSessao()));
+        double percentual = request.qtsFeitas() > 0 ? (double) request.qtsCorretas() / request.qtsFeitas() * 100 : 0;
+        entity.setUrgente(percentual < 40);
+        entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
 
         StudySession saved = repository.save(entity);
         
@@ -112,7 +114,9 @@ public class StudySessionService {
         entity.setRevisaoConcluida(request.revisaoConcluida());
         
         // Recalculate revision date on update
-        entity.setDataProximaRevisao(calculateNextRevision(request.qtsCorretas(), request.qtsFeitas(), request.dataSessao()));
+        double percentual = request.qtsFeitas() > 0 ? (double) request.qtsCorretas() / request.qtsFeitas() * 100 : 0;
+        entity.setUrgente(percentual < 40);
+        entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
 
         StudySession saved = repository.save(entity);
         
@@ -163,16 +167,13 @@ public class StudySessionService {
         return entity;
     }
 
-    private LocalDate calculateNextRevision(int corretas, int feitas, LocalDate dataSessao) {
-        if (feitas == 0) return null;
-        
-        double percentual = (double) corretas / feitas * 100;
+    private LocalDate calculateNextRevision(double percentual, LocalDate dataSessao) {
         int diasParaRevisao;
 
-        if (percentual <= 65) diasParaRevisao = 3;
-        else if (percentual <= 75) diasParaRevisao = 5;
-        else if (percentual <= 85) diasParaRevisao = 10;
-        else diasParaRevisao = 20;
+        if (percentual < 50) diasParaRevisao = 1;
+        else if (percentual < 75) diasParaRevisao = 3;
+        else if (percentual < 90) diasParaRevisao = 7;
+        else diasParaRevisao = 15;
 
         return dataSessao.plusDays(diasParaRevisao);
     }

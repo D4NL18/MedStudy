@@ -102,6 +102,12 @@ public class FlashcardService {
         );
     }
 
+    @Transactional
+    public void resetProgress(String grandeArea) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        repository.resetProgress(user.getId(), grandeArea);
+    }
+
     private Flashcard findByIdAndValidateUser(UUID id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Flashcard flashcard = repository.findById(id)

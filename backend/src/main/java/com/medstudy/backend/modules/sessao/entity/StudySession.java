@@ -2,11 +2,14 @@ package com.medstudy.backend.modules.sessao.entity;
 
 import com.medstudy.backend.core.entity.BaseEntity;
 import com.medstudy.backend.modules.user.entity.User;
+import com.medstudy.backend.core.util.StringNormalizer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
@@ -14,6 +17,14 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "study_sessions")
 public class StudySession extends BaseEntity {
+
+    @PrePersist
+    @PreUpdate
+    public void normalizeData() {
+        this.grandeArea = StringNormalizer.normalize(this.grandeArea);
+        this.tema = StringNormalizer.normalize(this.tema);
+        this.instituicao = StringNormalizer.normalize(this.instituicao);
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -43,10 +54,21 @@ public class StudySession extends BaseEntity {
     @Column(name = "revisao_concluida", nullable = false)
     private Boolean revisaoConcluida = false;
 
+    @Column(name = "urgente", nullable = false)
+    private Boolean urgente = false;
+
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 
     // Getters and Setters
+    public Boolean getUrgente() {
+        return urgente;
+    }
+
+    public void setUrgente(Boolean urgente) {
+        this.urgente = urgente;
+    }
+
     public User getUser() {
         return user;
     }

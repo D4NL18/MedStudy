@@ -39,4 +39,12 @@ export class FlashcardService {
   getSummary(): Observable<any> {
     return this.http.get(`${this.apiUrl}/summary`);
   }
+
+  resetProgress(grandeArea?: string): Observable<void> {
+    let params: any = {};
+    if (grandeArea) {
+      params = { grandeArea };
+    }
+    return this.http.post<void>(`${this.apiUrl}/reset`, null, { params });
+  }
 }

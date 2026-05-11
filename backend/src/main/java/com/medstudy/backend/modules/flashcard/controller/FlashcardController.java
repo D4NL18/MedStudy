@@ -63,4 +63,10 @@ public class FlashcardController {
     public ResponseEntity<Object> getSummary() {
         return ResponseEntity.ok(service.getSummary());
     }
+
+    @PostMapping("/reset")
+    public ResponseEntity<Void> reset(@RequestParam(required = false) String grandeArea) {
+        service.resetProgress(grandeArea);
+        return ResponseEntity.ok().build();
+    }
 }

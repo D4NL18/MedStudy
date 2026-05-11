@@ -26,5 +26,8 @@ export const FlashcardsActions = createActionGroup({
     'Set Current Card': props<{ cardIndex: number }>(),
     'Move Current Card To Back': emptyProps(),
     'Close Study Mode': emptyProps(),
+    'Reset Progress': props<{ grandeArea?: string }>(),
+    'Reset Progress Success': emptyProps(),
+    'Reset Progress Failure': props<{ error: string }>(),
   }
 });

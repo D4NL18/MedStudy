@@ -5,6 +5,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { FlashcardResetModalComponent } from '../../components/reset-modal/flashcard-reset-modal.component';
 import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
 import { selectAllCards, selectSummary, selectLoading } from '../../../../store/flashcards/flashcards.reducer';
 
@@ -26,6 +27,19 @@ export class FlashcardsListComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(FlashcardsActions.loadFlashcards({}));
     this.store.dispatch(FlashcardsActions.loadSummary());
+  }
+
+  resetProgress(grandeArea?: string) {
+    const dialogRef = this.dialog.open(FlashcardResetModalComponent, {
+      data: { grandeArea },
+      width: '450px'
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.store.dispatch(FlashcardsActions.resetProgress({ grandeArea }));
+      }
+    });
   }
 
   startStudy() {

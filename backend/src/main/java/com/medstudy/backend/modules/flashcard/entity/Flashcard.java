@@ -1,5 +1,6 @@
 package com.medstudy.backend.modules.flashcard.entity;
 
+import com.medstudy.backend.core.util.StringNormalizer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.medstudy.backend.modules.user.entity.User;
 import jakarta.persistence.*;
@@ -54,6 +55,9 @@ public class Flashcard {
     @Column(name = "intervalo_atual")
     private Integer intervaloAtual;
 
+    @Column(name = "consecutive_hard_count", nullable = false)
+    private Integer consecutiveHardCount = 0;
+
     @Column(name = "last_studied_at")
     private LocalDate lastStudiedAt;
 
@@ -70,10 +74,12 @@ public class Flashcard {
         if (easeFactor == null) easeFactor = 2.5;
         if (intervaloAtual == null) intervaloAtual = 0;
         if (proximaRevisao == null) proximaRevisao = LocalDate.now();
+        this.grandeArea = StringNormalizer.normalize(this.grandeArea);
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = OffsetDateTime.now();
+        this.grandeArea = StringNormalizer.normalize(this.grandeArea);
     }
 }
