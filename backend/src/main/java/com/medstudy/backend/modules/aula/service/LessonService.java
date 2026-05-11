@@ -85,7 +85,13 @@ public class LessonService {
 
     public LessonResponse toggleAssistida(UUID id) {
         Lesson entity = getLessonAndVerifyOwnership(id);
-        entity.setAulaAssistida(!entity.getAulaAssistida());
+        boolean newState = !entity.getAulaAssistida();
+        entity.setAulaAssistida(newState);
+        
+        if (newState && entity.getDataAula() == null) {
+            entity.setDataAula(java.time.LocalDate.now());
+        }
+        
         Lesson saved = repository.save(entity);
         return mapper.toResponse(saved);
     }

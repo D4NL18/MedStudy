@@ -82,6 +82,23 @@ class LessonServiceTest {
     }
 
     @Test
+    void toggleAssistida_ShouldSetDateWhenMarkedAsAssisted() {
+        UUID id = UUID.randomUUID();
+        Lesson entity = new Lesson();
+        entity.setUser(user);
+        entity.setAulaAssistida(false);
+        entity.setDataAula(null);
+        when(repository.findById(id)).thenReturn(Optional.of(entity));
+        when(repository.save(any())).thenReturn(entity);
+
+        service.toggleAssistida(id);
+
+        assertTrue(entity.getAulaAssistida());
+        assertNotNull(entity.getDataAula());
+        assertEquals(java.time.LocalDate.now(), entity.getDataAula());
+    }
+
+    @Test
     void delete_ShouldThrowException_WhenNotOwner() {
         UUID id = UUID.randomUUID();
         Lesson entity = new Lesson();
