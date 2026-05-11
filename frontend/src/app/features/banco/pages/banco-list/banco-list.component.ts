@@ -9,6 +9,7 @@ import { QuestionSession, QuestionSessionFilters } from '../../../../core/models
 import { SessionModalComponent } from '../../components/session-modal/session-modal.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ExportService } from '../../../../core/services/export/export.service';
 
 @Component({
   selector: 'app-banco-list',
@@ -20,6 +21,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 export class BancoListComponent implements OnInit {
   private store = inject(Store);
   private dialog = inject(MatDialog);
+  private exportService = inject(ExportService);
   private searchSubject = new Subject<string>();
 
   sessions = this.store.selectSignal<QuestionSession[]>(selectAllSessions);

@@ -4,9 +4,14 @@
       <h1>Banco de Dados</h1>
       <p>Gerencie suas sessões de estudo e acompanhe seu progresso detalhado.</p>
     </div>
-    <button class="btn-add glass" (click)="openCreateModal()">
-      <span class="icon">+</span> Nova Sessão
-    </button>
+    <div class="header-actions">
+      <button class="btn-export glass" (click)="exportCsv()" title="Exportar filtrados para CSV">
+        <span class="icon">📊</span> Exportar CSV
+      </button>
+      <button class="btn-add glass" (click)="openCreateModal()">
+        <span class="icon">+</span> Nova Sessão
+      </button>
+    </div>
   </header>
 
   <div class="filters-bar glass">

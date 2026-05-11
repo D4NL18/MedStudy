@@ -17,6 +17,8 @@ import { TopErrorsRankingComponent } from './components/top-errors-ranking/top-e
 import { SubareaModalComponent } from './components/subarea-modal/subarea-modal.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { ExportService } from '../../core/services/export/export.service';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,6 +42,7 @@ export class DashboardComponent implements OnInit {
   public themeService = inject(ThemeService);
   public perfTheme = inject(PerformanceThemeService);
   private dialog = inject(MatDialog);
+  private exportService = inject(ExportService);
   
   user = this.store.selectSignal(selectUser);
   kpis = toSignal(this.store.select(selectDashboardKPIs));
@@ -72,5 +75,32 @@ export class DashboardComponent implements OnInit {
 
   logout() {
     // Moved to Shell
+  }
+
+  async exportPdf() {
+    const charts: { [key: string]: string } = {};
+    const chartElements = ['evolution-chart', 'distribution-chart'];
+
+    for (const id of chartElements) {
+      const element = document.getElementById(id);
+      if (element) {
+        const canvas = await html2canvas(element, {
+          backgroundColor: null,
+          scale: 2 // Better quality
+        });
+        charts[id] = canvas.toDataURL('image/png');
+      }
+    }
+
+    this.exportService.exportPdf('Relatório de Desempenho - MedStudy', charts).subscribe(blob => {
+      this.exportService.downloadFile(blob, 'relatorio-medstudy.pdf');
+    });
+  }
+
+  exportCsv() {
+    // No specific filters for dashboard global export
+    this.exportService.exportCsv({}).subscribe(blob => {
+      this.exportService.downloadFile(blob, 'historico-sessoes.csv');
+    });
   }
 }

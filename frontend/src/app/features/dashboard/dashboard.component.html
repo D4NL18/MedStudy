@@ -4,6 +4,16 @@
       <h1>Dashboard de Performance</h1>
       <p>Seu sistema de estudos inteligente está pronto para hoje.</p>
     </div>
+    <div class="header-actions">
+      <button class="btn-export csv" (click)="exportCsv()" title="Exportar para Excel (CSV)">
+        <lucide-icon name="file-spreadsheet"></lucide-icon>
+        CSV
+      </button>
+      <button class="btn-export pdf" (click)="exportPdf()" title="Gerar Relatório Profissional (PDF)">
+        <lucide-icon name="file-text"></lucide-icon>
+        Relatório PDF
+      </button>
+    </div>
     <div class="progress-indicator glass">
       <div class="label">Progresso Teórico</div>
       <div class="value">29.2%</div>
@@ -53,7 +63,7 @@
           <div class="box-header">
             <h3>📈 Evolução Mensal (%)</h3>
           </div>
-          <app-evolution-chart></app-evolution-chart>
+          <app-evolution-chart id="evolution-chart"></app-evolution-chart>
         </section>
 
         <section class="chart-box glass areas-section">
@@ -102,7 +112,7 @@
           <div class="box-header">
             <h3>⭕ Distribuição de Questões</h3>
           </div>
-          <app-distribution-chart></app-distribution-chart>
+          <app-distribution-chart id="distribution-chart"></app-distribution-chart>
         </section>
 
         <section class="ranking-box">

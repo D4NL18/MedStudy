@@ -8,9 +8,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  h1 { font-size: 2rem; margin: 0; font-weight: 800; }
-  p { margin: 4px 0 0; opacity: 0.6; font-size: 0.95rem; }
+  margin-bottom: 2rem;
+
+  .title-area {
+    h1 { font-size: 2.2rem; margin: 0; font-weight: 800; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    p { margin: 0.5rem 0 0 0; color: var(--text-secondary); }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .btn-export {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary-color);
+    }
+  }
 
   .btn-add {
     background: var(--color-accent);
