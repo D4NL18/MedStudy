@@ -5,11 +5,11 @@
 See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 12 — Backend Tests
+**Current focus:** Phase 14 — Security Hardening & OWASP Audit
 
-- **Current Phase:** Phase 12: Backend Tests
-- **Status:** Phase 11 Shipped. Phase 12 Planning complete.
-- **Next Steps:** Proceed to /gsd-execute-phase 12.
+- **Current Phase:** Phase 14: Security Hardening & OWASP Audit
+- **Status:** Phase 14 Started (Execution)
+- **Next Steps:** Complete execution waves.
 
 
 
