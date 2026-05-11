@@ -8,8 +8,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 **Current focus:** Phase 14 — Security Hardening & OWASP Audit
 
 - **Current Phase:** Phase 15: Final Testing & Deployment
-- **Status:** Phase 14 Shipped (Branch feat/14-security-hardening-owasp-audit)
-- **Next Steps:** Start Phase 15.
+- **Status:** Phase 15 Context Gathered
+- **Next Steps:** Create detailed phase plan.
 
 
 
