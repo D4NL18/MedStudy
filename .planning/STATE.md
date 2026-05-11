@@ -7,9 +7,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:** Phase 14 — Security Hardening & OWASP Audit
 
-- **Current Phase:** Phase 15: Final Testing & Deployment
-- **Status:** Phase 15 Planned
-- **Next Steps:** Execute implementation waves.
+- **Current Phase:** [None]
+- **Status:** Milestone v1.0 Completed ✓
+- **Next Steps:** /gsd-complete-milestone
 
 
 
@@ -17,7 +17,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ## Current Status
 
-**Phase:** 14 of 15 — Shipped (Branch feat/14-security-hardening-owasp-audit)
+**Phase:** 15 of 15 — Shipped (Branch feat/14-security-hardening-owasp-audit)
 **Milestone:** v1.0 — Reescrita Angular + Spring Boot + PostgreSQL
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine (15 phases)
@@ -44,6 +44,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 - [x] Phase 10: Frontend: Banco de Dados & Simulados [v] Verified & Shipped
 - [x] Phase 11: Frontend: Plano de Aulas, Revisão & Flashcards [v] Verified & Shipped
 - [x] Phase 14: Security Hardening & OWASP Audit [v] Verified & Shipped
+- [x] Phase 15: Final Documentation & E2E Integration [v] Verified & Shipped
 
 ---
 
@@ -67,7 +68,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-07)
 
 ---
 
-Run `/gsd-plan-phase 15` to prepare for the final delivery.
+Milestone v1.0 is 100% complete. Run `/gsd-complete-milestone` to archive the phase documents and prepare for the next version.
 
 | Phase 11: Frontend Core       | [x] | Plano de Aulas, Revisão, Flashcards |
 | Phase 12: Backend Tests       | [/] | Plano pronto, pronto para execução |
