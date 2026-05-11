@@ -12,7 +12,18 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 ## Requirements
 
-### Validated
+## Current Milestone: v1.1 Legacy Convergence & Advanced Features
+
+**Goal:** Sincronizar as regras de negócio com o sistema legado e expandir funcionalidades com exportação, gamificação e notificações.
+
+**Target features:**
+- Sincronização de regras de Spaced Repetition (% de acerto).
+- Alertas de "Reforço" e "Teoria Ineficiente" no Plano de Aulas.
+- Cálculo de Tendência de 30 dias e Drill-down por Subárea.
+- Exportação de relatórios (PDF/CSV) e Reset de Flashcards.
+- Sistema de Badges (Gamificação) e Notificações in-app.
+
+### Active (v1.1 Planning)
  
 - ✓ Autenticação segura (login + recuperação de senha + JWT com refresh tokens) — v1.0
 - ✓ Monorepo Angular + Spring Boot + PostgreSQL local — v1.0

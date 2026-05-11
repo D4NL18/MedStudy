@@ -3,44 +3,68 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** — Phases 1-15 (shipped 2026-05-11) [v1.0-ROADMAP.md](.planning/milestones/v1.0-ROADMAP.md)
-- 🚧 **v1.1 Advanced Features** — Planning (Phases 16-20)
+- 🚧 **v1.1 Legacy Convergence** — Phases 16-20 (in progress)
 
 ## Phases
 
 <details>
 <summary>✅ v1.0 MVP (Phases 1-15) — SHIPPED 2026-05-11</summary>
 
-- [x] Phase 1: Monorepo Setup (2/2 plans)
-- [x] Phase 2: Database Schema (2/2 plans)
-- [x] Phase 3: Auth Backend (3/3 plans)
-- [x] Phase 4: Banco de Questões API (3/3 plans)
-- [x] Phase 5: Simulados & Aulas API (3/3 plans)
-- [x] Phase 6: Analytics API (2/2 plans)
-- [x] Phase 7: Revisão & Flashcards API (3/3 plans)
-- [x] Phase 8: Frontend Core + Auth (4/4 plans)
-- [x] Phase 9: Dashboard & Análises UI (6/6 plans)
-- [x] Phase 10: Banco & Simulados UI (5/5 plans)
-- [x] Phase 11: Aulas, Revisão & Flashcards UI (6/6 plans)
-- [x] Phase 12: Backend Tests (6/6 plans)
-- [x] Phase 13: Frontend Tests (5/5 plans)
-- [x] Phase 14: Security Hardening (4/4 plans)
-- [x] Phase 15: Docs & E2E (4/4 plans)
+- [x] Phase 1-15: Monorepo Setup to Docs & E2E
 
 </details>
 
-### 🚧 v1.1 Advanced Features (Planning)
+---
 
-- [ ] Phase 16: Export System (PDF/CSV)
-- [ ] Phase 17: In-App Notifications
-- [ ] Phase 18: Gamification & Badges
-- [ ] Phase 19: PWA Integration
-- [ ] Phase 20: Performance Optimization
+### Phase 16 — Refinamento de Analytics & Tendências
+**Goal:** Implementar tendências de 30 dias e drill-down por subárea conforme legado.
+**Requirements:** ANLY-01, ANLY-02, ANLY-03, ANLY-04
+**Deliverables:**
+- Lógica de backend para cálculo de tendência (comparativo de janelas de tempo).
+- UI: Indicadores de tendência (setas up/down) no Dashboard.
+- UI: Breakpoints de cores atualizados.
+- UI: Componente de detalhamento de Subáreas.
+
+### Phase 17 — Sincronização de Regras & Normalização
+**Goal:** Sincronizar algoritmos de revisão e normalização de dados.
+**Requirements:** SYNC-01, SYNC-02, SYNC-03, SYNC-04
+**Deliverables:**
+- Utilitário de Normalização de Strings (backend).
+- Atualização do algoritmo de Spaced Repetition (Sessions).
+- Ajuste no agendamento de Flashcards.
+- Botão de "Reset de Progresso" no módulo de Flashcards.
+
+### Phase 18 — Alertas de Performance & Exportação
+**Goal:** Inteligência de reforço e geração de arquivos PDF/CSV.
+**Requirements:** PLAN-07, PLAN-08, PLAN-09, EXPO-01, EXPO-02
+**Deliverables:**
+- Sinalizadores visuais (Reforço/Teoria Ineficiente) no Plano de Aulas.
+- Endpoint backend para geração de PDF (relatórios).
+- Funcionalidade de download de CSV no Banco de Dados.
+
+### Phase 19 — Gamificação & Notificações
+**Goal:** Engajamento do usuário via badges e alertas in-app.
+**Requirements:** GAMI-01, NOTF-01
+**Deliverables:**
+- Backend: Sistema de conquista de Badges.
+- UI: Galeria de Badges no perfil do usuário.
+- UI: Navbar notifications para revisões pendentes.
+
+### Phase 20 — PWA & Otimização Final
+**Goal:** Tornar o sistema instalável e offline-ready.
+**Requirements:** PWA-01
+**Deliverables:**
+- Configuração de Service Worker e Manifest.json.
+- Otimização de bundle size.
+- Teste de instalação (Mobile/Desktop).
 
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-15  | v1.0      | 100%           | Shipped| 2026-05-11|
+| 16    | v1.1      | 0/1            | Planned| -         |
+| 17    | v1.1      | 0/1            | Planned| -         |
 
 ---
-*Roadmap archived for v1.0 on 2026-05-11*
+*Roadmap updated for v1.1 on 2026-05-11*
