@@ -1,68 +1,74 @@
 # MedStudy — Plataforma de Estudos Médicos
 
-Bem-vindo ao repositório do **MedStudy**, uma plataforma web full-stack para médicos e estudantes de medicina prestando residência no Brasil. 
+![MedStudy Banner](.planning/phases/15-documentacao-final-integradacao-e2e/assets/dashboard_light.png)
 
-Esta é uma arquitetura Monorepo contendo:
-- **Frontend**: Angular 18 (Standalone Components, SCSS, RxJS, NgRx)
-- **Backend**: Java 21, Spring Boot 3 (Spring Security, Data JPA, MapStruct)
-- **Banco de Dados**: PostgreSQL 16 local via Docker
+> **Core Value:** O MedStudy é uma plataforma moderna projetada para médicos e estudantes de medicina otimizarem sua preparação para a residência através de sessões de estudo focadas, análise de desempenho em tempo real e revisão intervalada.
 
 ---
 
-## Pré-requisitos
+## ✨ Features Premium
 
-1. **Docker e Docker Compose** (Para subir o PostgreSQL local)
-2. **Node.js** (LTS v22 — o projeto usa `.nvmrc`) e **npm**
-3. **Java 21** (O backend utiliza Maven Wrapper, não é necessário instalar o Maven na sua máquina, mas o Java 21 é obrigatório).
+### 📊 Dashboard Inteligente
+Acompanhe sua evolução mensal, taxa de acerto por grande área e mantenha sua constância com o sistema de **Streak**.
+![Dashboard Dark Mode](.planning/phases/15-documentacao-final-integradacao-e2e/assets/dashboard_dark.png)
+
+### 📂 Banco de Questões & Simulados
+Gerencie seu progresso com filtros avançados por Instituição, Grande Área e Tema. Os simulados calculam automaticamente seu aproveitamento por área médica.
+
+### 🧠 Flashcards & Revisão Espaçada
+Sistema de **Active Recall** com flip cards e agendamento automático baseado na dificuldade (Fácil, Médio, Difícil).
+
+### 🎨 Design System Dinâmico
+Suporte a **8 temas de cores** (Rosa, Claro, Escuro, Verde, Azul, etc.) com transições suaves e persistência de preferência.
 
 ---
 
-## Configuração Inicial do Ambiente
+## 🛠️ Tecnologia de Ponta
 
-Copie o arquivo `.env.example` para `.env` na raiz do projeto:
+- **Frontend**: [Angular 18](https://angular.dev/) (Standalone Components, NgRx, RxJS, Signals)
+- **Backend**: [Spring Boot 3](https://spring.io/projects/spring-boot) (Java 21, Spring Security, JPA)
+- **Database**: [PostgreSQL 16](https://www.postgresql.org/)
+- **Segurança**: Autenticação via **HttpOnly Cookies**, CSRF Double Submit, CSP rígido e auditoria OWASP.
 
+---
+
+## 🚀 Como Começar (Setup Local)
+
+### Pré-requisitos
+- Docker e Docker Compose
+- Node.js (LTS v22)
+- Java 21
+
+### 1. Preparar Ambiente
 ```bash
 cp .env.example .env
-```
-O `.env` contém as variáveis locais como porta, usuário e senha do banco de dados, além da chave secreta do JWT.
-
----
-
-## 1. Subindo o Banco de Dados (PostgreSQL)
-
-O banco de dados é inicializado através do Docker. Na raiz do projeto, execute:
-
-```bash
 docker-compose up -d
 ```
-Isso vai expor o PostgreSQL na porta `5432` com as credenciais definidas no `.env`.
 
----
-
-## 2. Rodando o Backend (Spring Boot)
-
-O backend utiliza o **Maven Wrapper** (`./mvnw` ou `mvnw.cmd` no Windows), garantindo que todos rodem a mesma versão do Maven.
-
-Navegue até o diretório do backend e inicie a aplicação:
-
+### 2. Iniciar Backend
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
-O Spring Boot subirá por padrão na porta `8080`.
 
----
-
-## 3. Rodando o Frontend (Angular)
-
-O frontend utiliza o Angular CLI. Certifique-se de estar usando a versão do Node.js definida no `.nvmrc`.
-
-Navegue até o diretório do frontend, instale as dependências e inicie o servidor:
-
+### 3. Iniciar Frontend
 ```bash
 cd frontend
-# (Opcional se usar nvm) nvm use
 npm install
 npm start
 ```
-O frontend subirá por padrão em `http://localhost:4200`.
+
+Acesse em: `http://localhost:4200`
+
+---
+
+## 📚 Documentação Complementar
+
+- [**Guia de Uso (Walkthrough)**](.planning/phases/15-documentacao-final-integradacao-e2e/WALKTHROUGH.md): Passo-a-passo para novos usuários.
+- [**Política de Segurança**](SECURITY.md): Como reportar vulnerabilidades e detalhes do hardening.
+- [**Documentação da API**](http://localhost:8080/api/docs): Swagger/OpenAPI interativo (requer backend rodando).
+
+---
+
+## 📄 Licença
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.

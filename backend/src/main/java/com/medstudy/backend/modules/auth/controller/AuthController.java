@@ -10,7 +10,8 @@ import com.medstudy.backend.modules.auth.dto.TokenRefreshRequest;
 import com.medstudy.backend.modules.auth.service.AuthService;
 import com.medstudy.backend.modules.auth.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Endpoints for user login, logout, and token management")
 public class AuthController {
 
     private final AuthService authService;
@@ -37,6 +39,7 @@ public class AuthController {
         this.refreshTokenService = refreshTokenService;
     }
 
+    @Operation(summary = "Authenticate user", description = "Verifies credentials and returns JWT tokens in secure cookies")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         AuthResponse authResponse = authService.authenticate(request);
@@ -44,6 +47,7 @@ public class AuthController {
         return ResponseEntity.ok(authResponse);
     }
 
+    @Operation(summary = "Refresh JWT token", description = "Uses a valid refresh token to issue a new access token")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody TokenRefreshRequest request, HttpServletResponse response) {
         AuthResponse authResponse = authService.refreshToken(request);

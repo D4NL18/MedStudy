@@ -37,7 +37,11 @@
   &.highlight { border-top: 3px solid var(--color-accent); }
 }
 
-.kpi-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; }
+.kpi-label { 
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.5; 
+  display: flex; align-items: center; gap: 4px;
+  .info-icon { width: 12px; height: 12px; opacity: 0.5; cursor: help; &:hover { opacity: 1; color: var(--color-accent); } }
+}
 .kpi-value { font-size: 1.5rem; font-weight: 800; .divider { opacity: 0.2; font-weight: 300; } }
 .kpi-value.small { font-size: 1rem; }
 .text-accent { color: var(--color-accent); }
