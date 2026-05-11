@@ -3,7 +3,7 @@ import { AnalyticsState } from './analytics.reducer';
 
 describe('AnalyticsSelectors', () => {
   const initialState: AnalyticsState = {
-    areas: [{ grandeArea: 'Test', totalQuestions: 10, accuracy: 80, sessionsCount: 1, trendRate: 0 }],
+    areas: [{ grandeArea: 'Test', totalQuestions: 10, accuracy: 80, sessionsCount: 1, trendShort: 0, trendLong: 0, performanceLevel: 'MEDIUM' }],
     topics: [],
     loading: false,
     error: null

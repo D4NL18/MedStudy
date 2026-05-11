@@ -60,7 +60,7 @@ describe('SessionModalComponent', () => {
     fixture.componentInstance.onSave();
     
     expect(dispatchSpy).toHaveBeenCalled();
-    const action = dispatchSpy.calls.all().find(c => c.args[0].type === BancoActions.createSession.type)?.args[0] as any;
-    expect(action).toBeTruthy();
+    const action = dispatchSpy.calls.mostRecent().args[0] as any;
+    expect(action.type).toBe('[Banco] Create Session');
   });
 });

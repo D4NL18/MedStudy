@@ -1,5 +1,6 @@
 import { analyticsReducer, initialState } from './analytics.reducer';
 import * as AnalyticsActions from './analytics.actions';
+import { createMockAreaAnalytics } from '../../testing/fixtures/analytics.fixture';
 
 describe('AnalyticsReducer', () => {
   it('should set loading on loadAreaAnalytics', () => {
@@ -9,7 +10,7 @@ describe('AnalyticsReducer', () => {
   });
 
   it('should set areas on loadAreaAnalyticsSuccess', () => {
-    const areas = [{ grandeArea: 'A', acertos: 1 } as any];
+    const areas = [createMockAreaAnalytics({ grandeArea: 'A' })];
     const action = AnalyticsActions.loadAreaAnalyticsSuccess({ areas });
     const state = analyticsReducer(initialState, action);
     expect(state.areas).toEqual(areas);

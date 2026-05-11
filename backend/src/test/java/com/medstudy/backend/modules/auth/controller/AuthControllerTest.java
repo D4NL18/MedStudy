@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -43,6 +43,37 @@ class AuthControllerTest {
 
     @MockitoBean
     private UserDetailsService userDetailsService;
+
+    @MockitoBean
+    private com.medstudy.backend.core.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockitoBean
+    private com.medstudy.backend.core.util.CookieUtil cookieUtil;
+
+    @MockitoBean
+    private com.medstudy.backend.modules.auth.service.RefreshTokenService refreshTokenService;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() throws jakarta.servlet.ServletException, java.io.IOException {
+        doAnswer(invocation -> {
+            jakarta.servlet.http.HttpServletRequest request = invocation.getArgument(0);
+            jakarta.servlet.http.HttpServletResponse response = invocation.getArgument(1);
+            jakarta.servlet.FilterChain filterChain = invocation.getArgument(2);
+            filterChain.doFilter(request, response);
+            return null;
+        }).when(jwtAuthenticationFilter).doFilter(any(), any(), any());
+
+        // CookieUtil mocks
+        org.springframework.http.ResponseCookie dummyCookie = org.springframework.http.ResponseCookie.from("dummy", "value").build();
+        when(cookieUtil.createAccessTokenCookie(anyString(), any())).thenReturn(dummyCookie);
+        when(cookieUtil.createRefreshTokenCookie(anyString(), any())).thenReturn(dummyCookie);
+        when(cookieUtil.deleteAccessTokenCookie()).thenReturn(dummyCookie);
+        when(cookieUtil.deleteRefreshTokenCookie()).thenReturn(dummyCookie);
+
+        // Service constants mocks
+        when(jwtService.getExpirationTime()).thenReturn(3600000L);
+        when(refreshTokenService.getRefreshTokenDurationMs()).thenReturn(86400000L);
+    }
 
 
     @Test

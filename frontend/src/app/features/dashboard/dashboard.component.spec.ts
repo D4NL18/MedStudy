@@ -56,12 +56,15 @@ describe('DashboardComponent', () => {
   it('should display KPIs when loaded', () => {
     const store = TestBed.inject(MockStore);
     const mockKPIs = {
-      sessions: { total: 100, accuracy: 85, completed: 100 },
-      simulados: { total: 50, averageAccuracy: 80 },
+      sessions: { totalSessions: 100, totalQuestions: 500, successRate: 85, performanceLevel: 'HIGH' },
+      simulados: { totalSimulados: 50, averageScore: 80, bestArea: 'Pediatria', worstArea: 'GO' },
       strongArea: 'Pediatria',
       weakArea: 'GO',
-      currentStreak: 5
-    };
+      currentStreak: 5,
+      areaAnalytics: [],
+      topErrors: [],
+      evolution: []
+    } as any;
     store.overrideSelector(selectDashboardLoading, false);
     store.overrideSelector(selectDashboardKPIs, mockKPIs);
     store.refreshState();
@@ -75,12 +78,15 @@ describe('DashboardComponent', () => {
   it('should change theme when theme card is clicked', () => {
     const store = TestBed.inject(MockStore);
     const mockKPIs = {
-      sessions: { total: 100, accuracy: 85, completed: 100 },
-      simulados: { total: 50, averageAccuracy: 80 },
+      sessions: { totalSessions: 100, totalQuestions: 500, successRate: 85, performanceLevel: 'HIGH' },
+      simulados: { totalSimulados: 50, averageScore: 80, bestArea: 'Pediatria', worstArea: 'GO' },
       strongArea: 'Pediatria',
       weakArea: 'GO',
-      currentStreak: 5
-    };
+      currentStreak: 5,
+      areaAnalytics: [],
+      topErrors: [],
+      evolution: []
+    } as any;
     store.overrideSelector(selectDashboardLoading, false);
     store.overrideSelector(selectDashboardKPIs, mockKPIs);
     store.refreshState();

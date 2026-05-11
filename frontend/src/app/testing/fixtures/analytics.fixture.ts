@@ -3,9 +3,11 @@ import { AreaAnalytics } from '../../store/analytics/analytics.actions';
 export const createMockAreaAnalytics = (overrides?: Partial<AreaAnalytics>): AreaAnalytics => ({
   grandeArea: 'Clínica Médica',
   totalQuestions: 100,
-  accuracy: 85,
+  accuracy: 75,
   sessionsCount: 10,
-  trendRate: 5,
+  trendShort: 5,
+  trendLong: 2,
+  performanceLevel: 'HIGH',
   ...overrides
 });
 

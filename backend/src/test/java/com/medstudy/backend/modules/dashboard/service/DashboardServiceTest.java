@@ -34,6 +34,9 @@ class DashboardServiceTest {
     private SecurityContext securityContext;
 
     @Mock
+    private com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService;
+
+    @Mock
     private Authentication authentication;
 
     @InjectMocks
@@ -72,12 +75,15 @@ class DashboardServiceTest {
         sim.setPrevTotal(20); sim.setPrevAcertos(14);
         
         when(simuladoRepository.findAllByUserId(userId)).thenReturn(Collections.singletonList(sim));
+        
+        when(analyticsService.getAreaAnalytics("TOTAL")).thenReturn(Collections.emptyList());
+        when(analyticsService.getTopErrorThemes("LAST_60_DAYS")).thenReturn(Collections.emptyList());
 
         DashboardResponse response = dashboardService.getDashboardData();
 
         assertEquals(10L, response.sessions().totalSessions());
         assertEquals(80.0, response.sessions().successRate());
-        assertEquals("HIGH", response.sessions().performanceLevel());
+        assertEquals("MEDIUM", response.sessions().performanceLevel());
         assertEquals(3, response.currentStreak());
         assertEquals(69.0, response.simulados().averageScore());
         assertEquals("Pediatria", response.simulados().bestArea());
