@@ -25,6 +25,10 @@ public class RefreshTokenService {
         this.userRepository = userRepository;
     }
 
+    public long getRefreshTokenDurationMs() {
+        return refreshTokenDurationMs;
+    }
+
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
     }
