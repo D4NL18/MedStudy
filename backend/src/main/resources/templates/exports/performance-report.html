@@ -128,13 +128,13 @@
 <div class="section" th:if="${charts != null}">
     <div class="section-title">Análise Visual</div>
     <div class="charts-container">
-        <div class="chart-box" th:if="${charts.containsKey('performanceArea')}">
-            <div class="metric-label">Desempenho por Área</div>
-            <img class="chart-img" th:src="${charts.get('performanceArea')}"/>
+        <div class="chart-box" th:if="${charts.containsKey('evolution-chart')}">
+            <div class="metric-label" style="margin-bottom: 5px; font-weight: bold;">Evolução Mensal (%)</div>
+            <img class="chart-img" th:src="${charts.get('evolution-chart')}"/>
         </div>
-        <div class="chart-box" th:if="${charts.containsKey('evolution')}">
-            <div class="metric-label">Evolução Mensal</div>
-            <img class="chart-img" th:src="${charts.get('evolution')}"/>
+        <div class="chart-box" th:if="${charts.containsKey('distribution-chart')}">
+            <div class="metric-label" style="margin-bottom: 5px; font-weight: bold;">Distribuição por Área</div>
+            <img class="chart-img" th:src="${charts.get('distribution-chart')}"/>
         </div>
     </div>
 </div>
