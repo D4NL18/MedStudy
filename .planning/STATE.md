@@ -8,8 +8,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 **Current focus:** Phase 16 — Refinamento de Analytics & Tendências
 
 - **Current Phase:** Phase 16: Refinamento de Analytics & Tendências
-- **Status:** Planning Complete
-- **Next Steps:** Run /gsd-execute-phase 16 to start implementation.
+- **Status:** Shipped (Pushed to Remote)
+- **Next Steps:** Create PR manually on GitHub using the provided description.
 
 ---
 
@@ -28,6 +28,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 - [x] PROJECT.md updated with v1.1 goals
 - [x] REQUIREMENTS.md created for v1.1
 - [x] ROADMAP.md updated with Phases 16-20
+- [x] Phase 16: Refinamento de Analytics & Tendências (Shipped)
 
 ---
 
