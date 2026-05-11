@@ -6,5 +6,7 @@ public record TopicAnalyticsResponse(
     long totalQuestions,
     double accuracy,
     long sessionsCount,
-    double trendRate
+    double trendShort,
+    double trendLong,
+    String performanceLevel
 ) {}

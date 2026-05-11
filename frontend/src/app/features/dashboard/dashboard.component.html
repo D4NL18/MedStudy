@@ -22,28 +22,28 @@
             Taxa Global
             <lucide-icon name="info" class="info-icon" title="Média de acerto calculada sobre todas as sessões de estudo realizadas."></lucide-icon>
           </div>
-          <div class="kpi-value text-accent">{{ kpis()?.sessions?.accuracy || 0 }}%</div>
+          <div class="kpi-value" [style.color]="perfTheme.getColor(kpis()?.sessions?.successRate || 0)">
+            {{ kpis()?.sessions?.successRate || 0 | number:'1.0-0' }}%
+          </div>
         </div>
         <div class="kpi-card glass">
-          <div class="kpi-label">
-            Questões (Mês/Ano)
-            <lucide-icon name="info" class="info-icon" title="Volume total de questões respondidas no mês atual versus o ano vigente."></lucide-icon>
-          </div>
-          <div class="kpi-value">{{ kpis()?.sessions?.completed || 0 }} <span class="divider">/</span> 1581</div>
+          <div class="kpi-label">Questões (Total)</div>
+          <div class="kpi-value">{{ kpis()?.sessions?.totalQuestions || 0 }}</div>
+        </div>
+        <div class="kpi-card glass">
+          <div class="kpi-label">Sessões Realizadas</div>
+          <div class="kpi-value">{{ kpis()?.sessions?.totalSessions || 0 }}</div>
         </div>
         <div class="kpi-card glass">
           <div class="kpi-label">Área Mais Forte</div>
-          <div class="kpi-value small text-success">{{ kpis()?.strongArea || 'Pediatria' }}</div>
+          <div class="kpi-value small text-success">{{ kpis()?.simulados?.bestArea || 'N/A' }}</div>
         </div>
         <div class="kpi-card glass">
           <div class="kpi-label">Área Mais Fraca</div>
-          <div class="kpi-value small text-error">{{ kpis()?.weakArea || 'GO' }}</div>
+          <div class="kpi-value small text-error">{{ kpis()?.simulados?.worstArea || 'N/A' }}</div>
         </div>
         <div class="kpi-card glass">
-          <div class="kpi-label">
-            Streak
-            <lucide-icon name="info" class="info-icon" title="Dias consecutivos em que você realizou pelo menos uma sessão de estudo."></lucide-icon>
-          </div>
+          <div class="kpi-label">Streak</div>
           <div class="kpi-value">🔥 {{ kpis()?.currentStreak || 0 }}</div>
         </div>
       </div>
@@ -56,11 +56,44 @@
           <app-evolution-chart></app-evolution-chart>
         </section>
 
-        <section class="chart-box glass">
+        <section class="chart-box glass areas-section">
           <div class="box-header">
-            <h3>📊 Desempenho por Área (%)</h3>
+            <h3>📊 Desempenho por Área</h3>
           </div>
-          <app-area-chart></app-area-chart>
+          <div class="areas-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Área</th>
+                  <th>Acerto</th>
+                  <th>
+                    Tendência (30d)
+                    <lucide-icon name="info" class="info-icon" title="Compara a média dos últimos 30 dias com o seu histórico global para mostrar se você está evoluindo."></lucide-icon>
+                  </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (area of areaAnalytics(); track area.grandeArea) {
+                  <tr>
+                    <td class="area-name">{{ area.grandeArea }}</td>
+                    <td class="accuracy" [style.color]="perfTheme.getColor(area.accuracy)">
+                      {{ area.accuracy | number:'1.0-0' }}%
+                    </td>
+                    <td class="trend" [class]="area.trendLong >= 0 ? 'up' : 'down'">
+                      <lucide-icon [name]="area.trendLong >= 0 ? 'trending-up' : 'trending-down'"></lucide-icon>
+                      {{ area.trendLong | number:'1.1-1' }}%
+                    </td>
+                    <td>
+                      <button class="btn-detail" (click)="openSubareaDetails(area)">
+                        <lucide-icon name="maximize-2"></lucide-icon>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </section>
       </div>
 
@@ -72,21 +105,8 @@
           <app-distribution-chart></app-distribution-chart>
         </section>
 
-        <section class="lessons-box glass">
-          <div class="box-header">
-            <h3>🚨 Top 5 Aulas Prioritárias</h3>
-          </div>
-          <div class="lessons-list">
-            <div class="lesson-item" *ngFor="let lesson of topLessons">
-              <div class="lesson-info">
-                <span class="lesson-name">{{ lesson.tema }}</span>
-                <span class="lesson-area">{{ lesson.grandeArea }}</span>
-              </div>
-              <span class="priority-badge" [attr.data-priority]="lesson.prioridade">
-                {{ lesson.prioridade }}
-              </span>
-            </div>
-          </div>
+        <section class="ranking-box">
+          <app-top-errors-ranking></app-top-errors-ranking>
         </section>
 
         <section class="theme-box glass">

@@ -31,8 +31,8 @@
           <span [class]="getPerformanceClass(area.accuracy)">{{ area.accuracy }}%</span>
           <span class="count">{{ area.totalQuestions }} questões</span>
         </div>
-        <div class="trend" [class.up]="area.trendRate > 0" [class.down]="area.trendRate < 0">
-          {{ area.trendRate > 0 ? '↑' : '↓' }} {{ area.trendRate }}% vs média
+        <div class="trend" [class.up]="area.trendLong > 0" [class.down]="area.trendLong < 0">
+          {{ area.trendLong > 0 ? '↑' : '↓' }} {{ area.trendLong | number:'1.1-1' }}% vs média
         </div>
       </div>
     </div>

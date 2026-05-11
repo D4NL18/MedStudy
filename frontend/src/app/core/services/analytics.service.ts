@@ -16,4 +16,8 @@ export class AnalyticsService {
   getTopicAnalytics(): Observable<TopicAnalytics[]> {
     return this.http.get<TopicAnalytics[]>('/api/analytics/topics');
   }
+
+  getTopErrors(period: string = 'LAST_60_DAYS'): Observable<any[]> {
+    return this.http.get<any[]>(`/api/analytics/errors?period=${period}`);
+  }
 }

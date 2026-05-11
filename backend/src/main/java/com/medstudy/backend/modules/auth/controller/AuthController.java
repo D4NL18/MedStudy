@@ -10,6 +10,7 @@ import com.medstudy.backend.modules.auth.dto.TokenRefreshRequest;
 import com.medstudy.backend.modules.auth.service.AuthService;
 import com.medstudy.backend.modules.auth.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;

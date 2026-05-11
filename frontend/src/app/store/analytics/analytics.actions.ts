@@ -5,7 +5,9 @@ export interface AreaAnalytics {
   totalQuestions: number;
   accuracy: number;
   sessionsCount: number;
-  trendRate: number;
+  trendShort: number;
+  trendLong: number;
+  performanceLevel: string;
 }
 
 export interface TopicAnalytics {
@@ -14,6 +16,9 @@ export interface TopicAnalytics {
   totalQuestions: number;
   accuracy: number;
   sessionsCount: number;
+  trendShort: number;
+  trendLong: number;
+  performanceLevel: string;
 }
 
 export const loadAreaAnalytics = createAction('[Analytics] Load Area Analytics');

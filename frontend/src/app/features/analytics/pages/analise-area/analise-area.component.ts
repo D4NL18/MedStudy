@@ -93,7 +93,9 @@ export class AnaliseAreaComponent implements OnInit {
         totalQuestions: 0,
         accuracy: 0,
         sessionsCount: 0,
-        trendRate: 0
+        trendShort: 0,
+        trendLong: 0,
+        performanceLevel: 'LOW'
       } as AreaAnalytics;
     });
   });

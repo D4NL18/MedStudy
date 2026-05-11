@@ -22,7 +22,7 @@ export const dashboardReducer = createReducer(
   })),
   on(DashboardActions.loadDashboardSuccess, (state, { kpis }) => ({
     ...state,
-    kpis,
+    kpis: { ...kpis },
     loading: false
   })),
   on(DashboardActions.loadDashboardFailure, (state, { error }) => ({

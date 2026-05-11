@@ -71,4 +71,15 @@ export class BancoEffects {
       )
     )
   );
+
+  syncDashboard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        BancoActions.createSessionSuccess,
+        BancoActions.updateSessionSuccess,
+        BancoActions.deleteSessionSuccess
+      ),
+      map(() => ({ type: '[Dashboard] Load Dashboard' }))
+    )
+  );
 }

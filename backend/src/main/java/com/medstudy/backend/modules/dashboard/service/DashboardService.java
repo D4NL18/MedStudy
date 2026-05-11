@@ -20,10 +20,14 @@ public class DashboardService {
 
     private final StudySessionRepository studySessionRepository;
     private final SimuladoRepository simuladoRepository;
+    private final com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService;
 
-    public DashboardService(StudySessionRepository studySessionRepository, SimuladoRepository simuladoRepository) {
+    public DashboardService(StudySessionRepository studySessionRepository, 
+                            SimuladoRepository simuladoRepository,
+                            com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService) {
         this.studySessionRepository = studySessionRepository;
         this.simuladoRepository = simuladoRepository;
+        this.analyticsService = analyticsService;
     }
 
     public DashboardResponse getDashboardData() {
@@ -57,8 +61,6 @@ public class DashboardService {
         String worstArea = "N/A";
 
         if (totalSimulados > 0) {
-            Map<String, Double> areaAverages = new HashMap<>();
-            // Simple logic for average score (sum of all acertos / sum of all total)
             long simTotalQuest = 0;
             long simTotalCorrect = 0;
 
@@ -68,7 +70,6 @@ public class DashboardService {
             }
             avgScore = simTotalQuest > 0 ? (double) simTotalCorrect / simTotalQuest * 100 : 0.0;
             
-            // Calculate best and worst area across all simulados
             Map<String, AreaTotal> totals = new HashMap<>();
             for (Simulado s : simulados) {
                 updateAreaTotal(totals, "Clínica Médica", s.getCmTotal(), s.getCmAcertos());
@@ -95,16 +96,44 @@ public class DashboardService {
         );
 
         // 3. Streak
-        // Fetch all dates for the user (could be optimized with a specific query)
-        // For now, let's just get the last 100 sessions to calculate streak
         int streak = calculateStreak(userId);
 
-        return new DashboardResponse(studyMetrics, simuladoMetrics, streak);
+        // 4. Analytics
+        var areaAnalytics = analyticsService.getAreaAnalytics("TOTAL");
+        var topErrors = analyticsService.getTopErrorThemes("LAST_60_DAYS");
+
+        // 5. Evolution (Last 6 months)
+        List<DashboardResponse.EvolutionPoint> evolution = calculateEvolution(userId);
+
+        return new DashboardResponse(studyMetrics, simuladoMetrics, streak, areaAnalytics, topErrors, evolution);
+    }
+
+    private List<DashboardResponse.EvolutionPoint> calculateEvolution(UUID userId) {
+        List<DashboardResponse.EvolutionPoint> points = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        
+        for (int i = 5; i >= 0; i--) {
+            LocalDate monthDate = now.minusMonths(i);
+            int month = monthDate.getMonthValue();
+            int year = monthDate.getYear();
+            
+            Long monthTotal = studySessionRepository.sumTotalQuestionsByUserIdAndMonth(userId, month, year);
+            Long monthCorrect = studySessionRepository.sumTotalCorrectByUserIdAndMonth(userId, month, year);
+            
+            monthTotal = monthTotal != null ? monthTotal : 0L;
+            monthCorrect = monthCorrect != null ? monthCorrect : 0L;
+            
+            double rate = monthTotal > 0 ? (double) monthCorrect / monthTotal * 100 : 0.0;
+            
+            String label = monthDate.getMonth().getDisplayName(java.time.format.TextStyle.SHORT, new Locale("pt", "BR"));
+            points.add(new DashboardResponse.EvolutionPoint(label, rate));
+        }
+        return points;
     }
 
     private String calculatePerformanceLevel(double rate) {
         if (rate < 70) return "LOW";
-        if (rate < 80) return "MEDIUM";
+        if (rate < 85) return "MEDIUM";
         return "HIGH";
     }
 

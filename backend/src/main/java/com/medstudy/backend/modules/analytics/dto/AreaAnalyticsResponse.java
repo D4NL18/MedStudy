@@ -5,5 +5,7 @@ public record AreaAnalyticsResponse(
     long totalQuestions,
     double accuracy,
     long sessionsCount,
-    double trendRate
+    double trendShort,
+    double trendLong,
+    String performanceLevel
 ) {}

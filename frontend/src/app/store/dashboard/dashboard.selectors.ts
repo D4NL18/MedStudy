@@ -10,7 +10,17 @@ export const selectDashboardKPIs = createSelector(
 
 export const selectDashboardLoading = createSelector(
   selectDashboardState,
-  (state: DashboardState) => state.loading
+  (state) => state.loading
+);
+
+export const selectAreaAnalytics = createSelector(
+  selectDashboardKPIs,
+  (kpis) => kpis?.areaAnalytics || []
+);
+
+export const selectTopErrors = createSelector(
+  selectDashboardKPIs,
+  (kpis) => kpis?.topErrors || []
 );
 
 export const selectDashboardError = createSelector(

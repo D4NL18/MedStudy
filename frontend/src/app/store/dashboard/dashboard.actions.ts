@@ -1,18 +1,41 @@
 import { createAction, props } from '@ngrx/store';
 
+export interface AreaAnalytics {
+  grandeArea: string;
+  totalQuestions: number;
+  accuracy: number;
+  sessionsCount: number;
+  trendShort: number;
+  trendLong: number;
+  performanceLevel: string;
+}
+
+export interface TopicError {
+  tema: string;
+  grandeArea: string;
+  totalQuestions: number;
+  errorRate: number;
+}
+
 export interface DashboardKPIs {
   sessions: {
-    total: number;
-    completed: number;
-    accuracy: number;
+    totalSessions: number;
+    totalQuestions: number;
+    successRate: number;
+    performanceLevel: string;
   };
   simulados: {
-    total: number;
-    averageAccuracy: number;
+    totalSimulados: number;
+    averageScore: number;
+    bestArea: string;
+    worstArea: string;
   };
   currentStreak: number;
   strongArea: string;
   weakArea: string;
+  areaAnalytics: AreaAnalytics[];
+  topErrors: TopicError[];
+  evolution: { label: string; value: number; }[];
 }
 
 export const loadDashboard = createAction('[Dashboard] Load Dashboard');

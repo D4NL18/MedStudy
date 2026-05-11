@@ -1,7 +1,10 @@
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { ThemeService } from '../../../../core/services/theme.service';
+import { Store } from '@ngrx/store';
+import { selectAreaAnalytics } from '../../../../store/dashboard/dashboard.selectors';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-area-chart',
@@ -9,23 +12,27 @@ import { ThemeService } from '../../../../core/services/theme.service';
   imports: [CommonModule, NgxChartsModule],
   template: `
     <div class="chart-container" #containerRef>
-      <ngx-charts-bar-horizontal
-        [view]="[containerRef.offsetWidth, 250]"
-        [scheme]="colorScheme()"
-        [results]="chartData"
-        [gradient]="true"
-        [xAxis]="true"
-        [yAxis]="true"
-        [legend]="false"
-        [showXAxisLabel]="false"
-        [showYAxisLabel]="false"
-        [xAxisLabel]="'Acerto %'"
-      >
-      </ngx-charts-bar-horizontal>
+      @if (chartData().length > 0) {
+        <ngx-charts-bar-horizontal
+          [view]="[containerRef.offsetWidth, 250]"
+          [scheme]="colorScheme()"
+          [results]="chartData()"
+          [gradient]="true"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="false"
+          [showXAxisLabel]="false"
+          [showYAxisLabel]="false"
+        >
+        </ngx-charts-bar-horizontal>
+      } @else {
+        <div class="empty-chart">Sem dados suficientes para gerar o gráfico</div>
+      }
     </div>
   `,
   styles: [`
-    .chart-container { width: 100%; height: 250px; }
+    .chart-container { width: 100%; height: 250px; display: flex; align-items: center; justify-content: center; }
+    .empty-chart { opacity: 0.5; font-size: 14px; }
     :host ::ng-deep .ngx-charts {
       text { fill: var(--color-text); opacity: 0.7; font-size: 11px; }
       .gridline-path { stroke: rgba(255, 255, 255, 0.05); }
@@ -33,28 +40,30 @@ import { ThemeService } from '../../../../core/services/theme.service';
   `]
 })
 export class AreaChartComponent {
+  private store = inject(Store);
   private themeService = inject(ThemeService);
 
-  chartData = [
-    { name: 'Pediatria', value: 85 },
-    { name: 'Cirurgia', value: 72 },
-    { name: 'Preventiva', value: 68 },
-    { name: 'Clínica Médica', value: 62 },
-    { name: 'Ginecologia', value: 58 }
-  ];
+  areaAnalytics = toSignal(this.store.select(selectAreaAnalytics));
+
+  chartData = computed(() => {
+    const data = this.areaAnalytics() || [];
+    return data.map(a => ({
+      name: a.grandeArea,
+      value: a.accuracy
+    })).sort((a, b) => b.value - a.value);
+  });
 
   colorScheme = signal<Color>({
     name: 'performance',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#52B788'] // Default emerald
+    domain: ['#52B788']
   });
 
   constructor() {
-    // Re-calculate colors when theme changes
     effect(() => {
-      this.themeService.activeTheme(); // Dependency
-      setTimeout(() => this.updateColors(), 50); // Small delay to let CSS variables update
+      this.themeService.activeTheme();
+      setTimeout(() => this.updateColors(), 50);
     });
   }
 
@@ -63,12 +72,9 @@ export class AreaChartComponent {
     let accent = getComputedStyle(root).getPropertyValue('--color-accent').trim();
     const isClaro = this.themeService.activeTheme() === 'claro';
     
-    // User requested green bars in light theme
     if (isClaro) {
       accent = '#10B981';
-    } 
-    // If accent is white or too dark/missing, use primary for better contrast
-    else if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || !accent) {
+    } else if (accent === '#FFFFFF' || accent.toLowerCase() === 'white' || !accent) {
       accent = getComputedStyle(root).getPropertyValue('--color-primary').trim();
     }
 

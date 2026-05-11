@@ -2,6 +2,7 @@ package com.medstudy.backend.modules.analytics.controller;
 
 import com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse;
 import com.medstudy.backend.modules.analytics.dto.TopicAnalyticsResponse;
+import com.medstudy.backend.modules.analytics.dto.TopicErrorResponse;
 import com.medstudy.backend.modules.analytics.service.AnalyticsService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,11 @@ public class AnalyticsController {
     public ResponseEntity<List<TopicAnalyticsResponse>> getTopicAnalytics(
             @RequestParam(required = false, defaultValue = "TOTAL") String period) {
         return ResponseEntity.ok(service.getTopicAnalytics(period));
+    }
+
+    @GetMapping("/errors")
+    public ResponseEntity<List<TopicErrorResponse>> getTopErrorThemes(
+            @RequestParam(required = false, defaultValue = "LAST_60_DAYS") String period) {
+        return ResponseEntity.ok(service.getTopErrorThemes(period));
     }
 }

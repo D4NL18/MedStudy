@@ -115,6 +115,10 @@ public class StudySessionService {
         entity.setDataProximaRevisao(calculateNextRevision(request.qtsCorretas(), request.qtsFeitas(), request.dataSessao()));
 
         StudySession saved = repository.save(entity);
+        
+        // Legacy rule: Update lesson performance
+        updateLessonPerformance(saved.getTema(), getCurrentUser());
+        
         return mapper.toResponse(saved);
     }
 

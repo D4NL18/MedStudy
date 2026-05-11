@@ -46,7 +46,7 @@ class AnalyticsServiceTest {
     }
 
     @Test
-    void getAreaAnalytics_ShouldReturnDataWithTrend() {
+    void getAreaAnalytics_ShouldReturnDataWithTrends() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(user);
 
@@ -55,18 +55,23 @@ class AnalyticsServiceTest {
         List<Object[]> totals = new ArrayList<>();
         totals.add(new Object[]{"CLINICA_MEDICA", 100L, 80L, 5L});
 
-        List<Object[]> recent = new ArrayList<>();
-        recent.add(new Object[]{"CLINICA_MEDICA", 20L, 18L});
+        List<Object[]> last30d = new ArrayList<>();
+        last30d.add(new Object[]{"CLINICA_MEDICA", 40L, 30L}); // 75%
+
+        List<Object[]> last7d = new ArrayList<>();
+        last7d.add(new Object[]{"CLINICA_MEDICA", 20L, 18L}); // 90%
 
         when(repository.aggregateByAreaTotal(userId)).thenReturn(totals);
-        when(repository.aggregateByAreaSince(eq(userId), any())).thenReturn(recent);
+        when(repository.aggregateByAreaSince(eq(userId), any())).thenReturn(last30d).thenReturn(last7d);
 
         List<AreaAnalyticsResponse> result = analyticsService.getAreaAnalytics("TOTAL");
 
         assertFalse(result.isEmpty());
         assertEquals("CLINICA_MEDICA", result.get(0).grandeArea());
         assertEquals(80.0, result.get(0).accuracy());
-        assertEquals(90.0, result.get(0).trendRate()); // 18/20 * 100
+        assertEquals(15.0, result.get(0).trendShort(), 0.01); // 90 - 75
+        assertEquals(-5.0, result.get(0).trendLong(), 0.01);  // 75 - 80
+        assertEquals("MEDIUM", result.get(0).performanceLevel());
     }
 
     @Test
@@ -79,16 +84,19 @@ class AnalyticsServiceTest {
         List<Object[]> totals = new ArrayList<>();
         totals.add(new Object[]{"Pneumo", "CLINICA_MEDICA", 50L, 40L, 3L});
 
-        List<Object[]> recent = new ArrayList<>();
-        recent.add(new Object[]{"Pneumo", "CLINICA_MEDICA", 10L, 9L});
+        List<Object[]> last30d = new ArrayList<>();
+        last30d.add(new Object[]{"Pneumo", "CLINICA_MEDICA", 10L, 8L}); // 80%
+
+        List<Object[]> last7d = new ArrayList<>();
+        last7d.add(new Object[]{"Pneumo", "CLINICA_MEDICA", 10L, 9L}); // 90%
 
         when(repository.aggregateByTopicTotal(userId)).thenReturn(totals);
-        when(repository.aggregateByTopicSince(eq(userId), any())).thenReturn(recent);
+        when(repository.aggregateByTopicSince(eq(userId), any())).thenReturn(last30d).thenReturn(last7d);
 
         var result = analyticsService.getTopicAnalytics("TOTAL");
 
         assertFalse(result.isEmpty());
         assertEquals("Pneumo", result.get(0).tema());
-        assertEquals(90.0, result.get(0).trendRate());
+        assertEquals(10.0, result.get(0).trendShort(), 0.01); // 90 - 80
     }
 }

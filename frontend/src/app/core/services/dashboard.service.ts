@@ -12,18 +12,30 @@ export class DashboardService {
   constructor(private http: HttpClient) {}
 
   getDashboardKPIs(): Observable<DashboardKPIs> {
-    // Para v1, podemos usar o HttpClient real ou mockar se o backend não estiver rodando
     return this.http.get<DashboardKPIs>(this.apiUrl);
   }
 
-  // Mock para desenvolvimento inicial
+  // Mock para desenvolvimento inicial sincronizado com a v1.1
   getDashboardKPIsMock(): Observable<DashboardKPIs> {
     return of({
-      sessions: { total: 45, completed: 40, accuracy: 78.5 },
-      simulados: { total: 12, averageAccuracy: 72.0 },
+      sessions: { 
+        totalSessions: 45, 
+        totalQuestions: 450, 
+        successRate: 78.5,
+        performanceLevel: 'MEDIUM' 
+      },
+      simulados: { 
+        totalSimulados: 12, 
+        averageScore: 72.0,
+        bestArea: 'Clínica Médica',
+        worstArea: 'Preventiva'
+      },
       currentStreak: 5,
       strongArea: 'Clínica Médica',
-      weakArea: 'Preventiva'
+      weakArea: 'Preventiva',
+      areaAnalytics: [],
+      topErrors: [],
+      evolution: []
     });
   }
 }

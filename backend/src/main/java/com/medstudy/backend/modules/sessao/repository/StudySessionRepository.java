@@ -20,6 +20,12 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
     @Query("SELECT SUM(s.qtsCorretas) FROM StudySession s WHERE s.user.id = :userId")
     Long sumTotalCorrectByUserId(@Param("userId") UUID userId);
 
+    @Query("SELECT SUM(s.qtsFeitas) FROM StudySession s WHERE s.user.id = :userId AND MONTH(s.dataSessao) = :month AND YEAR(s.dataSessao) = :year")
+    Long sumTotalQuestionsByUserIdAndMonth(@Param("userId") UUID userId, @Param("month") int month, @Param("year") int year);
+
+    @Query("SELECT SUM(s.qtsCorretas) FROM StudySession s WHERE s.user.id = :userId AND MONTH(s.dataSessao) = :month AND YEAR(s.dataSessao) = :year")
+    Long sumTotalCorrectByUserIdAndMonth(@Param("userId") UUID userId, @Param("month") int month, @Param("year") int year);
+
     @Query("SELECT COUNT(s) FROM StudySession s WHERE s.user.id = :userId")
     long countByUserId(@Param("userId") UUID userId);
 
@@ -41,6 +47,12 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
     @Query("SELECT s.tema, s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas), COUNT(s) " +
            "FROM StudySession s WHERE s.user.id = :userId GROUP BY s.tema, s.grandeArea")
     List<Object[]> aggregateByTopicTotal(@Param("userId") UUID userId);
+
+    @Query("SELECT s.tema, s.grandeArea, SUM(s.qtsFeitas), SUM(s.qtsCorretas) " +
+           "FROM StudySession s WHERE s.user.id = :userId AND s.dataSessao >= :since " +
+           "GROUP BY s.tema, s.grandeArea " +
+           "ORDER BY (SUM(s.qtsFeitas) - SUM(s.qtsCorretas)) * 1.0 / SUM(s.qtsFeitas) DESC")
+    List<Object[]> findTopErrorsByUserIdSince(@Param("userId") UUID userId, @Param("since") LocalDate since);
 
     long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(UUID userId, LocalDate date);
     long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(UUID userId, LocalDate date);
