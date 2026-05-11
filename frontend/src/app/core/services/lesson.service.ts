@@ -8,7 +8,7 @@ import { Lesson } from '../models/lesson.model';
   providedIn: 'root'
 })
 export class LessonService {
-  private apiUrl = `${environment.apiUrl}/lessons`;
+  private apiUrl = '/api/lessons';
 
   constructor(private http: HttpClient) {}
 

@@ -8,7 +8,7 @@ import { Flashcard, FlashcardStudyRating } from '../models/flashcard.model';
   providedIn: 'root'
 })
 export class FlashcardService {
-  private apiUrl = `${environment.apiUrl}/flashcards`;
+  private apiUrl = '/api/flashcards';
 
   constructor(private http: HttpClient) {}
 

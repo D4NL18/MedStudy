@@ -2,6 +2,7 @@ package com.medstudy.backend.modules.dashboard.service;
 
 import com.medstudy.backend.modules.dashboard.dto.DashboardResponse;
 import com.medstudy.backend.modules.sessao.repository.StudySessionRepository;
+import com.medstudy.backend.modules.simulado.entity.Simulado;
 import com.medstudy.backend.modules.simulado.repository.SimuladoRepository;
 import com.medstudy.backend.modules.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,16 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,65 +30,57 @@ class DashboardServiceTest {
     @Mock
     private SimuladoRepository simuladoRepository;
 
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
+
     @InjectMocks
     private DashboardService dashboardService;
 
-    private User testUser;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        testUser = new User();
-        testUser.setId(UUID.randomUUID());
-        testUser.setEmail("test@medstudy.com");
-
-        SecurityContextHolder.getContext().setAuthentication(
-            new UsernamePasswordAuthenticationToken(testUser, null, Collections.emptyList())
-        );
+        user = new User();
+        user.setId(UUID.randomUUID());
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
-    void shouldCalculateStreakCorrectly_WithTodayAndYesterday() {
-        LocalDate today = LocalDate.now();
-        List<LocalDate> dates = List.of(today, today.minusDays(1), today.minusDays(2));
-        
-        when(studySessionRepository.findDistinctSessionDatesByUserId(any())).thenReturn(dates);
-        
-        DashboardResponse response = dashboardService.getDashboardData();
-        
-        assertEquals(3, response.currentStreak());
-    }
+    void getDashboardData_ShouldCalculateMetricsCorrectly() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(user);
 
-    @Test
-    void shouldCalculateStreakCorrectly_WithYesterdayOnly() {
-        LocalDate today = LocalDate.now();
-        List<LocalDate> dates = List.of(today.minusDays(1), today.minusDays(2));
-        
-        when(studySessionRepository.findDistinctSessionDatesByUserId(any())).thenReturn(dates);
-        
-        DashboardResponse response = dashboardService.getDashboardData();
-        
-        assertEquals(2, response.currentStreak());
-    }
+        UUID userId = user.getId();
 
-    @Test
-    void shouldReturnZeroStreak_WhenLastSessionWasThreeDaysAgo() {
-        LocalDate today = LocalDate.now();
-        List<LocalDate> dates = List.of(today.minusDays(3), today.minusDays(4));
+        // Sessions mocks
+        when(studySessionRepository.countByUserId(userId)).thenReturn(10L);
+        when(studySessionRepository.sumTotalQuestionsByUserId(userId)).thenReturn(100L);
+        when(studySessionRepository.sumTotalCorrectByUserId(userId)).thenReturn(80L);
         
-        when(studySessionRepository.findDistinctSessionDatesByUserId(any())).thenReturn(dates);
-        
-        DashboardResponse response = dashboardService.getDashboardData();
-        
-        assertEquals(0, response.currentStreak());
-    }
+        List<LocalDate> dates = Arrays.asList(LocalDate.now(), LocalDate.now().minusDays(1), LocalDate.now().minusDays(2));
+        when(studySessionRepository.findDistinctSessionDatesByUserId(userId)).thenReturn(dates);
 
-    @Test
-    void shouldReturnPerformanceLevelHigh_WhenRateIsAboveEighty() {
-        when(studySessionRepository.sumTotalQuestionsByUserId(any())).thenReturn(100L);
-        when(studySessionRepository.sumTotalCorrectByUserId(any())).thenReturn(85L);
+        // Simulados mocks
+        Simulado sim = new Simulado();
+        sim.setCmTotal(20); sim.setCmAcertos(15);
+        sim.setCirTotal(20); sim.setCirAcertos(10);
+        sim.setPedTotal(20); sim.setPedAcertos(18);
+        sim.setGoTotal(20); sim.setGoAcertos(12);
+        sim.setPrevTotal(20); sim.setPrevAcertos(14);
         
+        when(simuladoRepository.findAllByUserId(userId)).thenReturn(Collections.singletonList(sim));
+
         DashboardResponse response = dashboardService.getDashboardData();
-        
+
+        assertEquals(10L, response.sessions().totalSessions());
+        assertEquals(80.0, response.sessions().successRate());
         assertEquals("HIGH", response.sessions().performanceLevel());
+        assertEquals(3, response.currentStreak());
+        assertEquals(69.0, response.simulados().averageScore());
+        assertEquals("Pediatria", response.simulados().bestArea());
+        assertEquals("Cirurgia", response.simulados().worstArea());
     }
 }

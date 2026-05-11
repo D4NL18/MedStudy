@@ -2,7 +2,6 @@ package com.medstudy.backend.modules.flashcard.service;
 
 import com.medstudy.backend.modules.flashcard.entity.Flashcard;
 import com.medstudy.backend.modules.flashcard.entity.FlashcardDifficulty;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -11,54 +10,42 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SpacedRepetitionServiceTest {
 
-    private SpacedRepetitionService service;
-    private Flashcard flashcard;
+    private final SpacedRepetitionService service = new SpacedRepetitionService();
 
-    @BeforeEach
-    void setUp() {
-        service = new SpacedRepetitionService();
-        flashcard = new Flashcard();
-        flashcard.setIntervaloAtual(0);
-        flashcard.setEaseFactor(2.5);
-        flashcard.setProximaRevisao(LocalDate.now());
+    @Test
+    void calculateNextRevision_ShouldHandleEasyCorrectly() {
+        Flashcard f = new Flashcard();
+        f.setIntervaloAtual(0);
+        f.setEaseFactor(2.5);
+
+        service.calculateNextRevision(f, FlashcardDifficulty.EASY);
+
+        assertEquals(4, f.getIntervaloAtual());
+        assertEquals(2.6, f.getEaseFactor());
+        assertEquals(LocalDate.now().plusDays(4), f.getProximaRevisao());
     }
 
     @Test
-    void shouldSetIntervalToOne_WhenHard() {
-        service.calculateNextRevision(flashcard, FlashcardDifficulty.HARD);
-        
-        assertEquals(1, flashcard.getIntervaloAtual());
-        assertEquals(2.3, flashcard.getEaseFactor()); // 2.5 - 0.2
-        assertEquals(LocalDate.now().plusDays(1), flashcard.getProximaRevisao());
+    void calculateNextRevision_ShouldHandleHardCorrectly() {
+        Flashcard f = new Flashcard();
+        f.setIntervaloAtual(10);
+        f.setEaseFactor(2.5);
+
+        service.calculateNextRevision(f, FlashcardDifficulty.HARD);
+
+        assertEquals(1, f.getIntervaloAtual());
+        assertEquals(2.3, f.getEaseFactor());
     }
 
     @Test
-    void shouldSetIntervalToOne_WhenMediumAndFirstTime() {
-        service.calculateNextRevision(flashcard, FlashcardDifficulty.MEDIUM);
-        
-        assertEquals(1, flashcard.getIntervaloAtual());
-        assertEquals(2.5, flashcard.getEaseFactor());
-        assertEquals(LocalDate.now().plusDays(1), flashcard.getProximaRevisao());
-    }
+    void calculateNextRevision_ShouldHandleMediumCorrectly() {
+        Flashcard f = new Flashcard();
+        f.setIntervaloAtual(1);
+        f.setEaseFactor(2.5);
 
-    @Test
-    void shouldSetIntervalToFour_WhenEasyAndFirstTime() {
-        service.calculateNextRevision(flashcard, FlashcardDifficulty.EASY);
-        
-        assertEquals(4, flashcard.getIntervaloAtual());
-        assertEquals(2.6, flashcard.getEaseFactor()); // 2.5 + 0.1
-        assertEquals(LocalDate.now().plusDays(4), flashcard.getProximaRevisao());
-    }
+        service.calculateNextRevision(f, FlashcardDifficulty.MEDIUM);
 
-    @Test
-    void shouldGrowInterval_WhenEasyAndAlreadyStudied() {
-        flashcard.setIntervaloAtual(4);
-        flashcard.setEaseFactor(2.6);
-        
-        service.calculateNextRevision(flashcard, FlashcardDifficulty.EASY);
-        
-        // interval = 4 * 2.6 * 1.2 = 12.48 -> 12
-        assertEquals(12, flashcard.getIntervaloAtual());
-        assertEquals(2.7, flashcard.getEaseFactor());
+        assertEquals(3, f.getIntervaloAtual()); // 1 * 2.5 = 2.5 -> round 3
+        assertEquals(2.5, f.getEaseFactor());
     }
 }

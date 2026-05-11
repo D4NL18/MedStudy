@@ -8,7 +8,10 @@ import java.util.UUID;
 public class StudySessionSpecifications {
 
     public static Specification<StudySession> hasUserId(UUID userId) {
-        return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+        return (root, query, cb) -> {
+            if (userId == null) return null;
+            return cb.equal(root.get("user").get("id"), userId);
+        };
     }
 
     public static Specification<StudySession> hasGrandeArea(String grandeArea) {

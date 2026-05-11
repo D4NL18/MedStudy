@@ -8,7 +8,7 @@ export const RevisionActions = createActionGroup({
     'Load Summary Success': props<{ summary: RevisionSummary }>(),
     'Load Summary Failure': props<{ error: string }>(),
     'Load Sessions': props<{ filter: 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS' }>(),
-    'Load Sessions Success': props<{ sessions: StudySession[], filter: string }>(),
+    'Load Sessions Success': props<{ sessions: StudySession[] }>(),
     'Load Sessions Failure': props<{ error: string }>(),
   }
 });

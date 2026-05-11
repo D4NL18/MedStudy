@@ -8,7 +8,7 @@ import { RevisionSummary, StudySession } from '../models/revision.model';
   providedIn: 'root'
 })
 export class RevisionService {
-  private apiUrl = `${environment.apiUrl}/revisoes`;
+  private apiUrl = '/api/revisoes';
 
   constructor(private http: HttpClient) {}
 

@@ -9,7 +9,10 @@ import java.util.UUID;
 public class LessonSpecifications {
 
     public static Specification<Lesson> hasUserId(UUID userId) {
-        return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+        return (root, query, cb) -> {
+            if (userId == null) return null;
+            return cb.equal(root.get("user").get("id"), userId);
+        };
     }
 
     public static Specification<Lesson> hasGrandeArea(String grandeArea) {
@@ -45,6 +48,24 @@ public class LessonSpecifications {
                 return null;
             }
             return cb.like(cb.lower(root.get("tema")), "%" + tema.toLowerCase() + "%");
+        };
+    }
+
+    public static Specification<Lesson> hasReforco(Boolean reforco) {
+        return (root, query, cb) -> {
+            if (reforco == null) {
+                return null;
+            }
+            return cb.equal(root.get("reforco"), reforco);
+        };
+    }
+
+    public static Specification<Lesson> hasRevisao(Boolean revisao) {
+        return (root, query, cb) -> {
+            if (revisao == null) {
+                return null;
+            }
+            return cb.equal(root.get("revisao"), revisao);
         };
     }
 }
