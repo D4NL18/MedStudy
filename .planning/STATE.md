@@ -2,15 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Legacy Convergence
-current_phase: 18
 status: executing
-last_updated: "2026-05-11T23:48:15.014Z"
+last_updated: "2026-05-12T14:44:48.614Z"
 progress:
   total_phases: 18
-  completed_phases: 12
-  total_plans: 22
-  completed_plans: 17
-  percent: 77
+  completed_phases: 14
+  total_plans: 24
+  completed_plans: 20
+  percent: 85
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -21,18 +20,18 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:**
-- **Phase 18**: Alertas de Performance & Exportação - **Concluído**
-    - Infraestrutura de exportação PDF/CSV implementada.
-    - Captura de gráficos com html2canvas.
-    - Badges de alerta de performance no Plano de Aulas.
-    - Data de conclusão automática.
-- **Phase 19**: Sistema de Metas Semanais - **Pendente**
+
+- **Phase 18**: Alertas de Performance & Exportação - **Concluído (com bugfixes)**
+    - Relatório PDF redesenhado e 100% funcional com KPI completos.
+    - Resolvido bug de listagem (vazia) na Revisão Intervalada (Backend/Frontend alinhados).
+    - Corrigido race condition de login via LocalStorage e interceptor ajustado.
+- **Phase 19**: Gamificação & Notificações - **Pendente**
 
 ---
 
 ## Current Status
 
-**Phase:** 16 of 20
+**Phase:** 18 of 20
 **Milestone:** v1.1 — Legacy Convergence & Advanced Features
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
@@ -46,6 +45,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 - [x] REQUIREMENTS.md created for v1.1
 - [x] ROADMAP.md updated with Phases 16-20
 - [x] Phase 16: Refinamento de Analytics & Tendências (Shipped)
+- [x] Phase 17: Sincronização de Regras & Normalização (Shipped)
+- [x] Phase 18: Alertas de Performance & Exportação + Bugfixes (Shipped)
 
 ---
 

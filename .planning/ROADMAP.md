@@ -62,9 +62,10 @@
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1-15  | v1.0      | 100%           | Shipped| 2026-05-11|
+| 1-15  | v1.0      | 100%           | Shipped | 2026-05-11|
 | 16    | v1.1      | 1/1            | Complete| 2026-05-11|
-| 17    | v1.1      | 0/1            | Planned| -         |
+| 17    | v1.1      | 1/1            | Complete| 2026-05-11|
+| 18    | v1.1      | 2/2            | Complete| 2026-05-12|
 
 ---
 *Roadmap updated for v1.1 on 2026-05-11*
