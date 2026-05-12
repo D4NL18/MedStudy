@@ -76,6 +76,9 @@ export class DashboardComponent implements OnInit {
     const charts: { [key: string]: string } = {};
     const chartElements = ['evolution-chart', 'distribution-chart'];
 
+    // Adiciona classe global temporária para forçar as fontes e eixos do gráfico a ficarem escuros no PDF
+    document.body.classList.add('pdf-export-mode');
+
     for (const id of chartElements) {
       const element = document.getElementById(id);
       if (element) {
@@ -83,6 +86,9 @@ export class DashboardComponent implements OnInit {
         const originalWidth = element.style.width;
         element.style.width = '800px';
         
+        // Aguarda 500ms para o ngx-charts recalcular o SVG e rodar a animação de resize
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         const canvas = await html2canvas(element, {
           backgroundColor: '#ffffff', // Force white background for PDF readability
           scale: 2
@@ -92,6 +98,8 @@ export class DashboardComponent implements OnInit {
         charts[id] = canvas.toDataURL('image/png');
       }
     }
+
+    document.body.classList.remove('pdf-export-mode');
 
     this.exportService.exportPdf('Relatório de Desempenho - MedStudy', charts).subscribe(blob => {
       this.exportService.downloadFile(blob, 'relatorio-medstudy.pdf');
