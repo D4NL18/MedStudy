@@ -9,6 +9,7 @@ import { QuestionSession, QuestionSessionFilters } from '../../../../core/models
 import { SessionModalComponent } from '../../components/session-modal/session-modal.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ExportService } from '../../../../core/services/export/export.service';
 
 @Component({
   selector: 'app-banco-list',
@@ -20,6 +21,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 export class BancoListComponent implements OnInit {
   private store = inject(Store);
   private dialog = inject(MatDialog);
+  private exportService = inject(ExportService);
   private searchSubject = new Subject<string>();
 
   sessions = this.store.selectSignal<QuestionSession[]>(selectAllSessions);
@@ -107,5 +109,12 @@ export class BancoListComponent implements OnInit {
     if (accuracy >= 80) return 'high';
     if (accuracy >= 70) return 'mid';
     return 'low';
+  }
+
+  exportCsv() {
+    const filters = this.filters();
+    this.exportService.exportCsv(filters).subscribe(blob => {
+      this.exportService.downloadFile(blob, 'banco-questoes.csv');
+    });
   }
 }

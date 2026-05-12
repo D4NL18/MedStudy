@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Relatório de Desempenho - MedStudy</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #6F0642;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #6F0642;
+            margin: 0;
+            font-size: 24px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #430428;
+            margin-bottom: 15px;
+            border-left: 4px solid #6F0642;
+            padding-left: 10px;
+        }
+        .metrics-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            display: table-cell;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            width: 16%;
+        }
+        .metric-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #6F0642;
+            margin-bottom: 5px;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .text-success { color: #10b981; }
+        .text-error { color: #ef4444; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        th {
+            background-color: #f3f4f6;
+            color: #374151;
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+            border-bottom: 2px solid #ddd;
+        }
+        td {
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+            font-size: 13px;
+            color: #333;
+        }
+        .charts-container {
+            width: 100%;
+            text-align: center;
+            page-break-before: always;
+        }
+        .chart-box {
+            display: block;
+            width: 100%;
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+            padding: 15px;
+            background-color: #fff;
+        }
+        .chart-img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 th:text="${title}">Relatório de Desempenho - MedStudy</h1>
+    <p>Relatório gerado em: [[${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}]]</p>
+</div>
+
+<div class="section">
+    <div class="section-title">Resumo Geral</div>
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-value" th:text="${#numbers.formatDecimal(kpis.sessions.successRate, 1, 0)} + '%'">0%</div>
+            <div class="metric-label">Taxa Global</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" th:text="${kpis.sessions.totalQuestions}">0</div>
+            <div class="metric-label">Questões</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" th:text="${kpis.sessions.totalSessions}">0</div>
+            <div class="metric-label">Sessões</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value" th:text="${kpis.currentStreak}">0</div>
+            <div class="metric-label">Streak (Dias)</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value text-success" th:text="${kpis.simulados.bestArea}">N/A</div>
+            <div class="metric-label">Área Mais Forte</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-value text-error" th:text="${kpis.simulados.worstArea}">N/A</div>
+            <div class="metric-label">Área Mais Fraca</div>
+        </div>
+    </div>
+</div>
+
+<div class="section" th:if="${areas != null and !areas.isEmpty()}">
+    <div class="section-title">Desempenho por Área</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Grande Área</th>
+                <th>Questões</th>
+                <th>Acerto (%)</th>
+                <th>Tendência (30d)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="area : ${areas}">
+                <td th:text="${area.grandeArea}">Área</td>
+                <td th:text="${area.totalQuestions}">0</td>
+                <td th:text="${#numbers.formatDecimal(area.accuracy, 1, 0)} + '%'">0%</td>
+                <td th:style="${area.trendLong >= 0 ? 'color:#10b981;' : 'color:#ef4444;'}" 
+                    th:text="${(area.trendLong >= 0 ? '+' : '') + #numbers.formatDecimal(area.trendLong, 1, 1)} + '%'">
+                    0.0%
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="section" th:if="${topErrors != null and !topErrors.isEmpty()}">
+    <div class="section-title">Maiores Erros (Temas)</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Tema</th>
+                <th>Grande Área</th>
+                <th>Erro (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="error : ${topErrors}">
+                <td th:text="${error.tema}">Tema</td>
+                <td th:text="${error.grandeArea}">Área</td>
+                <td class="text-error" th:text="${#numbers.formatDecimal(error.errorRate, 1, 1)} + '%'">0.0%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="charts-container" th:if="${charts != null}">
+    <div class="section-title" style="text-align: left;">Análise Visual</div>
+    
+    <div class="chart-box" th:if="${charts['evolution-chart'] != null}">
+        <div class="metric-label" style="margin-bottom: 10px; font-weight: bold; font-size: 14px;">Evolução Mensal (%)</div>
+        <img class="chart-img" th:src="${charts['evolution-chart']}"/>
+    </div>
+    
+    <div class="chart-box" th:if="${charts['distribution-chart'] != null}">
+        <div class="metric-label" style="margin-bottom: 10px; font-weight: bold; font-size: 14px;">Distribuição de Questões</div>
+        <img class="chart-img" th:src="${charts['distribution-chart']}"/>
+    </div>
+</div>
+
+<div class="footer">
+    Gerado automaticamente pela plataforma MedStudy. Todos os direitos reservados.
+</div>
+
+</body>
+</html>

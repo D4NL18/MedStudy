@@ -28,7 +28,7 @@
       <div class="stat-card glass" *ngFor="let area of displayAreas()">
         <div class="area-name">{{ area.grandeArea }}</div>
         <div class="area-metrics">
-          <span [class]="getPerformanceClass(area.accuracy)">{{ area.accuracy }}%</span>
+          <span [class]="getPerformanceClass(area.accuracy)">{{ area.accuracy | number:'1.0-0' }}%</span>
           <span class="count">{{ area.totalQuestions }} questões</span>
         </div>
         <div class="trend" [class.up]="area.trendLong > 0" [class.down]="area.trendLong < 0">

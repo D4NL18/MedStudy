@@ -11,12 +11,12 @@ import { selectDashboardKPIs, selectDashboardLoading, selectAreaAnalytics } from
 import * as DashboardActions from '../../store/dashboard/dashboard.actions';
 import { AreaAnalytics } from '../../store/dashboard/dashboard.actions';
 import { EvolutionChartComponent } from './components/evolution-chart/evolution-chart.component';
-import { AreaChartComponent } from './components/area-chart/area-chart.component';
 import { DistributionChartComponent } from './components/distribution-chart/distribution-chart.component';
 import { TopErrorsRankingComponent } from './components/top-errors-ranking/top-errors-ranking.component';
 import { SubareaModalComponent } from './components/subarea-modal/subarea-modal.component';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { ExportService } from '../../core/services/export/export.service';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,12 +25,9 @@ import { LucideAngularModule } from 'lucide-angular';
     CommonModule, 
     LucideAngularModule,
     EvolutionChartComponent, 
-    AreaChartComponent, 
     DistributionChartComponent,
     TopErrorsRankingComponent,
-    MatDialogModule,
-    RouterLink, 
-    RouterLinkActive
+    MatDialogModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -40,6 +37,7 @@ export class DashboardComponent implements OnInit {
   public themeService = inject(ThemeService);
   public perfTheme = inject(PerformanceThemeService);
   private dialog = inject(MatDialog);
+  private exportService = inject(ExportService);
   
   user = this.store.selectSignal(selectUser);
   kpis = toSignal(this.store.select(selectDashboardKPIs));
@@ -72,5 +70,46 @@ export class DashboardComponent implements OnInit {
 
   logout() {
     // Moved to Shell
+  }
+
+  async exportPdf() {
+    const charts: { [key: string]: string } = {};
+    const chartElements = ['evolution-chart', 'distribution-chart'];
+
+    // Adiciona classe global temporária para forçar as fontes e eixos do gráfico a ficarem escuros no PDF
+    document.body.classList.add('pdf-export-mode');
+
+    for (const id of chartElements) {
+      const element = document.getElementById(id);
+      if (element) {
+        // Force fixed width before capture so the layout doesn't get squashed
+        const originalWidth = element.style.width;
+        element.style.width = '800px';
+        
+        // Aguarda 500ms para o ngx-charts recalcular o SVG e rodar a animação de resize
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const canvas = await html2canvas(element, {
+          backgroundColor: '#ffffff', // Force white background for PDF readability
+          scale: 2
+        });
+        
+        element.style.width = originalWidth;
+        charts[id] = canvas.toDataURL('image/png');
+      }
+    }
+
+    document.body.classList.remove('pdf-export-mode');
+
+    this.exportService.exportPdf('Relatório de Desempenho - MedStudy', charts).subscribe(blob => {
+      this.exportService.downloadFile(blob, 'relatorio-medstudy.pdf');
+    });
+  }
+
+  exportCsv() {
+    // No specific filters for dashboard global export
+    this.exportService.exportCsv({}).subscribe(blob => {
+      this.exportService.downloadFile(blob, 'historico-sessoes.csv');
+    });
   }
 }

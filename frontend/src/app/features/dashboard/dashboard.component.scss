@@ -7,9 +7,68 @@
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  h1 { font-size: 1.75rem; margin: 0; }
-  p { font-size: 0.9rem; opacity: 0.6; margin: 4px 0 0; }
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1.5rem;
+
+  .title-area {
+    flex: 1;
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      color: var(--text-secondary);
+      margin: 0.5rem 0 0 0;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.75rem;
+
+    .btn-export {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+
+      lucide-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &.pdf {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        border: none;
+
+        &:hover {
+          box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4);
+        }
+      }
+    }
+  }
 }
 
 .progress-indicator {
@@ -198,3 +257,20 @@ td {
 
 .fade-in { animation: fadeIn 0.6s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* PDF Export Overrides */
+::ng-deep body.pdf-export-mode .ngx-charts {
+  text {
+    fill: #333333 !important;
+    opacity: 1 !important;
+  }
+  .pie-label {
+    fill: #333333 !important;
+  }
+  .gridline-path {
+    stroke: #dddddd !important;
+  }
+  path.pie-label-line {
+    stroke: #999999 !important;
+  }
+}

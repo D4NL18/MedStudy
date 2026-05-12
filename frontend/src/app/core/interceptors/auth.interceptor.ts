@@ -8,9 +8,15 @@ import * as AuthActions from '../../store/auth/auth.actions';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(Store);
   let token: string | null = null;
-  
-  // Get token from Store
+
+  // Get token from Store (async — may not be populated yet right after login)
   store.select(selectToken).subscribe(t => token = t);
+
+  // Fallback: read from localStorage, which is set synchronously in the loginSuccess effect.
+  // This prevents the race-condition where the Store hasn't propagated yet (#BF-03)
+  if (!token) {
+    token = localStorage.getItem('auth_token');
+  }
 
   if (token) {
     req = req.clone({
@@ -28,8 +34,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        // Auto logout on unauthorized error
-        store.dispatch(AuthActions.logout());
+        // Only auto-logout if there's no token at all (true session expiry),
+        // not when a race-condition causes a transient 401 right after login (#BF-03)
+        const hasToken = !!token || !!localStorage.getItem('auth_token');
+        if (!hasToken) {
+          store.dispatch(AuthActions.logout());
+        }
       }
       return throwError(() => error);
     })

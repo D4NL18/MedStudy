@@ -103,7 +103,7 @@ export class AnaliseAreaComponent implements OnInit {
   chartData = computed(() => {
     return this.displayAreas().map(a => ({
       name: a.grandeArea,
-      value: a.accuracy || 0
+      value: Math.round(a.accuracy || 0)
     }));
   });
 

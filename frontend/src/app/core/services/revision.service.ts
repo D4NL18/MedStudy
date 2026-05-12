@@ -13,7 +13,7 @@ export class RevisionService {
   constructor(private http: HttpClient) {}
 
   getSummary(): Observable<RevisionSummary> {
-    return this.http.get<RevisionSummary>(`${this.apiUrl}/summary`);
+    return this.http.get<RevisionSummary>(`${this.apiUrl}/resumo`);
   }
 
   getSessions(filter: string): Observable<StudySession[]> {

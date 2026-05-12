@@ -86,7 +86,7 @@ public class StudySessionService {
         
         Specification<StudySession> spec = Specification.where(StudySessionSpecifications.hasUserId(currentUser.getId()))
                 .and(StudySessionSpecifications.hasGrandeArea(grandeArea))
-                .and(StudySessionSpecifications.hasTema(tema))
+                .and(StudySessionSpecifications.search(tema))
                 .and(StudySessionSpecifications.hasInstituicao(instituicao))
                 .and(StudySessionSpecifications.hasRevisaoConcluida(revisaoConcluida))
                 .and(StudySessionSpecifications.hasMinSuccessRate(minRate))

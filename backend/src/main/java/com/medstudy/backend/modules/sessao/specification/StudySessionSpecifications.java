@@ -17,7 +17,7 @@ public class StudySessionSpecifications {
     public static Specification<StudySession> hasGrandeArea(String grandeArea) {
         return (root, query, cb) -> {
             if (grandeArea == null || grandeArea.isBlank()) return null;
-            return cb.equal(root.get("grandeArea"), grandeArea);
+            return cb.equal(cb.lower(root.get("grandeArea")), grandeArea.toLowerCase());
         };
     }
 
@@ -66,6 +66,17 @@ public class StudySessionSpecifications {
                             cb.quot(cb.prod(root.get("qtsCorretas"), 100.0), root.get("qtsFeitas")).as(Double.class),
                             max
                     )
+            );
+        };
+    }
+
+    public static Specification<StudySession> search(String term) {
+        return (root, query, cb) -> {
+            if (term == null || term.isBlank()) return null;
+            String pattern = "%" + term.toLowerCase() + "%";
+            return cb.or(
+                    cb.like(cb.lower(root.get("tema")), pattern),
+                    cb.like(cb.lower(root.get("grandeArea")), pattern)
             );
         };
     }

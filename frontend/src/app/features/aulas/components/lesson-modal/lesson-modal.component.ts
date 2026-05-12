@@ -46,6 +46,18 @@ import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
             <option [value]="'BAIXA'">Baixa</option>
           </select>
         </div>
+        
+        <div class="form-group row-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="aulaAssistida">
+            <span>Aula Assistida</span>
+          </label>
+        </div>
+
+        <div class="form-group" *ngIf="lessonForm.get('aulaAssistida')?.value">
+          <label>Data de Conclusão</label>
+          <input type="date" formControlName="dataAula">
+        </div>
       </form>
     </app-modal-layout>
   `,
@@ -107,6 +119,29 @@ import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
         }
       }
     }
+
+    .row-group {
+      flex-direction: row !important;
+      align-items: center;
+      gap: 12px !important;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      color: #fff !important;
+      font-weight: 500 !important;
+      text-transform: none !important;
+
+      input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+    }
   `]
 })
 export class LessonModalComponent implements OnInit {
@@ -120,7 +155,9 @@ export class LessonModalComponent implements OnInit {
     grandeArea: ['Clínica Médica', Validators.required],
     subArea: [''],
     tema: ['', Validators.required],
-    prioridade: [LessonPriority.MEDIA, Validators.required]
+    prioridade: [LessonPriority.MEDIA, Validators.required],
+    aulaAssistida: [false],
+    dataAula: ['']
   });
 
   ngOnInit() {
@@ -129,9 +166,18 @@ export class LessonModalComponent implements OnInit {
         grandeArea: this.lessonToEdit.grandeArea,
         subArea: this.lessonToEdit.subArea,
         tema: this.lessonToEdit.tema,
-        prioridade: this.lessonToEdit.prioridade
+        prioridade: this.lessonToEdit.prioridade,
+        aulaAssistida: this.lessonToEdit.aulaAssistida,
+        dataAula: this.lessonToEdit.dataAula ? this.lessonToEdit.dataAula.split('T')[0] : ''
       });
     }
+
+    // Auto-set date when checkbox is checked
+    this.lessonForm.get('aulaAssistida')?.valueChanges.subscribe(checked => {
+      if (checked && !this.lessonForm.get('dataAula')?.value) {
+        this.lessonForm.get('dataAula')?.setValue(new Date().toISOString().split('T')[0]);
+      }
+    });
   }
 
   onSave() {

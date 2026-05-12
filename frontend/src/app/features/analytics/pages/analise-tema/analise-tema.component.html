@@ -30,7 +30,7 @@
                 <div class="progress-bar">
                   <div class="fill" [style.width.%]="topic.accuracy" [class]="getAccClass(topic.accuracy)"></div>
                 </div>
-                <span>{{ topic.accuracy }}%</span>
+                <span>{{ topic.accuracy | number:'1.0-0' }}%</span>
               </div>
             </td>
             <td>{{ topic.sessionsCount }}</td>

@@ -2,15 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Legacy Convergence
-current_phase: "Phase 17: Sincronização de Regras & Normalização"
-status: completed
-last_updated: "2026-05-11T19:18:36.103Z"
+status: shipped
+last_updated: "2026-05-12T15:00:00.000Z"
 progress:
-  total_phases: 17
-  completed_phases: 12
-  total_plans: 21
-  completed_plans: 17
-  percent: 71
+  total_phases: 18
+  completed_phases: 13
+  total_plans: 23
+  completed_plans: 19
+  percent: 83
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -20,17 +19,19 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-11)
 
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
-**Current focus:** Phase 17 — Sincronização de Regras & Normalização
+**Current focus:**
 
-- **Current Phase:** Phase 17: Sincronização de Regras & Normalização
-- **Status:** Phase 17 complete
-- **Next Steps:** Start implementing Task 1.1 (StringNormalizer).
+- **Phase 18**: Alertas de Performance & Exportação - **Concluído (com bugfixes)**
+    - Relatório PDF redesenhado e 100% funcional com KPI completos.
+    - Resolvido bug de listagem (vazia) na Revisão Intervalada (Backend/Frontend alinhados).
+    - Corrigido race condition de login via LocalStorage e interceptor ajustado.
+- **Phase 19**: Gamificação & Notificações - **Pendente**
 
 ---
 
 ## Current Status
 
-**Phase:** 16 of 20
+**Phase:** 18 of 20
 **Milestone:** v1.1 — Legacy Convergence & Advanced Features
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
@@ -44,6 +45,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 - [x] REQUIREMENTS.md created for v1.1
 - [x] ROADMAP.md updated with Phases 16-20
 - [x] Phase 16: Refinamento de Analytics & Tendências (Shipped)
+- [x] Phase 17: Sincronização de Regras & Normalização (Shipped)
+- [x] Phase 18: Alertas de Performance & Exportação + Bugfixes (Shipped)
 
 ---
 

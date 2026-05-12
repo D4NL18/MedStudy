@@ -50,7 +50,7 @@
     </div>
 
     <div class="table-container">
-      <table class="revisao-table">
+      <table class="revisao-table" *ngIf="((sessions$ | async)?.length || 0) > 0">
         <thead>
           <tr>
             <th>Tema</th>
