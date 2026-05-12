@@ -31,7 +31,10 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
-        tap(() => {
+        tap(({ response }) => {
+          // Persist token immediately so interceptor can read it before
+          // the Store update propagates (prevents race-condition 401 #BF-03)
+          localStorage.setItem('auth_token', response.accessToken);
           this.router.navigate(['/dashboard']);
         })
       ),
@@ -43,6 +46,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.logout),
         tap(() => {
+          localStorage.removeItem('auth_token');
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('user');
