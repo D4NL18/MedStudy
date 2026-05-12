@@ -11,11 +11,9 @@ import { selectDashboardKPIs, selectDashboardLoading, selectAreaAnalytics } from
 import * as DashboardActions from '../../store/dashboard/dashboard.actions';
 import { AreaAnalytics } from '../../store/dashboard/dashboard.actions';
 import { EvolutionChartComponent } from './components/evolution-chart/evolution-chart.component';
-import { AreaChartComponent } from './components/area-chart/area-chart.component';
 import { DistributionChartComponent } from './components/distribution-chart/distribution-chart.component';
 import { TopErrorsRankingComponent } from './components/top-errors-ranking/top-errors-ranking.component';
 import { SubareaModalComponent } from './components/subarea-modal/subarea-modal.component';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { ExportService } from '../../core/services/export/export.service';
 import html2canvas from 'html2canvas';
@@ -27,12 +25,9 @@ import html2canvas from 'html2canvas';
     CommonModule, 
     LucideAngularModule,
     EvolutionChartComponent, 
-    AreaChartComponent, 
     DistributionChartComponent,
     TopErrorsRankingComponent,
-    MatDialogModule,
-    RouterLink, 
-    RouterLinkActive
+    MatDialogModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -84,10 +79,16 @@ export class DashboardComponent implements OnInit {
     for (const id of chartElements) {
       const element = document.getElementById(id);
       if (element) {
+        // Force fixed width before capture so the layout doesn't get squashed
+        const originalWidth = element.style.width;
+        element.style.width = '800px';
+        
         const canvas = await html2canvas(element, {
-          backgroundColor: null,
-          scale: 2 // Better quality
+          backgroundColor: '#ffffff', // Force white background for PDF readability
+          scale: 2
         });
+        
+        element.style.width = originalWidth;
         charts[id] = canvas.toDataURL('image/png');
       }
     }

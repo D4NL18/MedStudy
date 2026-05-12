@@ -29,6 +29,7 @@ public class ExportController {
     private final PdfExportService pdfExportService;
     private final CsvExportService csvExportService;
     private final StudySessionService studySessionService;
+    private final com.medstudy.backend.modules.dashboard.service.DashboardService dashboardService;
 
     @PostMapping("/pdf")
     public ResponseEntity<byte[]> exportPdf(@RequestBody PdfExportRequest request) {
@@ -36,8 +37,11 @@ public class ExportController {
         data.put("title", request.title());
         data.put("charts", request.charts());
         
-        // Add metrics summary
-        data.put("metrics", studySessionService.getMetrics());
+        // Add complete dashboard data instead of just session metrics
+        com.medstudy.backend.modules.dashboard.dto.DashboardResponse dashboardData = dashboardService.getDashboardData();
+        data.put("kpis", dashboardData);
+        data.put("areas", dashboardData.areaAnalytics());
+        data.put("topErrors", dashboardData.topErrors());
 
         byte[] pdf = pdfExportService.generatePdf("performance-report", data);
 
