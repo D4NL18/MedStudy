@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // MedStudy Design System - 8 Themes
 $themes: (
   rosa: (
@@ -149,7 +151,7 @@ $themes: (
   --shadow-lg: 0 12px 24px rgba(0,0,0,0.2);
   
   // Apply Verde as default if no data-theme is set
-  @each $key, $value in map-get($themes, verde) {
+  @each $key, $value in map.get($themes, verde) {
     --color-#{$key}: #{$value};
   }
 }

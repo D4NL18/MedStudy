@@ -110,4 +110,11 @@ export class BancoListComponent implements OnInit {
     if (accuracy >= 70) return 'mid';
     return 'low';
   }
+
+  exportCsv() {
+    const filters = this.filters();
+    this.exportService.exportCsv(filters).subscribe(blob => {
+      this.exportService.downloadFile(blob, 'banco-questoes.csv');
+    });
+  }
 }

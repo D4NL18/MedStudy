@@ -30,7 +30,9 @@ public class PdfExportService {
             renderer.createPDF(outputStream);
             return outputStream.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar PDF", e);
+            System.err.println(">>> PdfExportService Error: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao gerar PDF: " + e.getMessage(), e);
         }
     }
 }

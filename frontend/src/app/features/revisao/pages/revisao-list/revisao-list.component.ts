@@ -2,7 +2,6 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
-import { RouterLink } from '@angular/router';
 import { RevisionActions } from '../../../../store/revision/revision.actions';
 import { selectSessions, selectSummary, selectLoading } from '../../../../store/revision/revision.reducer';
 import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
@@ -14,8 +13,7 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
   standalone: true,
   imports: [
     CommonModule, 
-    LucideAngularModule, 
-    RouterLink
+    LucideAngularModule
   ],
   templateUrl: './revisao-list.component.html',
   styleUrl: './revisao-list.component.scss'
