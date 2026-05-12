@@ -42,7 +42,7 @@
 - Endpoint backend para geração de PDF (relatórios).
 - Funcionalidade de download de CSV no Banco de Dados.
 
-### Phase 19 — Gamificação & Notificações
+### Phase 19 - Gamificação & Notificações
 **Goal:** Engajamento do usuário via badges e alertas in-app.
 **Requirements:** GAMI-01, NOTF-01
 **Deliverables:**
@@ -66,6 +66,8 @@
 | 16    | v1.1      | 1/1            | Complete| 2026-05-11|
 | 17    | v1.1      | 1/1            | Complete| 2026-05-11|
 | 18    | v1.1      | 2/2            | Complete| 2026-05-12|
+| 19    | v1.1      | 0/1            | Planned | -         |
+| 20    | v1.1      | 0/1            | Planned | -         |
 
 ---
 *Roadmap updated for v1.1 on 2026-05-11*
