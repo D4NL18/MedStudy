@@ -119,15 +119,15 @@
     <div class="section-title">Resumo Geral</div>
     <div class="metrics-grid">
         <div class="metric-card">
-            <div class="metric-value" th:text="${#numbers.formatDecimal(kpis.studyMetrics.successRate, 1, 0)} + '%'">0%</div>
+            <div class="metric-value" th:text="${#numbers.formatDecimal(kpis.sessions.successRate, 1, 0)} + '%'">0%</div>
             <div class="metric-label">Taxa Global</div>
         </div>
         <div class="metric-card">
-            <div class="metric-value" th:text="${kpis.studyMetrics.totalQuestions}">0</div>
+            <div class="metric-value" th:text="${kpis.sessions.totalQuestions}">0</div>
             <div class="metric-label">Questões</div>
         </div>
         <div class="metric-card">
-            <div class="metric-value" th:text="${kpis.studyMetrics.totalSessions}">0</div>
+            <div class="metric-value" th:text="${kpis.sessions.totalSessions}">0</div>
             <div class="metric-label">Sessões</div>
         </div>
         <div class="metric-card">
@@ -135,11 +135,11 @@
             <div class="metric-label">Streak (Dias)</div>
         </div>
         <div class="metric-card">
-            <div class="metric-value text-success" th:text="${kpis.simuladoMetrics.bestArea}">N/A</div>
+            <div class="metric-value text-success" th:text="${kpis.simulados.bestArea}">N/A</div>
             <div class="metric-label">Área Mais Forte</div>
         </div>
         <div class="metric-card">
-            <div class="metric-value text-error" th:text="${kpis.simuladoMetrics.worstArea}">N/A</div>
+            <div class="metric-value text-error" th:text="${kpis.simulados.worstArea}">N/A</div>
             <div class="metric-label">Área Mais Fraca</div>
         </div>
     </div>
