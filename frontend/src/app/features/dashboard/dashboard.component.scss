@@ -17,7 +17,7 @@
       font-size: 2.2rem;
       font-weight: 800;
       margin: 0;
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -54,17 +54,17 @@
       &:hover {
         transform: translateY(-2px);
         background: rgba(255, 255, 255, 0.1);
-        border-color: var(--primary-color);
+        border-color: var(--color-primary);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
       &.pdf {
-        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
         color: white;
         border: none;
 
         &:hover {
-          box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4);
+          box-shadow: 0 4px 15px rgba(var(--color-primary-rgb), 0.4);
         }
       }
     }
@@ -206,46 +206,114 @@ td {
   @media (max-width: 800px) { grid-template-columns: 1fr; }
 }
 
-.chart-box, .lessons-box, .theme-box {
+.chart-box, .lessons-box, .badges-mini-box {
   padding: 20px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  h3 { font-size: 0.9rem; font-weight: 700; margin: 0; opacity: 0.9; }
-}
 
-.lessons-list { display: flex; flex-direction: column; gap: 8px; }
-.lesson-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px; background: rgba(255,255,255,0.02); border-radius: 10px;
-  .lesson-info {
-    display: flex; flex-direction: column; gap: 1px;
-    .lesson-name { font-size: 0.8rem; font-weight: 600; }
-    .lesson-area { font-size: 0.7rem; opacity: 0.5; }
+  .box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 { font-size: 0.9rem; font-weight: 700; margin: 0; opacity: 0.9; }
+    .badge-count { 
+      font-size: 0.7rem; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      background: rgba(var(--color-accent-rgb), 0.1);
+      color: var(--color-accent);
+      padding: 4px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
   }
 }
 
-.priority-badge {
-  font-size: 0.6rem; font-weight: 800; padding: 3px 6px; border-radius: 4px;
-  &[data-priority="Diamante"] { background: rgba(157, 78, 221, 0.2); color: #9D4EDD; }
-  &[data-priority="Alta"] { background: rgba(255, 133, 49, 0.2); color: #FF8531; }
+.badges-mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.theme-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;
-}
-.theme-card {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  color: var(--color-text); cursor: pointer;
-  .color-preview { 
-    width: 100%; height: 24px; border-radius: 4px; 
-    background: var(--color-preview);
-    border: 1px solid rgba(255,255,255,0.1);
+.badge-mini-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(8px) scale(1.02);
+    border-color: var(--color-accent);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
-  span { font-size: 0.65rem; font-weight: 600; }
-  &.active { border-color: var(--color-accent); background: rgba(var(--color-accent-rgb), 0.05); }
+  
+  .badge-mini-icon {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    lucide-icon { width: 20px; height: 20px; }
+  }
+
+  .badge-mini-info {
+    display: flex;
+    flex-direction: column;
+    .badge-name { font-size: 0.9rem; font-weight: 700; color: var(--color-text); }
+    .badge-date { font-size: 0.7rem; opacity: 0.6; font-weight: 500; }
+  }
+
+  &.locked {
+    opacity: 0.4;
+    background: rgba(255, 255, 255, 0.01);
+    filter: grayscale(1);
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      border-color: rgba(255, 255, 255, 0.05);
+      box-shadow: none;
+    }
+
+    .badge-mini-icon {
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+  }
+}
+
+.btn-ver-todos {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  
+  &:hover { 
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(var(--color-accent-rgb), 0.3);
+  }
 }
 
 .glass {

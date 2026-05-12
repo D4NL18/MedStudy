@@ -4,10 +4,34 @@ import { SimuladosService } from '../../core/services/simulados.service';
 import * as SimuladosActions from './simulados.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 
+import { ToastService } from '../../core/services/toast.service';
+
 @Injectable()
 export class SimuladosEffects {
   private actions$ = inject(Actions);
   private simuladosService = inject(SimuladosService);
+  private toastService = inject(ToastService);
+
+  private badgeMap: Record<string, string> = {
+    'STREAK_7': 'Mestre da Ofensiva',
+    'QUESTIONS_1000': 'Maratonista de Questões',
+    'SIMULADOS_10': 'Estratega de Simulados'
+  };
+
+  showBadgeToast$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(SimuladosActions.createSimuladoSuccess, SimuladosActions.updateSimuladoSuccess),
+      map(({ simulado }) => {
+        if (simulado.newlyEarnedBadges && simulado.newlyEarnedBadges.length > 0) {
+          simulado.newlyEarnedBadges.forEach(badgeType => {
+            const name = this.badgeMap[badgeType] || badgeType;
+            this.toastService.badge(name);
+          });
+        }
+      })
+    ),
+    { dispatch: false }
+  );
 
   loadSimulados$ = createEffect(() =>
     this.actions$.pipe(

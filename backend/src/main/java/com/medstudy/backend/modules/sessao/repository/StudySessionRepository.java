@@ -54,6 +54,9 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
            "ORDER BY (SUM(s.qtsFeitas) - SUM(s.qtsCorretas)) * 1.0 / SUM(s.qtsFeitas) DESC")
     List<Object[]> findTopErrorsByUserIdSince(@Param("userId") UUID userId, @Param("since") LocalDate since);
 
+    @Query("SELECT COUNT(s) FROM StudySession s WHERE s.user.id = :userId AND s.revisaoConcluida = false AND s.dataProximaRevisao <= :today")
+    long countPendingRevisions(@Param("userId") UUID userId, @Param("today") LocalDate today);
+
     long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(UUID userId, LocalDate date);
     long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(UUID userId, LocalDate date);
     long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(UUID userId, LocalDate date);

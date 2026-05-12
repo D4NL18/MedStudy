@@ -10,6 +10,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface SimuladoMapper {
     SimuladoResponse toResponse(Simulado entity);
+
+    @Mapping(target = "newlyEarnedBadges", source = "newlyEarnedBadges")
+    SimuladoResponse toResponse(Simulado entity, java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newlyEarnedBadges);
     
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)

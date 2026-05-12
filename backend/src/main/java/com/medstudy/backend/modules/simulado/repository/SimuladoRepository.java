@@ -18,4 +18,6 @@ public interface SimuladoRepository extends JpaRepository<Simulado, UUID>, JpaSp
     List<Simulado> findAllByUserId(@Param("userId") UUID userId);
 
     Optional<Simulado> findFirstByUserIdAndInstituicaoIgnoreCaseOrderByCreatedAtDesc(UUID userId, String instituicao);
+
+    long countByUserId(UUID userId);
 }

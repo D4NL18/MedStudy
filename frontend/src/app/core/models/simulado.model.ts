@@ -16,6 +16,7 @@ export interface Simulado {
   pedTotal: number; pedAcertos: number; pedErros: number;
   goTotal: number; goAcertos: number; goErros: number;
   prevTotal: number; prevAcertos: number; prevErros: number;
+  newlyEarnedBadges?: string[];
 }
 
 export interface SimuladoFilters {

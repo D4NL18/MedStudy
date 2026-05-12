@@ -35,7 +35,8 @@ export class DashboardService {
       weakArea: 'Preventiva',
       areaAnalytics: [],
       topErrors: [],
-      evolution: []
+      evolution: [],
+      recentBadges: []
     });
   }
 }

@@ -10,7 +10,8 @@ public record DashboardResponse(
     int currentStreak,
     List<AreaAnalyticsResponse> areaAnalytics,
     List<TopicErrorResponse> topErrors,
-    List<EvolutionPoint> evolution
+    List<EvolutionPoint> evolution,
+    List<com.medstudy.backend.modules.gamificacao.dto.UserBadgeResponse> recentBadges
 ) {
     public record StudyMetrics(
         long totalSessions,

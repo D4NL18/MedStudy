@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface LessonRepository extends JpaRepository<Lesson, UUID>, JpaSpecificationExecutor<Lesson> {
     java.util.List<Lesson> findByUserIdAndTemaContainingIgnoreCase(UUID userId, String tema);
     Optional<Lesson> findByUserAndTema(User user, String tema);
+    long countByUserIdAndReforcoTrue(UUID userId);
 }

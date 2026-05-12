@@ -14,11 +14,47 @@
       <a routerLink="/analytics/area" routerLinkActive="active">Análise Área</a>
       <a routerLink="/analytics/tema" routerLinkActive="active">Análise Tema</a>
     </div>
-    <div class="user-info">
-      <div class="user-avatar">
-        <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+    <div class="user-actions">
+      <!-- Notificações -->
+      <div class="notification-wrapper">
+        <button class="nav-icon-btn" (click)="toggleDropdown()">
+          <lucide-icon name="bell"></lucide-icon>
+          <span class="badge" *ngIf="notifications()?.totalAlerts! > 0">{{ notifications()?.totalAlerts }}</span>
+        </button>
+
+        <div class="notification-dropdown" *ngIf="showDropdown()">
+          <div class="dropdown-header">
+            <h4>Pendências</h4>
+          </div>
+          <div class="dropdown-body">
+            <div class="notif-item" *ngIf="notifications()?.pendingRevisions! > 0" routerLink="/revisoes" (click)="showDropdown.set(false)">
+              <div class="notif-icon rev"><lucide-icon name="refresh-cw"></lucide-icon></div>
+              <div class="notif-text">
+                <span class="title">{{ notifications()?.pendingRevisions }} Revisões Atrasadas</span>
+                <span class="desc">Clique para resolver seus flashcards</span>
+              </div>
+            </div>
+            <div class="notif-item" *ngIf="notifications()?.reinforcementLessons! > 0" routerLink="/aulas" (click)="showDropdown.set(false)">
+              <div class="notif-icon ref"><lucide-icon name="book-open"></lucide-icon></div>
+              <div class="notif-text">
+                <span class="title">{{ notifications()?.reinforcementLessons }} Aulas de Reforço</span>
+                <span class="desc">Temas com desempenho baixo</span>
+              </div>
+            </div>
+            <div class="empty-state" *ngIf="notifications()?.totalAlerts === 0">
+              <lucide-icon name="check-circle"></lucide-icon>
+              <p>Tudo em dia!</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
+
+      <div class="user-info" routerLink="/perfil">
+        <div class="user-avatar">
+          <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+        </div>
+        <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
+      </div>
       <button class="btn-logout" (click)="logout()">Sair</button>
     </div>
   </nav>

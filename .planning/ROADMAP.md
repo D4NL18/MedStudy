@@ -50,7 +50,16 @@
 - UI: Galeria de Badges no perfil do usuário.
 - UI: Navbar notifications para revisões pendentes.
 
-### Phase 20 — PWA & Otimização Final
+### Phase 20 — Ajustes de Responsividade
+**Goal:** Garantir que todos os novos componentes (Badges, Notificações, Analytics) funcionem em dispositivos móveis.
+**Requirements:** RESP-01
+**Deliverables:**
+- UI: Media queries para o novo Dashboard (3 colunas -> 1 coluna).
+- UI: Ajuste de largura e empilhamento da Galeria de Badges no mobile.
+- UI: Navbar responsiva com menu hambúrguer e dropdown de notificações ajustado.
+- UI: Tabelas de aulas e revisões com scroll horizontal ou visualização em card.
+
+### Phase 21 — PWA & Otimização Final
 **Goal:** Tornar o sistema instalável e offline-ready.
 **Requirements:** PWA-01
 **Deliverables:**
@@ -66,8 +75,9 @@
 | 16    | v1.1      | 1/1            | Complete| 2026-05-11|
 | 17    | v1.1      | 1/1            | Complete| 2026-05-11|
 | 18    | v1.1      | 2/2            | Complete| 2026-05-12|
-| 19    | v1.1      | 0/1            | Planned | -         |
+| 19    | v1.1      | 1/1            | Complete| 2026-05-12|
 | 20    | v1.1      | 0/1            | Planned | -         |
+| 21    | v1.1      | 0/1            | Planned | -         |
 
 ---
-*Roadmap updated for v1.1 on 2026-05-11*
+*Roadmap updated for v1.1 on 2026-05-12*

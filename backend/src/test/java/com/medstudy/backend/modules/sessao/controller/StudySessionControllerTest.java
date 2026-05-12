@@ -62,7 +62,7 @@ class StudySessionControllerTest {
     @WithMockUser
     void create_ShouldReturn201_WhenRequestIsValid() throws Exception {
         StudySessionRequest request = new StudySessionRequest("CLINICA_MEDICA", "Pneumo", LocalDate.now(), 10, 8, "SUS", "Obs", null, false);
-        StudySessionResponse response = new StudySessionResponse(UUID.randomUUID(), "CLINICA_MEDICA", "Pneumo", LocalDate.now(), 10, 8, "SUS", "Obs", null, false);
+        StudySessionResponse response = new StudySessionResponse(UUID.randomUUID(), "CLINICA_MEDICA", "Pneumo", LocalDate.now(), 10, 8, "SUS", "Obs", null, false, java.util.Collections.emptyList());
 
         when(service.createSession(any(StudySessionRequest.class))).thenReturn(response);
 
@@ -79,7 +79,7 @@ class StudySessionControllerTest {
     @WithMockUser
     void getById_ShouldReturn200_WhenExists() throws Exception {
         UUID id = UUID.randomUUID();
-        StudySessionResponse response = new StudySessionResponse(id, "CIRURGIA", "Trauma", LocalDate.now(), 5, 4, "HOSPITAL", "", null, false);
+        StudySessionResponse response = new StudySessionResponse(id, "CIRURGIA", "Trauma", LocalDate.now(), 5, 4, "HOSPITAL", "", null, false, java.util.Collections.emptyList());
 
         when(service.getById(id)).thenReturn(response);
 

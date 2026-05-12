@@ -76,6 +76,10 @@ export const routes: Routes = [
       {
         path: 'flashcards/novo',
         loadComponent: () => import('./features/flashcards/pages/flashcard-form/flashcard-form.component').then(m => m.FlashcardFormComponent)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./features/perfil/perfil.component').then(m => m.PerfilComponent)
       }
     ]
   },

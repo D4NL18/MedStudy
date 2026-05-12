@@ -42,7 +42,7 @@ export class AulasListComponent implements OnInit {
           }));
         } else {
           this.store.dispatch(StudyPlanActions.createLesson({ 
-            lesson: { ...result, aulaAssistida: false } 
+            lesson: result 
           }));
         }
       }
@@ -84,9 +84,13 @@ export class AulasListComponent implements OnInit {
 
   onFilterChange(type: string, value: any) {
     const filters: any = {};
+    
+    // We should ideally maintain the current state of other filters
+    // For now, let's at least add 'reforco' support
     if (type === 'grandeArea') filters.grandeArea = value || undefined;
     if (type === 'prioridade') filters.prioridade = value || undefined;
     if (type === 'status') filters.aulaAssistida = value === 'concluido' ? true : value === 'pendente' ? false : undefined;
+    if (type === 'reforco') filters.reforco = value === 'true' ? true : value === 'false' ? false : undefined;
     
     this.store.dispatch(StudyPlanActions.loadLessons(filters));
   }

@@ -129,3 +129,30 @@ input {
     }
   }
 }
+
+/* Toast Styles */
+.toast-success {
+  --mdc-snackbar-container-color: #22c55e;
+  --mdc-snackbar-label-text-color: #ffffff;
+  border-radius: 12px;
+}
+
+.toast-error {
+  --mdc-snackbar-container-color: #ef4444;
+  --mdc-snackbar-label-text-color: #ffffff;
+  border-radius: 12px;
+}
+
+.toast-badge {
+  --mdc-snackbar-container-color: #6F0642;
+  --mdc-snackbar-label-text-color: #ffffff;
+  border-radius: 20px;
+  border: 2px solid #F553B0;
+  box-shadow: 0 10px 40px rgba(245, 83, 176, 0.3);
+  
+  .mdc-snackbar__label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+  }
+}
