@@ -58,4 +58,9 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
     long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(UUID userId, LocalDate date);
     long countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(UUID userId, LocalDate date);
     long countByUserIdAndRevisaoConcluidaTrue(UUID userId);
+
+    List<StudySession> findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(UUID userId, LocalDate date);
+    List<StudySession> findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(UUID userId, LocalDate date);
+    List<StudySession> findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(UUID userId, LocalDate date);
+    List<StudySession> findByUserIdAndRevisaoConcluidaTrue(UUID userId);
 }

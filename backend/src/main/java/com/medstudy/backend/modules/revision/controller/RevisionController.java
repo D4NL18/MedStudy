@@ -23,6 +23,9 @@ public class RevisionController {
         return ResponseEntity.ok(service.getSummary());
     }
 
-    // Listagem por categoria será implementada via StudySessionController 
-    // ou endpoints dedicados aqui se a lógica for muito específica.
+    @GetMapping
+    public ResponseEntity<java.util.List<StudySessionResponse>> getSessions(
+            @org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "HOJE") String tipo) {
+        return ResponseEntity.ok(service.getSessions(tipo));
+    }
 }

@@ -13,40 +13,40 @@ public class CookieUtil {
     public ResponseCookie createAccessTokenCookie(String token, Duration duration) {
         return ResponseCookie.from("access_token", token)
                 .httpOnly(true)
-                .secure(true) // Should be true in production (requires HTTPS)
+                .secure(false) // Changed to false for localhost dev environment
                 .path("/")
                 .maxAge(duration)
-                .sameSite("Strict")
+                .sameSite("Lax") // Changed Strict to Lax to allow navigation from email links
                 .build();
     }
 
     public ResponseCookie createRefreshTokenCookie(String token, Duration duration) {
         return ResponseCookie.from("refresh_token", token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/api/auth/refresh") // Only send to refresh endpoint
                 .maxAge(duration)
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
     }
 
     public ResponseCookie deleteAccessTokenCookie() {
         return ResponseCookie.from("access_token", "")
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(0)
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
     }
 
     public ResponseCookie deleteRefreshTokenCookie() {
         return ResponseCookie.from("refresh_token", "")
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/api/auth/refresh")
                 .maxAge(0)
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
     }
 
