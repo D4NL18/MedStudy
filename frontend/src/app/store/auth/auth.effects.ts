@@ -35,7 +35,11 @@ export class AuthEffects {
           // Persist token immediately so interceptor can read it before
           // the Store update propagates (prevents race-condition 401 #BF-03)
           localStorage.setItem('auth_token', response.accessToken);
-          this.router.navigate(['/dashboard']);
+          // Give a small delay to ensure the Store is updated and
+          // any HTTP cookies are fully processed by the browser
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 100);
         })
       ),
     { dispatch: false }
