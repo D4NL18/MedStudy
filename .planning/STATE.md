@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Legacy Convergence
-status: shipping
-last_updated: "2026-05-13T15:56:51Z"
+status: planning
+last_updated: "2026-05-13T16:28:51Z"
 progress:
-  total_phases: 20
+  total_phases: 21
   completed_phases: 15
-  total_plans: 27
+  total_plans: 28
   completed_plans: 23
-  percent: 88
+  percent: 82
 ---
 
 # STATE.md — MedStudy Project Memory
