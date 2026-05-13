@@ -1,3 +1,5 @@
+@use '../../../../core/styles/mixins' as *;
+
 .flashcards-container {
   padding: var(--spacing-xl);
   max-width: 1400px;
@@ -197,4 +199,133 @@
 
   &:hover { background: rgba(255, 255, 255, 0.1); color: var(--color-text); }
   &.delete:hover { background: #EF4444; color: white; border-color: #EF4444; }
+}
+
+/* RESPONSIVE OVERRIDES */
+@include respond-to('large-tablet') {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .list-section .cards-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    table {
+      min-width: 800px;
+      font-size: 0.85rem;
+      
+      th, td { 
+        padding: 12px 10px; 
+        
+        &:nth-child(2) { // Área
+          display: none;
+        }
+      }
+
+      .status.available { white-space: nowrap; }
+    }
+  }
+}
+
+@include respond-to('mobile') {
+  .flashcards-container {
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    
+    .actions {
+      flex-direction: column;
+      gap: 12px;
+      button { width: 100%; justify-content: center; }
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    
+    .stat-card {
+      padding: 16px;
+      min-height: 100px;
+      .value { font-size: 1.8rem; }
+    }
+  }
+
+  .config-section {
+    padding: 16px;
+    .meta-row {
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      text-align: center;
+      
+      input { width: 60px; }
+      span { width: 100%; font-size: 0.8rem; }
+      .btn-save { margin: 0; width: 100%; }
+    }
+  }
+
+  .list-header {
+    padding: 12px 16px;
+    .list-title { font-size: 1rem; }
+  }
+
+  .cards-table {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead tr {
+      display: none;
+    }
+
+    tbody tr {
+      background: var(--color-surface-glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      padding: 16px;
+    }
+
+    td {
+      border: none;
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: right;
+
+      &::before {
+        content: attr(data-label);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        opacity: 0.5;
+      }
+
+      &.preview {
+        max-width: 100%;
+        text-align: right;
+        margin-left: 12px;
+      }
+
+      &.actions-cell {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--color-border);
+        justify-content: center;
+        gap: 24px;
+        
+        .icon-btn { width: 44px; height: 44px; }
+      }
+    }
+  }
 }

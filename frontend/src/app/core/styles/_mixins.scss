@@ -1,0 +1,20 @@
+// Breakpoints
+$bp-xs: 480px;
+$bp-mobile: 767px;
+$bp-tablet: 1024px;
+$bp-large-tablet: 1200px;
+$bp-desktop: 1400px;
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: #{$bp-xs}) { @content; }
+  } @else if $breakpoint == 'mobile' {
+    @media (max-width: #{$bp-mobile}) { @content; }
+  } @else if $breakpoint == 'tablet' {
+    @media (max-width: #{$bp-tablet}) { @content; }
+  } @else if $breakpoint == 'large-tablet' {
+    @media (max-width: #{$bp-large-tablet}) { @content; }
+  } @else if $breakpoint == 'desktop' {
+    @media (max-width: #{$bp-desktop}) { @content; }
+  }
+}

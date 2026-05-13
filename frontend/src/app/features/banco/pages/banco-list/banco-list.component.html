@@ -38,12 +38,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let session of sessions()" class="session-row">
-          <td class="date-cell">{{ session.dataSessao | date:'dd/MM/yyyy' }}</td>
-          <td><span class="area-badge">{{ session.grandeArea }}</span></td>
-          <td class="theme-cell">{{ session.tema }}</td>
-          <td class="text-center font-bold">{{ session.qtsFeitas }}</td>
-          <td class="text-center font-bold">{{ session.qtsCorretas }}</td>
-          <td class="text-center">
+          <td class="date-cell" data-label="Data">{{ session.dataSessao | date:'dd/MM/yyyy' }}</td>
+          <td data-label="Grande Área"><span class="area-badge">{{ session.grandeArea }}</span></td>
+          <td class="theme-cell" data-label="Tema">{{ session.tema }}</td>
+          <td class="text-center font-bold" data-label="Questões">{{ session.qtsFeitas }}</td>
+          <td class="text-center font-bold" data-label="Acertos">{{ session.qtsCorretas }}</td>
+          <td class="text-center" data-label="Performance">
             <div class="performance-indicator" [class]="getPerformanceClass(session.qtsFeitas > 0 ? (session.qtsCorretas / session.qtsFeitas * 100) : 0)">
               {{ session.qtsFeitas > 0 ? (session.qtsCorretas / session.qtsFeitas * 100 | number:'1.0-0') : 0 }}%
             </div>
