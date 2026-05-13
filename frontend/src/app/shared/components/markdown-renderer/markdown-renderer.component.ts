@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
@@ -8,6 +8,11 @@ import { MarkdownModule } from 'ngx-markdown';
   templateUrl: './markdown-renderer.component.html',
   styleUrl: './markdown-renderer.component.scss'
 })
-export class MarkdownRendererComponent {
+export class MarkdownRendererComponent implements OnChanges {
   @Input() data: string = '';
+  private cdr = inject(ChangeDetectorRef);
+
+  ngOnChanges() {
+    this.cdr.detectChanges();
+  }
 }

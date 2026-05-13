@@ -1,3 +1,5 @@
+@use '../../../../core/styles/mixins' as *;
+
 .revisao-container {
   padding: var(--spacing-xl);
   max-width: 1400px;
@@ -128,3 +130,106 @@
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* RESPONSIVE OVERRIDES */
+@include respond-to('large-tablet') {
+  .stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    .revisao-table {
+      min-width: 800px;
+      font-size: 0.85rem;
+      th, td { padding: 12px 10px; }
+    }
+  }
+}
+
+@include respond-to('mobile') {
+  .revisao-container {
+    padding: 16px;
+  }
+
+  .header {
+    h1 { font-size: 2rem; }
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+    
+    .stat-card {
+      padding: 16px;
+      min-height: 100px;
+      .value { font-size: 1.8rem; }
+    }
+  }
+
+  .list-header {
+    padding: 12px 16px;
+    font-size: 1rem;
+    .badge { padding: 2px 8px; font-size: 0.75rem; }
+  }
+
+  .revisao-table {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead tr {
+      display: none;
+    }
+
+    tbody tr {
+      background: var(--color-surface-glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      padding: 16px;
+      
+      &:hover { background: var(--color-surface-glass); }
+    }
+
+    td {
+      border: none;
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: right;
+
+      &::before {
+        content: attr(data-label);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        opacity: 0.5;
+      }
+
+      &.tema { font-size: 1.1rem; color: var(--color-accent); margin-bottom: 8px; }
+      
+      &.action-cell {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--color-border);
+        justify-content: center;
+        
+        .action-btn {
+          width: 100%;
+          padding: 10px;
+          background: rgba(var(--color-accent-rgb), 0.1);
+          border-radius: 12px;
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}

@@ -28,6 +28,7 @@ class StudySessionServiceTest {
     private UserRepository userRepository;
     private StudySessionMapper mapper;
     private LessonRepository lessonRepository;
+    private com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
     private StudySessionService service;
 
     @BeforeEach
@@ -36,7 +37,8 @@ class StudySessionServiceTest {
         userRepository = mock(UserRepository.class);
         mapper = mock(StudySessionMapper.class);
         lessonRepository = mock(LessonRepository.class);
-        service = new StudySessionService(repository, userRepository, mapper, lessonRepository);
+        badgeService = mock(com.medstudy.backend.modules.gamificacao.service.BadgeService.class);
+        service = new StudySessionService(repository, userRepository, mapper, lessonRepository, badgeService);
 
         // Mock Security Context
         User user = new User();

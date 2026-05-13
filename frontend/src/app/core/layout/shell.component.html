@@ -1,9 +1,15 @@
 <div class="app-shell">
   <nav class="glass main-nav">
-    <div class="logo" routerLink="/dashboard">
-      <span class="brand">MedStudy</span>
-      <div class="dot"></div>
+    <div class="nav-left">
+      <button class="hamburger-btn" (click)="toggleDrawer()">
+        <lucide-icon name="menu"></lucide-icon>
+      </button>
+      <div class="logo" routerLink="/dashboard">
+        <span class="brand">MedStudy</span>
+        <div class="dot"></div>
+      </div>
     </div>
+    
     <div class="nav-links">
       <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
       <a routerLink="/banco-questoes" routerLinkActive="active">Banco de Dados</a>
@@ -14,14 +20,119 @@
       <a routerLink="/analytics/area" routerLinkActive="active">Análise Área</a>
       <a routerLink="/analytics/tema" routerLinkActive="active">Análise Tema</a>
     </div>
-    <div class="user-info">
-      <div class="user-avatar">
-        <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+
+    <div class="user-actions">
+      <!-- Notificações -->
+      <div class="notification-wrapper">
+        <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin">
+          <lucide-icon name="bell"></lucide-icon>
+          <span class="badge" *ngIf="notifications()?.totalAlerts! > 0">{{ notifications()?.totalAlerts }}</span>
+        </button>
+
+        <ng-template
+          cdkConnectedOverlay
+          [cdkConnectedOverlayOrigin]="notifOrigin"
+          [cdkConnectedOverlayOpen]="showDropdown()"
+          [cdkConnectedOverlayPanelClass]="isMobile() ? 'bottom-sheet-overlay-pane' : ''"
+          (overlayOutsideClick)="showDropdown.set(false)"
+        >
+          <div class="notification-dropdown glass">
+            <div class="dropdown-header">
+              <h4>Pendências</h4>
+            </div>
+            <div class="dropdown-body">
+              <div class="notif-item" *ngIf="notifications()?.pendingRevisions! > 0" routerLink="/revisoes" (click)="showDropdown.set(false)">
+                <div class="notif-icon rev"><lucide-icon name="refresh-cw" [size]="20"></lucide-icon></div>
+                <div class="notif-text">
+                  <span class="title">{{ notifications()?.pendingRevisions }} Revisões Atrasadas</span>
+                  <span class="desc">Clique para resolver seus flashcards</span>
+                </div>
+              </div>
+              <div class="notif-item" *ngIf="notifications()?.reinforcementLessons! > 0" routerLink="/aulas" (click)="showDropdown.set(false)">
+                <div class="notif-icon ref"><lucide-icon name="book-open" [size]="20"></lucide-icon></div>
+                <div class="notif-text">
+                  <span class="title">{{ notifications()?.reinforcementLessons }} Aulas de Reforço</span>
+                  <span class="desc">Temas com desempenho baixo</span>
+                </div>
+              </div>
+              <div class="empty-state" *ngIf="notifications()?.totalAlerts === 0">
+                <lucide-icon name="check-circle" [size]="32"></lucide-icon>
+                <p>Tudo em dia!</p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
       </div>
-      <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
+
+      <div class="user-info" routerLink="/perfil">
+        <div class="user-avatar">
+          <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+        </div>
+        <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
+      </div>
       <button class="btn-logout" (click)="logout()">Sair</button>
     </div>
   </nav>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer-container" *ngIf="isDrawerOpen()">
+    <div class="drawer-backdrop" (click)="toggleDrawer()"></div>
+    <div class="drawer-content glass">
+      <div class="drawer-header">
+        <div class="logo">
+          <span class="brand">MedStudy</span>
+          <div class="dot"></div>
+        </div>
+        <button class="close-btn" (click)="toggleDrawer()">
+          <lucide-icon name="x"></lucide-icon>
+        </button>
+      </div>
+      
+      <div class="drawer-body">
+        <div class="mobile-nav-links">
+          <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="toggleDrawer()">
+            <lucide-icon name="layout-dashboard"></lucide-icon> Dashboard
+          </a>
+          <a routerLink="/banco-questoes" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="database"></lucide-icon> Banco de Dados
+          </a>
+          <a routerLink="/simulados" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="clipboard-list"></lucide-icon> Simulados
+          </a>
+          <a routerLink="/aulas" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="play-circle"></lucide-icon> Aulas
+          </a>
+          <a routerLink="/revisoes" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="refresh-cw"></lucide-icon> Revisão Intervalada
+          </a>
+          <a routerLink="/flashcards" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="layers"></lucide-icon> Flashcards
+          </a>
+          <a routerLink="/analytics/area" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="pie-chart"></lucide-icon> Análise Área
+          </a>
+          <a routerLink="/analytics/tema" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="bar-chart"></lucide-icon> Análise Tema
+          </a>
+        </div>
+      </div>
+
+      <div class="drawer-footer">
+        <div class="user-profile-mobile" routerLink="/perfil" (click)="toggleDrawer()">
+          <div class="user-avatar">
+            <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+          </div>
+          <div class="user-details">
+            <span class="name">{{ user()?.nome || 'Estudante' }}</span>
+            <span class="view-profile">Ver perfil</span>
+          </div>
+        </div>
+        <button class="btn-logout-mobile" (click)="logout()">
+          <lucide-icon name="log-out"></lucide-icon> Sair
+        </button>
+      </div>
+    </div>
+  </div>
   
   <main class="content-area">
     <router-outlet></router-outlet>

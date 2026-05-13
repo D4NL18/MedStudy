@@ -12,8 +12,8 @@
   </div>
 
   <!-- Card State -->
-  <div class="card-container" *ngIf="currentCard$ | async as card">
-    <div class="flashcard" [class.is-flipped]="isFlipped()" (click)="flip()">
+  <div class="card-container" *ngIf="currentCard() as card">
+    <div class="flashcard" [class.is-flipped]="isFlipped()" (click)="handleCardClick($event)">
       <div class="card-face front">
         <div class="card-label">Pergunta</div>
         <div class="content-wrapper">
@@ -29,12 +29,26 @@
         <div class="content-wrapper">
           <app-markdown-renderer [data]="card.verso"></app-markdown-renderer>
         </div>
+        <div class="flip-hint">
+          <lucide-icon name="rotate-ccw" [size]="16"></lucide-icon>
+          Clique para desvirar
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Zoom Overlay -->
+  <div class="zoom-backdrop" *ngIf="isZoomed()" (click)="closeZoom($event)">
+    <div class="zoom-container" (click)="$event.stopPropagation()">
+      <img [src]="zoomImageUrl()" alt="Zoomed Image">
+      <button class="close-zoom-btn" (click)="closeZoom($event)">
+        <lucide-icon name="x" [size]="32"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
   <!-- Actions -->
-  <div class="actions result-step" *ngIf="(currentCard$ | async) && isFlipped() && !hasResult()">
+  <div class="actions result-step" *ngIf="currentCard() && isFlipped() && !hasResult()">
     <button class="result-btn wrong" (click)="setResult(true)">
       <lucide-icon name="x-circle" [size]="32"></lucide-icon>
       <span>Errei</span>
@@ -45,7 +59,7 @@
     </button>
   </div>
 
-  <div class="actions difficulty-step" *ngIf="(currentCard$ | async) && hasResult()">
+  <div class="actions difficulty-step" *ngIf="currentCard() && hasResult()">
     <button class="diff-btn hard" (click)="rate('HARD')">
       <lucide-icon name="alert-triangle" [size]="24"></lucide-icon>
       <span>Difícil</span>

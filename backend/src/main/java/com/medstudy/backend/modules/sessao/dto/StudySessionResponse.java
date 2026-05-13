@@ -13,5 +13,6 @@ public record StudySessionResponse(
     String instituicao,
     String observacoes,
     LocalDate dataProximaRevisao,
-    boolean revisaoConcluida
+    boolean revisaoConcluida,
+    java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newlyEarnedBadges
 ) {}

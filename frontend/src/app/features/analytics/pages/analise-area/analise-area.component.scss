@@ -1,4 +1,17 @@
+@use '../../../../core/styles/mixins' as *;
+
 .analytics-page { display: flex; flex-direction: column; gap: 24px; animation: fadeIn 0.5s ease; }
+
+@include respond-to('mobile') {
+  .chart-wrapper {
+    padding: 12px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
 h2 { margin: 0; font-size: 1.5rem; }
 
 .chart-wrapper {

@@ -22,10 +22,10 @@
           </tr>
         } @else {
           <tr *ngFor="let topic of topics()">
-            <td class="theme-name">{{ topic.tema }}</td>
-            <td><span class="badge">{{ topic.grandeArea }}</span></td>
-            <td>{{ topic.totalQuestions }}</td>
-            <td>
+            <td class="theme-name" data-label="Tema">{{ topic.tema }}</td>
+            <td data-label="Área"><span class="badge">{{ topic.grandeArea }}</span></td>
+            <td data-label="Questões">{{ topic.totalQuestions }}</td>
+            <td data-label="Acerto (%)">
               <div class="accuracy-cell">
                 <div class="progress-bar">
                   <div class="fill" [style.width.%]="topic.accuracy" [class]="getAccClass(topic.accuracy)"></div>
@@ -33,7 +33,7 @@
                 <span>{{ topic.accuracy | number:'1.0-0' }}%</span>
               </div>
             </td>
-            <td>{{ topic.sessionsCount }}</td>
+            <td data-label="Sessões">{{ topic.sessionsCount }}</td>
           </tr>
         }
       </tbody>

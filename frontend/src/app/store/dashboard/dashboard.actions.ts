@@ -36,6 +36,7 @@ export interface DashboardKPIs {
   areaAnalytics: AreaAnalytics[];
   topErrors: TopicError[];
   evolution: { label: string; value: number; }[];
+  recentBadges: any[];
 }
 
 export const loadDashboard = createAction('[Dashboard] Load Dashboard');

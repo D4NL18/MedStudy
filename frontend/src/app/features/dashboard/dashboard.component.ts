@@ -16,6 +16,7 @@ import { TopErrorsRankingComponent } from './components/top-errors-ranking/top-e
 import { SubareaModalComponent } from './components/subarea-modal/subarea-modal.component';
 import { LucideAngularModule } from 'lucide-angular';
 import { ExportService } from '../../core/services/export/export.service';
+import { RouterLink } from '@angular/router';
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -27,14 +28,14 @@ import html2canvas from 'html2canvas';
     EvolutionChartComponent, 
     DistributionChartComponent,
     TopErrorsRankingComponent,
-    MatDialogModule
+    MatDialogModule,
+    RouterLink
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   private store = inject(Store);
-  public themeService = inject(ThemeService);
   public perfTheme = inject(PerformanceThemeService);
   private dialog = inject(MatDialog);
   private exportService = inject(ExportService);
@@ -44,8 +45,6 @@ export class DashboardComponent implements OnInit {
   loading = toSignal(this.store.select(selectDashboardLoading));
   areaAnalytics = toSignal(this.store.select(selectAreaAnalytics));
   
-  themes: AppTheme[] = ['verde', 'azul', 'rosa', 'roxo', 'laranja', 'vermelho', 'claro', 'escuro'];
-
   topLessons = [
     { tema: 'Puericultura', grandeArea: 'Pediatria', prioridade: 'Alta' },
     { tema: 'Hemorragias', grandeArea: 'GO', prioridade: 'Alta' },
@@ -54,10 +53,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(DashboardActions.loadDashboard());
-  }
-
-  changeTheme(theme: AppTheme) {
-    this.themeService.setTheme(theme);
   }
 
   openSubareaDetails(area: AreaAnalytics) {

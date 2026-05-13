@@ -19,7 +19,7 @@ import { revisionFeature } from './store/revision/revision.reducer';
 import { RevisionEffects } from './store/revision/revision.effects';
 import { flashcardsFeature } from './store/flashcards/flashcards.reducer';
 import { FlashcardsEffects } from './store/flashcards/flashcards.effects';
-import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw } from 'lucide-angular';
+import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw, Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, BarChart2, LogOut, User } from 'lucide-angular';
 import { importProvidersFrom } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
@@ -36,7 +36,8 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     importProvidersFrom(LucideAngularModule.pick({ 
       Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle,
-      Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw
+      Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw,
+      Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, LogOut, User, BarChart2
     })),
     provideStore({ 
       theme: themeReducer,

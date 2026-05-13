@@ -34,7 +34,11 @@ import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
 
         <div class="form-group">
           <label>Tema da Aula</label>
-          <input type="text" formControlName="tema" placeholder="Ex: Insuficiência Cardíaca">
+          <input type="text" formControlName="tema" placeholder="Ex: Insuficiência Cardíaca"
+                 [class.invalid]="lessonForm.get('tema')?.invalid && lessonForm.get('tema')?.touched">
+          <span class="error-msg" *ngIf="lessonForm.get('tema')?.invalid && lessonForm.get('tema')?.touched">
+            O tema da aula é obrigatório
+          </span>
         </div>
 
         <div class="form-group">
@@ -56,7 +60,11 @@ import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
 
         <div class="form-group" *ngIf="lessonForm.get('aulaAssistida')?.value">
           <label>Data de Conclusão</label>
-          <input type="date" formControlName="dataAula">
+          <input type="date" formControlName="dataAula"
+                 [class.invalid]="lessonForm.get('aulaAssistida')?.value && !lessonForm.get('dataAula')?.value && lessonForm.get('dataAula')?.touched">
+          <span class="error-msg" *ngIf="lessonForm.get('aulaAssistida')?.value && !lessonForm.get('dataAula')?.value && lessonForm.get('dataAula')?.touched">
+            Informe a data em que assistiu a aula
+          </span>
         </div>
       </form>
     </app-modal-layout>
@@ -97,9 +105,21 @@ import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
           box-shadow: 0 0 0 4px rgba(111, 6, 66, 0.2);
         }
 
+        &.invalid {
+          border-color: #ef4444;
+          background: rgba(239, 68, 68, 0.05);
+        }
+
         &::placeholder {
           color: rgba(255, 255, 255, 0.3);
         }
+      }
+
+      .error-msg {
+        color: #ef4444;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-top: -4px;
       }
 
       select {
@@ -182,7 +202,11 @@ export class LessonModalComponent implements OnInit {
 
   onSave() {
     if (this.lessonForm.valid) {
-      this.dialogRef.close(this.lessonForm.value);
+      const value = { ...this.lessonForm.value };
+      if (value.dataAula === '') {
+        (value as any).dataAula = null;
+      }
+      this.dialogRef.close(value);
     } else {
       this.lessonForm.markAllAsTouched();
     }

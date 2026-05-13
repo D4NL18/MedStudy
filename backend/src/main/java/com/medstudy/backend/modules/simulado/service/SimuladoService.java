@@ -25,11 +25,16 @@ public class SimuladoService {
     private final SimuladoRepository repository;
     private final UserRepository userRepository;
     private final SimuladoMapper mapper;
+    private final com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
 
-    public SimuladoService(SimuladoRepository repository, UserRepository userRepository, SimuladoMapper mapper) {
+    public SimuladoService(SimuladoRepository repository, 
+                           UserRepository userRepository, 
+                           SimuladoMapper mapper,
+                           com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.mapper = mapper;
+        this.badgeService = badgeService;
     }
 
     private User getCurrentUser() {
@@ -60,7 +65,11 @@ public class SimuladoService {
         calculateAndValidateAreas(entity);
 
         Simulado saved = repository.save(entity);
-        return mapper.toResponse(saved);
+        
+        // Gamificação: Check for badges
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId());
+        
+        return mapper.toResponse(saved, newBadges);
     }
 
     public Page<SimuladoResponse> findAll(String nome, Pageable pageable) {
@@ -109,7 +118,11 @@ public class SimuladoService {
         calculateAndValidateAreas(entity);
 
         Simulado saved = repository.save(entity);
-        return mapper.toResponse(saved);
+        
+        // Gamificação: Check for badges
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(getSimuladoAndVerifyOwnership(id).getUser().getId());
+        
+        return mapper.toResponse(saved, newBadges);
     }
 
     public void delete(UUID id) {

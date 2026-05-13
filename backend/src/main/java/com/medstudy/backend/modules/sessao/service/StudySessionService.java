@@ -31,15 +31,18 @@ public class StudySessionService {
     private final UserRepository userRepository;
     private final StudySessionMapper mapper;
     private final com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository;
+    private final com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
 
     public StudySessionService(StudySessionRepository repository, 
                                UserRepository userRepository, 
                                StudySessionMapper mapper,
-                               com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository) {
+                               com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository,
+                               com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.lessonRepository = lessonRepository;
+        this.badgeService = badgeService;
     }
 
     private User getCurrentUser() {
@@ -75,10 +78,13 @@ public class StudySessionService {
 
         StudySession saved = repository.save(entity);
         
+        // Gamificação: Check for badges
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId());
+        
         // Legacy rule: Update lesson performance
         updateLessonPerformance(saved.getTema(), currentUser);
         
-        return mapper.toResponse(saved);
+        return mapper.toResponse(saved, newBadges);
     }
 
     public Page<StudySessionResponse> findAll(String grandeArea, String tema, String instituicao, Boolean revisaoConcluida, Double minRate, Double maxRate, Pageable pageable) {
@@ -120,10 +126,13 @@ public class StudySessionService {
 
         StudySession saved = repository.save(entity);
         
+        // Gamificação: Check for badges
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(getCurrentUser().getId());
+        
         // Legacy rule: Update lesson performance
         updateLessonPerformance(saved.getTema(), getCurrentUser());
         
-        return mapper.toResponse(saved);
+        return mapper.toResponse(saved, newBadges);
     }
 
     public void deleteSession(UUID id) {

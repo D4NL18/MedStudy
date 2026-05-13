@@ -43,7 +43,7 @@ export class FlashcardsStudyComponent {
     return active && !loading && queue.length === 0;
   });
 
-  currentCard$ = this.store.select(state => {
+  currentCard = this.store.selectSignal(state => {
     const queue = selectQueue(state);
     const index = selectCurrentIndex(state);
     return (index < queue.length) ? queue[index] : null;
@@ -52,6 +52,8 @@ export class FlashcardsStudyComponent {
   isFlipped = signal(false);
   hasResult = signal(false);
   lastResultMissed = signal(false);
+  isZoomed = signal(false);
+  zoomImageUrl = signal('');
 
   constructor() {
     // Reset internal state whenever a card is successfully rated
@@ -61,10 +63,25 @@ export class FlashcardsStudyComponent {
     ).subscribe();
   }
 
-  flip() {
-    if (!this.isFlipped()) {
-      this.isFlipped.set(true);
+  handleCardClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    
+    // Se clicou numa imagem, abre o zoom e não vira o card
+    if (target.tagName === 'IMG') {
+      event.stopPropagation();
+      this.zoomImageUrl.set((target as HTMLImageElement).src);
+      this.isZoomed.set(true);
+      return;
     }
+
+    // Toggle flip (permite desvirar)
+    this.isFlipped.update(v => !v);
+  }
+
+  closeZoom(event?: MouseEvent) {
+    if (event) event.stopPropagation();
+    this.isZoomed.set(false);
+    this.zoomImageUrl.set('');
   }
 
   setResult(missed: boolean) {
@@ -73,17 +90,16 @@ export class FlashcardsStudyComponent {
   }
 
   rate(difficulty: 'EASY' | 'MEDIUM' | 'HARD') {
-    this.currentCard$.pipe(take(1)).subscribe(card => {
-      if (card) {
-        this.store.dispatch(FlashcardsActions.rateFlashcard({
-          rating: { 
-            flashcardId: card.id, 
-            dificuldade: difficulty as FlashcardDifficulty,
-            missed: this.lastResultMissed()
-          }
-        }));
-      }
-    });
+    const card = this.currentCard();
+    if (card) {
+      this.store.dispatch(FlashcardsActions.rateFlashcard({
+        rating: { 
+          flashcardId: card.id, 
+          dificuldade: difficulty as FlashcardDifficulty,
+          missed: this.lastResultMissed()
+        }
+      }));
+    }
   }
 
   private resetState() {

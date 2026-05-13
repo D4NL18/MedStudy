@@ -63,12 +63,12 @@
         </thead>
         <tbody>
           <tr *ngFor="let session of sessions$ | async">
-            <td class="tema">{{ session.tema }}</td>
-            <td>{{ session.grandeArea }}</td>
-            <td>{{ session.dataSessao | date:'dd/MM/yyyy' }}</td>
-            <td>{{ session.dataProximaRevisao | date:'dd/MM/yyyy' }}</td>
-            <td>{{ getAccuracy(session) }}%</td>
-            <td class="action-cell">
+            <td class="tema" data-label="Tema">{{ session.tema }}</td>
+            <td data-label="Área">{{ session.grandeArea }}</td>
+            <td data-label="Última Resolução">{{ session.dataSessao | date:'dd/MM/yyyy' }}</td>
+            <td data-label="Revisão Programada">{{ session.dataProximaRevisao | date:'dd/MM/yyyy' }}</td>
+            <td data-label="% Último Acerto">{{ getAccuracy(session) }}%</td>
+            <td class="action-cell" data-label="Ação">
               <button class="action-btn" (click)="startRevision(session.id)" 
                       [disabled]="session.revisaoConcluida">
                 <lucide-icon [name]="session.revisaoConcluida ? 'check-circle' : 'play'" [size]="20"></lucide-icon>

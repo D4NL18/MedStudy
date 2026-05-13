@@ -13,5 +13,6 @@ public record SimuladoResponse(
     int cirTotal, int cirAcertos, int cirErros,
     int pedTotal, int pedAcertos, int pedErros,
     int goTotal, int goAcertos, int goErros,
-    int prevTotal, int prevAcertos, int prevErros
+    int prevTotal, int prevAcertos, int prevErros,
+    java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newlyEarnedBadges
 ) {}

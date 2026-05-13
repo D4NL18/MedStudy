@@ -60,7 +60,7 @@ class SimuladoControllerTest {
     @WithMockUser
     void create_ShouldReturn201_WhenValid() throws Exception {
         SimuladoRequest request = new SimuladoRequest("Simulado 2024", LocalDate.now(), "USP", 2024, 20, 15, 5, 20, 12, 8, 20, 18, 2, 20, 14, 6, 20, 16, 4);
-        SimuladoResponse response = new SimuladoResponse(UUID.randomUUID(), "Simulado 2024", LocalDate.now(), "USP", 2024, 20, 15, 5, 20, 12, 8, 20, 18, 2, 20, 14, 6, 20, 16, 4);
+        SimuladoResponse response = new SimuladoResponse(UUID.randomUUID(), "Simulado 2024", LocalDate.now(), "USP", 2024, 20, 15, 5, 20, 12, 8, 20, 18, 2, 20, 14, 6, 20, 16, 4, java.util.Collections.emptyList());
 
         when(service.create(any(SimuladoRequest.class))).thenReturn(response);
 
@@ -76,7 +76,7 @@ class SimuladoControllerTest {
     @WithMockUser
     void getLatestByInstituicao_ShouldReturn200_WhenExists() throws Exception {
         String inst = "USP";
-        SimuladoResponse response = new SimuladoResponse(UUID.randomUUID(), "Simulado USP", LocalDate.now(), inst, 2023, 100, 80, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        SimuladoResponse response = new SimuladoResponse(UUID.randomUUID(), "Simulado USP", LocalDate.now(), inst, 2023, 100, 80, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, java.util.Collections.emptyList());
 
         when(service.findLatestByInstituicao(inst)).thenReturn(response);
 

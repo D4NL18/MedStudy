@@ -79,23 +79,23 @@
         </thead>
         <tbody>
           <tr *ngFor="let lesson of lessons">
-            <td>{{ lesson.grandeArea }}</td>
-            <td>{{ lesson.subArea || '—' }}</td>
-            <td><strong>{{ lesson.tema }}</strong></td>
-            <td>
+            <td data-label="Área">{{ lesson.grandeArea }}</td>
+            <td data-label="Subárea">{{ lesson.subArea || '—' }}</td>
+            <td data-label="Tema"><strong>{{ lesson.tema }}</strong></td>
+            <td data-label="Prioridade">
               <span class="badge-priority" [ngClass]="lesson.prioridade.toLowerCase()">
                 <lucide-icon [name]="lesson.prioridade === 'DIAMANTE' ? 'diamond' : 'circle'" [size]="12"></lucide-icon>
                 {{ lesson.prioridade }}
               </span>
             </td>
-            <td>
+            <td data-label="Status">
               <span class="badge-status" [class.assisted]="lesson.aulaAssistida" (click)="toggleAssisted(lesson.id)" style="cursor: pointer">
                 {{ lesson.aulaAssistida ? 'Concluída' : 'Não iniciada' }}
               </span>
             </td>
-            <td>{{ lesson.dataAula || '—' }}</td>
-            <td>{{ lesson.percentAcerto !== undefined && lesson.percentAcerto !== null ? lesson.percentAcerto + '%' : '—' }}</td>
-            <td>
+            <td data-label="Data Aula">{{ lesson.dataAula || '—' }}</td>
+            <td data-label="% Acerto">{{ lesson.percentAcerto !== undefined && lesson.percentAcerto !== null ? lesson.percentAcerto + '%' : '—' }}</td>
+            <td data-label="Alertas">
               <div class="alerts-container" style="display: flex; gap: 4px;">
                 <span *ngIf="lesson.reforco" class="performance-badge reforco" title="Esta aula precisa de reforço teórico (Média < 75%)">
                   <lucide-icon name="refresh-ccw"></lucide-icon>

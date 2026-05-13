@@ -21,13 +21,16 @@ public class DashboardService {
     private final StudySessionRepository studySessionRepository;
     private final SimuladoRepository simuladoRepository;
     private final com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService;
+    private final com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
 
     public DashboardService(StudySessionRepository studySessionRepository, 
                             SimuladoRepository simuladoRepository,
-                            com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService) {
+                            com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService,
+                            com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService) {
         this.studySessionRepository = studySessionRepository;
         this.simuladoRepository = simuladoRepository;
         this.analyticsService = analyticsService;
+        this.badgeService = badgeService;
     }
 
     public DashboardResponse getDashboardData() {
@@ -105,7 +108,19 @@ public class DashboardService {
         // 5. Evolution (Last 6 months)
         List<DashboardResponse.EvolutionPoint> evolution = calculateEvolution(userId);
 
-        return new DashboardResponse(studyMetrics, simuladoMetrics, streak, areaAnalytics, topErrors, evolution);
+        // 6. Recent Badges
+        List<com.medstudy.backend.modules.gamificacao.dto.UserBadgeResponse> recentBadges = badgeService.getUserBadges(userId).stream()
+            .sorted(Comparator.comparing(com.medstudy.backend.modules.gamificacao.entity.UserBadge::getEarnedAt).reversed())
+            .limit(3)
+            .map(ub -> new com.medstudy.backend.modules.gamificacao.dto.UserBadgeResponse(
+                ub.getBadgeType(),
+                ub.getBadgeType().getDisplayName(),
+                ub.getBadgeType().getDescription(),
+                ub.getEarnedAt()
+            ))
+            .collect(java.util.stream.Collectors.toList());
+
+        return new DashboardResponse(studyMetrics, simuladoMetrics, streak, areaAnalytics, topErrors, evolution, recentBadges);
     }
 
     private List<DashboardResponse.EvolutionPoint> calculateEvolution(UUID userId) {

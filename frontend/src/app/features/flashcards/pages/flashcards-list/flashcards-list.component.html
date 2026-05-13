@@ -72,15 +72,15 @@
       </thead>
       <tbody>
         <tr *ngFor="let card of cards$ | async">
-          <td><span class="area-badge">{{ card.grandeArea }}</span></td>
-          <td class="preview">{{ formatPreview(card.frente) }}</td>
-          <td class="preview">{{ formatPreview(card.verso) }}</td>
-          <td>
+          <td data-label="Área"><span class="area-badge">{{ card.grandeArea }}</span></td>
+          <td class="preview" data-label="Frente (prévia)">{{ formatPreview(card.frente) }}</td>
+          <td class="preview" data-label="Verso (prévia)">{{ formatPreview(card.verso) }}</td>
+          <td data-label="Próx. Revisão">
             <span class="status" [class.available]="isAvailable(card)">
               {{ card.proximaRevisao | date:'dd/MM/yyyy' }}
             </span>
           </td>
-          <td>
+          <td data-label="Última Dif.">
              <span class="difficulty" *ngIf="card.dificuldadeUltima">
                {{ card.dificuldadeUltima }}
              </span>

@@ -119,19 +119,48 @@
           <app-top-errors-ranking></app-top-errors-ranking>
         </section>
 
-        <section class="theme-box glass">
+        <section class="badges-mini-box glass">
           <div class="box-header">
-            <h3>🎨 Personalização</h3>
+            <h3>🏆 Conquistas</h3>
+            <span class="badge-count">{{ kpis()?.recentBadges?.length || 0 }} ganhas</span>
           </div>
-          <div class="theme-grid">
-            <button *ngFor="let t of themes" 
-                    class="theme-card"
-                    [class.active]="themeService.activeTheme() === t"
-                    (click)="changeTheme(t)">
-              <div class="color-preview" [attr.data-theme]="t"></div>
-              <span>{{ t | titlecase }}</span>
-            </button>
+          
+          <div class="badges-mini-list" *ngIf="kpis()?.recentBadges?.length! > 0; else emptyBadges">
+            <div *ngFor="let b of kpis()?.recentBadges?.slice(0, 3)" class="badge-mini-item" [title]="b.description">
+              <div class="badge-mini-icon">
+                <lucide-icon name="award"></lucide-icon>
+              </div>
+              <div class="badge-mini-info">
+                <span class="badge-name">{{ b.displayName }}</span>
+                <span class="badge-date">{{ b.earnedAt | date:'dd/MM' }}</span>
+              </div>
+            </div>
           </div>
+
+          <ng-template #emptyBadges>
+            <div class="badges-mini-list locked">
+              <div class="badge-mini-item locked" title="7 dias seguidos de estudo">
+                <div class="badge-mini-icon">
+                  <lucide-icon name="lock"></lucide-icon>
+                </div>
+                <div class="badge-mini-info">
+                  <span class="badge-name">Mestre da Ofensiva</span>
+                  <span class="badge-date">Bloqueado</span>
+                </div>
+              </div>
+              <div class="badge-mini-item locked" title="Resolveu 1000 questões">
+                <div class="badge-mini-icon">
+                  <lucide-icon name="lock"></lucide-icon>
+                </div>
+                <div class="badge-mini-info">
+                  <span class="badge-name">Maratonista</span>
+                  <span class="badge-date">Bloqueado</span>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+          <button class="btn-ver-todos" routerLink="/perfil">Ver todas as medalhas</button>
         </section>
       </div>
     }
