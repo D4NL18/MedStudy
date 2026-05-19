@@ -33,13 +33,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        // Only auto-logout if there's no token at all (true session expiry),
-        // not when a race-condition causes a transient 401 right after login (#BF-03)
-        const hasToken = !!token || !!localStorage.getItem('auth_token');
-        if (!hasToken) {
-          store.dispatch(AuthActions.logout());
-        }
+      if (error.status === 401 || error.status === 403) {
+        store.dispatch(AuthActions.logout());
       }
       return throwError(() => error);
     })

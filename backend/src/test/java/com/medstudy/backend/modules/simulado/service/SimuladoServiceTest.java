@@ -31,6 +31,9 @@ class SimuladoServiceTest {
     @Mock
     private SimuladoMapper mapper;
 
+    @Mock
+    private com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
+
     @InjectMocks
     private SimuladoService service;
 
@@ -50,6 +53,7 @@ class SimuladoServiceTest {
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(user);
+        lenient().when(badgeService.checkAndAwardBadges(any())).thenReturn(java.util.Collections.emptyList());
     }
 
     @Test

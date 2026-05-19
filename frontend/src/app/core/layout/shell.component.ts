@@ -13,6 +13,10 @@ import { selectUser } from '../../store/auth/auth.selectors';
 import * as AuthActions from '../../store/auth/auth.actions';
 import { NotificationService, NotificationSummary } from '../../core/services/notification.service';
 import { PwaService } from '../services/pwa.service';
+import { OnboardingComponent } from '../../features/auth/onboarding/onboarding.component';
+import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { ProfileActions } from '../../store/profile/profile.actions';
+import { selectProfile } from '../../store/profile/profile.reducer';
 
 @Component({
   selector: 'app-shell',
@@ -25,6 +29,8 @@ import { PwaService } from '../services/pwa.service';
     FlashcardsStudyComponent, 
     OfflineBannerComponent,
     LucideAngularModule,
+    OnboardingComponent,
+    AvatarComponent,
 
     OverlayModule,
     PortalModule
@@ -41,12 +47,14 @@ export class ShellComponent implements OnInit {
   canInstall = this.pwaService.canInstall$;
   
   user = this.store.selectSignal(selectUser);
+  profile = this.store.selectSignal(selectProfile);
   notifications = signal<NotificationSummary | null>(null);
   showDropdown = signal(false);
   isDrawerOpen = signal(false);
   isMobile = signal(false);
 
   ngOnInit() {
+    this.store.dispatch(ProfileActions.loadProfile());
     this.loadNotifications();
     this.breakpointObserver.observe(['(max-width: 768px)']).subscribe(result => {
       this.isMobile.set(result.matches);

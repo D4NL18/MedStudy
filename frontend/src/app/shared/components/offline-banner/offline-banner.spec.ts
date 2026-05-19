@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { OfflineBannerComponent } from './offline-banner';
 
-import { OfflineBanner } from './offline-banner';
-
-describe('OfflineBanner', () => {
-  let component: OfflineBanner;
-  let fixture: ComponentFixture<OfflineBanner>;
+describe('OfflineBannerComponent', () => {
+  let component: OfflineBannerComponent;
+  let fixture: ComponentFixture<OfflineBannerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OfflineBanner]
+      imports: [OfflineBannerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OfflineBanner);
+    fixture = TestBed.createComponent(OfflineBannerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

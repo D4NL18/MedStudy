@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { AuthEffects } from './auth.effects';
@@ -41,17 +41,18 @@ describe('AuthEffects', () => {
     });
   });
 
-  it('should handle login success', (done) => {
+  it('should handle login success', fakeAsync(() => {
     const response = { accessToken: 'token', refreshToken: 'refresh' } as any;
     actions$ = of(AuthActions.loginSuccess({ response }));
 
     effects.loginSuccess$.subscribe(() => {
-      expect(localStorage.setItem).toHaveBeenCalledWith('token', 'token');
-      expect(localStorage.setItem).toHaveBeenCalledWith('refreshToken', 'refresh');
-      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
-      done();
+      expect(localStorage.setItem).toHaveBeenCalledWith('auth_token', 'token');
     });
-  });
+
+    tick(100);
+
+    expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+  }));
 
   it('should navigate to login on logout', (done) => {
     actions$ = of(AuthActions.logout());

@@ -72,9 +72,10 @@
       </div>
 
       <div class="user-info" routerLink="/perfil">
-        <div class="user-avatar">
+        <div class="user-avatar" *ngIf="!profile()?.avatarPresetId">
           <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
         </div>
+        <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
         <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
       </div>
       <button class="btn-logout" (click)="logout()">Sair</button>
@@ -126,9 +127,10 @@
 
       <div class="drawer-footer">
         <div class="user-profile-mobile" routerLink="/perfil" (click)="toggleDrawer()">
-          <div class="user-avatar">
+          <div class="user-avatar" *ngIf="!profile()?.avatarPresetId">
             <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
           </div>
+          <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
           <div class="user-details">
             <span class="name">{{ user()?.nome || 'Estudante' }}</span>
             <span class="view-profile">Ver perfil</span>
@@ -153,4 +155,5 @@
   </main>
 
   <app-flashcards-study></app-flashcards-study>
+  <app-onboarding></app-onboarding>
 </div>

@@ -1,0 +1,414 @@
+.onboarding-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.onboarding-card {
+  width: 100%;
+  max-width: 680px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-height: 90vh;
+  overflow: hidden;
+  color: var(--text-color, #e2e8f0);
+
+  &.glass {
+    background: rgba(30, 30, 40, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+// Progress Bar
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .progress-bar {
+    height: 6px;
+    background: linear-gradient(90deg, #4f46e5, #9333ea);
+    border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .steps-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+
+    .step-num {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .step-title {
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+  }
+}
+
+// Step Header
+.header-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0;
+    background: linear-gradient(120deg, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  p {
+    color: #94a3b8;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// Forms & Inputs
+.onboarding-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  max-height: 55vh;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    color: #64748b;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+  }
+
+  input, select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 14px 16px 14px 48px;
+    font-size: 15px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    outline: none;
+
+    &:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  select {
+    appearance: none;
+    cursor: pointer;
+  }
+}
+
+// Handle Custom Inputs
+.handle-input-wrap {
+  .handle-at {
+    position: absolute;
+    left: 18px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #6366f1;
+    pointer-events: none;
+  }
+
+  input {
+    padding-left: 36px;
+    padding-right: 150px;
+  }
+}
+
+.verification-indicator {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    &.checking {
+      background: rgba(234, 179, 8, 0.15);
+      color: #eab308;
+      border: 1px solid rgba(234, 179, 8, 0.25);
+    }
+
+    &.success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+
+    &.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+  }
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.error-msg {
+  font-size: 12px;
+  color: #f87171;
+  font-weight: 500;
+}
+
+// Autocomplete list
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(20, 20, 25, 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-top: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+
+  .autocomplete-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #e2e8f0;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(99, 102, 241, 0.2);
+      color: #ffffff;
+      padding-left: 20px;
+    }
+  }
+}
+
+// Step 3 Category Tabs
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+  }
+
+  .tab-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    &.active {
+      color: #ffffff;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+  }
+}
+
+// Specialties Grid / Avatar Grid
+.specialties-grid {
+  overflow-y: auto;
+  max-height: 45vh;
+  padding: 10px 4px 10px 10px;
+  margin-top: 10px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  &.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+    gap: 18px;
+    justify-items: center;
+  }
+
+  .avatar-option-card {
+    position: relative;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 2px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &.active {
+      box-shadow: 0 0 0 3px #6366f1;
+    }
+
+    .check-indicator {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #22c55e;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+      z-index: 10;
+      
+      lucide-icon {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+}
+
+// Action Buttons
+.onboarding-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 24px;
+  margin-top: 10px;
+
+  .btn {
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    &.btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+      }
+    }
+
+    &.btn-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.08);
+      }
+    }
+  }
+}

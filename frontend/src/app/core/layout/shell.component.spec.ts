@@ -11,6 +11,8 @@ import { LucideAngularModule } from 'lucide-angular';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 
+import { PwaService } from '../../core/services/pwa.service';
+
 describe('ShellComponent', () => {
   MockInstance.scope();
 
@@ -23,6 +25,9 @@ describe('ShellComponent', () => {
       .mock(LucideAngularModule)
       .mock(OverlayModule)
       .mock(PortalModule)
+      .mock(PwaService, {
+        canInstall$: of(false)
+      })
       .provide(provideMockStore({
         initialState: {
           auth: { user: { nome: 'Test User' } }
