@@ -43,6 +43,9 @@
                 "src"
               ]
             },
+            "allowedCommonJsDependencies": [
+              "html2canvas"
+            ],
             "scripts": []
           },
           "configurations": {

@@ -2,7 +2,7 @@
   <app-offline-banner></app-offline-banner>
   <nav class="glass main-nav">
     <div class="nav-left">
-      <button class="hamburger-btn" (click)="toggleDrawer()">
+      <button class="hamburger-btn" (click)="toggleDrawer()" aria-label="Abrir menu">
         <lucide-icon name="menu"></lucide-icon>
       </button>
       <div class="logo" routerLink="/dashboard">
@@ -31,7 +31,7 @@
 
       <!-- Notificações -->
       <div class="notification-wrapper">
-        <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin">
+        <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin" aria-label="Notificações">
           <lucide-icon name="bell"></lucide-icon>
           <span class="badge" *ngIf="notifications()?.totalAlerts! > 0">{{ notifications()?.totalAlerts }}</span>
         </button>
@@ -90,7 +90,7 @@
           <span class="brand">MedStudy</span>
           <div class="dot"></div>
         </div>
-        <button class="close-btn" (click)="toggleDrawer()">
+        <button class="close-btn" (click)="toggleDrawer()" aria-label="Fechar menu">
           <lucide-icon name="x"></lucide-icon>
         </button>
       </div>
