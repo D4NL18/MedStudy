@@ -30,22 +30,22 @@
 ---
 
 ### Phase 22 — Perfis de Usuário & Cadastro de Informações
-**Goal:** Criar a infraestrutura de perfis com informações básicas e visualização pública/privada.
+**Goal:** Criar a infraestrutura de perfis com informações básicas, identificador único (@handle) e visualização pública/privada.
 **Requirements:** PROF-01, PROF-02
 **Deliverables:**
-- Backend: Schema de Profile associado ao User.
-- Backend: Endpoints de CRUD de informações de perfil (nome, semestre, faculdade, avatar).
+- Backend: Schema de Profile associado ao User com campo único de `@handle` (username).
+- Backend: Endpoints de CRUD de informações de perfil (nome, @handle, semestre, faculdade, avatar).
 - UI: Tela de Edição de Perfil nas configurações.
 - UI: Tela de Perfil Público amigável exibindo badges conquistadas.
 
 ### Phase 23 — Sistema de Conexões (Amigos) & Busca
-**Goal:** Permitir adicionar, aceitar, recusar amizades e realizar pesquisas na base.
+**Goal:** Permitir adicionar, aceitar, recusar amizades e realizar pesquisas na base por nome ou handle.
 **Requirements:** FRND-01, FRND-02
 **Deliverables:**
 - Backend: Tabela/Entidade de Friendships (Pending, Accepted, Blocked).
-- Backend: Busca otimizada de usuários por nome ou faculdade.
+- Backend: Busca otimizada de usuários por nome, @handle ou faculdade.
 - UI: Painel Social na barra de navegação/módulo com listagem de amigos e solicitações pendentes.
-- UI: Barra de busca e botão de "Adicionar Amigo".
+- UI: Barra de busca com suporte a busca rápida por `@handle` e botão de "Adicionar Amigo".
 
 ### Phase 24 — Configurações Granulares de Privacidade
 **Goal:** Garantir privacidade total e proteção de dados sensíveis na rede social do app.
