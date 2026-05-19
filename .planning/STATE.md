@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Socializacao Aprofundada
-status: planning
-last_updated: "2026-05-19T01:36:05.528Z"
+status: verifying
+last_updated: "2026-05-19T19:18:42.125Z"
 last_activity: 2026-05-19
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_phases: 22
+  completed_phases: 16
+  total_plans: 26
+  completed_plans: 24
+  percent: 92
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -22,7 +22,8 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:**
 
-- **Phase 18**: Alertas de Performance & Exportação - **Concluído (com bugfixes)**
+Phase 22 — perfis-de-usuario-e-cadastro-de-informacoes
+
     - Relatório PDF redesenhado e 100% funcional com KPI completos.
     - Resolvido bug de listagem (vazia) na Revisão Intervalada (Backend/Frontend alinhados).
     - Corrigido race condition de login via LocalStorage e interceptor ajustado.
@@ -40,7 +41,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 **Milestone:** v1.2 — Socialização Aprofundada
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Phase 22 planning complete — Ready for execution
+**Status:** Phase complete — ready for verification
 
 ---
 
@@ -63,7 +64,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 
 ## Current Position
 
-Phase: 22 — Perfis de Usuário & Cadastro de Informações
-Plan: 22-PLAN.md (planning complete)
-Status: Ready for execution
-Last activity: 2026-05-19 — Phase 22 technical plan created and committed
+Phase: 22 (perfis-de-usuario-e-cadastro-de-informacoes) — EXECUTING
+Plan: 1 of 1
+Status: Phase complete — ready for verification
+Last activity: 2026-05-19

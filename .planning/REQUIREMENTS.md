@@ -8,8 +8,8 @@
 ## v1.2 Requirements
 
 ### Profile & Basic Info (PROF)
-- [ ] **PROF-01**: O usuário deve poder cadastrar informações básicas no perfil: Nome Completo, Nome de Usuário Único (@handle), Semestre (1º ao 12º), Faculdade/Instituição de Ensino, e Avatar/Foto.
-- [ ] **PROF-02**: Criar uma página pública de perfil visualizável por amigos, exibindo informações autorizadas, conquistas (badges) e estatísticas de estudo.
+- [x] **PROF-01**: O usuário deve poder cadastrar informações básicas no perfil: Nome Completo, Nome de Usuário Único (@handle), Semestre (1º ao 12º), Faculdade/Instituição de Ensino, e Avatar/Foto.
+- [x] **PROF-02**: Criar uma página pública de perfil visualizável por amigos, exibindo informações autorizadas, conquistas (badges) e estatísticas de estudo.
 
 ### Social & Friends (FRND)
 - [ ] **FRND-01**: O usuário deve poder buscar outros usuários pelo nome, @handle ou instituição para enviar solicitações de amizade.
