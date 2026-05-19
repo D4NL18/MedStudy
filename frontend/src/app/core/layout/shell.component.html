@@ -18,6 +18,7 @@
       <a routerLink="/aulas" routerLinkActive="active">Aulas</a>
       <a routerLink="/revisoes" routerLinkActive="active">Revisão Intervalada</a>
       <a routerLink="/flashcards" routerLinkActive="active">Flashcards</a>
+      <a routerLink="/social" routerLinkActive="active">Social</a>
       <a routerLink="/analytics/area" routerLinkActive="active">Análise Área</a>
       <a routerLink="/analytics/tema" routerLinkActive="active">Análise Tema</a>
     </div>
@@ -33,7 +34,7 @@
       <div class="notification-wrapper">
         <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin" aria-label="Notificações">
           <lucide-icon name="bell"></lucide-icon>
-          <span class="badge" *ngIf="notifications()?.totalAlerts! > 0">{{ notifications()?.totalAlerts }}</span>
+          <span class="badge" *ngIf="notifications() && notifications()!.totalAlerts > 0 && !showDropdown() && !hasOpenedDropdown()">{{ notifications()?.totalAlerts }}</span>
         </button>
 
         <ng-template
@@ -60,6 +61,13 @@
                 <div class="notif-text">
                   <span class="title">{{ notifications()?.reinforcementLessons }} Aulas de Reforço</span>
                   <span class="desc">Temas com desempenho baixo</span>
+                </div>
+              </div>
+              <div class="notif-item" *ngIf="notifications()?.socialAlerts! > 0" routerLink="/social" (click)="showDropdown.set(false)">
+                <div class="notif-icon soc"><lucide-icon name="users" [size]="20"></lucide-icon></div>
+                <div class="notif-text">
+                  <span class="title">{{ notifications()?.socialAlerts }} Notificações Sociais</span>
+                  <span class="desc">Novas amizades, streaks e alertas</span>
                 </div>
               </div>
               <div class="empty-state" *ngIf="notifications()?.totalAlerts === 0">
@@ -115,6 +123,9 @@
           </a>
           <a routerLink="/flashcards" routerLinkActive="active" (click)="toggleDrawer()">
             <lucide-icon name="layers"></lucide-icon> Flashcards
+          </a>
+          <a routerLink="/social" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="users"></lucide-icon> Social
           </a>
           <a routerLink="/analytics/area" routerLinkActive="active" (click)="toggleDrawer()">
             <lucide-icon name="pie-chart"></lucide-icon> Análise Área

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
@@ -12,6 +12,7 @@ import { OfflineBannerComponent } from '../../shared/components/offline-banner/o
 import { selectUser } from '../../store/auth/auth.selectors';
 import * as AuthActions from '../../store/auth/auth.actions';
 import { NotificationService, NotificationSummary } from '../../core/services/notification.service';
+import { SocialService } from '../../core/services/social.service';
 import { PwaService } from '../services/pwa.service';
 import { OnboardingComponent } from '../../features/auth/onboarding/onboarding.component';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
@@ -41,6 +42,7 @@ import { selectProfile } from '../../store/profile/profile.reducer';
 export class ShellComponent implements OnInit {
   private store = inject(Store);
   private notificationService = inject(NotificationService);
+  private socialService = inject(SocialService);
   private breakpointObserver = inject(BreakpointObserver);
   private pwaService = inject(PwaService);
   
@@ -52,6 +54,23 @@ export class ShellComponent implements OnInit {
   showDropdown = signal(false);
   isDrawerOpen = signal(false);
   isMobile = signal(false);
+  hasOpenedDropdown = signal(false);
+  previousTotalAlerts = signal(0);
+
+  constructor() {
+    effect(() => {
+      if (this.notificationService.summary) {
+        const sum = this.notificationService.summary();
+        if (sum) {
+          this.notifications.set(sum);
+          if (sum.totalAlerts > this.previousTotalAlerts()) {
+            this.hasOpenedDropdown.set(false);
+          }
+          this.previousTotalAlerts.set(sum.totalAlerts);
+        }
+      }
+    }, { allowSignalWrites: true });
+  }
 
   ngOnInit() {
     this.store.dispatch(ProfileActions.loadProfile());
@@ -64,11 +83,26 @@ export class ShellComponent implements OnInit {
   loadNotifications() {
     this.notificationService.getSummary().subscribe(summary => {
       this.notifications.set(summary);
+      if (summary) {
+        if (summary.totalAlerts > this.previousTotalAlerts()) {
+          this.hasOpenedDropdown.set(false);
+        }
+        this.previousTotalAlerts.set(summary.totalAlerts);
+      }
     });
   }
 
   toggleDropdown() {
-    this.showDropdown.set(!this.showDropdown());
+    const isOpening = !this.showDropdown();
+    this.showDropdown.set(isOpening);
+    if (isOpening) {
+      this.hasOpenedDropdown.set(true);
+      this.socialService.markAllNotificationsAsRead().subscribe({
+        next: () => {
+          this.loadNotifications();
+        }
+      });
+    }
   }
 
   toggleDrawer() {

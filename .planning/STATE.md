@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Socializacao Aprofundada
-status: verifying
-last_updated: "2026-05-19T19:18:42.125Z"
+status: executing
+last_updated: "2026-05-19T22:38:00.000Z"
 last_activity: 2026-05-19
 progress:
-  total_phases: 22
-  completed_phases: 16
-  total_plans: 26
-  completed_plans: 24
-  percent: 92
+  total_phases: 26
+  completed_phases: 17
+  total_plans: 27
+  completed_plans: 25
+  percent: 93
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -22,26 +22,21 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:**
 
-Phase 22 — perfis-de-usuario-e-cadastro-de-informacoes
+Phase 23 — sistema-de-conexoes-amigos-e-busca
 
-    - Relatório PDF redesenhado e 100% funcional com KPI completos.
-    - Resolvido bug de listagem (vazia) na Revisão Intervalada (Backend/Frontend alinhados).
-    - Corrigido race condition de login via LocalStorage e interceptor ajustado.
-- **Phase 21**: PWA & Otimização Final - **Concluído (Verificando)**
-    - Service Worker e manifests configurados.
-    - Componentes de suporte offline e botão de instalação criados.
-    - Otimizações para Lighthouse implementadas.
-- **Phase 19**: Gamificação & Notificações - **Pendente**
+    - Desenhar o modelo de amizades (friendships) e busca reativa por handle/nome/faculdade.
+    - Planejar a nova aba/rota /social no frontend.
+    - Planejar a extensão do NotificationService para contemplar alertas de amigos.
 
 ---
 
 ## Current Status
 
-**Phase:** 22 of 26
+**Phase:** 23 of 26
 **Milestone:** v1.2 — Socialização Aprofundada
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Phase complete — ready for verification
+**Status:** Context gathered — ready for planning
 
 ---
 
@@ -50,7 +45,8 @@ Phase 22 — perfis-de-usuario-e-cadastro-de-informacoes
 - [x] Milestone v1.0 Shipped (Phases 1-15)
 - [x] Milestone v1.1 Shipped (Phases 16-21)
 - [x] PROJECT.md, REQUIREMENTS.md and ROADMAP.md created/updated for v1.2
-- [x] Phase 22: Perfis de Usuário & Cadastro de Informações (Plan Created)
+- [x] Phase 22: Perfis de Usuário & Cadastro de Informações (Shipped & Validated)
+- [x] Phase 23: Sistema de Conexões (Amigos) & Busca (Context Gathered)
 
 ---
 
@@ -60,11 +56,11 @@ Phase 22 — perfis-de-usuario-e-cadastro-de-informacoes
 - [ ] Feed: O feed de atividades deve armazenar eventos de forma persistente ou gerar em tempo real nas consultas?
 
 ---
-*STATE.md updated: 2026-05-18 after Phase 22 planning completion*
+*STATE.md updated: 2026-05-19 after Phase 23 context gathering completion*
 
 ## Current Position
 
-Phase: 22 (perfis-de-usuario-e-cadastro-de-informacoes) — EXECUTING
+Phase: 23 (sistema-de-conexoes-amigos-e-busca) — EXECUTING
 Plan: 1 of 1
-Status: Phase complete — ready for verification
+Status: Executing phase tasks
 Last activity: 2026-05-19
