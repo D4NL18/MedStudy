@@ -26,6 +26,7 @@ Entrega a infraestrutura de dados de perfis de usuário associados um-para-um ao
 
 ### Fluxo de Primeiro Acesso (Onboarding)
 - **D-06:** Implementar um modal/fluxo passo-a-passo obrigatório de onboarding de primeiro acesso. Novos usuários não podem interagir com o Dashboard até completarem o preenchimento de seu `@handle`, avatar e faculdade/semestre.
+- **D-07:** Alterar a rota default (`/`) para redirecionar para a tela de login (`/login`) caso o usuário não esteja logado, e redirecionar para o Dashboard (`/dashboard`) caso ele já esteja logado, garantindo proteção de rotas robusta.
 
 ### the agent's Discretion
 - A escolha exata das 50+ ilustrações médicas em SVG e a lista padrão de instituições de ensino médico do Brasil ficam sob a discrição do assistente técnico para manter o padrão premium e facilidade de manutenção.
