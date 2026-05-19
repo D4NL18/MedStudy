@@ -12,6 +12,7 @@ import { OfflineBannerComponent } from '../../shared/components/offline-banner/o
 import { selectUser } from '../../store/auth/auth.selectors';
 import * as AuthActions from '../../store/auth/auth.actions';
 import { NotificationService, NotificationSummary } from '../../core/services/notification.service';
+import { SocialService } from '../../core/services/social.service';
 import { PwaService } from '../services/pwa.service';
 import { OnboardingComponent } from '../../features/auth/onboarding/onboarding.component';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
@@ -41,6 +42,7 @@ import { selectProfile } from '../../store/profile/profile.reducer';
 export class ShellComponent implements OnInit {
   private store = inject(Store);
   private notificationService = inject(NotificationService);
+  private socialService = inject(SocialService);
   private breakpointObserver = inject(BreakpointObserver);
   private pwaService = inject(PwaService);
   
@@ -68,7 +70,15 @@ export class ShellComponent implements OnInit {
   }
 
   toggleDropdown() {
-    this.showDropdown.set(!this.showDropdown());
+    const isOpening = !this.showDropdown();
+    this.showDropdown.set(isOpening);
+    if (isOpening) {
+      this.socialService.markAllNotificationsAsRead().subscribe({
+        next: () => {
+          this.loadNotifications();
+        }
+      });
+    }
   }
 
   toggleDrawer() {
