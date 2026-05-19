@@ -12,6 +12,7 @@ import { authReducer } from './store/auth/auth.reducer';
 import { AuthEffects } from './store/auth/auth.effects';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { connectivityInterceptor } from './core/interceptors/connectivity.interceptor';
 import { provideMarkdown } from 'ngx-markdown';
 import { studyPlanFeature } from './store/study-plan/study-plan.reducer';
 import { StudyPlanEffects } from './store/study-plan/study-plan.effects';
@@ -27,7 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([authInterceptor]),
+      withInterceptors([authInterceptor, connectivityInterceptor]),
       withXsrfConfiguration({
         cookieName: 'XSRF-TOKEN',
         headerName: 'X-XSRF-TOKEN',

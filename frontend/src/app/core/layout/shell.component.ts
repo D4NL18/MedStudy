@@ -7,9 +7,12 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { LucideAngularModule } from 'lucide-angular';
 import { FlashcardsStudyComponent } from '../../features/flashcards/pages/flashcards-study/flashcards-study.component';
+import { OfflineBannerComponent } from '../../shared/components/offline-banner/offline-banner';
+
 import { selectUser } from '../../store/auth/auth.selectors';
 import * as AuthActions from '../../store/auth/auth.actions';
 import { NotificationService, NotificationSummary } from '../../core/services/notification.service';
+import { PwaService } from '../services/pwa.service';
 
 @Component({
   selector: 'app-shell',
@@ -20,7 +23,9 @@ import { NotificationService, NotificationSummary } from '../../core/services/no
     RouterLink, 
     RouterLinkActive, 
     FlashcardsStudyComponent, 
+    OfflineBannerComponent,
     LucideAngularModule,
+
     OverlayModule,
     PortalModule
   ],
@@ -31,6 +36,9 @@ export class ShellComponent implements OnInit {
   private store = inject(Store);
   private notificationService = inject(NotificationService);
   private breakpointObserver = inject(BreakpointObserver);
+  private pwaService = inject(PwaService);
+  
+  canInstall = this.pwaService.canInstall$;
   
   user = this.store.selectSignal(selectUser);
   notifications = signal<NotificationSummary | null>(null);
@@ -62,5 +70,9 @@ export class ShellComponent implements OnInit {
   logout() {
     this.isDrawerOpen.set(false);
     this.store.dispatch(AuthActions.logout());
+  }
+
+  installApp() {
+    this.pwaService.install();
   }
 }

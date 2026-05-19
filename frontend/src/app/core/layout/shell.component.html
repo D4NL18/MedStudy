@@ -1,4 +1,5 @@
 <div class="app-shell">
+  <app-offline-banner></app-offline-banner>
   <nav class="glass main-nav">
     <div class="nav-left">
       <button class="hamburger-btn" (click)="toggleDrawer()">
@@ -22,6 +23,12 @@
     </div>
 
     <div class="user-actions">
+      <!-- PWA Install -->
+      <button class="pwa-install-btn glass" *ngIf="canInstall | async" (click)="installApp()">
+        <lucide-icon name="download"></lucide-icon>
+        <span>Instalar App</span>
+      </button>
+
       <!-- Notificações -->
       <div class="notification-wrapper">
         <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin">
@@ -127,6 +134,13 @@
             <span class="view-profile">Ver perfil</span>
           </div>
         </div>
+        
+        <!-- PWA Install Mobile -->
+        <button class="pwa-install-btn-mobile glass" *ngIf="canInstall | async" (click)="installApp()">
+          <lucide-icon name="download"></lucide-icon>
+          <span>Instalar MedStudy</span>
+        </button>
+
         <button class="btn-logout-mobile" (click)="logout()">
           <lucide-icon name="log-out"></lucide-icon> Sair
         </button>
