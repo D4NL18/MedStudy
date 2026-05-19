@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -33,6 +33,10 @@ export class SocialComponent implements OnInit {
   blockedUsers = signal<SocialProfile[]>([]);
   searchResults = signal<SocialProfile[]>([]);
   notifications = signal<SocialNotification[]>([]);
+  
+  unreadNotificationsCount = computed(() => 
+    this.notifications().filter(n => !n.isRead).length
+  );
   
   loading = signal<boolean>(false);
   searchLoading = signal<boolean>(false);

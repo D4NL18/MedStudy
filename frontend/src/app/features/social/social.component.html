@@ -56,7 +56,7 @@
     >
       <lucide-icon name="bell" [size]="18"></lucide-icon>
       <span>Alertas</span>
-      <span class="count-badge unread" *ngIf="notifications().length > 0">{{ notifications().length }}</span>
+      <span class="count-badge unread" *ngIf="unreadNotificationsCount() > 0">{{ unreadNotificationsCount() }}</span>
     </button>
   </div>
 
