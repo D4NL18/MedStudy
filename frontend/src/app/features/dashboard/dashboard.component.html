@@ -61,14 +61,14 @@
       <div class="charts-layout">
         <section class="chart-box glass">
           <div class="box-header">
-            <h3>📈 Evolução Mensal (%)</h3>
+            <h2>📈 Evolução Mensal (%)</h2>
           </div>
           <app-evolution-chart id="evolution-chart"></app-evolution-chart>
         </section>
 
         <section class="chart-box glass areas-section">
           <div class="box-header">
-            <h3>📊 Desempenho por Área</h3>
+            <h2>📊 Desempenho por Área</h2>
           </div>
           <div class="areas-table-wrapper">
             <table>
@@ -95,7 +95,7 @@
                       {{ area.trendLong | number:'1.1-1' }}%
                     </td>
                     <td>
-                      <button class="btn-detail" (click)="openSubareaDetails(area)">
+                      <button class="btn-detail" (click)="openSubareaDetails(area)" aria-label="Ver detalhes">
                         <lucide-icon name="maximize-2"></lucide-icon>
                       </button>
                     </td>
@@ -110,7 +110,7 @@
       <div class="bottom-layout">
         <section class="chart-box glass distribution">
           <div class="box-header">
-            <h3>⭕ Distribuição de Questões</h3>
+            <h2>⭕ Distribuição de Questões</h2>
           </div>
           <app-distribution-chart id="distribution-chart"></app-distribution-chart>
         </section>
@@ -121,7 +121,7 @@
 
         <section class="badges-mini-box glass">
           <div class="box-header">
-            <h3>🏆 Conquistas</h3>
+            <h2>🏆 Conquistas</h2>
             <span class="badge-count">{{ kpis()?.recentBadges?.length || 0 }} ganhas</span>
           </div>
           

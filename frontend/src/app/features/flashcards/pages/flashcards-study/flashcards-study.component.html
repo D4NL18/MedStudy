@@ -6,7 +6,7 @@
         <div class="fill" [style.width.%]="getProgress((currentIndex$ | async)!, (queue$ | async)?.length || 0)"></div>
       </div>
     </div>
-    <button class="close-btn" (click)="close()">
+    <button class="close-btn" (click)="close()" aria-label="Fechar estudo">
       <lucide-icon name="x" [size]="24"></lucide-icon>
     </button>
   </div>
@@ -41,7 +41,7 @@
   <div class="zoom-backdrop" *ngIf="isZoomed()" (click)="closeZoom($event)">
     <div class="zoom-container" (click)="$event.stopPropagation()">
       <img [src]="zoomImageUrl()" alt="Zoomed Image">
-      <button class="close-zoom-btn" (click)="closeZoom($event)">
+      <button class="close-zoom-btn" (click)="closeZoom($event)" aria-label="Fechar zoom da imagem">
         <lucide-icon name="x" [size]="32"></lucide-icon>
       </button>
     </div>

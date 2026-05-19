@@ -17,7 +17,6 @@ import { SubareaModalComponent } from './components/subarea-modal/subarea-modal.
 import { LucideAngularModule } from 'lucide-angular';
 import { ExportService } from '../../core/services/export/export.service';
 import { RouterLink } from '@angular/router';
-import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-dashboard',
@@ -83,6 +82,9 @@ export class DashboardComponent implements OnInit {
         
         // Aguarda 500ms para o ngx-charts recalcular o SVG e rodar a animação de resize
         await new Promise(resolve => setTimeout(resolve, 500));
+
+        const html2canvasModule = await import('html2canvas');
+        const html2canvas = html2canvasModule.default;
 
         const canvas = await html2canvas(element, {
           backgroundColor: '#ffffff', // Force white background for PDF readability

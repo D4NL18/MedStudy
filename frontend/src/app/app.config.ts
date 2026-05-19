@@ -12,6 +12,8 @@ import { authReducer } from './store/auth/auth.reducer';
 import { AuthEffects } from './store/auth/auth.effects';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { connectivityInterceptor } from './core/interceptors/connectivity.interceptor';
+import { apiUrlInterceptor } from './core/interceptors/api-url.interceptor';
 import { provideMarkdown } from 'ngx-markdown';
 import { studyPlanFeature } from './store/study-plan/study-plan.reducer';
 import { StudyPlanEffects } from './store/study-plan/study-plan.effects';
@@ -19,7 +21,7 @@ import { revisionFeature } from './store/revision/revision.reducer';
 import { RevisionEffects } from './store/revision/revision.effects';
 import { flashcardsFeature } from './store/flashcards/flashcards.reducer';
 import { FlashcardsEffects } from './store/flashcards/flashcards.effects';
-import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw, Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, BarChart2, LogOut, User } from 'lucide-angular';
+import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw, Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, BarChart2, LogOut, User, WifiOff, Download } from 'lucide-angular';
 import { importProvidersFrom } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
@@ -27,7 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([authInterceptor]),
+      withInterceptors([apiUrlInterceptor, authInterceptor, connectivityInterceptor]),
       withXsrfConfiguration({
         cookieName: 'XSRF-TOKEN',
         headerName: 'X-XSRF-TOKEN',
@@ -37,7 +39,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(LucideAngularModule.pick({ 
       Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle,
       Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw,
-      Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, LogOut, User, BarChart2
+      Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, LogOut, User, BarChart2, WifiOff, Download
     })),
     provideStore({ 
       theme: themeReducer,

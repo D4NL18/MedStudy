@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Legacy Convergence
-status: shipping
-last_updated: "2026-05-13T15:56:51Z"
+status: verifying
+last_updated: "2026-05-18T21:20:00Z"
 progress:
-  total_phases: 20
+  total_phases: 21
   completed_phases: 15
-  total_plans: 27
-  completed_plans: 23
-  percent: 88
+  total_plans: 29
+  completed_plans: 24
+  percent: 85
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -25,16 +25,21 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
     - Relatório PDF redesenhado e 100% funcional com KPI completos.
     - Resolvido bug de listagem (vazia) na Revisão Intervalada (Backend/Frontend alinhados).
     - Corrigido race condition de login via LocalStorage e interceptor ajustado.
+- **Phase 21**: PWA & Otimização Final - **Concluído (Verificando)**
+    - Service Worker e manifests configurados.
+    - Componentes de suporte offline e botão de instalação criados.
+    - Otimizações para Lighthouse implementadas.
 - **Phase 19**: Gamificação & Notificações - **Pendente**
 
 ---
 
 ## Current Status
 
-**Phase:** 18 of 20
+**Phase:** 21 of 21
 **Milestone:** v1.1 — Legacy Convergence & Advanced Features
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
+**Status:** Phase 21 shipped — Branch pushed to origin/21
 
 ---
 
@@ -49,6 +54,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 - [x] Phase 18: Alertas de Performance & Exportação + Bugfixes (Shipped)
 - [ ] Phase 19: Gamificação & Notificações (In Progress)
 - [x] Phase 20: Refinamento Responsivo e Interatividade (Shipped)
+- [x] Phase 21: PWA & Otimização Final (Shipped)
 
 ---
 
@@ -59,4 +65,4 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 - [ ] Gamificação: Quais os critérios para as primeiras 5 badges?
 
 ---
-*STATE.md updated: 2026-05-11 after v1.1 initialization*
+*STATE.md updated: 2026-05-18 after v1.1 initialization*

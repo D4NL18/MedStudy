@@ -51,11 +51,11 @@
     display: flex; gap: 24px; align-items: center;
     .nav-divider { width: 1px; height: 20px; background: var(--color-border); margin: 0 4px; }
     a { 
-      color: var(--color-text); text-decoration: none; font-weight: 700; font-size: 0.9rem; opacity: 0.5;
+      color: var(--color-text); text-decoration: none; font-weight: 700; font-size: 0.9rem; opacity: 0.7;
       transition: all 0.3s ease;
       position: relative;
       &.active, &:hover { 
-        opacity: 1; color: var(--color-accent); 
+        opacity: 1; color: white; 
         &::after { width: 100%; }
       }
       &::after {
@@ -305,11 +305,76 @@
 }
 
 @media (max-width: 1100px) {
-  .app-shell {
-    padding: 16px;
-    gap: 16px;
+  .content-area {
+    padding: 1rem;
+    margin-top: 60px;
   }
-  
+
+  // PWA Install Button Styles
+  .pwa-install-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 1rem;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    lucide-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    @media (max-width: 1100px) {
+      display: none; // Hide on tablet/mobile nav, will show in drawer
+    }
+  }
+
+  .pwa-install-btn-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: calc(100% - 2rem);
+    margin: 0 1rem 1rem 1rem;
+    padding: 0.875rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.98);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    lucide-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
   .main-nav {
     padding: 12px 20px;
     border-radius: 20px;

@@ -47,7 +47,7 @@
             placeholder="••••••••"
             [class.invalid]="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched"
           >
-          <button type="button" class="btn-toggle" (click)="togglePassword()">
+          <button type="button" class="btn-toggle" (click)="togglePassword()" aria-label="Alternar visibilidade da senha">
             {{ showPassword() ? '🙈' : '👁️' }}
           </button>
         </div>

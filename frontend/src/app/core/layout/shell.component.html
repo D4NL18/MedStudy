@@ -1,7 +1,8 @@
 <div class="app-shell">
+  <app-offline-banner></app-offline-banner>
   <nav class="glass main-nav">
     <div class="nav-left">
-      <button class="hamburger-btn" (click)="toggleDrawer()">
+      <button class="hamburger-btn" (click)="toggleDrawer()" aria-label="Abrir menu">
         <lucide-icon name="menu"></lucide-icon>
       </button>
       <div class="logo" routerLink="/dashboard">
@@ -22,9 +23,15 @@
     </div>
 
     <div class="user-actions">
+      <!-- PWA Install -->
+      <button class="pwa-install-btn glass" *ngIf="canInstall | async" (click)="installApp()">
+        <lucide-icon name="download"></lucide-icon>
+        <span>Instalar App</span>
+      </button>
+
       <!-- Notificações -->
       <div class="notification-wrapper">
-        <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin">
+        <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin" aria-label="Notificações">
           <lucide-icon name="bell"></lucide-icon>
           <span class="badge" *ngIf="notifications()?.totalAlerts! > 0">{{ notifications()?.totalAlerts }}</span>
         </button>
@@ -38,7 +45,7 @@
         >
           <div class="notification-dropdown glass">
             <div class="dropdown-header">
-              <h4>Pendências</h4>
+              <h2>Pendências</h2>
             </div>
             <div class="dropdown-body">
               <div class="notif-item" *ngIf="notifications()?.pendingRevisions! > 0" routerLink="/revisoes" (click)="showDropdown.set(false)">
@@ -83,7 +90,7 @@
           <span class="brand">MedStudy</span>
           <div class="dot"></div>
         </div>
-        <button class="close-btn" (click)="toggleDrawer()">
+        <button class="close-btn" (click)="toggleDrawer()" aria-label="Fechar menu">
           <lucide-icon name="x"></lucide-icon>
         </button>
       </div>
@@ -127,6 +134,13 @@
             <span class="view-profile">Ver perfil</span>
           </div>
         </div>
+        
+        <!-- PWA Install Mobile -->
+        <button class="pwa-install-btn-mobile glass" *ngIf="canInstall | async" (click)="installApp()">
+          <lucide-icon name="download"></lucide-icon>
+          <span>Instalar MedStudy</span>
+        </button>
+
         <button class="btn-logout-mobile" (click)="logout()">
           <lucide-icon name="log-out"></lucide-icon> Sair
         </button>
