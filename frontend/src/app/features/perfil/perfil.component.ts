@@ -149,6 +149,98 @@ import { selectUser } from '../../store/auth/auth.selectors';
             </button>
           </div>
         </section>
+
+        <!-- Configurações de Privacidade -->
+        <section class="perfil-section glass">
+          <div class="section-header">
+            <h3>🔒 Privacidade</h3>
+            <p>Controle quem pode visualizar seus dados acadêmicos e conquistas</p>
+          </div>
+
+          <div class="privacy-settings">
+            <div class="setting-item">
+              <div class="setting-info">
+                <div class="setting-title">
+                  <lucide-icon name="shield" [size]="18" class="icon-primary"></lucide-icon>
+                  <span>Perfil Público</span>
+                </div>
+                <p class="setting-desc">Permitir que outros estudantes busquem e vejam seu perfil. Se desativado, apenas amigos aceitos terão acesso.</p>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" [checked]="profile()?.isPublic !== false" (change)="togglePrivacySetting('isPublic')">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item" [class.disabled]="profile()?.isPublic === false">
+              <div class="setting-info">
+                <div class="setting-title">
+                  <lucide-icon name="book-open" [size]="18" class="icon-secondary"></lucide-icon>
+                  <span>Compartilhar Faculdade</span>
+                </div>
+                <p class="setting-desc">Mostrar faculdade, semestre e situação acadêmica para outros usuários.</p>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" 
+                       [disabled]="profile()?.isPublic === false" 
+                       [checked]="profile()?.shareFaculdade !== false" 
+                       (change)="togglePrivacySetting('shareFaculdade')">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item" [class.disabled]="profile()?.isPublic === false">
+              <div class="setting-info">
+                <div class="setting-title">
+                  <lucide-icon name="zap" [size]="18" class="icon-accent"></lucide-icon>
+                  <span>Compartilhar Ofensiva (Streak)</span>
+                </div>
+                <p class="setting-desc">Mostrar o número de dias seguidos que você estudou.</p>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" 
+                       [disabled]="profile()?.isPublic === false" 
+                       [checked]="profile()?.shareStreak !== false" 
+                       (change)="togglePrivacySetting('shareStreak')">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item" [class.disabled]="profile()?.isPublic === false">
+              <div class="setting-info">
+                <div class="setting-title">
+                  <lucide-icon name="target" [size]="18" class="icon-target"></lucide-icon>
+                  <span>Compartilhar Total de Questões</span>
+                </div>
+                <p class="setting-desc">Mostrar o total de questões resolvidas.</p>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" 
+                       [disabled]="profile()?.isPublic === false" 
+                       [checked]="profile()?.shareTotalQuestions !== false" 
+                       (change)="togglePrivacySetting('shareTotalQuestions')">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-item" [class.disabled]="profile()?.isPublic === false">
+              <div class="setting-info">
+                <div class="setting-title">
+                  <lucide-icon name="award" [size]="18" class="icon-award"></lucide-icon>
+                  <span>Compartilhar Conquistas</span>
+                </div>
+                <p class="setting-desc">Mostrar as badges e conquistas na sua galeria.</p>
+              </div>
+              <label class="switch-control">
+                <input type="checkbox" 
+                       [disabled]="profile()?.isPublic === false" 
+                       [checked]="profile()?.shareBadges !== false" 
+                       (change)="togglePrivacySetting('shareBadges')">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </div>
+        </section>
       </div>
 
       <!-- Conquistas -->
@@ -317,6 +409,17 @@ export class PerfilComponent implements OnInit {
       };
       this.store.dispatch(ProfileActions.saveProfile({ profile: updatedProfile }));
       this.isEditing.set(false);
+    }
+  }
+
+  togglePrivacySetting(field: 'isPublic' | 'shareStreak' | 'shareFaculdade' | 'shareTotalQuestions' | 'shareBadges') {
+    const currentProfile = this.profile();
+    if (currentProfile) {
+      const updatedProfile = {
+        ...currentProfile,
+        [field]: currentProfile[field] === false ? true : false
+      };
+      this.store.dispatch(ProfileActions.saveProfile({ profile: updatedProfile }));
     }
   }
 

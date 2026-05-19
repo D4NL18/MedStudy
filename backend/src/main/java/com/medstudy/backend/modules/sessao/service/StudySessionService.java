@@ -9,6 +9,7 @@ import com.medstudy.backend.modules.sessao.repository.StudySessionRepository;
 import com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications;
 import com.medstudy.backend.modules.user.entity.User;
 import com.medstudy.backend.modules.user.repository.UserRepository;
+import com.medstudy.backend.modules.profile.entity.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,17 +33,26 @@ public class StudySessionService {
     private final StudySessionMapper mapper;
     private final com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository;
     private final com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
+    private final com.medstudy.backend.modules.profile.repository.ProfileRepository profileRepository;
+    private final com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository;
+    private final com.medstudy.backend.modules.notificacao.service.NotificationService notificationService;
 
     public StudySessionService(StudySessionRepository repository, 
                                UserRepository userRepository, 
                                StudySessionMapper mapper,
                                com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository,
-                               com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService) {
+                               com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService,
+                               com.medstudy.backend.modules.profile.repository.ProfileRepository profileRepository,
+                               com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository,
+                               com.medstudy.backend.modules.notificacao.service.NotificationService notificationService) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.lessonRepository = lessonRepository;
         this.badgeService = badgeService;
+        this.profileRepository = profileRepository;
+        this.friendshipRepository = friendshipRepository;
+        this.notificationService = notificationService;
     }
 
     private User getCurrentUser() {
@@ -65,10 +75,53 @@ public class StudySessionService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado no banco de dados"));
     }
 
+    private void broadcastSocialEvents(User currentUser, int streakBefore, java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges) {
+        Profile profile = profileRepository.findByUserId(currentUser.getId()).orElse(null);
+        if (profile == null) return;
+
+        List<com.medstudy.backend.modules.friendship.entity.Friendship> friendships = friendshipRepository.findAllAcceptedFriendships(currentUser.getId());
+        if (friendships.isEmpty()) return;
+
+        // 1. Check Streak Increase
+        List<StudySession> sessionsAfter = repository.findAll(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()));
+        int streakAfter = calculateStreak(sessionsAfter);
+        if (streakAfter > streakBefore && Boolean.TRUE.equals(profile.getShareStreak())) {
+            String senderName = profile.getNomeCompleto();
+            for (com.medstudy.backend.modules.friendship.entity.Friendship f : friendships) {
+                User friend = f.getRequester().getId().equals(currentUser.getId()) ? f.getReceiver() : f.getRequester();
+                notificationService.createNotification(
+                    friend,
+                    currentUser,
+                    "STREAK_RECORD",
+                    senderName + " atingiu um streak de " + streakAfter + " dias de estudo seguidos!"
+                );
+            }
+        }
+
+        // 2. Check Badges Earned
+        if (newBadges != null && !newBadges.isEmpty() && Boolean.TRUE.equals(profile.getShareBadges())) {
+            String senderName = profile.getNomeCompleto();
+            for (com.medstudy.backend.modules.gamificacao.entity.BadgeType badge : newBadges) {
+                for (com.medstudy.backend.modules.friendship.entity.Friendship f : friendships) {
+                    User friend = f.getRequester().getId().equals(currentUser.getId()) ? f.getReceiver() : f.getRequester();
+                    notificationService.createNotification(
+                        friend,
+                        currentUser,
+                        "BADGE_EARNED",
+                        senderName + " conquistou a medalha '" + badge.getDisplayName() + "'!"
+                    );
+                }
+            }
+        }
+    }
+
     public StudySessionResponse createSession(StudySessionRequest request) {
         validateSession(request);
 
         User currentUser = getCurrentUser();
+        List<StudySession> sessionsBefore = repository.findAll(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()));
+        int streakBefore = calculateStreak(sessionsBefore);
+
         StudySession entity = mapper.toEntity(request);
         entity.setUser(currentUser);
         
@@ -83,6 +136,9 @@ public class StudySessionService {
         
         // Legacy rule: Update lesson performance
         updateLessonPerformance(saved.getTema(), currentUser);
+
+        // Broadcast social events if sharing is active
+        broadcastSocialEvents(currentUser, streakBefore, newBadges);
         
         return mapper.toResponse(saved, newBadges);
     }
@@ -110,6 +166,10 @@ public class StudySessionService {
         validateSession(request);
         StudySession entity = getSessionAndVerifyOwnership(id);
 
+        User currentUser = getCurrentUser();
+        List<StudySession> sessionsBefore = repository.findAll(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()));
+        int streakBefore = calculateStreak(sessionsBefore);
+
         entity.setGrandeArea(request.grandeArea());
         entity.setTema(request.tema());
         entity.setDataSessao(request.dataSessao());
@@ -127,10 +187,13 @@ public class StudySessionService {
         StudySession saved = repository.save(entity);
         
         // Gamificação: Check for badges
-        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(getCurrentUser().getId());
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId());
         
         // Legacy rule: Update lesson performance
-        updateLessonPerformance(saved.getTema(), getCurrentUser());
+        updateLessonPerformance(saved.getTema(), currentUser);
+
+        // Broadcast social events if sharing is active
+        broadcastSocialEvents(currentUser, streakBefore, newBadges);
         
         return mapper.toResponse(saved, newBadges);
     }

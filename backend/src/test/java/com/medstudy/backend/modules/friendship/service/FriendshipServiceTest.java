@@ -296,4 +296,52 @@ class FriendshipServiceTest {
         assertEquals("Outro Estudante", result.get(0).name());
         assertEquals("BLOCKED", result.get(0).relationshipStatus());
     }
+
+    @Test
+    void searchProfiles_ShouldReturnMaskedProfile_WhenTargetProfileIsPrivateAndNotFriends() {
+        // Mark target profile private
+        otherProfile.setIsPublic(false);
+
+        when(profileRepository.searchProfiles("Outro", currentUser.getId()))
+                .thenReturn(List.of(otherProfile));
+        when(friendshipRepository.findFriendshipBetween(currentUser.getId(), otherUser.getId()))
+                .thenReturn(Optional.empty());
+        when(studySessionRepository.findDistinctSessionDatesByUserId(otherUser.getId()))
+                .thenReturn(List.of(LocalDate.now()));
+
+        List<SocialProfileResponseDTO> result = friendshipService.searchProfiles("Outro");
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        SocialProfileResponseDTO res = result.get(0);
+        assertEquals("Outro Estudante", res.name());
+        assertNull(res.faculdade()); // Masked because profile is private & not friends
+        assertNull(res.semestre());
+        assertEquals(0, res.streak()); // Zeroed streak
+    }
+
+    @Test
+    void searchProfiles_ShouldReturnGranularMaskedProfile_WhenTargetProfileHasShareFieldsDisabled() {
+        // Public profile but with specific sharing disabled
+        otherProfile.setIsPublic(true);
+        otherProfile.setShareFaculdade(false);
+        otherProfile.setShareStreak(false);
+
+        when(profileRepository.searchProfiles("Outro", currentUser.getId()))
+                .thenReturn(List.of(otherProfile));
+        when(friendshipRepository.findFriendshipBetween(currentUser.getId(), otherUser.getId()))
+                .thenReturn(Optional.empty());
+        when(studySessionRepository.findDistinctSessionDatesByUserId(otherUser.getId()))
+                .thenReturn(List.of(LocalDate.now()));
+
+        List<SocialProfileResponseDTO> result = friendshipService.searchProfiles("Outro");
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        SocialProfileResponseDTO res = result.get(0);
+        assertEquals("Outro Estudante", res.name());
+        assertNull(res.faculdade()); // Masked because shareFaculdade is false
+        assertNull(res.semestre());
+        assertNull(res.streak()); // Masked (null) because shareStreak is false
+    }
 }

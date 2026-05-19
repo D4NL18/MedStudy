@@ -77,7 +77,7 @@
           <div class="profile-card glass" *ngFor="let friend of friends()">
             <div class="card-glow"></div>
             
-            <div class="card-header">
+            <div class="card-header clickable" (click)="viewDetailedProfile(friend)" title="Clique para ver perfil completo">
               <app-avatar [presetId]="friend.avatarPresetId" size="md"></app-avatar>
               <div class="user-details">
                 <h3>{{ friend.name }}</h3>
@@ -132,7 +132,7 @@
       <div class="tab-pane" *ngIf="activeTab() === 'pending'">
         <div class="grid-layout" *ngIf="pendingRequests().length > 0; else noRequests">
           <div class="profile-card glass pending-card" *ngFor="let req of pendingRequests()">
-            <div class="card-header">
+            <div class="card-header clickable" (click)="viewDetailedProfile(req)" title="Clique para ver perfil completo">
               <app-avatar [presetId]="req.avatarPresetId" size="md"></app-avatar>
               <div class="user-details">
                 <h3>{{ req.name }}</h3>
@@ -187,7 +187,7 @@
           <div class="profile-card glass" *ngFor="let profile of searchResults()">
             <div class="card-glow"></div>
             
-            <div class="card-header">
+            <div class="card-header clickable" (click)="viewDetailedProfile(profile)" title="Clique para ver perfil completo">
               <app-avatar [presetId]="profile.avatarPresetId" size="md"></app-avatar>
               <div class="user-details">
                 <h3>{{ profile.name }}</h3>
@@ -372,5 +372,127 @@
       </div>
 
     </ng-container>
+  </div>
+
+  <!-- Detailed Profile Modal with Glassmorphic Privacy Overlay -->
+  <div class="modal-backdrop fade-in" *ngIf="selectedProfileDetail()" (click)="closeDetailModal()">
+    <div class="modal-content glass pop-in" (click)="$event.stopPropagation()">
+      <button class="btn-close-modal" (click)="closeDetailModal()">
+        <lucide-icon name="x" [size]="20"></lucide-icon>
+      </button>
+
+      <div class="modal-loading-overlay" *ngIf="modalLoading()">
+        <div class="spinner"></div>
+        <p>Carregando perfil...</p>
+      </div>
+
+      <ng-container *ngIf="!modalLoading() && selectedProfileDetail() as p">
+        <!-- Private Profile Overlay -->
+        <div class="private-overlay glassmorphic" *ngIf="p.isPrivate">
+          <div class="overlay-content">
+            <div class="lock-icon-wrap">
+              <lucide-icon name="lock" [size]="48"></lucide-icon>
+            </div>
+            <h2>Perfil Privado</h2>
+            <p>Este perfil é privado. Conecte-se com &#64;{{ p.handle }} para visualizar seus dados de estudos e conquistas.</p>
+            
+            <div class="overlay-actions">
+              <!-- Action Button based on friendship status -->
+              <button 
+                class="btn-primary" 
+                *ngIf="p.friendshipStatus === 'NONE'"
+                (click)="sendFriendRequestFromModal(p)"
+              >
+                <lucide-icon name="user-plus" [size]="16"></lucide-icon> Adicionar Amigo
+              </button>
+              
+              <span class="badge-status pending" *ngIf="p.friendshipStatus === 'PENDING' && p.isRequester">
+                <lucide-icon name="clock" [size]="14"></lucide-icon> Solicitação Enviada
+              </span>
+
+              <div class="received-actions-modal" *ngIf="p.friendshipStatus === 'PENDING' && !p.isRequester">
+                <button class="btn-accept" (click)="acceptFriendRequestFromModal(p)">
+                  <lucide-icon name="user-check" [size]="16"></lucide-icon> Aceitar
+                </button>
+                <button class="btn-decline" (click)="declineFriendRequestFromModal(p)">
+                  <lucide-icon name="user-x" [size]="16"></lucide-icon> Recusar
+                </button>
+              </div>
+
+              <span class="badge-status accepted" *ngIf="p.friendshipStatus === 'ACCEPTED'">
+                <lucide-icon name="user-check" [size]="14"></lucide-icon> Já são Amigos
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Public Profile / Friend Details -->
+        <div class="modal-profile-header">
+          <app-avatar [presetId]="p.avatarPresetId" size="xl"></app-avatar>
+          <div class="modal-user-details">
+            <h2>{{ p.nomeCompleto }}</h2>
+            <span class="modal-handle">&#64;{{ p.handle }}</span>
+            <div class="friendship-status-badge" *ngIf="p.friendshipStatus !== 'NONE'">
+              <span class="badge-status accepted" *ngIf="p.friendshipStatus === 'ACCEPTED'">
+                <lucide-icon name="user-check" [size]="12"></lucide-icon> Amigos
+              </span>
+              <span class="badge-status pending" *ngIf="p.friendshipStatus === 'PENDING'">
+                <lucide-icon name="clock" [size]="12"></lucide-icon> Pendente
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-profile-body">
+          <!-- Academic Card (Collapses organically if null/disabled) -->
+          <div class="modal-info-card glass" *ngIf="p.faculdade">
+            <h3>🎓 Dados Acadêmicos</h3>
+            <div class="info-row">
+              <span class="label">Instituição:</span>
+              <span class="value">{{ p.faculdade }}</span>
+            </div>
+            <div class="info-row" *ngIf="p.isFormado !== undefined && p.isFormado !== null">
+              <span class="label">Situação:</span>
+              <span class="value">{{ p.isFormado ? 'Formado' : (p.semestre + 'º Semestre') }}</span>
+            </div>
+          </div>
+
+          <!-- Stats Row (Collapses organically if null/disabled) -->
+          <div class="modal-stats-grid" *ngIf="p.streak !== null || (p.totalQuestions !== null && p.totalQuestions !== undefined)">
+            <div class="modal-stat-card glass streak" *ngIf="p.streak !== null && p.streak !== undefined">
+              <lucide-icon name="zap" [size]="28"></lucide-icon>
+              <div class="stat-values">
+                <span class="number">{{ p.streak }}</span>
+                <span class="label">Dias Seguidos</span>
+              </div>
+            </div>
+
+            <div class="modal-stat-card glass questions" *ngIf="p.totalQuestions !== null && p.totalQuestions !== undefined">
+              <lucide-icon name="target" [size]="28"></lucide-icon>
+              <div class="stat-values">
+                <span class="number">{{ p.totalQuestions }}</span>
+                <span class="label">Questões Resolvidas</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Badges Section (Collapses organically if empty/disabled) -->
+          <div class="modal-badges-section" *ngIf="p.badges && p.badges.length > 0">
+            <h3>🏆 Galeria de Conquistas</h3>
+            <div class="modal-badges-grid">
+              <div class="modal-badge-card" *ngFor="let badgeName of p.badges" [title]="getBadgeTooltip(badgeName)">
+                <div class="modal-badge-icon">
+                  <lucide-icon [name]="getBadgeIcon(badgeName)"></lucide-icon>
+                </div>
+                <div class="modal-badge-meta">
+                  <h4>{{ getBadgeDisplayName(badgeName) }}</h4>
+                  <p>{{ getBadgeDescription(badgeName) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>

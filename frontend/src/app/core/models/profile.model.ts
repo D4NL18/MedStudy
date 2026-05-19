@@ -7,6 +7,21 @@ export interface Profile {
   semestre?: number | null;
   faculdade: string;
   avatarPresetId: string;
+
+  // Privacy Settings
+  isPublic?: boolean;
+  shareStreak?: boolean;
+  shareFaculdade?: boolean;
+  shareTotalQuestions?: boolean;
+  shareBadges?: boolean;
+
+  // Metadata context & statistics
+  streak?: number | null;
+  totalQuestions?: number | null;
+  badges?: string[];
+  isPrivate?: boolean;
+  friendshipStatus?: string;
+  isRequester?: boolean;
 }
 
 export interface ProfileCheckResponse {

@@ -30,6 +30,21 @@ public class Profile extends BaseEntity {
     @Column(name = "avatar_preset_id", nullable = false)
     private String avatarPresetId;
 
+    @Column(name = "is_public", nullable = false)
+    private Boolean isPublic = true;
+
+    @Column(name = "share_streak", nullable = false)
+    private Boolean shareStreak = true;
+
+    @Column(name = "share_faculdade", nullable = false)
+    private Boolean shareFaculdade = true;
+
+    @Column(name = "share_total_questions", nullable = false)
+    private Boolean shareTotalQuestions = true;
+
+    @Column(name = "share_badges", nullable = false)
+    private Boolean shareBadges = true;
+
     // Getters and Setters
     public User getUser() {
         return user;
@@ -85,5 +100,45 @@ public class Profile extends BaseEntity {
 
     public void setAvatarPresetId(String avatarPresetId) {
         this.avatarPresetId = avatarPresetId;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public Boolean getShareStreak() {
+        return shareStreak;
+    }
+
+    public void setShareStreak(Boolean shareStreak) {
+        this.shareStreak = shareStreak;
+    }
+
+    public Boolean getShareFaculdade() {
+        return shareFaculdade;
+    }
+
+    public void setShareFaculdade(Boolean shareFaculdade) {
+        this.shareFaculdade = shareFaculdade;
+    }
+
+    public Boolean getShareTotalQuestions() {
+        return shareTotalQuestions;
+    }
+
+    public void setShareTotalQuestions(Boolean shareTotalQuestions) {
+        this.shareTotalQuestions = shareTotalQuestions;
+    }
+
+    public Boolean getShareBadges() {
+        return shareBadges;
+    }
+
+    public void setShareBadges(Boolean shareBadges) {
+        this.shareBadges = shareBadges;
     }
 }

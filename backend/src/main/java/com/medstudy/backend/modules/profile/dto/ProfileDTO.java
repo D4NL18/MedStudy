@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.UUID;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -36,4 +37,19 @@ public class ProfileDTO {
 
     @NotBlank(message = "O avatar é obrigatório")
     private String avatarPresetId;
+
+    // Privacy Settings
+    private Boolean isPublic;
+    private Boolean shareStreak;
+    private Boolean shareFaculdade;
+    private Boolean shareTotalQuestions;
+    private Boolean shareBadges;
+
+    // View context and statistics metadata
+    private Integer streak;
+    private Long totalQuestions;
+    private List<String> badges;
+    private Boolean isPrivate;
+    private String friendshipStatus;
+    private Boolean isRequester;
 }
