@@ -12,16 +12,16 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 ## Requirements
 
-## Current Milestone: v1.1 Legacy Convergence & Advanced Features
+## Current Milestone: v1.2 Socialização Aprofundada
 
-**Goal:** Sincronizar as regras de negócio com o sistema legado e expandir funcionalidades com exportação, gamificação e notificações.
+**Goal:** Introduzir recursos de socialização avançados como perfis configuráveis, conexões de amizade, competições de volume de questões em grupo (Gymrats style), duelos 1v1, feed de conquistas automatizado e controle absoluto de privacidade.
 
 **Target features:**
-- Sincronização de regras de Spaced Repetition (% de acerto).
-- Alertas de "Reforço" e "Teoria Ineficiente" no Plano de Aulas.
-- Cálculo de Tendência de 30 dias e Drill-down por Subárea.
-- Exportação de relatórios (PDF/CSV) e Reset de Flashcards.
-- Sistema de Badges (Gamificação) e Notificações in-app.
+- Perfis de usuário com dados básicos (faculdade, semestre, avatar).
+- Sistema de amigos (solicitar, aceitar, bloquear, listar).
+- Grupos de competição automáticos e painéis de liderança baseados no banco de dados.
+- Feed reativo de conquistas com reações silenciosas (aplausos e aplausos motivacionais).
+- Controle robusto e granular de privacidade.
 
 ### Active (v1.1 Planning)
  
