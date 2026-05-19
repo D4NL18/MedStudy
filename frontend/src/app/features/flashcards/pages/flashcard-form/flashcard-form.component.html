@@ -2,7 +2,7 @@
   <div class="form-modal glass">
     <div class="modal-header">
       <h2>Novo Flashcard</h2>
-      <button class="close-btn" (click)="cancel()">
+      <button class="close-btn" (click)="cancel()" aria-label="Cancelar e fechar formulário">
         <lucide-icon name="x" [size]="24"></lucide-icon>
       </button>
     </div>
@@ -28,7 +28,7 @@
                (imagePasted)="onImagePasted($event, 'frente')"
                placeholder="Digite o texto ou cole uma imagem...">
           </div>
-          <button class="btn-action" (click)="triggerImageUpload('frente')">
+          <button class="btn-action" (click)="triggerImageUpload('frente')" aria-label="Upload de imagem para a frente">
             <lucide-icon name="image" [size]="18"></lucide-icon>
             Inserir Imagem
           </button>
@@ -47,7 +47,7 @@
                (imagePasted)="onImagePasted($event, 'verso')"
                placeholder="Digite a resposta ou cole uma imagem...">
           </div>
-          <button class="btn-action" (click)="triggerImageUpload('verso')">
+          <button class="btn-action" (click)="triggerImageUpload('verso')" aria-label="Upload de imagem para o verso">
             <lucide-icon name="image" [size]="18"></lucide-icon>
             Inserir Imagem
           </button>

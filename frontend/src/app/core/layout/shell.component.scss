@@ -51,11 +51,11 @@
     display: flex; gap: 24px; align-items: center;
     .nav-divider { width: 1px; height: 20px; background: var(--color-border); margin: 0 4px; }
     a { 
-      color: var(--color-text); text-decoration: none; font-weight: 700; font-size: 0.9rem; opacity: 0.5;
+      color: var(--color-text); text-decoration: none; font-weight: 700; font-size: 0.9rem; opacity: 0.7;
       transition: all 0.3s ease;
       position: relative;
       &.active, &:hover { 
-        opacity: 1; color: var(--color-accent); 
+        opacity: 1; color: white; 
         &::after { width: 100%; }
       }
       &::after {

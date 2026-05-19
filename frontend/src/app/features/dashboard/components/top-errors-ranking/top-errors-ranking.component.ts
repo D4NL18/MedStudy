@@ -10,7 +10,7 @@ import { LucideAngularModule } from 'lucide-angular';
   template: `
     <div class="ranking-container glass">
       <header class="ranking-header">
-        <h3>🚨 Temas com Maior Taxa de Erro</h3>
+        <h2>🚨 Temas com Maior Taxa de Erro</h2>
         <div class="filter-toggle">
           <button [class.active]="period() === 'LAST_60_DAYS'" (click)="setPeriod('LAST_60_DAYS')">60d</button>
           <button [class.active]="period() === 'TOTAL'" (click)="setPeriod('TOTAL')">Total</button>
@@ -46,7 +46,7 @@ import { LucideAngularModule } from 'lucide-angular';
   styles: [`
     .ranking-container { padding: 20px; border-radius: 16px; height: 100%; display: flex; flex-direction: column; }
     .ranking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .ranking-header h3 { margin: 0; font-size: 16px; font-weight: 600; }
+    .ranking-header h2 { margin: 0; font-size: 16px; font-weight: 600; }
     
     .filter-toggle { display: flex; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 2px; }
     .filter-toggle button { 
@@ -58,14 +58,14 @@ import { LucideAngularModule } from 'lucide-angular';
     .ranking-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
     .ranking-item { display: grid; grid-template-columns: 32px 1fr auto; grid-template-rows: auto auto; gap: 4px 12px; align-items: center; }
     
-    .rank-number { grid-row: 1 / 3; font-size: 18px; font-weight: 800; opacity: 0.2; }
+    .rank-number { grid-row: 1 / 3; font-size: 18px; font-weight: 800; opacity: 0.5; }
     .item-info { display: flex; flex-direction: column; }
     .tema { font-size: 14px; font-weight: 500; }
-    .area { font-size: 11px; opacity: 0.5; }
+    .area { font-size: 11px; opacity: 0.7; }
     
     .item-stats { text-align: right; display: flex; flex-direction: column; }
     .error-rate { color: var(--color-error); font-weight: 700; font-size: 13px; }
-    .total { font-size: 10px; opacity: 0.4; }
+    .total { font-size: 10px; opacity: 0.7; }
     
     .progress-bar { grid-column: 2 / 4; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
     .progress-bar .fill { height: 100%; background: var(--color-error); opacity: 0.6; border-radius: 2px; }

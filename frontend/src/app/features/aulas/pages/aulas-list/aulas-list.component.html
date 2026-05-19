@@ -112,8 +112,8 @@
               </div>
             </td>
             <td class="actions">
-              <button class="btn-icon" (click)="editLesson(lesson)"><lucide-icon name="edit-2" [size]="16"></lucide-icon></button>
-              <button class="btn-icon delete" (click)="deleteLesson(lesson)"><lucide-icon name="trash-2" [size]="16"></lucide-icon></button>
+              <button class="btn-icon" (click)="editLesson(lesson)" aria-label="Editar aula"><lucide-icon name="edit-2" [size]="16"></lucide-icon></button>
+              <button class="btn-icon delete" (click)="deleteLesson(lesson)" aria-label="Excluir aula"><lucide-icon name="trash-2" [size]="16"></lucide-icon></button>
             </td>
           </tr>
           <tr *ngIf="lessons.length === 0">
