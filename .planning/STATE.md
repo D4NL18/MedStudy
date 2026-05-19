@@ -39,6 +39,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 **Milestone:** v1.1 — Legacy Convergence & Advanced Features
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
+**Status:** Phase 21 shipped — Branch pushed to origin/21
 
 ---
 
@@ -53,7 +54,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 - [x] Phase 18: Alertas de Performance & Exportação + Bugfixes (Shipped)
 - [ ] Phase 19: Gamificação & Notificações (In Progress)
 - [x] Phase 20: Refinamento Responsivo e Interatividade (Shipped)
-- [x] Phase 21: PWA & Otimização Final (Executed)
+- [x] Phase 21: PWA & Otimização Final (Shipped)
 
 ---
 
@@ -64,4 +65,4 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 - [ ] Gamificação: Quais os critérios para as primeiras 5 badges?
 
 ---
-*STATE.md updated: 2026-05-11 after v1.1 initialization*
+*STATE.md updated: 2026-05-18 after v1.1 initialization*
