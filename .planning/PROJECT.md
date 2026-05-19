@@ -42,13 +42,21 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 - ✓ Segurança: HttpOnly Cookies, CSRF Double Submit, Mascara de Logs — v1.0 (Phase 14)
 - ✓ Documentação Final: README Visual, Walkthrough, Security Policy — v1.0 (Phase 15)
 
-### Active (v1.1 Planning)
- 
-- [ ] Exportação de relatórios de desempenho em PDF/CSV
-- [ ] Sistema de notificações in-app para revisões críticas
-- [ ] Gamificação básica (badges por streak e volume de questões)
-- [ ] Integração de PWA (Progressive Web App) para uso mobile básico
-- [ ] Melhoria na performance de carregamento inicial (Lazy Loading de features)
+### Validated (v1.1)
+- ✓ Exportação de relatórios de desempenho em PDF/CSV
+- ✓ Sistema de notificações in-app para revisões críticas
+- ✓ Gamificação básica (badges por streak e volume de questões)
+- ✓ Integração de PWA (Progressive Web App) para uso mobile e offline
+- ✓ Melhoria na performance de carregamento inicial (Lazy Loading de features)
+- ✓ Sincronização de regras de Spaced Repetition (% de acerto)
+- ✓ Alertas de "Reforço" e "Teoria Ineficiente" no Plano de Aulas
+- ✓ Cálculo de Tendência de 30 dias e Drill-down por Subárea
+
+### Active (v2.0 Planning)
+- [ ] Implementação de Testes E2E com Cypress (Frontend)
+- [ ] Autenticação Social (Google, Apple)
+- [ ] Módulo comunitário/social (simples)
+- [ ] Dashboards para uso em tablets e iPad
 
 ### Out of Scope
 
@@ -60,6 +68,12 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 - Deploy em produção/cloud — foco em execução local robusta na v1
 
 ## Context
+
+**Shipped v1.1:**
+- O projeto foi estendido com exportação de dados via bibliotecas híbridas HTML-to-PDF (FlyingSaucer + Thymeleaf).
+- O Frontend Angular foi configurado como um PWA, suportando instalação e exibindo banners de erro offline graças ao `ApiUrlInterceptor`.
+- Implementados sistemas engajadores como Gamificação e Notificações (badges e dropdowns reativos baseados em Signals/NgRx).
+- Cobertura de testes mantida em backend e frontend ao longo da expansão, e scores de Performance/Acessibilidade elevados a 100 no Lighthouse.
 
 **Legado analisado (`estudos-lari`):**
 - React 19 + Create React App + Supabase (BaaS)
@@ -126,4 +140,4 @@ Este documento evolui a cada transição de fase e milestone.
 
 ---
 ---
-*Last updated: 2026-05-11 after v1.0 milestone completion.*
+*Last updated: 2026-05-18 after v1.1 milestone completion.*
