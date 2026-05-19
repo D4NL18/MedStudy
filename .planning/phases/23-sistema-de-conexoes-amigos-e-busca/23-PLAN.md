@@ -34,22 +34,21 @@ Este plano detalha as tarefas e entregáveis para a implementação do Sistema d
   - Buscar estudantes reativamente filtrando por nome completo, handle ou faculdade (excluindo usuários bloqueados e o próprio usuário).
   - Enviar solicitação de amizade (validações: não pode ser ele mesmo, não pode haver relação pendente/ativa, inverte se já houver convite do outro lado).
   - Aceitar/recusar convites de amizade recebidos.
-  - Remover conexão ativa.
-  - Bloquear usuário (cancela amizade ativa ou convites pendentes e define status = `BLOCKED`, registrando quem bloqueou).
-  - Desbloquear usuário.
-- [ ] **Controller**: Criar `FriendshipController` expondo os endpoints acordados protegidos por autenticação (`/api/friendships/*`).
+- [x] **Wave 2: Mapeamentos e Lógica de Negócios (Backend)**
+  - [x] Criar `FriendshipResponseDTO.java` e `SocialProfileResponseDTO.java` no backend.
+  - [x] Criar `SocialNotificationResponseDTO.java` no backend.
+  - [x] Criar mapper `FriendshipMapper.java` no backend.
+  - [x] Estender o `NotificationSummaryResponse.java` para adicionar o campo `socialAlerts`.
+  - [x] Estender o `NotificationService.java` para injetar `SocialNotificationRepository` e contar os alertas sociais.
+  - [x] Criar o `FriendshipService.java` implementando busca, convites, aceitar, recusar, remover e bloquear amizades.
+  - [x] Criar o `FriendshipController.java` mapeando endpoints em `/api/friendships/**`.
+  - [x] Estender `NotificationController.java` para adicionar endpoints de listagem de alertas sociais e marcar como lidas.
+  - [x] `POST /api/notifications/social/{id}/read` - Marca uma notificação social como lida.
+  - [x] `POST /api/notifications/social/read-all` - Marca todas as notificações sociais como lidas.
 
 ### 3. Backend: Módulo de Notificações Sociais
-- [ ] **Entity**: Criar a entidade `SocialNotification` estendendo `BaseEntity`.
-- [ ] **Repository**: Criar `SocialNotificationRepository` com métodos para buscar contagem não lida e listar ordenadas por data de criação.
-- [ ] **Service Extension**: Refatorar o `NotificationService` existente para:
-  - Injetar o `SocialNotificationRepository`.
-  - Retornar o total de alertas sociais na resposta de `getSummary()` e compor no total global de alertas.
-  - Método para listar notificações e marcar como lidas.
-- [ ] **Controller Extension**: Adicionar endpoints em `NotificationController`:
-  - `GET /api/notifications/social` - Lista notificações sociais do usuário atual.
-  - `POST /api/notifications/social/{id}/read` - Marca uma notificação social como lida.
-  - `POST /api/notifications/social/read-all` - Marca todas as notificações sociais como lidas.
+- [x] **Entity**: Criar a entidade `SocialNotification` estendendo `BaseEntity`.
+- [x] **Repository**: Criar `SocialNotificationRepository` com métodos para buscar contagem não lida e listar ordenadas por data de criação.
 
 ### 4. Frontend: SocialService & Integração de Rota
 - [ ] **Config**: Atualizar `app.config.ts` para registrar ícones Lucide adicionais: `Users`, `UserPlus`, `UserMinus`, `UserCheck`, `UserX`, `Ban`.

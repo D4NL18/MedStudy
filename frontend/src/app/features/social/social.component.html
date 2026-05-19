@@ -1,0 +1,376 @@
+<div class="social-container fade-in">
+  <!-- Header -->
+  <header class="social-header glass">
+    <div class="header-content">
+      <div class="title-wrap">
+        <h1>👥 Painel Social & Conexões</h1>
+        <p>Conecte-se com outros estudantes de medicina, acompanhe streaks de estudo e cresçam juntos!</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs-nav glass">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'friends'" 
+      (click)="changeTab('friends')"
+    >
+      <lucide-icon name="users" [size]="18"></lucide-icon>
+      <span>Meus Amigos</span>
+      <span class="count-badge" *ngIf="friends().length > 0">{{ friends().length }}</span>
+    </button>
+
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'pending'" 
+      (click)="changeTab('pending')"
+    >
+      <lucide-icon name="user-check" [size]="18"></lucide-icon>
+      <span>Solicitações</span>
+      <span class="count-badge pending" *ngIf="pendingRequests().length > 0">{{ pendingRequests().length }}</span>
+    </button>
+
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'search'" 
+      (click)="changeTab('search')"
+    >
+      <lucide-icon name="search" [size]="18"></lucide-icon>
+      <span>Buscar Estudantes</span>
+    </button>
+
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'blocked'" 
+      (click)="changeTab('blocked')"
+    >
+      <lucide-icon name="ban" [size]="18"></lucide-icon>
+      <span>Bloqueados</span>
+    </button>
+
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'notifications'" 
+      (click)="changeTab('notifications')"
+    >
+      <lucide-icon name="bell" [size]="18"></lucide-icon>
+      <span>Alertas</span>
+      <span class="count-badge unread" *ngIf="notifications().length > 0">{{ notifications().length }}</span>
+    </button>
+  </div>
+
+  <!-- Content Area -->
+  <div class="tab-content">
+    
+    <!-- Loading State -->
+    <div class="global-loader" *ngIf="loading()">
+      <div class="spinner"></div>
+      <p>Carregando dados...</p>
+    </div>
+
+    <ng-container *ngIf="!loading()">
+      
+      <!-- 1. MEUS AMIGOS TAB -->
+      <div class="tab-pane" *ngIf="activeTab() === 'friends'">
+        <div class="grid-layout" *ngIf="friends().length > 0; else noFriends">
+          <div class="profile-card glass" *ngFor="let friend of friends()">
+            <div class="card-glow"></div>
+            
+            <div class="card-header">
+              <app-avatar [presetId]="friend.avatarPresetId" size="md"></app-avatar>
+              <div class="user-details">
+                <h3>{{ friend.name }}</h3>
+                <span class="handle">&#64;{{ friend.handle }}</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="info-row">
+                <span class="label">Faculdade:</span>
+                <span class="value">{{ friend.faculdade }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Semestre:</span>
+                <span class="value">{{ friend.isFormado ? 'Formado' : friend.semestre + 'º Semestre' }}</span>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <!-- Streak counter -->
+              <div class="streak-badge" [class.active]="friend.streak > 0" title="Streak de Estudos Consecutivos">
+                <lucide-icon name="zap" class="streak-icon" [size]="18"></lucide-icon>
+                <span>{{ friend.streak }} {{ friend.streak === 1 ? 'dia' : 'dias' }}</span>
+              </div>
+
+              <!-- Friend Actions -->
+              <div class="action-buttons">
+                <button class="btn-action block" (click)="blockUser(friend)" title="Bloquear Estudante">
+                  <lucide-icon name="ban" [size]="16"></lucide-icon>
+                </button>
+                <button class="btn-action remove" (click)="removeFriend(friend)" title="Remover Amigo">
+                  <lucide-icon name="user-minus" [size]="16"></lucide-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noFriends>
+          <div class="empty-state glass">
+            <lucide-icon name="users" [size]="48"></lucide-icon>
+            <h3>Nenhum amigo conectado ainda</h3>
+            <p>Vá na aba de busca para encontrar colegas de faculdade e começar a acompanhar seus progressos de estudos!</p>
+            <button class="btn-primary" (click)="changeTab('search')">
+              <lucide-icon name="search" [size]="16"></lucide-icon> Buscar Colegas
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- 2. SOLICITAÇÕES TAB -->
+      <div class="tab-pane" *ngIf="activeTab() === 'pending'">
+        <div class="grid-layout" *ngIf="pendingRequests().length > 0; else noRequests">
+          <div class="profile-card glass pending-card" *ngFor="let req of pendingRequests()">
+            <div class="card-header">
+              <app-avatar [presetId]="req.avatarPresetId" size="md"></app-avatar>
+              <div class="user-details">
+                <h3>{{ req.name }}</h3>
+                <span class="handle">&#64;{{ req.handle }}</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <p class="request-meta">Deseja se conectar com você no MedStudy</p>
+              <div class="info-row">
+                <span class="label">Faculdade:</span>
+                <span class="value">{{ req.faculdade }}</span>
+              </div>
+            </div>
+
+            <div class="card-footer actions-center">
+              <button class="btn-accept" (click)="acceptFriendRequest(req)">
+                <lucide-icon name="user-check" [size]="16"></lucide-icon> Aceitar
+              </button>
+              <button class="btn-decline" (click)="declineFriendRequest(req)">
+                <lucide-icon name="user-x" [size]="16"></lucide-icon> Recusar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noRequests>
+          <div class="empty-state glass">
+            <lucide-icon name="user-check" [size]="48"></lucide-icon>
+            <h3>Nenhuma solicitação pendente</h3>
+            <p>Tudo limpo por aqui! Quando alguém enviar um convite de amizade para você, ele aparecerá nesta tela.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- 3. BUSCAR TAB -->
+      <div class="tab-pane" *ngIf="activeTab() === 'search'">
+        <div class="search-bar-wrap glass">
+          <lucide-icon name="search" class="search-icon" [size]="20"></lucide-icon>
+          <input 
+            type="text" 
+            [formControl]="searchControl" 
+            placeholder="Buscar por nome, handle (@nome) ou faculdade..."
+            class="search-input"
+          />
+          <div class="search-spinner" *ngIf="searchLoading()">
+            <div class="mini-spinner"></div>
+          </div>
+        </div>
+
+        <div class="grid-layout" *ngIf="searchResults().length > 0">
+          <div class="profile-card glass" *ngFor="let profile of searchResults()">
+            <div class="card-glow"></div>
+            
+            <div class="card-header">
+              <app-avatar [presetId]="profile.avatarPresetId" size="md"></app-avatar>
+              <div class="user-details">
+                <h3>{{ profile.name }}</h3>
+                <span class="handle">&#64;{{ profile.handle }}</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="info-row">
+                <span class="label">Faculdade:</span>
+                <span class="value">{{ profile.faculdade }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Semestre:</span>
+                <span class="value">{{ profile.isFormado ? 'Formado' : profile.semestre + 'º Semestre' }}</span>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <!-- Actions based on status -->
+              <div class="status-actions">
+                <!-- Case: NONE -->
+                <button 
+                  class="btn-primary-sm" 
+                  *ngIf="profile.relationshipStatus === 'NONE'" 
+                  (click)="sendFriendRequest(profile)"
+                >
+                  <lucide-icon name="user-plus" [size]="14"></lucide-icon> Adicionar
+                </button>
+
+                <!-- Case: PENDING -->
+                <div class="pending-status-group" *ngIf="profile.relationshipStatus === 'PENDING'">
+                  <!-- Sent by current user -->
+                  <span class="badge-status pending" *ngIf="profile.isRequester">
+                    <lucide-icon name="clock" [size]="12"></lucide-icon> Enviada
+                  </span>
+                  
+                  <!-- Received by current user -->
+                  <div class="received-actions" *ngIf="!profile.isRequester">
+                    <button class="btn-accept-sm" (click)="acceptFriendRequest(profile)" title="Aceitar">
+                      <lucide-icon name="user-check" [size]="14"></lucide-icon> Aceitar
+                    </button>
+                    <button class="btn-decline-sm" (click)="declineFriendRequest(profile)" title="Recusar">
+                      <lucide-icon name="user-x" [size]="14"></lucide-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Case: ACCEPTED -->
+                <div class="friend-status-group" *ngIf="profile.relationshipStatus === 'ACCEPTED'">
+                  <span class="badge-status accepted">
+                    <lucide-icon name="user-check" [size]="12"></lucide-icon> Amigos
+                  </span>
+                  <div class="streak-badge mini" [class.active]="profile.streak > 0">
+                    <lucide-icon name="zap" [size]="12"></lucide-icon>
+                    <span>{{ profile.streak }} d</span>
+                  </div>
+                </div>
+
+                <!-- Case: BLOCKED -->
+                <button 
+                  class="btn-secondary-sm" 
+                  *ngIf="profile.relationshipStatus === 'BLOCKED'" 
+                  (click)="unblockUser(profile)"
+                >
+                  Desbloquear
+                </button>
+              </div>
+
+              <!-- Generic block from search card -->
+              <button 
+                class="btn-action block" 
+                *ngIf="profile.relationshipStatus !== 'BLOCKED' && profile.relationshipStatus !== 'ACCEPTED'" 
+                (click)="blockUser(profile)" 
+                title="Bloquear"
+              >
+                <lucide-icon name="ban" [size]="14"></lucide-icon>
+              </button>
+              <button 
+                class="btn-action remove" 
+                *ngIf="profile.relationshipStatus === 'ACCEPTED'" 
+                (click)="removeFriend(profile)" 
+                title="Remover Amigo"
+              >
+                <lucide-icon name="user-minus" [size]="14"></lucide-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state glass search-empty" *ngIf="searchResults().length === 0 && !searchLoading()">
+          <lucide-icon name="search" [size]="40"></lucide-icon>
+          <h3>Busque por outros Médicos</h3>
+          <p>Escreva o nome, handle do perfil ou o nome da instituição acadêmica do estudante acima.</p>
+        </div>
+      </div>
+
+      <!-- 4. BLOQUEADOS TAB -->
+      <div class="tab-pane" *ngIf="activeTab() === 'blocked'">
+        <div class="grid-layout" *ngIf="blockedUsers().length > 0; else noBlocked">
+          <div class="profile-card glass blocked-card" *ngFor="let blocked of blockedUsers()">
+            <div class="card-header">
+              <div class="avatar-blocked-wrap">
+                <app-avatar [presetId]="blocked.avatarPresetId" size="md"></app-avatar>
+                <div class="ban-overlay"><lucide-icon name="ban" [size]="20"></lucide-icon></div>
+              </div>
+              <div class="user-details">
+                <h3>{{ blocked.name }}</h3>
+                <span class="handle">&#64;{{ blocked.handle }}</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <p class="blocked-meta">Este usuário está impedido de interagir ou encontrar seu perfil.</p>
+            </div>
+
+            <div class="card-footer actions-center">
+              <button class="btn-unblock" (click)="unblockUser(blocked)">
+                <lucide-icon name="user-check" [size]="16"></lucide-icon> Desbloquear
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noBlocked>
+          <div class="empty-state glass">
+            <lucide-icon name="ban" [size]="48"></lucide-icon>
+            <h3>Nenhum usuário bloqueado</h3>
+            <p>Lista limpa! Usuários que forem bloqueados por você aparecerão aqui para gerenciamento e desbloqueio rápido.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- 5. NOTIFICAÇÕES (ALERTAS) TAB -->
+      <div class="tab-pane" *ngIf="activeTab() === 'notifications'">
+        <div class="notifications-section glass">
+          <div class="section-header">
+            <h3>🔔 Alertas e Notificações Sociais</h3>
+            <button 
+              class="btn-mark-all glass" 
+              *ngIf="notifications().length > 0" 
+              (click)="markAllNotificationsAsRead()"
+            >
+              Marcar todas como lidas
+            </button>
+          </div>
+
+          <div class="notifications-list" *ngIf="notifications().length > 0; else noNotifications">
+            <div 
+              class="notification-item glass" 
+              *ngFor="let notif of notifications()"
+              [class.unread]="!notif.isRead"
+              (click)="markNotificationAsRead(notif)"
+            >
+              <div class="notif-avatar-wrap">
+                <app-avatar [presetId]="notif.senderAvatarPresetId" size="sm"></app-avatar>
+                <div class="notif-type-indicator" [ngClass]="notif.type.toLowerCase()">
+                  <lucide-icon 
+                    [name]="notif.type === 'FRIEND_REQUEST' ? 'user-plus' : (notif.type === 'FRIEND_ACCEPTED' ? 'user-check' : 'zap')" 
+                    [size]="10"
+                  ></lucide-icon>
+                </div>
+              </div>
+
+              <div class="notif-content">
+                <p class="notif-message">{{ notif.message }}</p>
+                <span class="notif-time">{{ notif.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+
+              <div class="unread-dot" *ngIf="!notif.isRead"></div>
+            </div>
+          </div>
+
+          <ng-template #noNotifications>
+            <div class="empty-state no-bg">
+              <lucide-icon name="bell" [size]="48"></lucide-icon>
+              <h3>Nenhum alerta recente</h3>
+              <p>Você está totalmente atualizado! Alertas de streaks de amigos e solicitações de amizades serão listados aqui.</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</div>

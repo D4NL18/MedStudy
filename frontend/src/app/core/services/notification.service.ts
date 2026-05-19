@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 export interface NotificationSummary {
   pendingRevisions: number;
   reinforcementLessons: number;
+  socialAlerts: number;
   totalAlerts: number;
 }
 
