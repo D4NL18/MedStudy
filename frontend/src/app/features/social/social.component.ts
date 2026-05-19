@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SocialService, SocialProfile, SocialNotification } from '../../core/services/social.service';
+import { NotificationService } from '../../core/services/notification.service';
 import { ToastService } from '../../core/services/toast.service';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
@@ -23,6 +24,7 @@ import { of } from 'rxjs';
 })
 export class SocialComponent implements OnInit {
   private socialService = inject(SocialService);
+  private notificationService = inject(NotificationService);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
@@ -126,6 +128,10 @@ export class SocialComponent implements OnInit {
     this.socialService.getSocialNotifications().subscribe({
       next: data => {
         this.notifications.set(data);
+        const hasUnread = data.some(n => !n.isRead);
+        if (hasUnread && this.activeTab() === 'notifications') {
+          this.markAllNotificationsAsRead(true);
+        }
       },
       error: () => {
         this.toastService.error('Erro ao carregar notificações.');
@@ -219,20 +225,26 @@ export class SocialComponent implements OnInit {
         this.notifications.update(list => 
           list.map(n => n.id === notif.id ? { ...n, isRead: true } : n)
         );
+        this.notificationService.refreshSummary();
       }
     });
   }
 
-  markAllNotificationsAsRead() {
+  markAllNotificationsAsRead(silent = false) {
     this.socialService.markAllNotificationsAsRead().subscribe({
       next: () => {
         this.notifications.update(list => 
           list.map(n => ({ ...n, isRead: true }))
         );
-        this.toastService.success('Todas as notificações foram marcadas como lidas.');
+        if (!silent) {
+          this.toastService.success('Todas as notificações foram marcadas como lidas.');
+        }
+        this.notificationService.refreshSummary();
       },
       error: () => {
-        this.toastService.error('Erro ao marcar notificações como lidas.');
+        if (!silent) {
+          this.toastService.error('Erro ao marcar notificações como lidas.');
+        }
       }
     });
   }

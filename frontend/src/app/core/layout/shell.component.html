@@ -34,7 +34,7 @@
       <div class="notification-wrapper">
         <button class="nav-icon-btn" (click)="toggleDropdown()" cdkOverlayOrigin #notifOrigin="cdkOverlayOrigin" aria-label="Notificações">
           <lucide-icon name="bell"></lucide-icon>
-          <span class="badge" *ngIf="notifications()?.totalAlerts! > 0 && !showDropdown()">{{ notifications()?.totalAlerts }}</span>
+          <span class="badge" *ngIf="notifications() && notifications()!.totalAlerts > 0 && !showDropdown() && !hasOpenedDropdown()">{{ notifications()?.totalAlerts }}</span>
         </button>
 
         <ng-template

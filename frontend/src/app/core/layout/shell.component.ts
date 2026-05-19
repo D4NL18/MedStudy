@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
@@ -54,6 +54,23 @@ export class ShellComponent implements OnInit {
   showDropdown = signal(false);
   isDrawerOpen = signal(false);
   isMobile = signal(false);
+  hasOpenedDropdown = signal(false);
+  previousTotalAlerts = signal(0);
+
+  constructor() {
+    effect(() => {
+      if (this.notificationService.summary) {
+        const sum = this.notificationService.summary();
+        if (sum) {
+          this.notifications.set(sum);
+          if (sum.totalAlerts > this.previousTotalAlerts()) {
+            this.hasOpenedDropdown.set(false);
+          }
+          this.previousTotalAlerts.set(sum.totalAlerts);
+        }
+      }
+    }, { allowSignalWrites: true });
+  }
 
   ngOnInit() {
     this.store.dispatch(ProfileActions.loadProfile());
@@ -66,6 +83,12 @@ export class ShellComponent implements OnInit {
   loadNotifications() {
     this.notificationService.getSummary().subscribe(summary => {
       this.notifications.set(summary);
+      if (summary) {
+        if (summary.totalAlerts > this.previousTotalAlerts()) {
+          this.hasOpenedDropdown.set(false);
+        }
+        this.previousTotalAlerts.set(summary.totalAlerts);
+      }
     });
   }
 
@@ -73,6 +96,7 @@ export class ShellComponent implements OnInit {
     const isOpening = !this.showDropdown();
     this.showDropdown.set(isOpening);
     if (isOpening) {
+      this.hasOpenedDropdown.set(true);
       this.socialService.markAllNotificationsAsRead().subscribe({
         next: () => {
           this.loadNotifications();
