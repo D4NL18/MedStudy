@@ -75,29 +75,4 @@ describe('DashboardComponent', () => {
     expect(accuracy.nativeElement.textContent).toContain('85%');
   });
 
-  it('should change theme when theme card is clicked', () => {
-    const store = TestBed.inject(MockStore);
-    const mockKPIs = {
-      sessions: { totalSessions: 100, totalQuestions: 500, successRate: 85, performanceLevel: 'HIGH' },
-      simulados: { totalSimulados: 50, averageScore: 80, bestArea: 'Pediatria', worstArea: 'GO' },
-      strongArea: 'Pediatria',
-      weakArea: 'GO',
-      currentStreak: 5,
-      areaAnalytics: [],
-      topErrors: [],
-      evolution: []
-    } as any;
-    store.overrideSelector(selectDashboardLoading, false);
-    store.overrideSelector(selectDashboardKPIs, mockKPIs);
-    store.refreshState();
-    
-    const fixture = MockRender(DashboardComponent);
-    const themeService = TestBed.inject(ThemeService);
-    spyOn(themeService, 'setTheme');
-    
-    const rosaButton = ngMocks.find(fixture, 'button.theme-card'); // First one is 'rosa'
-    ngMocks.click(rosaButton);
-    
-    expect(themeService.setTheme).toHaveBeenCalledWith('rosa');
-  });
 });

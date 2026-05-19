@@ -1,23 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { MockBuilder, MockRender } from 'ng-mocks';
+import { OfflinePageComponent } from './offline-page';
+import { provideRouter } from '@angular/router';
 
-import { OfflinePage } from './offline-page';
-
-describe('OfflinePage', () => {
-  let component: OfflinePage;
-  let fixture: ComponentFixture<OfflinePage>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [OfflinePage]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(OfflinePage);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+describe('OfflinePageComponent', () => {
+  beforeEach(() => {
+    return MockBuilder(OfflinePageComponent)
+      .provide(provideRouter([]));
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    const fixture = MockRender(OfflinePageComponent);
+    expect(fixture.point.componentInstance).toBeTruthy();
   });
 });

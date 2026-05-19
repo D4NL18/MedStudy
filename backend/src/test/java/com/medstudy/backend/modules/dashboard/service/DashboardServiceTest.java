@@ -37,6 +37,9 @@ class DashboardServiceTest {
     private com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService;
 
     @Mock
+    private com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
+
+    @Mock
     private Authentication authentication;
 
     @InjectMocks
@@ -78,6 +81,7 @@ class DashboardServiceTest {
         
         when(analyticsService.getAreaAnalytics("TOTAL")).thenReturn(Collections.emptyList());
         when(analyticsService.getTopErrorThemes("LAST_60_DAYS")).thenReturn(Collections.emptyList());
+        when(badgeService.getUserBadges(userId)).thenReturn(Collections.emptyList());
 
         DashboardResponse response = dashboardService.getDashboardData();
 

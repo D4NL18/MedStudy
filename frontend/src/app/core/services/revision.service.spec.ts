@@ -24,7 +24,7 @@ describe('RevisionService', () => {
     service.getSummary().subscribe(res => {
       expect(res).toEqual(mockSummary);
     });
-    const req = httpMock.expectOne('/api/revisoes/summary');
+    const req = httpMock.expectOne('/api/revisoes/resumo');
     req.flush(mockSummary);
   });
 

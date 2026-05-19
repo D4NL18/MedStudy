@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { authGuard } from './core/guards/auth.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
@@ -14,12 +15,13 @@ import { simuladosReducer } from './store/simulados/simulados.reducer';
 import { SimuladosEffects } from './store/simulados/simulados.effects';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   {
     path: '',
     loadComponent: () => import('./core/layout/shell.component').then(m => m.ShellComponent),
     canActivate: [authGuard],
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { 
         path: 'dashboard', 
         loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
