@@ -68,16 +68,15 @@ class ProfileControllerTest {
         user.setId(UUID.randomUUID());
         user.setEmail("medico@medstudy.com");
 
-        profileDTO = new ProfileDTO(
-                UUID.randomUUID(),
-                user.getId(),
-                "pediatra_feliz",
-                "Dr. Pedro",
-                false,
-                5,
-                "USP",
-                "pediatria"
-        );
+        profileDTO = new ProfileDTO();
+        profileDTO.setId(UUID.randomUUID());
+        profileDTO.setUserId(user.getId());
+        profileDTO.setHandle("pediatra_feliz");
+        profileDTO.setNomeCompleto("Dr. Pedro");
+        profileDTO.setIsFormado(false);
+        profileDTO.setSemestre(5);
+        profileDTO.setFaculdade("USP");
+        profileDTO.setAvatarPresetId("pediatria");
 
         // Setup mock authentication principal
         Authentication authentication = mock(Authentication.class);

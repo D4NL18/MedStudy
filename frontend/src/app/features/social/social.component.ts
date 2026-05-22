@@ -6,6 +6,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SocialService, SocialProfile, SocialNotification } from '../../core/services/social.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ToastService } from '../../core/services/toast.service';
+import { ProfileService } from '../../core/services/profile.service';
+import { Profile } from '../../core/models/profile.model';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -26,6 +28,7 @@ export class SocialComponent implements OnInit {
   private socialService = inject(SocialService);
   private notificationService = inject(NotificationService);
   private toastService = inject(ToastService);
+  private profileService = inject(ProfileService);
   private destroyRef = inject(DestroyRef);
 
   activeTab = signal<'friends' | 'pending' | 'search' | 'blocked' | 'notifications'>('friends');
@@ -42,6 +45,9 @@ export class SocialComponent implements OnInit {
   
   loading = signal<boolean>(false);
   searchLoading = signal<boolean>(false);
+  
+  selectedProfileDetail = signal<Profile | null>(null);
+  modalLoading = signal<boolean>(false);
   
   searchControl = new FormControl('');
 
@@ -264,5 +270,106 @@ export class SocialComponent implements OnInit {
     if (tab === 'pending') this.loadPendingRequests();
     if (tab === 'blocked') this.loadBlockedUsers();
     if (tab === 'notifications') this.loadNotifications();
+  }
+
+  viewDetailedProfile(profile: any) {
+    this.selectedProfileDetail.set(profile);
+    this.modalLoading.set(true);
+    this.profileService.getPublicProfile(profile.handle).subscribe({
+      next: (fullProfile) => {
+        this.selectedProfileDetail.set(fullProfile);
+        this.modalLoading.set(false);
+      },
+      error: () => {
+        this.toastService.error('Erro ao carregar detalhes do perfil.');
+        this.closeDetailModal();
+      }
+    });
+  }
+
+  closeDetailModal() {
+    this.selectedProfileDetail.set(null);
+    this.modalLoading.set(false);
+  }
+
+  sendFriendRequestFromModal(profile: any) {
+    this.socialService.sendFriendRequest(profile.userId).subscribe({
+      next: () => {
+        this.toastService.success(`Solicitação de amizade enviada para ${profile.nomeCompleto}!`);
+        this.updateProfileStatusInLists(profile.userId, 'PENDING', true);
+        
+        // Update modal state reactively
+        this.selectedProfileDetail.update(curr => curr ? {
+          ...curr,
+          friendshipStatus: 'PENDING',
+          isRequester: true
+        } : null);
+        
+        this.loadPendingRequests();
+      },
+      error: (err) => {
+        const errorMsg = err.error?.message || 'Erro ao enviar solicitação de amizade.';
+        this.toastService.error(errorMsg);
+      }
+    });
+  }
+
+  acceptFriendRequestFromModal(profile: any) {
+    this.socialService.acceptFriendRequest(profile.userId).subscribe({
+      next: () => {
+        this.toastService.success(`Agora você e ${profile.nomeCompleto} são amigos!`);
+        
+        // Update modal state reactively
+        this.viewDetailedProfile(profile);
+        this.loadAllData();
+      },
+      error: () => {
+        this.toastService.error('Erro ao aceitar solicitação de amizade.');
+      }
+    });
+  }
+
+  declineFriendRequestFromModal(profile: any) {
+    this.socialService.declineFriendRequest(profile.userId).subscribe({
+      next: () => {
+        this.toastService.success(`Solicitação de ${profile.nomeCompleto} recusada.`);
+        
+        // Update modal state reactively
+        this.selectedProfileDetail.update(curr => curr ? {
+          ...curr,
+          friendshipStatus: 'NONE',
+          isRequester: false
+        } : null);
+        this.loadAllData();
+      },
+      error: () => {
+        this.toastService.error('Erro ao recusar solicitação de amizade.');
+      }
+    });
+  }
+
+  getBadgeIcon(type: string): string {
+    if (type === 'STREAK_7') return 'zap';
+    if (type === 'QUESTIONS_1000') return 'target';
+    if (type === 'SIMULADOS_10') return 'award';
+    return 'award';
+  }
+
+  getBadgeDisplayName(type: string): string {
+    if (type === 'STREAK_7') return 'Mestre da Ofensiva';
+    if (type === 'QUESTIONS_1000') return 'Maratonista de Questões';
+    if (type === 'SIMULADOS_10') return 'Estratega de Simulados';
+    return type;
+  }
+
+  getBadgeDescription(type: string): string {
+    if (type === 'STREAK_7') return '7 dias seguidos de estudo';
+    if (type === 'QUESTIONS_1000') return 'Resolveu 1000 questões';
+    if (type === 'SIMULADOS_10') return 'Realizou 10 simulados completos';
+    return '';
+  }
+
+  getBadgeTooltip(type: string): string {
+    return `${this.getBadgeDisplayName(type)}: ${this.getBadgeDescription(type)}`;
   }
 }

@@ -79,4 +79,19 @@ describe('PerfilComponent', () => {
       }
     }));
   });
+
+  it('should toggle privacy setting and dispatch saveProfile', () => {
+    const fixture = MockRender(PerfilComponent, null, { reset: true });
+    const comp = fixture.point.componentInstance;
+    const store = fixture.point.injector.get(Store);
+    const dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
+
+    comp.togglePrivacySetting('shareStreak');
+
+    expect(dispatchSpy).toHaveBeenCalledWith(ProfileActions.saveProfile({
+      profile: jasmine.objectContaining({
+        shareStreak: false
+      }) as any
+    }));
+  });
 });

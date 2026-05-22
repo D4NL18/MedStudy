@@ -7,6 +7,7 @@ import com.medstudy.backend.modules.user.entity.User;
 import com.medstudy.backend.modules.user.repository.UserRepository;
 import com.medstudy.backend.modules.aula.repository.LessonRepository;
 import com.medstudy.backend.modules.sessao.dto.StudySessionRequest;
+import com.medstudy.backend.modules.competition.service.CompetitionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -29,6 +30,10 @@ class StudySessionServiceTest {
     private StudySessionMapper mapper;
     private LessonRepository lessonRepository;
     private com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
+    private com.medstudy.backend.modules.profile.repository.ProfileRepository profileRepository;
+    private com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository;
+    private com.medstudy.backend.modules.notificacao.service.NotificationService notificationService;
+    private com.medstudy.backend.modules.competition.service.CompetitionService competitionService;
     private StudySessionService service;
 
     @BeforeEach
@@ -38,7 +43,21 @@ class StudySessionServiceTest {
         mapper = mock(StudySessionMapper.class);
         lessonRepository = mock(LessonRepository.class);
         badgeService = mock(com.medstudy.backend.modules.gamificacao.service.BadgeService.class);
-        service = new StudySessionService(repository, userRepository, mapper, lessonRepository, badgeService);
+        profileRepository = mock(com.medstudy.backend.modules.profile.repository.ProfileRepository.class);
+        friendshipRepository = mock(com.medstudy.backend.modules.friendship.repository.FriendshipRepository.class);
+        notificationService = mock(com.medstudy.backend.modules.notificacao.service.NotificationService.class);
+        competitionService = mock(com.medstudy.backend.modules.competition.service.CompetitionService.class);
+        service = new StudySessionService(
+            repository, 
+            userRepository, 
+            mapper, 
+            lessonRepository, 
+            badgeService,
+            profileRepository,
+            friendshipRepository,
+            notificationService,
+            competitionService
+        );
 
         // Mock Security Context
         User user = new User();

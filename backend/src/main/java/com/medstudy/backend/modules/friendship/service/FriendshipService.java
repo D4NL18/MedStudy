@@ -107,18 +107,40 @@ public class FriendshipService {
                     }
 
                     int streak = calculateStreak(otherUserId);
+                    boolean isFriend = "ACCEPTED".equals(relationshipStatus);
+                    
+                    String faculdade = profile.getFaculdade();
+                    Integer semestre = profile.getSemestre();
+                    Boolean isFormado = profile.getIsFormado();
+                    Integer finalStreak = streak;
+
+                    if (Boolean.FALSE.equals(profile.getIsPublic()) && !isFriend) {
+                        faculdade = null;
+                        semestre = null;
+                        isFormado = null;
+                        finalStreak = 0;
+                    } else {
+                        if (Boolean.FALSE.equals(profile.getShareFaculdade())) {
+                            faculdade = null;
+                            semestre = null;
+                            isFormado = null;
+                        }
+                        if (Boolean.FALSE.equals(profile.getShareStreak())) {
+                            finalStreak = null;
+                        }
+                    }
 
                     return new SocialProfileResponseDTO(
                             otherUserId,
                             profile.getNomeCompleto(),
                             profile.getHandle(),
-                            profile.getFaculdade(),
-                            profile.getSemestre(),
+                            faculdade,
+                            semestre,
                             profile.getAvatarPresetId(),
-                            profile.getIsFormado(),
+                            isFormado,
                             relationshipStatus,
                             isRequester,
-                            streak
+                            finalStreak
                     );
                 })
                 .filter(dto -> dto != null)
@@ -282,18 +304,32 @@ public class FriendshipService {
                     }
 
                     int streak = calculateStreak(friendUser.getId());
+                    
+                    String faculdade = friendProfile.getFaculdade();
+                    Integer semestre = friendProfile.getSemestre();
+                    Boolean isFormado = friendProfile.getIsFormado();
+                    Integer finalStreak = streak;
+
+                    if (Boolean.FALSE.equals(friendProfile.getShareFaculdade())) {
+                        faculdade = null;
+                        semestre = null;
+                        isFormado = null;
+                    }
+                    if (Boolean.FALSE.equals(friendProfile.getShareStreak())) {
+                        finalStreak = null;
+                    }
 
                     return new SocialProfileResponseDTO(
                             friendUser.getId(),
                             friendProfile.getNomeCompleto(),
                             friendProfile.getHandle(),
-                            friendProfile.getFaculdade(),
-                            friendProfile.getSemestre(),
+                            faculdade,
+                            semestre,
                             friendProfile.getAvatarPresetId(),
-                            friendProfile.getIsFormado(),
+                            isFormado,
                             "ACCEPTED",
                             friendship.getRequester().getId().equals(currentUserId),
-                            streak
+                            finalStreak
                     );
                 })
                 .filter(dto -> dto != null)
@@ -316,18 +352,40 @@ public class FriendshipService {
                     }
 
                     int streak = calculateStreak(requester.getId());
+                    boolean isFriend = false;
+                    
+                    String faculdade = requesterProfile.getFaculdade();
+                    Integer semestre = requesterProfile.getSemestre();
+                    Boolean isFormado = requesterProfile.getIsFormado();
+                    Integer finalStreak = streak;
+
+                    if (Boolean.FALSE.equals(requesterProfile.getIsPublic()) && !isFriend) {
+                        faculdade = null;
+                        semestre = null;
+                        isFormado = null;
+                        finalStreak = 0;
+                    } else {
+                        if (Boolean.FALSE.equals(requesterProfile.getShareFaculdade())) {
+                            faculdade = null;
+                            semestre = null;
+                            isFormado = null;
+                        }
+                        if (Boolean.FALSE.equals(requesterProfile.getShareStreak())) {
+                            finalStreak = null;
+                        }
+                    }
 
                     return new SocialProfileResponseDTO(
                             requester.getId(),
                             requesterProfile.getNomeCompleto(),
                             requesterProfile.getHandle(),
-                            requesterProfile.getFaculdade(),
-                            requesterProfile.getSemestre(),
+                            faculdade,
+                            semestre,
                             requesterProfile.getAvatarPresetId(),
-                            requesterProfile.getIsFormado(),
+                            isFormado,
                             "PENDING",
                             false,
-                            streak
+                            finalStreak
                     );
                 })
                 .filter(dto -> dto != null)

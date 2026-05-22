@@ -3,6 +3,7 @@ import { MockBuilder, MockRender } from 'ng-mocks';
 import { SocialComponent } from './social.component';
 import { SocialService } from '../../core/services/social.service';
 import { ToastService } from '../../core/services/toast.service';
+import { ProfileService } from '../../core/services/profile.service';
 import { of } from 'rxjs';
 
 describe('SocialComponent', () => {
@@ -49,5 +50,29 @@ describe('SocialComponent', () => {
     comp.changeTab('notifications');
     expect(comp.activeTab()).toBe('notifications');
     expect(socialService.getSocialNotifications).toHaveBeenCalled();
+  });
+
+  it('should view detailed profile and load it from service', () => {
+    const fixture = MockRender(SocialComponent);
+    const comp = fixture.point.componentInstance;
+    const profileService = fixture.point.injector.get(ProfileService);
+    
+    const mockProfile = {
+      id: '123',
+      nomeCompleto: 'Dr. John Doe',
+      handle: 'john.doe',
+      avatarPresetId: 'pediatria',
+      isPublic: false,
+      isPrivate: true,
+      streak: 0,
+      totalQuestions: 0
+    };
+    
+    spyOn(profileService, 'getPublicProfile').and.returnValue(of(mockProfile as any));
+
+    comp.viewDetailedProfile({ handle: 'john.doe' });
+    
+    expect(profileService.getPublicProfile).toHaveBeenCalledWith('john.doe');
+    expect(comp.selectedProfileDetail()).toEqual(mockProfile as any);
   });
 });

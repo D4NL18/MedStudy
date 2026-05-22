@@ -1,0 +1,379 @@
+<div class="competitions-container">
+  <!-- Header Title & Premium Styling -->
+  <div class="competitions-header glass-card">
+    <div class="header-info">
+      <div class="title-with-badge">
+        <h1 class="gradient-text">Competições & Duelos</h1>
+      </div>
+      <p class="subtitle-text">Desafie seus amigos, acompanhe rankings dinâmicos e conquiste medalhas exclusivas!</p>
+    </div>
+    
+    <button class="btn-primary-glow" (click)="openCreateModal()">
+      <lucide-icon name="plus" [size]="20" class="header-btn-icon"></lucide-icon>
+      Novo Desafio
+    </button>
+  </div>
+
+  <div class="competitions-layout">
+    <!-- Sidebar List -->
+    <div class="competitions-sidebar glass-card">
+      <div class="tabs-navigation">
+        <button [class.active]="activeTab() === 'active'" (click)="changeTab('active')">
+          <lucide-icon name="users" class="tab-icon"></lucide-icon>
+          Grupos
+          <span class="tab-badge" *ngIf="activeGroups().length > 0">{{ activeGroups().length }}</span>
+        </button>
+        <button [class.active]="activeTab() === 'duels'" (click)="changeTab('duels')">
+          <lucide-icon name="flame" class="tab-icon"></lucide-icon>
+          Duelos 1v1
+          <span class="tab-badge" *ngIf="activeDuels().length > 0">{{ activeDuels().length }}</span>
+        </button>
+        <button [class.active]="activeTab() === 'invites'" (click)="changeTab('invites')">
+          <lucide-icon name="bell" class="tab-icon"></lucide-icon>
+          Convites
+          <span class="tab-badge warning" *ngIf="pendingInvites().length > 0">{{ pendingInvites().length }}</span>
+        </button>
+      </div>
+
+      <div class="cards-list">
+        <div class="loading-state" *ngIf="loading()">
+          <div class="spinner"></div>
+          <span>Carregando desafios...</span>
+        </div>
+
+        <div class="empty-state-sidebar" *ngIf="!loading() && activeTab() === 'active' && activeGroups().length === 0">
+          <lucide-icon name="target" class="empty-icon"></lucide-icon>
+          <h3>Nenhum grupo ativo</h3>
+          <p>Crie um novo grupo e chame seus amigos para estudar juntos!</p>
+        </div>
+
+        <div class="empty-state-sidebar" *ngIf="!loading() && activeTab() === 'duels' && activeDuels().length === 0">
+          <lucide-icon name="zap" class="empty-icon"></lucide-icon>
+          <h3>Nenhum duelo ativo</h3>
+          <p>Que tal convocar um amigo para um duelo de foco de curto prazo?</p>
+        </div>
+
+        <div class="empty-state-sidebar" *ngIf="!loading() && activeTab() === 'invites' && pendingInvites().length === 0">
+          <lucide-icon name="check-circle" class="empty-icon-success"></lucide-icon>
+          <h3>Tudo em dia!</h3>
+          <p>Você não possui nenhum convite de competição pendente no momento.</p>
+        </div>
+
+        <!-- Group / Duel Cards -->
+        <ng-container *ngIf="!loading()">
+          <!-- Group list -->
+          <div 
+            *ngFor="let item of (activeTab() === 'active' ? activeGroups() : activeTab() === 'duels' ? activeDuels() : pendingInvites())"
+            class="challenge-card"
+            [class.selected]="selectedCompetitionId() === item.id"
+            (click)="selectCompetition(item.id)"
+          >
+            <div class="card-glow-border"></div>
+            <div class="card-content">
+              <div class="card-top">
+                <span class="badge-type" [class.duel]="item.competitionType !== 'GROUP'">
+                  {{ getTypeLabel(item.competitionType) }}
+                </span>
+                <span class="badge-status" [class.active]="item.status === 'ACTIVE'" [class.finished]="item.status === 'FINISHED'" [class.pending]="item.status === 'PENDING'">
+                  {{ getCompetitionStatusLabel(item.status) }}
+                </span>
+              </div>
+              
+              <h4 class="card-title">{{ item.title }}</h4>
+              
+              <div class="card-meta">
+                <div class="meta-item">
+                  <lucide-icon name="award" class="meta-icon"></lucide-icon>
+                  <span>{{ getMetricLabel(item.metricType) }}</span>
+                </div>
+                <div class="meta-item" *ngIf="item.targetValue">
+                  <lucide-icon name="target" class="meta-icon"></lucide-icon>
+                  <span>Meta: {{ item.targetValue }}</span>
+                </div>
+                <div class="meta-item">
+                  <lucide-icon name="calendar" class="meta-icon"></lucide-icon>
+                  <span>{{ item.startDate | date:'dd/MM' }} - {{ item.endDate | date:'dd/MM' }}</span>
+                </div>
+              </div>
+
+              <!-- Invite action buttons -->
+              <div class="invite-actions" *ngIf="activeTab() === 'invites'">
+                <button class="btn-accept" (click)="acceptInvite(item.id, $event)">
+                  <lucide-icon name="check" class="btn-icon-small"></lucide-icon>
+                  Aceitar
+                </button>
+                <button class="btn-decline" (click)="declineInvite(item.id, $event)">
+                  <lucide-icon name="x" class="btn-icon-small"></lucide-icon>
+                  Recusar
+                </button>
+              </div>
+
+              <div class="participants-avatars">
+                <div class="avatar-stack">
+                  <div *ngFor="let p of item.participants | slice:0:4" class="stacked-avatar">
+                    <app-avatar [presetId]="p.avatarPresetId || 'avatar-1'" size="sm" title="{{ p.name }}"></app-avatar>
+                  </div>
+                  <span class="participants-count" *ngIf="item.participants.length > 4">
+                    +{{ item.participants.length - 4 }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Details View -->
+    <div class="competitions-details glass-card">
+      <div class="empty-details" *ngIf="!selectedCompetitionId()">
+        <lucide-icon name="target" class="empty-glow-icon"></lucide-icon>
+        <h2>Selecione uma Competição</h2>
+        <p>Escolha um grupo ou duelo da lista para acompanhar pontuações, medalhas e o pódio de vencedores em tempo real!</p>
+      </div>
+
+      <div class="details-content" *ngIf="selectedCompetition()">
+        <div class="details-header">
+          <div class="header-main-info">
+            <h2>{{ selectedCompetition()?.title }}</h2>
+            <div class="badges-row">
+              <span class="badge-type" [class.duel]="selectedCompetition()?.competitionType !== 'GROUP'">
+                {{ getTypeLabel(selectedCompetition()!.competitionType) }}
+              </span>
+              <span class="badge-metric">
+                <lucide-icon name="award" class="inline-icon"></lucide-icon>
+                {{ getMetricLabel(selectedCompetition()!.metricType) }}
+              </span>
+              <span class="badge-status" [class.active]="selectedCompetition()?.status === 'ACTIVE'" [class.finished]="selectedCompetition()?.status === 'FINISHED'" [class.pending]="selectedCompetition()?.status === 'PENDING'">
+                {{ getCompetitionStatusLabel(selectedCompetition()!.status) }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="header-dates">
+            <div class="date-box">
+              <span class="label">Início</span>
+              <span class="value">{{ selectedCompetition()?.startDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="date-arrow">
+              <lucide-icon name="chevron-right"></lucide-icon>
+            </div>
+            <div class="date-box">
+              <span class="label">Término</span>
+              <span class="value">{{ selectedCompetition()?.endDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target value description if applicable -->
+        <div class="target-notification glass-card" *ngIf="selectedCompetition()?.competitionType === 'DUEL_TARGET'">
+          <lucide-icon name="sparkles" class="target-glow-icon"></lucide-icon>
+          <div class="text">
+            <strong>Duelo Corrida por Meta!</strong> O primeiro a acumular <strong>{{ selectedCompetition()?.targetValue }}</strong> {{ selectedCompetition()!.metricType === 'TOTAL_QUESTIONS' ? 'questões resolvidas' : 'questões corretas' }} será coroado o vencedor absoluto e o duelo se encerrará automaticamente!
+          </div>
+        </div>
+
+        <div class="details-body">
+          <!-- Left side: Podium and Charts -->
+          <div class="body-left">
+            <!-- 3D Podium for Top 3 -->
+            <div class="podium-section" *ngIf="selectedLeaderboard().length > 0">
+              <h3 class="section-title">Pódio do Desafio</h3>
+              
+              <div class="podium-wrapper">
+                <!-- Visual podium columns mapped visually: 2nd, 1st, 3rd -->
+                <div *ngFor="let entry of podium()" class="podium-column" [class]="entry.podiumClass">
+                  <!-- Crown on top of 1st place -->
+                  <div class="crown-container" *ngIf="entry.podiumClass === 'first'">
+                    <lucide-icon name="crown" class="crown-icon"></lucide-icon>
+                  </div>
+                  
+                  <div class="avatar-wrapper">
+                    <app-avatar [presetId]="entry.avatarPresetId || 'avatar-1'" [size]="entry.podiumClass === 'first' ? 'lg' : 'md'"></app-avatar>
+                    <span class="podium-badge-number" [class]="entry.podiumClass">
+                      {{ entry.position }}
+                    </span>
+                  </div>
+
+                  <div class="entry-info">
+                    <span class="name">{{ entry.name }}</span>
+                    <span class="handle">&#64;{{ entry.handle }}</span>
+                  </div>
+
+                  <div class="podium-pillar" [class]="entry.podiumClass">
+                    <span class="score">{{ entry.score }} pts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ngx-charts view -->
+            <div class="chart-section" *ngIf="selectedLeaderboard().length > 0">
+              <h3 class="section-title text-center">Progresso Acumulado</h3>
+              <div class="chart-wrapper">
+                <ngx-charts-bar-vertical
+                  [scheme]="colorScheme"
+                  [results]="chartData()"
+                  [gradient]="true"
+                  [xAxis]="true"
+                  [yAxis]="true"
+                  [legend]="false"
+                  [showXAxisLabel]="true"
+                  [showYAxisLabel]="true"
+                  xAxisLabel="Competidores"
+                  yAxisLabel="Pontos">
+                </ngx-charts-bar-vertical>
+              </div>
+            </div>
+
+            <!-- Empty Leaderboard state -->
+            <div class="empty-leaderboard glass-card" *ngIf="selectedLeaderboard().length === 0">
+              <lucide-icon name="award" class="large-icon-glow"></lucide-icon>
+              <h3>Nenhum dado de ranking</h3>
+              <p>Os participantes ainda não enviaram sessões de estudo na janela da competição, ou não aceitaram os convites.</p>
+            </div>
+          </div>
+
+          <!-- Right side: Participants details and statuses -->
+          <div class="body-right">
+            <h3 class="section-title">Participantes ({{ selectedCompetition()?.participants?.length }})</h3>
+            
+            <div class="participants-list">
+              <div *ngFor="let p of selectedCompetition()?.participants" class="participant-item glass-card">
+                <div class="part-left">
+                  <app-avatar [presetId]="p.avatarPresetId || 'avatar-1'" size="sm"></app-avatar>
+                  <div class="part-text">
+                    <span class="name">{{ p.name }}</span>
+                    <span class="handle">&#64;{{ p.handle }}</span>
+                  </div>
+                </div>
+                
+                <div class="part-right">
+                  <span class="status-badge" [class]="p.status.toLowerCase()">
+                    {{ p.status === 'ACCEPTED' ? 'Aceito' : p.status === 'INVITED' ? 'Pendente' : 'Recusou' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Challenge Modal -->
+  <div class="modal-backdrop" *ngIf="showCreateModal()" (click)="closeCreateModal()">
+    <div class="modal-card glass-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="gradient-text">Forjar Novo Desafio</h2>
+        <button class="btn-close" (click)="closeCreateModal()">
+          <lucide-icon name="x"></lucide-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="competitionForm" (ngSubmit)="onCreateSubmit()" class="modal-form">
+        <div class="form-grid">
+          <!-- Title -->
+          <div class="form-group full-width">
+            <label for="title">Título do Desafio</label>
+            <input 
+              type="text" 
+              id="title" 
+              formControlName="title" 
+              placeholder="ex: Corrida dos Vestibulandos, Duelo Supremo..."
+            />
+            <span class="validation-error" *ngIf="competitionForm.get('title')?.touched && competitionForm.get('title')?.invalid">
+              O título é obrigatório e precisa de no mínimo 3 caracteres.
+            </span>
+          </div>
+
+          <!-- Type -->
+          <div class="form-group">
+            <label for="competitionType">Tipo de Desafio</label>
+            <select id="competitionType" formControlName="competitionType">
+              <option [value]="'GROUP'">Grupo Fechado</option>
+              <option [value]="'DUEL_TIME'">Duelo 1v1 (Por Tempo)</option>
+              <option [value]="'DUEL_TARGET'">Duelo 1v1 (Corrida por Meta)</option>
+            </select>
+          </div>
+
+          <!-- Metric -->
+          <div class="form-group">
+            <label for="metricType">Métrica de Pontuação</label>
+            <select id="metricType" formControlName="metricType">
+              <option [value]="'TOTAL_QUESTIONS'">Volume de Questões Feitas</option>
+              <option [value]="'CORRECT_QUESTIONS'">Total de Questões Corretas</option>
+            </select>
+          </div>
+
+          <!-- Target Value (conditional) -->
+          <div class="form-group full-width" *ngIf="competitionForm.get('competitionType')?.value === 'DUEL_TARGET'">
+            <label for="targetValue">Meta de Questões (Limite de Vitória)</label>
+            <input 
+              type="number" 
+              id="targetValue" 
+              formControlName="targetValue" 
+              placeholder="ex: 50, 100..."
+            />
+            <span class="validation-error" *ngIf="competitionForm.get('targetValue')?.touched && competitionForm.get('targetValue')?.invalid">
+              Defina um valor de meta maior ou igual a 1.
+            </span>
+          </div>
+
+          <!-- Start Date -->
+          <div class="form-group">
+            <label for="startDate">Data de Início</label>
+            <input type="date" id="startDate" formControlName="startDate" />
+          </div>
+
+          <!-- End Date -->
+          <div class="form-group">
+            <label for="endDate">Data de Término</label>
+            <input type="date" id="endDate" formControlName="endDate" />
+          </div>
+        </div>
+
+        <!-- Invites section -->
+        <div class="invite-friends-section">
+          <h3>Convidar Amigos para o Combate</h3>
+          <p class="hint-text">
+            {{ competitionForm.get('competitionType')?.value === 'GROUP' ? 'Selecione todos os amigos que deseja convidar.' : 'Selecione exatamente 1 amigo para duelar.' }}
+          </p>
+
+          <div class="friends-selection-grid" *ngIf="friends().length > 0">
+            <div 
+              *ngFor="let friend of friends()" 
+              class="friend-select-card glass-card"
+              [class.selected]="selectedFriendIds().includes(friend.userId)"
+              (click)="toggleFriendSelection(friend.userId)"
+            >
+              <app-avatar [presetId]="friend.avatarPresetId || 'avatar-1'" size="sm"></app-avatar>
+              <div class="friend-info">
+                <span class="name">{{ friend.name }}</span>
+                <span class="handle">&#64;{{ friend.handle }}</span>
+              </div>
+              <div class="select-badge" [class.selected]="selectedFriendIds().includes(friend.userId)">
+                <lucide-icon name="check" class="check-icon" *ngIf="selectedFriendIds().includes(friend.userId)"></lucide-icon>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-friends glass-card" *ngIf="friends().length === 0">
+            <lucide-icon name="users" class="icon-glow"></lucide-icon>
+            <h4>Sua lista de amigos está vazia</h4>
+            <p>Você precisa ter amigos aceitos para convidá-los para um desafio.</p>
+            <a href="/social" class="btn-link" (click)="closeCreateModal()">Ir para Rede Social</a>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" (click)="closeCreateModal()">Cancelar</button>
+          <button type="submit" class="btn-primary-glow" [disabled]="competitionForm.invalid || creating()">
+            <span *ngIf="creating()" class="btn-spinner"></span>
+            {{ creating() ? 'Iniciando desafio...' : 'Começar Desafio!' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

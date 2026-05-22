@@ -6,6 +6,15 @@ import com.medstudy.backend.modules.profile.mapper.ProfileMapper;
 import com.medstudy.backend.modules.profile.repository.ProfileRepository;
 import com.medstudy.backend.modules.user.entity.User;
 import com.medstudy.backend.modules.user.repository.UserRepository;
+import com.medstudy.backend.modules.sessao.repository.StudySessionRepository;
+import com.medstudy.backend.modules.gamificacao.repository.UserBadgeRepository;
+import com.medstudy.backend.modules.friendship.repository.FriendshipRepository;
+import com.medstudy.backend.modules.friendship.entity.Friendship;
+import com.medstudy.backend.modules.friendship.entity.FriendshipStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +24,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +43,15 @@ class ProfileServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private StudySessionRepository studySessionRepository;
+
+    @Mock
+    private UserBadgeRepository userBadgeRepository;
+
+    @Mock
+    private FriendshipRepository friendshipRepository;
+
     @InjectMocks
     private ProfileService profileService;
 
@@ -45,16 +65,20 @@ class ProfileServiceTest {
         user.setId(UUID.randomUUID());
         user.setEmail("medico@medstudy.com");
 
-        profileDTO = new ProfileDTO(
-                UUID.randomUUID(),
-                user.getId(),
-                "pediatra_feliz",
-                "Dr. Pedro",
-                false,
-                5,
-                "USP",
-                "pediatria"
-        );
+        profileDTO = new ProfileDTO();
+        profileDTO.setId(UUID.randomUUID());
+        profileDTO.setUserId(user.getId());
+        profileDTO.setHandle("pediatra_feliz");
+        profileDTO.setNomeCompleto("Dr. Pedro");
+        profileDTO.setIsFormado(false);
+        profileDTO.setSemestre(5);
+        profileDTO.setFaculdade("USP");
+        profileDTO.setAvatarPresetId("pediatria");
+        profileDTO.setIsPublic(true);
+        profileDTO.setShareStreak(true);
+        profileDTO.setShareFaculdade(true);
+        profileDTO.setShareTotalQuestions(true);
+        profileDTO.setShareBadges(true);
 
         profile = new Profile();
         profile.setId(profileDTO.getId());
@@ -64,6 +88,11 @@ class ProfileServiceTest {
         profile.setSemestre(profileDTO.getSemestre());
         profile.setFaculdade(profileDTO.getFaculdade());
         profile.setAvatarPresetId(profileDTO.getAvatarPresetId());
+        profile.setIsPublic(true);
+        profile.setShareStreak(true);
+        profile.setShareFaculdade(true);
+        profile.setShareTotalQuestions(true);
+        profile.setShareBadges(true);
     }
 
     @Test
@@ -115,5 +144,139 @@ class ProfileServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> profileService.createOrUpdateProfile(profileDTO, user));
         verify(profileRepository, never()).save(any());
+    }
+
+    private void mockSecurityContext(User principal) {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        if (principal != null) {
+            when(authentication.getPrincipal()).thenReturn(principal);
+        } else {
+            when(authentication.getPrincipal()).thenReturn(null);
+        }
+        SecurityContextHolder.setContext(securityContext);
+    }
+
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    void getProfileByHandle_ShouldReturnFullProfile_WhenViewerIsOwner() {
+        mockSecurityContext(user);
+        
+        when(profileRepository.findByHandle(profile.getHandle())).thenReturn(Optional.of(profile));
+        when(profileMapper.toDTO(profile)).thenReturn(profileDTO);
+        
+        // Mock stats calls
+        when(studySessionRepository.findDistinctSessionDatesByUserId(user.getId())).thenReturn(new ArrayList<>());
+        when(studySessionRepository.sumTotalQuestionsByUserId(user.getId())).thenReturn(100L);
+        when(userBadgeRepository.findAllByUserId(user.getId())).thenReturn(new ArrayList<>());
+
+        Optional<ProfileDTO> result = profileService.getProfileByHandle(profile.getHandle());
+
+        assertTrue(result.isPresent());
+        ProfileDTO returnedDto = result.get();
+        assertFalse(returnedDto.getIsPrivate());
+        assertEquals(0, returnedDto.getStreak());
+        assertEquals(100L, returnedDto.getTotalQuestions());
+        assertEquals("NONE", returnedDto.getFriendshipStatus());
+    }
+
+    @Test
+    void getProfileByHandle_ShouldReturnGranularProfile_WhenViewerIsFriend() {
+        User friend = new User();
+        friend.setId(UUID.randomUUID());
+        mockSecurityContext(friend);
+
+        // Friend viewer friendship mock
+        Friendship friendship = new Friendship();
+        friendship.setRequester(user);
+        friendship.setReceiver(friend);
+        friendship.setStatus(FriendshipStatus.ACCEPTED);
+
+        when(profileRepository.findByHandle(profile.getHandle())).thenReturn(Optional.of(profile));
+        when(profileMapper.toDTO(profile)).thenReturn(profileDTO);
+        when(friendshipRepository.findFriendshipBetween(friend.getId(), user.getId()))
+                .thenReturn(Optional.of(friendship));
+        
+        // Mock stats calls
+        when(studySessionRepository.findDistinctSessionDatesByUserId(user.getId())).thenReturn(new ArrayList<>());
+        when(studySessionRepository.sumTotalQuestionsByUserId(user.getId())).thenReturn(50L);
+        when(userBadgeRepository.findAllByUserId(user.getId())).thenReturn(new ArrayList<>());
+
+        // Disable shareStreak to test granular masking
+        profile.setShareStreak(false);
+
+        Optional<ProfileDTO> result = profileService.getProfileByHandle(profile.getHandle());
+
+        assertTrue(result.isPresent());
+        ProfileDTO returnedDto = result.get();
+        assertFalse(returnedDto.getIsPrivate());
+        assertNull(returnedDto.getStreak()); // Masked because shareStreak is false
+        assertEquals(50L, returnedDto.getTotalQuestions());
+        assertEquals("USP", returnedDto.getFaculdade());
+        assertEquals("ACCEPTED", returnedDto.getFriendshipStatus());
+    }
+
+    @Test
+    void getProfileByHandle_ShouldReturnGranularProfile_WhenViewerIsNonFriendAndPublic() {
+        User viewer = new User();
+        viewer.setId(UUID.randomUUID());
+        mockSecurityContext(viewer);
+
+        when(profileRepository.findByHandle(profile.getHandle())).thenReturn(Optional.of(profile));
+        when(profileMapper.toDTO(profile)).thenReturn(profileDTO);
+        when(friendshipRepository.findFriendshipBetween(viewer.getId(), user.getId()))
+                .thenReturn(Optional.empty());
+        
+        // Mock stats calls
+        when(studySessionRepository.findDistinctSessionDatesByUserId(user.getId())).thenReturn(new ArrayList<>());
+        when(studySessionRepository.sumTotalQuestionsByUserId(user.getId())).thenReturn(50L);
+        when(userBadgeRepository.findAllByUserId(user.getId())).thenReturn(new ArrayList<>());
+
+        // Disable shareFaculdade
+        profile.setShareFaculdade(false);
+
+        Optional<ProfileDTO> result = profileService.getProfileByHandle(profile.getHandle());
+
+        assertTrue(result.isPresent());
+        ProfileDTO returnedDto = result.get();
+        assertFalse(returnedDto.getIsPrivate());
+        assertNull(returnedDto.getFaculdade()); // Masked because shareFaculdade is false
+        assertEquals(50L, returnedDto.getTotalQuestions());
+        assertEquals("NONE", returnedDto.getFriendshipStatus());
+    }
+
+    @Test
+    void getProfileByHandle_ShouldReturnMaskedProfile_WhenViewerIsNonFriendAndPrivate() {
+        User viewer = new User();
+        viewer.setId(UUID.randomUUID());
+        mockSecurityContext(viewer);
+
+        profile.setIsPublic(false); // Private profile
+
+        when(profileRepository.findByHandle(profile.getHandle())).thenReturn(Optional.of(profile));
+        when(profileMapper.toDTO(profile)).thenReturn(profileDTO);
+        when(friendshipRepository.findFriendshipBetween(viewer.getId(), user.getId()))
+                .thenReturn(Optional.empty());
+        
+        // Mock stats calls
+        when(studySessionRepository.findDistinctSessionDatesByUserId(user.getId())).thenReturn(new ArrayList<>());
+        when(studySessionRepository.sumTotalQuestionsByUserId(user.getId())).thenReturn(50L);
+        when(userBadgeRepository.findAllByUserId(user.getId())).thenReturn(new ArrayList<>());
+
+        Optional<ProfileDTO> result = profileService.getProfileByHandle(profile.getHandle());
+
+        assertTrue(result.isPresent());
+        ProfileDTO returnedDto = result.get();
+        assertTrue(returnedDto.getIsPrivate());
+        assertNull(returnedDto.getFaculdade());
+        assertNull(returnedDto.getSemestre());
+        assertEquals(0, returnedDto.getStreak());
+        assertEquals(0L, returnedDto.getTotalQuestions());
+        assertTrue(returnedDto.getBadges().isEmpty());
     }
 }

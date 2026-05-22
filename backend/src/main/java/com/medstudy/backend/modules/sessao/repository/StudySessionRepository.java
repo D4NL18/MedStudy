@@ -66,4 +66,10 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
     List<StudySession> findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(UUID userId, LocalDate date);
     List<StudySession> findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(UUID userId, LocalDate date);
     List<StudySession> findByUserIdAndRevisaoConcluidaTrue(UUID userId);
+
+    @Query("SELECT COALESCE(SUM(s.qtsFeitas), 0) FROM StudySession s WHERE s.user.id = :userId AND s.dataSessao >= :startDate AND s.dataSessao <= :endDate")
+    Long sumTotalQuestionsByUserIdAndDateRange(@Param("userId") UUID userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT COALESCE(SUM(s.qtsCorretas), 0) FROM StudySession s WHERE s.user.id = :userId AND s.dataSessao >= :startDate AND s.dataSessao <= :endDate")
+    Long sumTotalCorrectQuestionsByUserIdAndDateRange(@Param("userId") UUID userId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }
