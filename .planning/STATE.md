@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Socializacao Aprofundada
-status: verified
-last_updated: "2026-05-19T20:38:00.000Z"
-last_activity: 2026-05-19
+status: planned
+last_updated: "2026-05-20T14:21:00.000Z"
+last_activity: 2026-05-20
 progress:
   total_phases: 26
   completed_phases: 24
-  total_plans: 27
+  total_plans: 28
   completed_plans: 27
-  percent: 100
+  percent: 96
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -32,11 +32,11 @@ Phase 24 — configuracoes-granulares-de-privacidade
 
 ## Current Status
 
-**Phase:** 24 of 26
+**Phase:** 25 of 26
 **Milestone:** v1.2 — Socialização Aprofundada
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Completed & Verified (All backend and frontend tests passed)
+**Status:** In Planning
 
 ---
 
@@ -47,21 +47,21 @@ Phase 24 — configuracoes-granulares-de-privacidade
 - [x] PROJECT.md, REQUIREMENTS.md and ROADMAP.md created/updated for v1.2
 - [x] Phase 22: Perfis de Usuário & Cadastro de Informações (Shipped & Validated)
 - [x] Phase 23: Sistema de Conexões (Amigos) & Busca (Shipped & Validated)
-- [x] Phase 24: Configurações Granulares de Privacidade (Executed & Verified)
+- [x] Phase 24: Configurações Granulares de Privacidade (Shipped & Validated)
 
 ---
 
 ## Open Questions / Decisions Pending
 
-- [ ] Grupos: Como gerenciar a persistência das competições (tabelas de associação de participantes)?
+- [ ] Grupos: Revisão do plano de migração das tabelas e do pódio 3D da UI pelo usuário.
 - [ ] Feed: O feed de atividades deve armazenar eventos de forma persistente ou gerar em tempo real nas consultas?
 
 ---
-*STATE.md updated: 2026-05-19 after Phase 24 verification completion*
+*STATE.md updated: 2026-05-20 after Phase 25 planning preparation*
 
 ## Current Position
 
-Phase: 24 (configuracoes-granulares-de-privacidade) — VERIFIED
-Plan: 1 of 1
-Status: Executed & Verified successfully
-Last activity: 2026-05-19
+Phase: 25 (grupos-de-competicao-automatizados) — PLANNING
+Plan: 0 of 1
+Status: Planning in progress
+Last activity: 2026-05-20

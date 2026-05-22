@@ -13,6 +13,8 @@ import { bancoReducer } from './store/banco/banco.reducer';
 import { BancoEffects } from './store/banco/banco.effects';
 import { simuladosReducer } from './store/simulados/simulados.reducer';
 import { SimuladosEffects } from './store/simulados/simulados.effects';
+import { reducer as competitionReducer } from './store/competition/competition.reducer';
+import { CompetitionEffects } from './store/competition/competition.effects';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
@@ -86,6 +88,14 @@ export const routes: Routes = [
       {
         path: 'social',
         loadComponent: () => import('./features/social/social.component').then(m => m.SocialComponent)
+      },
+      {
+        path: 'competicoes',
+        loadComponent: () => import('./features/competicoes/competicoes.component').then(m => m.CompeticoesComponent),
+        providers: [
+          provideState('competition', competitionReducer),
+          provideEffects(CompetitionEffects)
+        ]
       }
     ]
   },

@@ -36,6 +36,7 @@ public class StudySessionService {
     private final com.medstudy.backend.modules.profile.repository.ProfileRepository profileRepository;
     private final com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository;
     private final com.medstudy.backend.modules.notificacao.service.NotificationService notificationService;
+    private final com.medstudy.backend.modules.competition.service.CompetitionService competitionService;
 
     public StudySessionService(StudySessionRepository repository, 
                                UserRepository userRepository, 
@@ -44,7 +45,8 @@ public class StudySessionService {
                                com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService,
                                com.medstudy.backend.modules.profile.repository.ProfileRepository profileRepository,
                                com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository,
-                               com.medstudy.backend.modules.notificacao.service.NotificationService notificationService) {
+                               com.medstudy.backend.modules.notificacao.service.NotificationService notificationService,
+                               com.medstudy.backend.modules.competition.service.CompetitionService competitionService) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.mapper = mapper;
@@ -53,6 +55,7 @@ public class StudySessionService {
         this.profileRepository = profileRepository;
         this.friendshipRepository = friendshipRepository;
         this.notificationService = notificationService;
+        this.competitionService = competitionService;
     }
 
     private User getCurrentUser() {
@@ -140,6 +143,8 @@ public class StudySessionService {
         // Broadcast social events if sharing is active
         broadcastSocialEvents(currentUser, streakBefore, newBadges);
         
+        competitionService.checkActiveDuels(currentUser.getId());
+        
         return mapper.toResponse(saved, newBadges);
     }
 
@@ -194,6 +199,8 @@ public class StudySessionService {
 
         // Broadcast social events if sharing is active
         broadcastSocialEvents(currentUser, streakBefore, newBadges);
+        
+        competitionService.checkActiveDuels(currentUser.getId());
         
         return mapper.toResponse(saved, newBadges);
     }
