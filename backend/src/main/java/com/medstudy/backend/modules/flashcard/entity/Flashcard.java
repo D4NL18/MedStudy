@@ -58,6 +58,9 @@ public class Flashcard {
     @Column(name = "consecutive_hard_count", nullable = false)
     private Integer consecutiveHardCount = 0;
 
+    @Column(name = "ultima_revisao")
+    private LocalDate ultimaRevisao;
+
     @Column(name = "last_studied_at")
     private LocalDate lastStudiedAt;
 
