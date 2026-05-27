@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-15 (shipped 2026-05-11) [v1.0-ROADMAP.md](.planning/milestones/v1.0-ROADMAP.md)
 - ✅ **v1.1 Legacy Convergence** — Phases 16-21 (shipped 2026-05-18) [v1.1-ROADMAP.md](.planning/milestones/v1.1-ROADMAP.md)
-- 🚧 **v1.2 Socialização Aprofundada** — Phases 22-26 (in progress)
+- 🚧 **v1.2 Socialização Aprofundada** — Phases 22-27 (in progress)
 
 ## Phases
 
@@ -64,7 +64,15 @@
 - UI: Dashboard de Competição de Grupos com gráficos e ranking dinâmico.
 - UI: Interface rápida de "Duelos 1v1" temporários.
 
-### Phase 26 — Feed de Atividades & Interações Silenciosas
+### Phase 26 — Tela de Registro de Usuário
+**Status**: `COMPLETED`
+**Goal:** Criar uma tela de registro para permitir que novos usuários criem uma conta no sistema.
+**Requirements:** AUTH-01
+**Deliverables:**
+- Backend: Endpoints de criação de conta e validação inicial de dados.
+- UI: Tela de registro amigável e responsiva com formulário de cadastro.
+
+### Phase 27 — Feed de Atividades & Interações Silenciosas
 **Goal:** Implementar o feed de conquistas automatizadas e interações silenciosas de suporte.
 **Requirements:** FEED-01, FEED-02, FRND-03
 **Deliverables:**
@@ -83,6 +91,7 @@
 | 24    | v1.2      | 1/1            | Complete | 2026-05-19|
 | 25    | v1.2      | 0/1            | Planned | -         |
 | 26    | v1.2      | 0/1            | Planned | -         |
+| 27    | v1.2      | 0/1            | Planned | -         |
 
 ---
 *Roadmap updated for v1.2 on 2026-05-19*

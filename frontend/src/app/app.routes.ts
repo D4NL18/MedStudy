@@ -18,6 +18,11 @@ import { CompetitionEffects } from './store/competition/competition.effects';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+  { 
+    path: 'register', 
+    loadComponent: () => import('./features/auth/register/register').then(m => m.RegisterComponent),
+    canActivate: [guestGuard] 
+  },
   {
     path: '',
     loadComponent: () => import('./core/layout/shell.component').then(m => m.ShellComponent),

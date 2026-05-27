@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "medstudy-497617",
+    "public": "dist/frontend/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

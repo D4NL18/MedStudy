@@ -3,6 +3,7 @@ package com.medstudy.backend.modules.auth.service;
 import com.medstudy.backend.core.security.JwtService;
 import com.medstudy.backend.modules.auth.dto.AuthResponse;
 import com.medstudy.backend.modules.auth.dto.LoginRequest;
+import com.medstudy.backend.modules.auth.dto.RegisterRequest;
 import com.medstudy.backend.modules.auth.dto.TokenRefreshRequest;
 import com.medstudy.backend.modules.auth.entity.RefreshToken;
 import com.medstudy.backend.modules.user.entity.User;
@@ -13,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +69,26 @@ public class AuthService {
             loginAttemptService.loginFailed(request.email());
             throw e;
         }
+    }
+
+    @Transactional
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este e-mail já está em uso. Tente fazer login ou recupere sua senha.");
+        }
+
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole("ROLE_USER");
+        userRepository.save(user);
+
+        // Auto-login after registration
+        String jwtToken = jwtService.generateToken(user);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+
+        return new AuthResponse(jwtToken, refreshToken.getToken());
     }
 
     @Transactional
