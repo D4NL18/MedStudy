@@ -19,5 +19,13 @@ public class FlashcardRequest {
 
     @NotNull(message = "Conteúdo do verso é obrigatório")
     private Object verso;
+
+    private java.time.LocalDate proximaRevisao;
+    private com.medstudy.backend.modules.flashcard.entity.FlashcardDifficulty dificuldadeUltima;
+    private Double easeFactor;
+    private Integer intervaloAtual;
+    private Integer consecutiveHardCount;
+    private java.time.LocalDate ultimaRevisao;
+    private java.time.LocalDate lastStudiedAt;
 }
 

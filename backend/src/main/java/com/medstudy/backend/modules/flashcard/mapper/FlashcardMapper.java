@@ -18,10 +18,6 @@ public abstract class FlashcardMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "proximaRevisao", ignore = true)
-    @Mapping(target = "dificuldadeUltima", ignore = true)
-    @Mapping(target = "easeFactor", ignore = true)
-    @Mapping(target = "intervaloAtual", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     public abstract Flashcard toEntity(FlashcardRequest request);
@@ -30,10 +26,6 @@ public abstract class FlashcardMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
-    @Mapping(target = "proximaRevisao", ignore = true)
-    @Mapping(target = "dificuldadeUltima", ignore = true)
-    @Mapping(target = "easeFactor", ignore = true)
-    @Mapping(target = "intervaloAtual", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     public abstract void updateEntity(FlashcardRequest request, @MappingTarget Flashcard entity);
