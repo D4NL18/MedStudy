@@ -13,7 +13,7 @@ export class LessonService {
   constructor(private http: HttpClient) {}
 
   getLessons(filters?: any): Observable<Lesson[]> {
-    let params = new HttpParams();
+    let params = new HttpParams().set('size', '1000');
     if (filters) {
       Object.keys(filters).forEach(key => {
         if (filters[key] !== undefined && filters[key] !== null) {
