@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: 'https://medstudy-backend-142872223826.us-central1.run.app/api'
 };
