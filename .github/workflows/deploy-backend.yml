@@ -67,6 +67,11 @@ jobs:
             --cpu=1
             --concurrency=80
             --timeout=300
+          env_vars: |-
+            DB_URL=${{ secrets.SUPABASE_DB_URL }}
+            DB_USER=${{ secrets.SUPABASE_DB_USER }}
+            DB_PASSWORD=${{ secrets.SUPABASE_DB_PASSWORD }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
 
       - name: Show Deployment URL
         run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
