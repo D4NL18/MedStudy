@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlashcardRequest {
+    public FlashcardRequest(String grandeArea, Object frente, Object verso) {
+        this.grandeArea = grandeArea;
+        this.frente = frente;
+        this.verso = verso;
+    }
     @NotBlank(message = "Grande área é obrigatória")
     private String grandeArea;
 
