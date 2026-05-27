@@ -1,0 +1,99 @@
+<div class="login-container">
+  <!-- Animated Background Mesh -->
+  <div class="mesh-gradient"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="login-card glass">
+    <div class="card-header">
+      <div class="logo">
+        <span class="brand">MedStudy</span>
+        <div class="dot"></div>
+      </div>
+      <h1>Criar Conta</h1>
+      <p>Junte-se ao MedStudy e impulsione seus estudos.</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Error Message -->
+      @if (errorMessage) {
+        <div class="error-badge">
+          <i class="icon-error"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="name">Nome Completo</label>
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            id="name" 
+            formControlName="name" 
+            placeholder="Seu nome"
+            [class.invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+          >
+        </div>
+        <div class="error-badge" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" style="margin-top: 4px; padding: 6px; background: transparent; border: none;">
+          <small *ngIf="registerForm.get('name')?.errors?.['required']">O nome é obrigatório.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="seu@email.com"
+            [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          >
+        </div>
+        <div class="error-badge" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" style="margin-top: 4px; padding: 6px; background: transparent; border: none;">
+          <small *ngIf="registerForm.get('email')?.errors?.['required']">O e-mail é obrigatório.</small>
+          <small *ngIf="registerForm.get('email')?.errors?.['email']">E-mail inválido.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <input 
+            [type]="showPassword() ? 'text' : 'password'" 
+            id="password" 
+            formControlName="password" 
+            placeholder="Mínimo 8 caracteres"
+            [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+          >
+          <button type="button" class="btn-toggle" (click)="togglePassword()" aria-label="Alternar visibilidade da senha">
+            {{ showPassword() ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div class="error-badge" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" style="margin-top: 4px; padding: 6px; background: transparent; border: none;">
+          <small *ngIf="registerForm.get('password')?.errors?.['required']">A senha é obrigatória.</small>
+          <small *ngIf="registerForm.get('password')?.errors?.['minlength']">Mínimo de 8 caracteres.</small>
+          <small *ngIf="registerForm.get('password')?.errors?.['pattern']">Deve conter maiúscula, minúscula e número.</small>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="registerForm.invalid || isLoading">
+        @if (isLoading) {
+          <span class="spinner"></span>
+        } @else {
+          Registrar
+        }
+      </button>
+      
+      <p style="font-size: 0.75rem; color: var(--color-text); text-align: center; opacity: 0.8;">
+        Ao se cadastrar, você concorda com nossos <a routerLink="/termos" style="color: var(--color-accent);">Termos</a> e <a routerLink="/privacidade" style="color: var(--color-accent);">Privacidade</a>.
+      </p>
+    </form>
+
+    <div class="card-footer">
+      <span>Já tem uma conta?</span>
+      <a routerLink="/login">Faça Login</a>
+    </div>
+  </div>
+</div>

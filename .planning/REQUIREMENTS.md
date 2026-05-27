@@ -32,6 +32,9 @@
   - Escolher se deseja compartilhar: Streak (Sim/Não), Faculdade (Sim/Não), Quantidade total de Questões (Sim/Não), Galeria de Badges (Sim/Não).
 - [ ] **PRIV-02**: Garantir conformidade de privacidade no backend: endpoints de perfil, feed e competições devem filtrar estritamente os dados baseados nas opções salvas pelo usuário.
 
+### Authentication & Registration (AUTH)
+- [ ] **AUTH-01**: Criar tela de registro para permitir que novos usuários criem uma conta no sistema. Inclui frontend responsivo e endpoints no backend para criação de conta e validação de dados iniciais.
+
 ---
 
 ## Traceability
@@ -42,4 +45,5 @@
 | FRND-01..03 | Phase 23 | Pending |
 | PRIV-01..02 | Phase 24 | Pending |
 | COMP-01..04 | Phase 25 | Pending |
-| FEED-01..02 | Phase 26 | Pending |
+| AUTH-01     | Phase 26 | Pending |
+| FEED-01..02 | Phase 27 | Pending |

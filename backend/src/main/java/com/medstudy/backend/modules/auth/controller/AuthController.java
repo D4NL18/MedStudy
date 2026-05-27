@@ -5,6 +5,7 @@ import com.medstudy.backend.core.util.CookieUtil;
 import com.medstudy.backend.modules.auth.dto.AuthResponse;
 import com.medstudy.backend.modules.auth.dto.ForgotPasswordRequest;
 import com.medstudy.backend.modules.auth.dto.LoginRequest;
+import com.medstudy.backend.modules.auth.dto.RegisterRequest;
 import com.medstudy.backend.modules.auth.dto.ResetPasswordRequest;
 import com.medstudy.backend.modules.auth.dto.TokenRefreshRequest;
 import com.medstudy.backend.modules.auth.service.AuthService;
@@ -46,6 +47,14 @@ public class AuthController {
         AuthResponse authResponse = authService.authenticate(request);
         setAuthCookies(response, authResponse);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @Operation(summary = "Register user", description = "Creates a new user account and returns JWT tokens")
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request, HttpServletResponse response) {
+        AuthResponse authResponse = authService.register(request);
+        setAuthCookies(response, authResponse);
+        return ResponseEntity.status(201).body(authResponse);
     }
 
     @Operation(summary = "Refresh JWT token", description = "Uses a valid refresh token to issue a new access token")

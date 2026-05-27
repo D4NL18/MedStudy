@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as AuthActions from '../../../store/auth/auth.actions';
 import { selectAuthError, selectAuthLoading } from '../../../store/auth/auth.selectors';
@@ -8,7 +9,7 @@ import { selectAuthError, selectAuthLoading } from '../../../store/auth/auth.sel
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
