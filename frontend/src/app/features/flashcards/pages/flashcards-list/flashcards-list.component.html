@@ -29,25 +29,14 @@
       <span class="label">Disponíveis Hoje</span>
       <span class="value">{{ (summary$ | async)?.disponiveisHoje || 0 }}</span>
     </div>
-    <div class="stat-card glass">
-      <span class="label">Meta Diária</span>
-      <span class="value">{{ (summary$ | async)?.metaDiaria || 20 }}</span>
-    </div>
+
     <div class="stat-card glass success">
       <span class="label">Concluídos Hoje</span>
       <span class="value">{{ (summary$ | async)?.concluidosHoje || 0 }}</span>
     </div>
   </div>
 
-  <div class="config-section glass">
-    <div class="meta-row">
-      <lucide-icon name="calendar" [size]="18"></lucide-icon>
-      <label>Meta diária:</label>
-      <input type="number" value="20">
-      <span>cards/dia divididos entre 5 áreas (4 por área)</span>
-      <button class="btn-save">Salvar</button>
-    </div>
-  </div>
+
 
   <div class="list-section">
     <div class="list-header">
