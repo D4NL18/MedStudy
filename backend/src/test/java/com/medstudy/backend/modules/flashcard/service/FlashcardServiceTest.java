@@ -102,7 +102,6 @@ class FlashcardServiceTest {
         Map<String, Object> summary = flashcardService.getSummary();
 
         assertEquals(2L, summary.get("total"));
-        assertEquals(20, summary.get("metaDiaria"));
     }
 
     @Test

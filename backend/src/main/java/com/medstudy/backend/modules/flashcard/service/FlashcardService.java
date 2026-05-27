@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -66,6 +67,7 @@ public class FlashcardService {
         Flashcard flashcard = findByIdAndValidateUser(request.flashcardId());
         srService.calculateNextRevision(flashcard, request.dificuldade());
         flashcard.setLastStudiedAt(LocalDate.now());
+        flashcard.setUltimaRevisao(LocalDate.now());
         return mapper.toResponse(repository.save(flashcard));
     }
 
@@ -73,10 +75,13 @@ public class FlashcardService {
     public List<FlashcardResponse> getTodayQueue() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         LocalDate today = LocalDate.now();
-        return repository.findAllByUserId(user.getId()).stream()
+        List<FlashcardResponse> queue = repository.findAllByUserId(user.getId()).stream()
             .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
             .map(mapper::toResponse)
             .collect(Collectors.toList());
+        
+        Collections.shuffle(queue);
+        return queue;
     }
 
     @Transactional(readOnly = true)
@@ -91,13 +96,12 @@ public class FlashcardService {
             .count();
         
         long concluidosHoje = cards.stream()
-            .filter(f -> f.getLastStudiedAt() != null && f.getLastStudiedAt().equals(today))
+            .filter(f -> f.getUltimaRevisao() != null && f.getUltimaRevisao().equals(today))
             .count();
 
         return Map.of(
             "total", total,
             "disponiveisHoje", disponiveis,
-            "metaDiaria", 20,
             "concluidosHoje", concluidosHoje
         );
     }

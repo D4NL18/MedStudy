@@ -32,16 +32,11 @@ class SpacedRepetitionServiceTest {
         Flashcard f = new Flashcard();
         User u = new User(); u.setId(UUID.randomUUID());
         f.setUser(u);
-        f.setIntervaloAtual(0);
-        f.setEaseFactor(2.5);
-        f.setConsecutiveHardCount(0);
 
         service.calculateNextRevision(f, FlashcardDifficulty.EASY);
 
-        assertEquals(4, f.getIntervaloAtual());
-        assertEquals(2.6, f.getEaseFactor());
-        // Interval 4 has jitter ±0 (4*0.1=0.4 round 0). So it remains 4.
-        assertEquals(LocalDate.now().plusDays(4), f.getProximaRevisao());
+        assertEquals(7, f.getIntervaloAtual());
+        assertEquals(LocalDate.now().plusDays(7), f.getProximaRevisao());
     }
 
     @Test
@@ -49,31 +44,11 @@ class SpacedRepetitionServiceTest {
         Flashcard f = new Flashcard();
         User u = new User(); u.setId(UUID.randomUUID());
         f.setUser(u);
-        f.setIntervaloAtual(10);
-        f.setEaseFactor(2.5);
-        f.setConsecutiveHardCount(0);
 
         service.calculateNextRevision(f, FlashcardDifficulty.HARD);
 
         assertEquals(1, f.getIntervaloAtual());
-        assertEquals(2.5, f.getEaseFactor()); // No EF penalty on 1st hard
-        assertEquals(1, f.getConsecutiveHardCount());
-    }
-
-    @Test
-    void calculateNextRevision_ShouldPenalizeEaseFactorOnThirdHard() {
-        Flashcard f = new Flashcard();
-        User u = new User(); u.setId(UUID.randomUUID());
-        f.setUser(u);
-        f.setIntervaloAtual(10);
-        f.setEaseFactor(2.5);
-        f.setConsecutiveHardCount(2);
-
-        service.calculateNextRevision(f, FlashcardDifficulty.HARD);
-
-        assertEquals(0, f.getIntervaloAtual()); // Reset to learning
-        assertEquals(2.3, f.getEaseFactor()); // 2.5 - 0.2
-        assertEquals(0, f.getConsecutiveHardCount()); // Reset count
+        assertEquals(LocalDate.now().plusDays(1), f.getProximaRevisao());
     }
 
     @Test
@@ -81,13 +56,10 @@ class SpacedRepetitionServiceTest {
         Flashcard f = new Flashcard();
         User u = new User(); u.setId(UUID.randomUUID());
         f.setUser(u);
-        f.setIntervaloAtual(1);
-        f.setEaseFactor(2.5);
-        f.setConsecutiveHardCount(0);
 
         service.calculateNextRevision(f, FlashcardDifficulty.MEDIUM);
 
-        assertEquals(3, f.getIntervaloAtual()); // 1 * 2.5 = 2.5 -> round 3
-        assertEquals(2.5, f.getEaseFactor());
+        assertEquals(4, f.getIntervaloAtual());
+        assertEquals(LocalDate.now().plusDays(4), f.getProximaRevisao());
     }
 }

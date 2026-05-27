@@ -3,6 +3,7 @@ FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /app
 # Copy the Maven wrapper and POM first to cache dependencies
 COPY mvnw .
+RUN chmod +x mvnw
 COPY .mvn .mvn
 COPY pom.xml .
 RUN ./mvnw dependency:go-offline
