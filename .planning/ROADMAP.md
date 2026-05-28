@@ -72,7 +72,16 @@
 - Backend: Endpoints de criação de conta e validação inicial de dados.
 - UI: Tela de registro amigável e responsiva com formulário de cadastro.
 
-### Phase 27 — Feed de Atividades & Interações Silenciosas
+### Phase 27 — Redução de Custos, Paginação & Rate Limiting
+**Status**: `COMPLETED`
+**Goal:** Otimizar a performance da aplicação e reduzir custos de infraestrutura através de paginação severa, lazy loading e mitigação de DDoS.
+**Requirements:** PERF-01, SEC-02
+**Deliverables:**
+- Backend: Endpoint de listagem paginados (Pageable), consultas Lazy no Hibernate, Rate Limiting (Bucket4j - 50/7 req/min).
+- Frontend: `mat-paginator` implementado em todas as listas longas e tratamento visual de `429 Too Many Requests`.
+
+### Phase 28 — Feed de Atividades & Interações Silenciosas
+**Status**: `PLANNED`
 **Goal:** Implementar o feed de conquistas automatizadas e interações silenciosas de suporte.
 **Requirements:** FEED-01, FEED-02, FRND-03
 **Deliverables:**
@@ -91,7 +100,8 @@
 | 24    | v1.2      | 1/1            | Complete | 2026-05-19|
 | 25    | v1.2      | 0/1            | Planned | -         |
 | 26    | v1.2      | 0/1            | Planned | -         |
-| 27    | v1.2      | 0/1            | Planned | -         |
+| 27    | v1.2      | 1/1            | Complete | 2026-05-28|
+| 28    | v1.2      | 0/1            | Planned | -         |
 
 ---
 *Roadmap updated for v1.2 on 2026-05-19*

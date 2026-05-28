@@ -3,7 +3,7 @@ import * as SimuladosActions from './simulados.actions';
 
 describe('SimuladosReducer', () => {
   it('should set loading on loadSimulados', () => {
-    const action = SimuladosActions.loadSimulados({ filters: { page: 0, size: 20 }, append: false });
+    const action = SimuladosActions.loadSimulados({ filters: { page: 0, size: 10 }, append: false });
     const state = simuladosReducer(initialState, action);
     expect(state.loading).toBeTrue();
   });

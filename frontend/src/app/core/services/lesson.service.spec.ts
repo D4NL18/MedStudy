@@ -22,16 +22,17 @@ describe('LessonService', () => {
 
   it('should get lessons', () => {
     const mockLessons = [createMockLesson()];
-    service.getLessons({}).subscribe(lessons => {
-      expect(lessons.length).toBe(1);
+    service.getLessons().subscribe(res => {
+      expect(res.content.length).toBe(1);
+      expect(res.totalElements).toBe(1);
     });
-    const req = httpMock.expectOne('/api/lessons');
+    const req = httpMock.expectOne(r => r.url === '/api/lessons' && r.params.get('page') === '0');
     expect(req.request.method).toBe('GET');
     req.flush(mockLessons);
   });
 
   it('should get lessons with complex filters', () => {
-    service.getLessons({ 
+    service.getLessons(0, 10, { 
       tema: 'Cardio', 
       nulo: null, 
       indefinido: undefined 
@@ -46,9 +47,10 @@ describe('LessonService', () => {
   it('should handle lessons response with content property', () => {
     const mockResponse = { content: [createMockLesson()] };
     service.getLessons().subscribe(res => {
-      expect(res.length).toBe(1);
+      expect(res.content.length).toBe(1);
+      expect(res.totalElements).toBe(1);
     });
-    const req = httpMock.expectOne('/api/lessons');
+    const req = httpMock.expectOne(r => r.url === '/api/lessons' && r.params.get('page') === '0');
     req.flush(mockResponse);
   });
 

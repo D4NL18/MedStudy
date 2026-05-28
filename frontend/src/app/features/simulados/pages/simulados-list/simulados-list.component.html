@@ -59,14 +59,14 @@
       <span>Carregando simulados...</span>
     </div>
 
-    <app-sentinel 
-      *ngIf="hasMore()" 
-      [disabled]="loading()" 
-      (intersect)="onScroll()">
-    </app-sentinel>
-
-    <div class="end-of-list" *ngIf="!hasMore() && simulados().length > 0">
-      🏆 Você completou sua visualização!
-    </div>
+    <mat-paginator 
+      *ngIf="totalCount() > 10"
+      [length]="totalCount()"
+      [pageSize]="filters().size"
+      [pageIndex]="filters().page"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPageChange($event)"
+      aria-label="Selecionar página">
+    </mat-paginator>
   </div>
 </div>

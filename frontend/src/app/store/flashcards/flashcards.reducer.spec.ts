@@ -60,7 +60,7 @@ describe('FlashcardsReducer', () => {
 
   it('should set allCards on loadFlashcardsSuccess', () => {
     const mockCards = [createMockFlashcard()];
-    const action = FlashcardsActions.loadFlashcardsSuccess({ flashcards: mockCards });
+    const action = FlashcardsActions.loadFlashcardsSuccess({ flashcards: mockCards, totalElements: 1 });
     const state = reducer(initialState, action);
     expect(state.allCards).toEqual(mockCards);
   });

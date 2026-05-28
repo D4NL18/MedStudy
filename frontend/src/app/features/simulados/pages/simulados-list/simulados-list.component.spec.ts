@@ -21,7 +21,7 @@ describe('SimuladosListComponent', () => {
             entities: {},
             loading: false,
             totalCount: 0,
-            filters: { page: 0, size: 20 }
+            filters: { page: 0, size: 10 }
           }
         }
       }));
@@ -42,7 +42,7 @@ describe('SimuladosListComponent', () => {
     expect(dispatchSpy).toHaveBeenCalled();
   });
 
-  it('should dispatch loadSimulados on scroll', () => {
+  it('should dispatch loadSimulados on page change', () => {
     const fixture = MockRender(SimuladosListComponent, null, { reset: true });
     const store = fixture.point.injector.get(Store) as MockStore;
     
@@ -52,12 +52,12 @@ describe('SimuladosListComponent', () => {
         entities: { '1': { id: '1' } as any },
         loading: false,
         totalCount: 10,
-        filters: { page: 0, size: 20 }
+        filters: { page: 0, size: 10 }
       }
     });
     
     const dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
-    fixture.point.componentInstance.onScroll();
+    fixture.point.componentInstance.onPageChange({ pageIndex: 1, pageSize: 10 });
     
     expect(dispatchSpy).toHaveBeenCalled();
   });

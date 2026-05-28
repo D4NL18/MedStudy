@@ -14,4 +14,5 @@ public interface LessonRepository extends JpaRepository<Lesson, UUID>, JpaSpecif
     java.util.List<Lesson> findByUserIdAndTemaContainingIgnoreCase(UUID userId, String tema);
     Optional<Lesson> findByUserAndTema(User user, String tema);
     long countByUserIdAndReforcoTrue(UUID userId);
+    long countByUserId(UUID userId);
 }

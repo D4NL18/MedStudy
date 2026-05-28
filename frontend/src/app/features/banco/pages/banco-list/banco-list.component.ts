@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { selectAllSessions, selectBancoLoading, selectBancoFilters, selectBancoTotalCount } from '../../../../store/banco/banco.selectors';
 import * as BancoActions from '../../../../store/banco/banco.actions';
-import { SentinelComponent } from '../../../../shared/components/sentinel/sentinel.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { QuestionSession, QuestionSessionFilters } from '../../../../core/models/question-session.model';
 import { SessionModalComponent } from '../../components/session-modal/session-modal.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -14,7 +14,7 @@ import { ExportService } from '../../../../core/services/export/export.service';
 @Component({
   selector: 'app-banco-list',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, SentinelComponent],
+  imports: [CommonModule, MatDialogModule, MatPaginatorModule],
   templateUrl: './banco-list.component.html',
   styleUrl: './banco-list.component.scss'
 })
@@ -28,8 +28,6 @@ export class BancoListComponent implements OnInit {
   loading = this.store.selectSignal<boolean>(selectBancoLoading);
   filters = this.store.selectSignal<QuestionSessionFilters>(selectBancoFilters);
   totalCount = this.store.selectSignal<number>(selectBancoTotalCount);
-
-  hasMore = computed(() => this.sessions().length < this.totalCount());
 
   ngOnInit() {
     this.loadInitial();
@@ -52,20 +50,18 @@ export class BancoListComponent implements OnInit {
 
   loadInitial() {
     this.store.dispatch(BancoActions.loadSessions({ 
-      filters: { ...this.filters(), page: 0 }, 
+      filters: this.filters(), 
       append: false 
     }));
   }
 
-  onScroll() {
-    if (!this.loading() && this.hasMore()) {
-      const nextPage = this.filters().page + 1;
-      this.store.dispatch(BancoActions.loadSessions({ 
-        filters: { ...this.filters(), page: nextPage }, 
-        append: true 
-      }));
-      this.store.dispatch(BancoActions.updateFilters({ filters: { page: nextPage } }));
-    }
+  onPageChange(event: any) {
+    const filters = { ...this.filters(), page: event.pageIndex, size: event.pageSize };
+    this.store.dispatch(BancoActions.updateFilters({ filters }));
+    this.store.dispatch(BancoActions.loadSessions({ 
+      filters, 
+      append: false 
+    }));
   }
 
   openCreateModal() {

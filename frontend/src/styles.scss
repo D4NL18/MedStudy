@@ -258,3 +258,54 @@ input {
     animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
+
+/* Glassmorphism Angular Material Paginator overrides */
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: var(--color-text) !important;
+  font-family: 'Outfit', sans-serif !important;
+
+  .mat-mdc-paginator-container {
+    background: var(--color-surface-glass);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--color-border);
+    border-radius: 0 0 20px 20px;
+    padding: 8px 24px;
+    min-height: 56px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .mat-mdc-paginator-range-label {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .mat-mdc-paginator-page-size-label {
+    color: var(--color-text-secondary);
+  }
+
+  .mat-mdc-select-value {
+    color: var(--color-text) !important;
+  }
+
+  .mat-mdc-select-arrow {
+    color: var(--color-accent) !important;
+  }
+
+  .mat-mdc-icon-button {
+    color: var(--color-accent) !important;
+    transition: all 0.2s ease;
+    
+    &[disabled] {
+      color: var(--color-text-muted) !important;
+      opacity: 0.5;
+    }
+
+    &:not([disabled]):hover {
+      background: rgba(var(--color-accent-rgb), 0.1) !important;
+      transform: scale(1.1);
+    }
+  }
+}

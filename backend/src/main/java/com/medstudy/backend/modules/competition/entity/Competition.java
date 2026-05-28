@@ -39,7 +39,7 @@ public class Competition extends BaseEntity {
     @Column(nullable = false, length = 20)
     private CompetitionStatus status;
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CompetitionParticipant> participants = new ArrayList<>();
 
     public String getTitle() {

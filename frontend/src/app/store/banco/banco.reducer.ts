@@ -18,7 +18,7 @@ export const initialState: BancoState = adapter.getInitialState({
   totalCount: 0,
   filters: {
     page: 0,
-    size: 20
+    size: 10
   }
 });
 
@@ -51,7 +51,11 @@ export const bancoReducer = createReducer(
   })),
   on(BancoActions.updateFilters, (state, { filters }) => ({
     ...state,
-    filters: { ...state.filters, ...filters, page: 0 } // Reset page on filter change
+    filters: { 
+      ...state.filters, 
+      ...filters, 
+      page: filters.page !== undefined ? filters.page : 0 
+    }
   })),
   on(BancoActions.createSessionSuccess, (state, { session }) => 
     adapter.addOne(session, { ...state, totalCount: state.totalCount + 1 })

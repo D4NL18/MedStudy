@@ -5,6 +5,7 @@ import { FlashcardsActions } from './flashcards.actions';
 export interface FlashcardsState {
   queue: Flashcard[];
   allCards: Flashcard[];
+  totalElements: number;
   summary: any | null;
   currentIndex: number;
   loading: boolean;
@@ -15,6 +16,7 @@ export interface FlashcardsState {
 export const initialState: FlashcardsState = {
   queue: [],
   allCards: [],
+  totalElements: 0,
   summary: null,
   currentIndex: 0,
   loading: false,
@@ -46,9 +48,10 @@ export const flashcardsFeature = createFeature({
       ...state,
       loading: true
     })),
-    on(FlashcardsActions.loadFlashcardsSuccess, (state, { flashcards }) => ({
+    on(FlashcardsActions.loadFlashcardsSuccess, (state, { flashcards, totalElements }) => ({
       ...state,
       allCards: flashcards,
+      totalElements,
       loading: false
     })),
     on(FlashcardsActions.loadSummarySuccess, (state, { summary }) => ({
@@ -93,6 +96,7 @@ export const {
   selectFlashcardsState,
   selectQueue,
   selectAllCards,
+  selectTotalElements,
   selectSummary,
   selectCurrentIndex,
   selectLoading,

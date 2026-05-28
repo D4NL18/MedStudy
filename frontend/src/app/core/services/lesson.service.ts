@@ -12,8 +12,11 @@ export class LessonService {
 
   constructor(private http: HttpClient) {}
 
-  getLessons(filters?: any): Observable<Lesson[]> {
-    let params = new HttpParams().set('size', '1000');
+  getLessons(page: number = 0, size: number = 10, filters?: any): Observable<{content: Lesson[], totalElements: number}> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+      
     if (filters) {
       Object.keys(filters).forEach(key => {
         if (filters[key] !== undefined && filters[key] !== null) {
@@ -23,7 +26,11 @@ export class LessonService {
     }
 
     return this.http.get<any>(this.apiUrl, { params }).pipe(
-      map(response => response.content || response)
+      map(response => ({
+        content: response.content || (Array.isArray(response) ? response : []),
+        totalElements: response.totalElements !== undefined ? response.totalElements : 
+                       (response.content ? response.content.length : (Array.isArray(response) ? response.length : 0))
+      }))
     );
   }
 

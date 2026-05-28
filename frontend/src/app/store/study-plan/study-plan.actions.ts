@@ -5,12 +5,14 @@ export const StudyPlanActions = createActionGroup({
   source: 'Study Plan',
   events: {
     'Load Lessons': props<{ 
+      page?: number,
+      size?: number,
       grandeArea?: string, 
       prioridade?: string, 
       aulaAssistida?: boolean, 
       tema?: string 
     }>(),
-    'Load Lessons Success': props<{ lessons: Lesson[] }>(),
+    'Load Lessons Success': props<{ lessons: Lesson[], totalElements: number }>(),
     'Load Lessons Failure': props<{ error: string }>(),
     
     'Toggle Lesson Assisted': props<{ lessonId: string }>(),

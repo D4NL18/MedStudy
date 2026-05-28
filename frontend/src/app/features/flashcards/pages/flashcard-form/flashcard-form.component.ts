@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { FlashcardService } from '../../../../core/services/flashcard.service';
 import { ImagePasteDirective } from '../../../../shared/directives/image-paste.directive';
+import { ImageCompressorService } from '../../../../core/services/image-compressor.service';
 
 @Component({
   selector: 'app-flashcard-form',
@@ -16,6 +17,7 @@ import { ImagePasteDirective } from '../../../../shared/directives/image-paste.d
 export class FlashcardFormComponent {
   private flashcardService = inject(FlashcardService);
   private router = inject(Router);
+  private imageCompressor = inject(ImageCompressorService);
 
   @ViewChild('frenteEditor') frenteEditor!: ElementRef<HTMLDivElement>;
   @ViewChild('versoEditor') versoEditor!: ElementRef<HTMLDivElement>;
@@ -23,15 +25,28 @@ export class FlashcardFormComponent {
   grandeArea = 'Clínica Médica';
   areas = ['Clínica Médica', 'Cirurgia', 'Pediatria', 'Ginecologia e Obstetrícia', 'Preventiva'];
 
-  onImagePasted(base64: string, field: 'frente' | 'verso') {
+  async onImagePasted(base64: string, field: 'frente' | 'verso') {
     const editor = field === 'frente' ? this.frenteEditor.nativeElement : this.versoEditor.nativeElement;
-    const img = document.createElement('img');
-    img.src = base64;
-    img.style.maxWidth = '100%';
-    img.style.borderRadius = '8px';
-    img.style.margin = '8px 0';
     
-    this.insertAtCursor(editor, img);
+    try {
+      const compressedBase64 = await this.imageCompressor.compressImage(base64);
+      const img = document.createElement('img');
+      img.src = compressedBase64;
+      img.style.maxWidth = '100%';
+      img.style.borderRadius = '8px';
+      img.style.margin = '8px 0';
+      
+      this.insertAtCursor(editor, img);
+    } catch (e) {
+      console.error('Failed to compress image', e);
+      const img = document.createElement('img');
+      img.src = base64;
+      img.style.maxWidth = '100%';
+      img.style.borderRadius = '8px';
+      img.style.margin = '8px 0';
+      
+      this.insertAtCursor(editor, img);
+    }
   }
 
   insertAtCursor(editor: HTMLDivElement, node: Node) {

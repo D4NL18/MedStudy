@@ -21,7 +21,7 @@ describe('BancoListComponent', () => {
             entities: {},
             loading: false,
             totalCount: 0,
-            filters: { page: 0, size: 20 }
+            filters: { page: 0, size: 10 }
           }
         }
       }));

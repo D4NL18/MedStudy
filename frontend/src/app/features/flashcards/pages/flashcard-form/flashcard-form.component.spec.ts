@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { of } from 'rxjs';
 import { ImagePasteDirective } from '../../../../shared/directives/image-paste.directive';
+import { ImageCompressorService } from '../../../../core/services/image-compressor.service';
 
 describe('FlashcardFormComponent', () => {
   MockInstance.scope();
@@ -15,6 +16,7 @@ describe('FlashcardFormComponent', () => {
       .mock(LucideAngularModule)
       .mock(ImagePasteDirective)
       .mock(FlashcardService)
+      .mock(ImageCompressorService)
       .mock(Router);
   });
 
@@ -41,15 +43,18 @@ describe('FlashcardFormComponent', () => {
     expect(component.htmlToMarkdown(html)).toBe(expected);
   });
 
-  it('should call onImagePasted when an image is pasted', () => {
+  it('should call onImagePasted when an image is pasted', async () => {
     const fixture = MockRender(FlashcardFormComponent, null, { reset: true });
     const component = fixture.point.componentInstance;
     
     // Mock editors
     component.frenteEditor = { nativeElement: document.createElement('div') } as any;
     
+    const compressor = TestBed.inject(ImageCompressorService);
+    spyOn(compressor, 'compressImage').and.returnValue(Promise.resolve('data:image/webp;base64,compressed'));
+    
     spyOn(component, 'onImagePasted').and.callThrough();
-    component.onImagePasted('data:image/png;base64,abc', 'frente');
+    await component.onImagePasted('data:image/png;base64,abc', 'frente');
     
     expect(component.frenteEditor.nativeElement.querySelector('img')).toBeTruthy();
   });

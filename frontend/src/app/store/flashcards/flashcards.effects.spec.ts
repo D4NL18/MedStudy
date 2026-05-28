@@ -52,11 +52,11 @@ describe('FlashcardsEffects', () => {
 
   it('should load all flashcards successfully', (done) => {
     const flashcards = [{ id: '1' } as any];
-    flashcardService.getFlashcards.and.returnValue(of({ content: flashcards }));
+    flashcardService.getFlashcards.and.returnValue(of({ content: flashcards, totalElements: 1 }));
     actions$ = of(FlashcardsActions.loadFlashcards({}));
 
     effects.loadAll$.subscribe(action => {
-      expect(action).toEqual(FlashcardsActions.loadFlashcardsSuccess({ flashcards }));
+      expect(action).toEqual(FlashcardsActions.loadFlashcardsSuccess({ flashcards, totalElements: 1 }));
       done();
     });
   });

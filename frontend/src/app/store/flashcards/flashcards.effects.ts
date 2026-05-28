@@ -50,9 +50,9 @@ export class FlashcardsEffects {
   loadAll$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FlashcardsActions.loadFlashcards),
-      mergeMap(() =>
-        this.flashcardService.getFlashcards(0, 100).pipe(
-          map(response => FlashcardsActions.loadFlashcardsSuccess({ flashcards: response.content })),
+      mergeMap((action) =>
+        this.flashcardService.getFlashcards(action.page || 0, action.size || 10).pipe(
+          map(response => FlashcardsActions.loadFlashcardsSuccess({ flashcards: response.content, totalElements: response.totalElements })),
           catchError(error => of(FlashcardsActions.loadFlashcardsFailure({ error: error.message })))
         )
       )

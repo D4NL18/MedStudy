@@ -10,7 +10,7 @@ describe('StudyPlanReducer', () => {
 
   it('should set lessons on loadLessonsSuccess', () => {
     const lessons = [{ id: '1' } as any];
-    const action = StudyPlanActions.loadLessonsSuccess({ lessons });
+    const action = StudyPlanActions.loadLessonsSuccess({ lessons, totalElements: 1 });
     const state = reducer(initialState, action);
     expect(state.lessons).toEqual(lessons);
     expect(state.loading).toBeFalse();

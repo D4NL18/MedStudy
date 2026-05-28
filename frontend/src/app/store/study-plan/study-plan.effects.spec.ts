@@ -33,11 +33,11 @@ describe('StudyPlanEffects', () => {
 
   it('should load lessons successfully', (done) => {
     const mockLessons = [createMockLesson()];
-    lessonService.getLessons.and.returnValue(of(mockLessons));
+    lessonService.getLessons.and.returnValue(of({ content: mockLessons, totalElements: 1 }));
     actions$ = of(StudyPlanActions.loadLessons({}));
 
     effects.loadLessons$.subscribe(action => {
-      expect(action).toEqual(StudyPlanActions.loadLessonsSuccess({ lessons: mockLessons }));
+      expect(action).toEqual(StudyPlanActions.loadLessonsSuccess({ lessons: mockLessons, totalElements: 1 }));
       done();
     });
   });
