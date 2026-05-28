@@ -18,8 +18,8 @@ export class LoginComponent {
   private store = inject(Store);
 
   loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    senha: ['', [Validators.required, Validators.minLength(6)]]
+    email: ['admin@medstudy.com', [Validators.required, Validators.email]],
+    senha: ['admin123', [Validators.required, Validators.minLength(6)]]
   });
 
   loading = this.store.selectSignal(selectAuthLoading);

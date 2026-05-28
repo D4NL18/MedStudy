@@ -84,5 +84,15 @@
         </tr>
       </tbody>
     </table>
+    
+    <mat-paginator 
+      *ngIf="((totalElements$ | async) || 0) > 10"
+      [length]="totalElements$ | async"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[10, 25, 50]"
+      (page)="onPageChange($event)"
+      aria-label="Selecionar página">
+    </mat-paginator>
   </div>
 </div>

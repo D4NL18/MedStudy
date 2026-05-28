@@ -17,6 +17,6 @@ export const mockSessionsResponse = {
   content: [createMockSession(), createMockSession({ id: '2', tema: 'Cardiologia' })],
   totalElements: 2,
   totalPages: 1,
-  size: 20,
+  size: 10,
   number: 0
 };

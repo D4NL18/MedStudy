@@ -26,12 +26,17 @@ import { ProfileEffects } from './store/profile/profile.effects';
 import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw, Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, BarChart2, LogOut, User, WifiOff, Download, Heart, Brain, Shield, Pill, Dna, Activity, Eye, Skull, Baby, Stethoscope, Bone, Syringe, FlaskConical, Microscope, Users, UserPlus, UserMinus, UserCheck, UserX, Ban, Crown, Trophy, Sparkles, Flame } from 'lucide-angular';
 import { importProvidersFrom } from '@angular/core';
 
+import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomPaginatorIntl } from './core/config/custom-paginator-intl';
+
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([apiUrlInterceptor, authInterceptor, connectivityInterceptor]),
+      withInterceptors([apiUrlInterceptor, authInterceptor, connectivityInterceptor, errorInterceptor]),
       withXsrfConfiguration({
         cookieName: 'XSRF-TOKEN',
         headerName: 'X-XSRF-TOKEN',

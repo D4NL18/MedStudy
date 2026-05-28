@@ -23,19 +23,19 @@ describe('BancoService', () => {
     const mockResponse = { content: [], totalElements: 0 };
     
     // Test grandeArea branch
-    service.getSessions({ page: 0, size: 20, grandeArea: 'PED' }).subscribe();
+    service.getSessions({ page: 0, size: 10, grandeArea: 'PED' }).subscribe();
     httpMock.expectOne(req => req.params.get('grandeArea') === 'PED').flush(mockResponse);
     
     // Test tema branch
-    service.getSessions({ page: 0, size: 20, tema: 'Cardio' }).subscribe();
+    service.getSessions({ page: 0, size: 10, tema: 'Cardio' }).subscribe();
     httpMock.expectOne(req => req.params.get('tema') === 'Cardio').flush(mockResponse);
 
     // Test startDate branch
-    service.getSessions({ page: 0, size: 20, startDate: '2023-01-01' }).subscribe();
+    service.getSessions({ page: 0, size: 10, startDate: '2023-01-01' }).subscribe();
     httpMock.expectOne(req => req.params.get('startDate') === '2023-01-01').flush(mockResponse);
 
     // Test endDate branch
-    service.getSessions({ page: 0, size: 20, endDate: '2023-01-31' }).subscribe();
+    service.getSessions({ page: 0, size: 10, endDate: '2023-01-31' }).subscribe();
     httpMock.expectOne(req => req.params.get('endDate') === '2023-01-31').flush(mockResponse);
   });
 
@@ -43,7 +43,7 @@ describe('BancoService', () => {
     const mockResponse = { content: [], totalElements: 0 };
     const filters = { 
       page: 0, 
-      size: 20, 
+      size: 10, 
       grandeArea: 'Clinica',
       tema: 'HAS',
       startDate: '2024-01-01',

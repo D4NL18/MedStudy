@@ -2,9 +2,9 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { selectAllSimulados, selectSimuladosLoading, selectSimuladosFilters, selectSimuladosTotalCount } from '../../../../store/simulados/simulados.selectors';
 import * as SimuladosActions from '../../../../store/simulados/simulados.actions';
-import { SentinelComponent } from '../../../../shared/components/sentinel/sentinel.component';
 import { Simulado, SimuladoFilters } from '../../../../core/models/simulado.model';
 import { SimuladoModalComponent } from '../../components/simulado-modal/simulado-modal.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -13,7 +13,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'app-simulados-list',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, SentinelComponent],
+  imports: [CommonModule, MatDialogModule, MatPaginatorModule],
   templateUrl: './simulados-list.component.html',
   styleUrl: './simulados-list.component.scss'
 })
@@ -26,8 +26,6 @@ export class SimuladosListComponent implements OnInit {
   loading = this.store.selectSignal<boolean>(selectSimuladosLoading);
   filters = this.store.selectSignal<SimuladoFilters>(selectSimuladosFilters);
   totalCount = this.store.selectSignal<number>(selectSimuladosTotalCount);
-
-  hasMore = computed(() => this.simulados().length < this.totalCount());
 
   ngOnInit() {
     this.loadInitial();
@@ -50,20 +48,18 @@ export class SimuladosListComponent implements OnInit {
 
   loadInitial() {
     this.store.dispatch(SimuladosActions.loadSimulados({ 
-      filters: { ...this.filters(), page: 0 }, 
+      filters: this.filters(), 
       append: false 
     }));
   }
 
-  onScroll() {
-    if (!this.loading() && this.hasMore()) {
-      const nextPage = this.filters().page + 1;
-      this.store.dispatch(SimuladosActions.loadSimulados({ 
-        filters: { ...this.filters(), page: nextPage }, 
-        append: true 
-      }));
-      this.store.dispatch(SimuladosActions.updateFilters({ filters: { page: nextPage } }));
-    }
+  onPageChange(event: any) {
+    const filters = { ...this.filters(), page: event.pageIndex, size: event.pageSize };
+    this.store.dispatch(SimuladosActions.updateFilters({ filters }));
+    this.store.dispatch(SimuladosActions.loadSimulados({ 
+      filters, 
+      append: false 
+    }));
   }
 
   openCreateModal() {

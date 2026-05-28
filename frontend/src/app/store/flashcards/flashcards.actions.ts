@@ -8,8 +8,8 @@ export const FlashcardsActions = createActionGroup({
     'Load Study Queue Success': props<{ flashcards: Flashcard[] }>(),
     'Load Study Queue Failure': props<{ error: string }>(),
     
-    'Load Flashcards': props<{ filter?: any }>(),
-    'Load Flashcards Success': props<{ flashcards: Flashcard[] }>(),
+    'Load Flashcards': props<{ page?: number, size?: number, filter?: any }>(),
+    'Load Flashcards Success': props<{ flashcards: Flashcard[], totalElements: number }>(),
     'Load Flashcards Failure': props<{ error: string }>(),
 
     'Load Summary': emptyProps(),

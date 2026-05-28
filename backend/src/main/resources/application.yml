@@ -3,3 +3,8 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
     name: backend
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 2000

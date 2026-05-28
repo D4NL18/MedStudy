@@ -21,7 +21,7 @@ describe('SimuladosService', () => {
 
   it('should get simulados', () => {
     const mockResponse = { content: [], totalElements: 0 } as any;
-    service.getSimulados({ page: 0, size: 20 }).subscribe(res => {
+    service.getSimulados({ page: 0, size: 10 }).subscribe(res => {
       expect(res).toEqual(mockResponse);
     });
     const req = httpMock.expectOne(req => req.url === '/api/simulados' && req.params.has('page'));
@@ -32,13 +32,13 @@ describe('SimuladosService', () => {
     const mockResponse = { content: [], totalElements: 0 } as any;
     
     // Test nome branch
-    service.getSimulados({ page: 0, size: 20, nome: 'Sim' }).subscribe(res => {
+    service.getSimulados({ page: 0, size: 10, nome: 'Sim' }).subscribe(res => {
       expect(res).toEqual(mockResponse);
     });
     httpMock.expectOne(req => req.params.get('nome') === 'Sim').flush(mockResponse);
     
     // Test instituicao branch
-    service.getSimulados({ page: 0, size: 20, instituicao: 'USP' }).subscribe(res => {
+    service.getSimulados({ page: 0, size: 10, instituicao: 'USP' }).subscribe(res => {
       expect(res).toEqual(mockResponse);
     });
     httpMock.expectOne(req => req.params.get('instituicao') === 'USP').flush(mockResponse);

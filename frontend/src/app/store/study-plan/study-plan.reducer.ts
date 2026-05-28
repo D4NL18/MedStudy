@@ -4,12 +4,14 @@ import { StudyPlanActions } from './study-plan.actions';
 
 export interface StudyPlanState {
   lessons: Lesson[];
+  totalElements: number;
   loading: boolean;
   error: string | null;
 }
 
 export const initialState: StudyPlanState = {
   lessons: [],
+  totalElements: 0,
   loading: false,
   error: null,
 };
@@ -23,9 +25,10 @@ export const studyPlanFeature = createFeature({
       loading: true,
       error: null
     })),
-    on(StudyPlanActions.loadLessonsSuccess, (state, { lessons }) => ({
+    on(StudyPlanActions.loadLessonsSuccess, (state, { lessons, totalElements }) => ({
       ...state,
       lessons,
+      totalElements,
       loading: false
     })),
     on(StudyPlanActions.loadLessonsFailure, (state, { error }) => ({
@@ -67,6 +70,7 @@ export const {
   reducer,
   selectStudyPlanState,
   selectLessons,
+  selectTotalElements,
   selectLoading,
   selectError,
 } = studyPlanFeature;

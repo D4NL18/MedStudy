@@ -8,7 +8,7 @@ describe('BancoSelectors', () => {
     loading: false,
     error: null,
     totalCount: 5,
-    filters: { page: 0, size: 20 }
+    filters: { page: 0, size: 10 }
   };
 
   it('should select totalCount', () => {

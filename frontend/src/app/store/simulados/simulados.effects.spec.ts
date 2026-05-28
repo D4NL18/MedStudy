@@ -33,7 +33,7 @@ describe('SimuladosEffects', () => {
   it('should load simulados successfully', (done) => {
     const mockSimulados = [createMockSimulado()];
     simuladosService.getSimulados.and.returnValue(of({ content: mockSimulados, totalElements: 1 }));
-    actions$ = of(SimuladosActions.loadSimulados({ filters: { page: 0, size: 20 }, append: false }));
+    actions$ = of(SimuladosActions.loadSimulados({ filters: { page: 0, size: 10 }, append: false }));
 
     effects.loadSimulados$.subscribe(action => {
       expect(action).toEqual(SimuladosActions.loadSimuladosSuccess({ 
@@ -47,7 +47,7 @@ describe('SimuladosEffects', () => {
 
   it('should handle load simulados failure', (done) => {
     simuladosService.getSimulados.and.returnValue(throwError(() => new Error('Error')));
-    actions$ = of(SimuladosActions.loadSimulados({ filters: { page: 0, size: 20 }, append: false }));
+    actions$ = of(SimuladosActions.loadSimulados({ filters: { page: 0, size: 10 }, append: false }));
 
     effects.loadSimulados$.subscribe(action => {
       expect(action).toEqual(SimuladosActions.loadSimuladosFailure({ error: 'Erro ao carregar simulados.' }));

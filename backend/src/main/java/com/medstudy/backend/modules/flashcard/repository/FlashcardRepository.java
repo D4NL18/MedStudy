@@ -19,6 +19,7 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, UUID>, Jpa
     long countByUserIdAndProximaRevisao(UUID userId, LocalDate date);
     long countByUserIdAndProximaRevisaoAfter(UUID userId, LocalDate date);
     long countByUserIdAndLastStudiedAt(UUID userId, LocalDate date);
+    long countByUserId(UUID userId);
 
     @org.springframework.data.jpa.repository.Modifying(clearAutomatically = true)
     @org.springframework.data.jpa.repository.Query("UPDATE Flashcard f SET f.intervaloAtual = 0, f.easeFactor = 2.5, f.proximaRevisao = CURRENT_DATE, f.consecutiveHardCount = 0 WHERE f.user.id = :userId AND (:grandeArea IS NULL OR f.grandeArea = :grandeArea)")

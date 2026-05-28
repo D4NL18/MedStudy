@@ -73,7 +73,7 @@ describe('CompetitionEffects', () => {
       metricType: MetricType.TOTAL_QUESTIONS,
       startDate: '2026-05-20',
       endDate: '2026-05-27',
-      friendIds: ['friend-1']
+      invitedFriendIds: ['friend-1']
     };
     competitionService.createCompetition.and.returnValue(of(mockCompetition));
     actions$ = of(CompetitionActions.createCompetition({ request }));

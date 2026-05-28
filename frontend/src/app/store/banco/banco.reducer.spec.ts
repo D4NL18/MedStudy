@@ -3,7 +3,7 @@ import * as BancoActions from './banco.actions';
 
 describe('BancoReducer', () => {
   it('should set loading on loadSessions', () => {
-    const action = BancoActions.loadSessions({ filters: { page: 0, size: 20 }, append: false });
+    const action = BancoActions.loadSessions({ filters: { page: 0, size: 10 }, append: false });
     const state = bancoReducer(initialState, action);
     expect(state.loading).toBeTrue();
   });

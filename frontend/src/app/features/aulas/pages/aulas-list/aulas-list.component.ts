@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { StudyPlanActions } from '../../../../store/study-plan/study-plan.actions';
-import { selectLessons, selectLoading } from '../../../../store/study-plan/study-plan.reducer';
+import { selectLessons, selectLoading, selectTotalElements } from '../../../../store/study-plan/study-plan.reducer';
 import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
 import { LessonModalComponent } from '../../components/lesson-modal/lesson-modal.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -12,7 +13,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 @Component({
   selector: 'app-aulas-list',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, MatDialogModule],
+  imports: [CommonModule, LucideAngularModule, MatDialogModule, MatPaginatorModule],
   templateUrl: './aulas-list.component.html',
   styleUrl: './aulas-list.component.scss'
 })
@@ -22,9 +23,28 @@ export class AulasListComponent implements OnInit {
   
   lessons$ = this.store.select(selectLessons);
   loading$ = this.store.select(selectLoading);
+  totalElements$ = this.store.select(selectTotalElements);
+
+  pageIndex = 0;
+  pageSize = 10;
+  currentFilters: any = {};
 
   ngOnInit() {
-    this.store.dispatch(StudyPlanActions.loadLessons({}));
+    this.loadLessons();
+  }
+
+  loadLessons() {
+    this.store.dispatch(StudyPlanActions.loadLessons({
+      ...this.currentFilters,
+      page: this.pageIndex,
+      size: this.pageSize
+    }));
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadLessons();
   }
 
   openModal(lesson?: Lesson) {
@@ -79,20 +99,19 @@ export class AulasListComponent implements OnInit {
   }
 
   onSearch(term: string) {
-    this.store.dispatch(StudyPlanActions.loadLessons({ tema: term }));
+    this.currentFilters.tema = term || undefined;
+    this.pageIndex = 0;
+    this.loadLessons();
   }
 
   onFilterChange(type: string, value: any) {
-    const filters: any = {};
+    if (type === 'grandeArea') this.currentFilters.grandeArea = value || undefined;
+    if (type === 'prioridade') this.currentFilters.prioridade = value || undefined;
+    if (type === 'status') this.currentFilters.aulaAssistida = value === 'concluido' ? true : value === 'pendente' ? false : undefined;
+    if (type === 'reforco') this.currentFilters.reforco = value === 'true' ? true : value === 'false' ? false : undefined;
     
-    // We should ideally maintain the current state of other filters
-    // For now, let's at least add 'reforco' support
-    if (type === 'grandeArea') filters.grandeArea = value || undefined;
-    if (type === 'prioridade') filters.prioridade = value || undefined;
-    if (type === 'status') filters.aulaAssistida = value === 'concluido' ? true : value === 'pendente' ? false : undefined;
-    if (type === 'reforco') filters.reforco = value === 'true' ? true : value === 'false' ? false : undefined;
-    
-    this.store.dispatch(StudyPlanActions.loadLessons(filters));
+    this.pageIndex = 0;
+    this.loadLessons();
   }
 
   getAssistedCount(lessons: Lesson[]): number {

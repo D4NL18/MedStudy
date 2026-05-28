@@ -18,7 +18,7 @@ export const initialState: SimuladosState = adapter.getInitialState({
   totalCount: 0,
   filters: {
     page: 0,
-    size: 20
+    size: 10
   }
 });
 
@@ -51,7 +51,11 @@ export const simuladosReducer = createReducer(
   })),
   on(SimuladosActions.updateFilters, (state, { filters }) => ({
     ...state,
-    filters: { ...state.filters, ...filters, page: 0 }
+    filters: { 
+      ...state.filters, 
+      ...filters, 
+      page: filters.page !== undefined ? filters.page : 0 
+    }
   })),
   on(SimuladosActions.createSimuladoSuccess, (state, { simulado }) => 
     adapter.addOne(simulado, { ...state, totalCount: state.totalCount + 1 })

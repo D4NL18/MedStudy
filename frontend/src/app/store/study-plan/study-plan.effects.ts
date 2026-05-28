@@ -15,8 +15,8 @@ export class StudyPlanEffects {
     this.actions$.pipe(
       ofType(StudyPlanActions.loadLessons),
       mergeMap((filters) =>
-        this.lessonService.getLessons(filters).pipe(
-          map(lessons => StudyPlanActions.loadLessonsSuccess({ lessons })),
+        this.lessonService.getLessons(filters.page, filters.size, filters).pipe(
+          map(result => StudyPlanActions.loadLessonsSuccess({ lessons: result.content, totalElements: result.totalElements })),
           catchError(error => of(StudyPlanActions.loadLessonsFailure({ error: error.message })))
         )
       )
