@@ -15,7 +15,7 @@ export interface UserBadge {
 })
 export class BadgeService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/badges`;
+  private apiUrl = '/api/badges';
 
   getUserBadges(): Observable<UserBadge[]> {
     return this.http.get<UserBadge[]>(this.apiUrl);

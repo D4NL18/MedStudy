@@ -15,7 +15,7 @@ export interface NotificationSummary {
 })
 export class NotificationService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/notifications`;
+  private apiUrl = '/api/notifications';
 
   summary = signal<NotificationSummary | null>(null);
 
