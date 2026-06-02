@@ -130,7 +130,11 @@ public class StudySessionService {
         
         double percentual = request.qtsFeitas() > 0 ? (double) request.qtsCorretas() / request.qtsFeitas() * 100 : 0;
         entity.setUrgente(percentual < 40);
-        entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
+        if (request.dataProximaRevisao() != null) {
+            entity.setDataProximaRevisao(request.dataProximaRevisao());
+        } else {
+            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
+        }
 
         StudySession saved = repository.save(entity);
         
@@ -187,7 +191,11 @@ public class StudySessionService {
         // Recalculate revision date on update
         double percentual = request.qtsFeitas() > 0 ? (double) request.qtsCorretas() / request.qtsFeitas() * 100 : 0;
         entity.setUrgente(percentual < 40);
-        entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
+        if (request.dataProximaRevisao() != null) {
+            entity.setDataProximaRevisao(request.dataProximaRevisao());
+        } else {
+            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
+        }
 
         StudySession saved = repository.save(entity);
         
