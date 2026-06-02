@@ -15,4 +15,7 @@ public interface LessonRepository extends JpaRepository<Lesson, UUID>, JpaSpecif
     Optional<Lesson> findByUserAndTema(User user, String tema);
     long countByUserIdAndReforcoTrue(UUID userId);
     long countByUserId(UUID userId);
+    long countByUserIdAndAulaAssistidaTrue(UUID userId);
+    long countByUserIdAndAulaAssistidaFalse(UUID userId);
+    long countByUserIdAndAulaAssistidaFalseAndPrioridade(UUID userId, com.medstudy.backend.modules.aula.entity.LessonPriority prioridade);
 }

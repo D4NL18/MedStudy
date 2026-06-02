@@ -41,6 +41,11 @@ public class LessonController {
         return ResponseEntity.ok(service.findAll(grandeArea, prioridade, aulaAssistida, tema, pageable));
     }
 
+    @GetMapping("/summary")
+    public ResponseEntity<com.medstudy.backend.modules.aula.dto.LessonSummaryResponse> getSummary() {
+        return ResponseEntity.ok(service.getSummary());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<LessonResponse> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(service.getById(id));

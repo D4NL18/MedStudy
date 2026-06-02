@@ -60,6 +60,18 @@ public class LessonService {
         return mapper.toResponse(entity);
     }
 
+    public com.medstudy.backend.modules.aula.dto.LessonSummaryResponse getSummary() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UUID userId = currentUser.getId();
+        
+        long total = repository.countByUserId(userId);
+        long assistidas = repository.countByUserIdAndAulaAssistidaTrue(userId);
+        long pendentes = repository.countByUserIdAndAulaAssistidaFalse(userId);
+        long diamantePendentes = repository.countByUserIdAndAulaAssistidaFalseAndPrioridade(userId, LessonPriority.DIAMANTE);
+
+        return new com.medstudy.backend.modules.aula.dto.LessonSummaryResponse(total, assistidas, pendentes, diamantePendentes);
+    }
+
     public LessonResponse update(UUID id, LessonRequest request) {
         Lesson entity = getLessonAndVerifyOwnership(id);
 
