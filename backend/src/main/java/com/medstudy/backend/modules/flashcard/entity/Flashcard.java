@@ -42,7 +42,7 @@ public class Flashcard {
     @Column(name = "verso", nullable = false)
     private JsonNode verso;
 
-    @Column(name = "proxima_revisao", nullable = false)
+    @Column(name = "proxima_revisao")
     private LocalDate proximaRevisao;
 
     @Enumerated(EnumType.STRING)
@@ -76,7 +76,6 @@ public class Flashcard {
         updatedAt = OffsetDateTime.now();
         if (easeFactor == null) easeFactor = 2.5;
         if (intervaloAtual == null) intervaloAtual = 0;
-        if (proximaRevisao == null) proximaRevisao = LocalDate.now();
         this.grandeArea = StringNormalizer.normalize(this.grandeArea);
     }
 
