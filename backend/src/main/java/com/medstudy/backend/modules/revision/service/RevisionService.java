@@ -58,17 +58,11 @@ public class RevisionService {
         long sessionsFuturas = sessionRepository.countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(userId, today);
         long sessionsConcluidas = sessionRepository.countByUserIdAndRevisaoConcluidaTrue(userId);
 
-        // Flashcards
-        long flashcardsAtrasados = flashcardRepository.countByUserIdAndProximaRevisaoBefore(userId, today);
-        long flashcardsHoje = flashcardRepository.countByUserIdAndProximaRevisao(userId, today);
-        long flashcardsFuturos = flashcardRepository.countByUserIdAndProximaRevisaoAfter(userId, today);
-        long flashcardsConcluidos = flashcardRepository.countByUserIdAndLastStudiedAt(userId, today);
-
         return new RevisionSummaryResponse(
-            sessionsAtrasadas + flashcardsAtrasados,
-            sessionsHoje + flashcardsHoje,
-            sessionsFuturas + flashcardsFuturos,
-            sessionsConcluidas + flashcardsConcluidos
+            sessionsAtrasadas,
+            sessionsHoje,
+            sessionsFuturas,
+            sessionsConcluidas
         );
     }
 
