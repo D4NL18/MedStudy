@@ -17,3 +17,10 @@ export interface Lesson {
   reforco: boolean;
   revisao: boolean;
 }
+
+export interface LessonSummary {
+  total: number;
+  assistidas: number;
+  pendentes: number;
+  diamantePendentes: number;
+}

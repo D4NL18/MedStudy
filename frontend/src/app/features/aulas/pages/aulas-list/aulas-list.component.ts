@@ -6,7 +6,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { StudyPlanActions } from '../../../../store/study-plan/study-plan.actions';
 import { selectLessons, selectLoading, selectTotalElements } from '../../../../store/study-plan/study-plan.reducer';
-import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
+import { Lesson, LessonPriority, LessonSummary } from '../../../../core/models/lesson.model';
+import { LessonService } from '../../../../core/services/lesson.service';
 import { LessonModalComponent } from '../../components/lesson-modal/lesson-modal.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
@@ -20,10 +21,12 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 export class AulasListComponent implements OnInit {
   private store = inject(Store);
   private dialog = inject(MatDialog);
+  private lessonService = inject(LessonService);
   
   lessons$ = this.store.select(selectLessons);
   loading$ = this.store.select(selectLoading);
   totalElements$ = this.store.select(selectTotalElements);
+  summary$ = this.lessonService.getSummary();
 
   pageIndex = 0;
   pageSize = 10;
@@ -39,6 +42,7 @@ export class AulasListComponent implements OnInit {
       page: this.pageIndex,
       size: this.pageSize
     }));
+    this.summary$ = this.lessonService.getSummary();
   }
 
   onPageChange(event: PageEvent) {
@@ -114,20 +118,4 @@ export class AulasListComponent implements OnInit {
     this.loadLessons();
   }
 
-  getAssistedCount(lessons: Lesson[]): number {
-    return lessons.filter(l => l.aulaAssistida).length;
-  }
-
-  getPendingCount(lessons: Lesson[]): number {
-    return lessons.filter(l => !l.aulaAssistida).length;
-  }
-
-  getDiamondPendingCount(lessons: Lesson[]): number {
-    return lessons.filter(l => l.prioridade === LessonPriority.DIAMANTE && !l.aulaAssistida).length;
-  }
-
-  getProgress(lessons: Lesson[]): number {
-    if (lessons.length === 0) return 0;
-    return Math.round((this.getAssistedCount(lessons) / lessons.length) * 100);
-  }
 }

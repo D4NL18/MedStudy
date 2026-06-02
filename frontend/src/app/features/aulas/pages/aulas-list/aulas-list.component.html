@@ -11,22 +11,22 @@
   </div>
 
   <ng-container *ngIf="lessons$ | async as lessons; else loadingTpl">
-    <div class="stats-row">
+    <div class="stats-row" *ngIf="summary$ | async as summary">
       <div class="stat-card">
         <span class="label">Total de Aulas</span>
-        <span class="value">{{ lessons.length }}</span>
+        <span class="value">{{ summary.total }}</span>
       </div>
       <div class="stat-card">
         <span class="label">Aulas Assistidas</span>
-        <span class="value">{{ getAssistedCount(lessons) }}</span>
+        <span class="value">{{ summary.assistidas }}</span>
       </div>
       <div class="stat-card">
         <span class="label">Pendentes</span>
-        <span class="value">{{ getPendingCount(lessons) }}</span>
+        <span class="value">{{ summary.pendentes }}</span>
       </div>
       <div class="stat-card highlight">
         <span class="label">Prioridade Diamante Pendente</span>
-        <span class="value">{{ getDiamondPendingCount(lessons) }}</span>
+        <span class="value">{{ summary.diamantePendentes }}</span>
       </div>
     </div>
 

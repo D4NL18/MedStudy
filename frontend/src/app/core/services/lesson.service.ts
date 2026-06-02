@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Lesson } from '../models/lesson.model';
+import { Lesson, LessonSummary } from '../models/lesson.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +32,10 @@ export class LessonService {
                        (response.content ? response.content.length : (Array.isArray(response) ? response.length : 0))
       }))
     );
+  }
+
+  getSummary(): Observable<LessonSummary> {
+    return this.http.get<LessonSummary>(`${this.apiUrl}/summary`);
   }
 
   createLesson(lesson: Partial<Lesson>): Observable<Lesson> {
