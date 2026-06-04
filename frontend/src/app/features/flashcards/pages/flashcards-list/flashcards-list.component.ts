@@ -84,8 +84,29 @@ export class FlashcardsListComponent implements OnInit {
 
   formatPreview(content: any): string {
     if (!content) return '';
-    const text = typeof content === 'string' ? content : JSON.stringify(content);
+    let text = typeof content === 'string' ? content : JSON.stringify(content);
+    
+    // Parse TipTap JSON
+    if (typeof content === 'string' && content.trim().startsWith('{"type":"doc"')) {
+      try {
+        const json = JSON.parse(content);
+        text = this.extractTextFromTipTap(json);
+      } catch (e) {}
+    } else if (typeof content === 'object' && content.type === 'doc') {
+      text = this.extractTextFromTipTap(content);
+    }
+    
     return text.replace(/!\[image\]\(.*?\)/g, '🖼️');
+  }
+
+  private extractTextFromTipTap(node: any): string {
+    if (!node) return '';
+    if (node.type === 'text') return node.text || '';
+    if (node.type === 'image') return '🖼️';
+    if (node.content && Array.isArray(node.content)) {
+      return node.content.map((c: any) => this.extractTextFromTipTap(c)).join(' ');
+    }
+    return '';
   }
 
   isAvailable(card: any): boolean {

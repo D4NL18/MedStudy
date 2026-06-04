@@ -81,28 +81,35 @@ public class DashboardService {
                 updateAreaTotal(totals, "Ginecologia e Obstetrícia", s.getGoTotal(), s.getGoAcertos());
                 updateAreaTotal(totals, "Preventiva", s.getPrevTotal(), s.getPrevAcertos());
             }
+        }
 
-            bestArea = totals.entrySet().stream()
-                .max(Comparator.comparingDouble(e -> e.getValue().getRate()))
-                .map(Map.Entry::getKey).orElse("N/A");
+        // 4. Analytics
+        var areaAnalytics = analyticsService.getAreaAnalytics("TOTAL");
 
-            worstArea = totals.entrySet().stream()
-                .min(Comparator.comparingDouble(e -> e.getValue().getRate()))
-                .map(Map.Entry::getKey).orElse("N/A");
+        String globalBestArea = "N/A";
+        String globalWorstArea = "N/A";
+
+        if (areaAnalytics != null && !areaAnalytics.isEmpty()) {
+            globalBestArea = areaAnalytics.stream()
+                .max(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getAccuracy))
+                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getGrandeArea).orElse("N/A");
+
+            globalWorstArea = areaAnalytics.stream()
+                .min(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getAccuracy))
+                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getGrandeArea).orElse("N/A");
         }
 
         DashboardResponse.SimuladoMetrics simuladoMetrics = new DashboardResponse.SimuladoMetrics(
             totalSimulados,
             avgScore,
-            bestArea,
-            worstArea
+            globalBestArea,
+            globalWorstArea
         );
 
         // 3. Streak
         int streak = calculateStreak(userId);
 
         // 4. Analytics
-        var areaAnalytics = analyticsService.getAreaAnalytics("TOTAL");
         var topErrors = analyticsService.getTopErrorThemes("LAST_60_DAYS");
 
         // 5. Evolution (Last 6 months)

@@ -85,7 +85,7 @@
           <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
         </div>
         <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
-        <span class="user-name">{{ user()?.nome || 'Estudante' }}</span>
+        <span class="user-name">{{ getFirstName(user()?.nome) }}</span>
       </div>
       <button class="btn-logout" (click)="logout()">Sair</button>
     </div>
@@ -147,7 +147,7 @@
           </div>
           <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
           <div class="user-details">
-            <span class="name">{{ user()?.nome || 'Estudante' }}</span>
+            <span class="name">{{ getFirstName(user()?.nome) }}</span>
             <span class="view-profile">Ver perfil</span>
           </div>
         </div>

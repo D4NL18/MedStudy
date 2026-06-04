@@ -32,31 +32,74 @@ public class AnalyticsService {
         List<Object[]> last30d = repository.aggregateByAreaSince(userId, LocalDate.now().minusDays(30));
         List<Object[]> last7d = repository.aggregateByAreaSince(userId, LocalDate.now().minusDays(7));
 
-        List<AreaAnalyticsResponse> responses = new ArrayList<>();
+        java.util.Map<String, AreaData> aggregated = new java.util.HashMap<>();
+
         for (Object[] row : totals) {
-            String area = (String) row[0];
+            String rawArea = (String) row[0];
+            String area = normalizeAreaName(rawArea);
             long totalQuest = row[1] != null ? ((Number) row[1]).longValue() : 0L;
             long totalCorr = row[2] != null ? ((Number) row[2]).longValue() : 0L;
             long sessions = row[3] != null ? ((Number) row[3]).longValue() : 0L;
-            double rateGlobal = totalQuest > 0 ? (double) totalCorr / totalQuest * 100 : 0;
+            
+            AreaData data = aggregated.computeIfAbsent(area, k -> new AreaData());
+            data.totalQuest += totalQuest;
+            data.totalCorr += totalCorr;
+            data.sessions += sessions;
+        }
 
-            double rate30d = calculateRate(area, last30d, 1);
-            double rate7d = calculateRate(area, last7d, 1);
+        List<AreaAnalyticsResponse> responses = new ArrayList<>();
+        for (java.util.Map.Entry<String, AreaData> entry : aggregated.entrySet()) {
+            String area = entry.getKey();
+            AreaData data = entry.getValue();
+            double rateGlobal = data.totalQuest > 0 ? (double) data.totalCorr / data.totalQuest * 100 : 0;
+
+            double rate30d = calculateNormalizedRate(area, last30d, 1);
+            double rate7d = calculateNormalizedRate(area, last7d, 1);
 
             double trendShort = rate30d > 0 ? (rate7d - rate30d) : 0;
             double trendLong = rateGlobal > 0 ? (rate30d - rateGlobal) : 0;
 
             responses.add(new AreaAnalyticsResponse(
                 area,
-                totalQuest,
+                data.totalQuest,
                 rateGlobal,
-                sessions,
+                data.sessions,
                 trendShort,
                 trendLong,
                 calculatePerformanceLevel(rateGlobal)
             ));
         }
         return responses;
+    }
+
+    private static class AreaData {
+        long totalQuest = 0;
+        long totalCorr = 0;
+        long sessions = 0;
+    }
+
+    private String normalizeAreaName(String raw) {
+        if (raw == null) return "Desconhecido";
+        String lower = raw.toLowerCase();
+        if (lower.contains("clnica") || lower.contains("clinica")) return "Clínica Médica";
+        if (lower.contains("ginecologia") || lower.contains("obstet")) return "Ginecologia e Obstetrícia";
+        if (lower.contains("pediatria")) return "Pediatria";
+        if (lower.contains("cirurgia")) return "Cirurgia";
+        if (lower.contains("preventiva")) return "Preventiva";
+        return raw;
+    }
+
+    private double calculateNormalizedRate(String normalizedKey, List<Object[]> data, int valueIndex) {
+        long q = 0;
+        long c = 0;
+        for (Object[] row : data) {
+            String area = normalizeAreaName((String) row[0]);
+            if (area.equals(normalizedKey)) {
+                q += row[valueIndex] != null ? ((Number) row[valueIndex]).longValue() : 0L;
+                c += row[valueIndex + 1] != null ? ((Number) row[valueIndex + 1]).longValue() : 0L;
+            }
+        }
+        return q > 0 ? (double) c / q * 100 : 0;
     }
 
     public List<TopicAnalyticsResponse> getTopicAnalytics(String period) {

@@ -117,4 +117,9 @@ export class ShellComponent implements OnInit {
   installApp() {
     this.pwaService.install();
   }
+
+  getFirstName(nome: string | undefined): string {
+    if (!nome) return 'Estudante';
+    return nome.split(' ')[0];
+  }
 }
