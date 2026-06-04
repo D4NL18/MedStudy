@@ -81,8 +81,8 @@ public class AnalyticsService {
     private String normalizeAreaName(String raw) {
         if (raw == null) return "Desconhecido";
         String lower = raw.toLowerCase();
-        if (lower.contains("clnica") || lower.contains("clinica")) return "Clínica Médica";
-        if (lower.contains("ginecologia") || lower.contains("obstet")) return "Ginecologia e Obstetrícia";
+        if (lower.contains("clnica") || lower.contains("clinica")) return "Cl\u00EDnica M\u00E9dica";
+        if (lower.contains("ginecologia") || lower.contains("obstet")) return "Ginecologia e Obstetr\u00EDcia";
         if (lower.contains("pediatria")) return "Pediatria";
         if (lower.contains("cirurgia")) return "Cirurgia";
         if (lower.contains("preventiva")) return "Preventiva";

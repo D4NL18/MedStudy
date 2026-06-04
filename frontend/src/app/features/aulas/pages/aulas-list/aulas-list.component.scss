@@ -137,7 +137,7 @@
     font-size: 0.875rem;
 
     th {
-      text-align: left;
+      text-align: center;
       padding: var(--spacing-md);
       background: rgba(255, 255, 255, 0.02);
       color: var(--color-text-secondary);
@@ -156,9 +156,11 @@
       padding: var(--spacing-md);
       border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       color: var(--color-text);
+      text-align: center;
 
       &.actions {
         display: flex;
+        justify-content: center;
         gap: 8px;
       }
 
@@ -203,6 +205,7 @@
   font-size: 0.75rem;
   background: rgba(255, 255, 255, 0.05);
   color: var(--color-text-secondary);
+  white-space: nowrap;
 
   &.assisted {
     background: rgba(16, 185, 129, 0.1);

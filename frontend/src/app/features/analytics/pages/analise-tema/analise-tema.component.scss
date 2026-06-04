@@ -15,8 +15,8 @@ table {
   border-collapse: collapse;
   color: var(--color-text);
   
-  th { text-align: left; padding: 16px; font-size: 0.85rem; opacity: 0.6; font-weight: 600; }
-  td { padding: 16px; border-top: 1px solid var(--color-border); }
+  th { text-align: center; padding: 16px; font-size: 0.85rem; opacity: 0.6; font-weight: 600; }
+  td { text-align: center; padding: 16px; border-top: 1px solid var(--color-border); }
   
   tr:hover td { background: rgba(var(--color-accent-rgb), 0.03); }
 }

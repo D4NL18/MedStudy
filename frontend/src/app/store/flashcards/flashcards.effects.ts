@@ -101,4 +101,14 @@ export class FlashcardsEffects {
       map(() => FlashcardsActions.loadSummary())
     )
   );
+
+  refreshAfterDelete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FlashcardsActions.deleteFlashcardSuccess),
+      mergeMap(() => [
+        FlashcardsActions.loadSummary(),
+        FlashcardsActions.loadFlashcards({ page: 0, size: 10 })
+      ])
+    )
+  );
 }

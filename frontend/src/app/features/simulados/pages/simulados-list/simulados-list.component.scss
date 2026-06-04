@@ -67,7 +67,7 @@
   border-collapse: collapse;
   
   th {
-    text-align: left;
+    text-align: center;
     padding: 20px 24px;
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -78,6 +78,7 @@
   }
 
   td {
+    text-align: center;
     padding: 20px 24px;
     border-top: 1px solid var(--color-border);
     font-size: 0.95rem;

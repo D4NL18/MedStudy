@@ -25,11 +25,7 @@
     </div>
 
     <div class="user-actions">
-      <!-- PWA Install -->
-      <button class="pwa-install-btn glass" *ngIf="canInstall | async" (click)="installApp()">
-        <lucide-icon name="download"></lucide-icon>
-        <span>Instalar App</span>
-      </button>
+      <!-- PWA Install removed -->
 
       <!-- Notificações -->
       <div class="notification-wrapper">
@@ -82,10 +78,10 @@
 
       <div class="user-info" routerLink="/perfil">
         <div class="user-avatar" *ngIf="!profile()?.avatarPresetId">
-          <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+          <span class="initials">{{ getInitials() }}</span>
         </div>
         <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
-        <span class="user-name">{{ getFirstName(user()?.nome) }}</span>
+        <span class="user-name">{{ getFirstName() }}</span>
       </div>
       <button class="btn-logout" (click)="logout()">Sair</button>
     </div>
@@ -143,20 +139,16 @@
       <div class="drawer-footer">
         <div class="user-profile-mobile" routerLink="/perfil" (click)="toggleDrawer()">
           <div class="user-avatar" *ngIf="!profile()?.avatarPresetId">
-            <span class="initials">{{ user()?.nome?.charAt(0) || 'E' }}</span>
+            <span class="initials">{{ getInitials() }}</span>
           </div>
           <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
           <div class="user-details">
-            <span class="name">{{ getFirstName(user()?.nome) }}</span>
+            <span class="name">{{ getFirstName() }}</span>
             <span class="view-profile">Ver perfil</span>
           </div>
         </div>
         
-        <!-- PWA Install Mobile -->
-        <button class="pwa-install-btn-mobile glass" *ngIf="canInstall | async" (click)="installApp()">
-          <lucide-icon name="download"></lucide-icon>
-          <span>Instalar MedStudy</span>
-        </button>
+        <!-- PWA Install Mobile removed -->
 
         <button class="btn-logout-mobile" (click)="logout()">
           <lucide-icon name="log-out"></lucide-icon> Sair

@@ -96,7 +96,7 @@ export class FlashcardsListComponent implements OnInit {
       text = this.extractTextFromTipTap(content);
     }
     
-    return text.replace(/!\[image\]\(.*?\)/g, '🖼️');
+    return text.replace(/!\[image\]\(.*?\)/g, '🖼️').replace(/<img[^>]*>/gi, '🖼️');
   }
 
   private extractTextFromTipTap(node: any): string {

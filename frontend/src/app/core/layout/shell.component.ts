@@ -118,8 +118,18 @@ export class ShellComponent implements OnInit {
     this.pwaService.install();
   }
 
-  getFirstName(nome: string | undefined): string {
+  getFirstName(): string {
+    const p = this.profile();
+    const u = this.user() as any;
+    const nome = p?.nomeCompleto || u?.name || u?.nome;
     if (!nome) return 'Estudante';
     return nome.split(' ')[0];
+  }
+
+  getInitials(): string {
+    const p = this.profile();
+    const u = this.user() as any;
+    const nome = p?.nomeCompleto || u?.name || u?.nome;
+    return nome ? nome.charAt(0).toUpperCase() : 'E';
   }
 }

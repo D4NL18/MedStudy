@@ -97,15 +97,15 @@
             <td data-label="% Acerto">{{ lesson.percentAcerto !== undefined && lesson.percentAcerto !== null ? lesson.percentAcerto + '%' : '—' }}</td>
             <td data-label="Alertas">
               <div class="alerts-container" style="display: flex; gap: 4px;">
-                <span *ngIf="lesson.reforco" class="performance-badge reforco" title="Esta aula precisa de reforço teórico (Média < 75%)">
-                  <lucide-icon name="refresh-ccw"></lucide-icon>
+                <span *ngIf="lesson.reforco && lesson.percentAcerto != null" class="performance-badge reforco" title="Esta aula precisa de reforço teórico (Média < 75%)">
+                  <lucide-icon name="refresh-ccw" [size]="14"></lucide-icon>
                   Reforço
                 </span>
-                <span *ngIf="lesson.revisao" class="performance-badge ineficiente" title="Teoria Ineficiente: Desempenho muito abaixo do esperado">
-                  <lucide-icon name="alert-triangle"></lucide-icon>
+                <span *ngIf="lesson.revisao && lesson.percentAcerto != null" class="performance-badge ineficiente" title="Teoria Ineficiente: Desempenho muito abaixo do esperado">
+                  <lucide-icon name="alert-triangle" [size]="14"></lucide-icon>
                   Crítico
                 </span>
-                <span *ngIf="!lesson.reforco && !lesson.revisao && lesson.aulaAssistida" class="performance-badge ok" style="color: #10B981; opacity: 0.7;">
+                <span *ngIf="(!lesson.reforco || lesson.percentAcerto == null) && (!lesson.revisao || lesson.percentAcerto == null) && lesson.aulaAssistida" class="performance-badge ok" style="color: #10B981; opacity: 0.7;">
                   <lucide-icon name="check-circle" [size]="14"></lucide-icon>
                   Estável
                 </span>
