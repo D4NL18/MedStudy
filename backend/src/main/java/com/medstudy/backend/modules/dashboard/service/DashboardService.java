@@ -91,12 +91,12 @@ public class DashboardService {
 
         if (areaAnalytics != null && !areaAnalytics.isEmpty()) {
             globalBestArea = areaAnalytics.stream()
-                .max(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getAccuracy))
-                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getGrandeArea).orElse("N/A");
+                .max(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::accuracy))
+                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::grandeArea).orElse("N/A");
 
             globalWorstArea = areaAnalytics.stream()
-                .min(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getAccuracy))
-                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getGrandeArea).orElse("N/A");
+                .min(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::accuracy))
+                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::grandeArea).orElse("N/A");
         }
 
         DashboardResponse.SimuladoMetrics simuladoMetrics = new DashboardResponse.SimuladoMetrics(
