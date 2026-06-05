@@ -22,12 +22,12 @@
     <table class="modern-table">
       <thead>
         <tr>
-          <th>Data</th>
-          <th>Prova / Simulado</th>
-          <th>Instituição</th>
-          <th class="text-center">Ano</th>
-          <th class="text-center">Score Total</th>
-          <th class="text-center">Aproveitamento</th>
+          <th (click)="onSort('dataRealizacao')" class="sortable" style="cursor: pointer;">Data <span *ngIf="currentSort()?.column === 'dataRealizacao'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('nome')" class="sortable" style="cursor: pointer;">Prova / Simulado <span *ngIf="currentSort()?.column === 'nome'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('instituicao')" class="sortable" style="cursor: pointer;">Instituição <span *ngIf="currentSort()?.column === 'instituicao'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('ano')" class="text-center sortable" style="cursor: pointer;">Ano <span *ngIf="currentSort()?.column === 'ano'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('scoreTotal')" class="text-center sortable" style="cursor: pointer;">Score Total <span *ngIf="currentSort()?.column === 'scoreTotal'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('aproveitamento')" class="text-center sortable" style="cursor: pointer;">Aproveitamento <span *ngIf="currentSort()?.column === 'aproveitamento'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
           <th>Ações</th>
         </tr>
       </thead>

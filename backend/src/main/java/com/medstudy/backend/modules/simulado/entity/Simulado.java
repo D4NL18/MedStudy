@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "simulados")
@@ -71,6 +72,12 @@ public class Simulado extends BaseEntity {
     @Column(name = "prev_erros", nullable = false)
     private Integer prevErros = 0;
 
+    @Formula("CASE WHEN (cm_total + cir_total + ped_total + go_total + prev_total) > 0 THEN ((cm_acertos + cir_acertos + ped_acertos + go_acertos + prev_acertos) * 100.0) / (cm_total + cir_total + ped_total + go_total + prev_total) ELSE 0.0 END")
+    private Double aproveitamento;
+
+    @Formula("(cm_acertos + cir_acertos + ped_acertos + go_acertos + prev_acertos)")
+    private Integer scoreTotal;
+
     // Getters and Setters
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
@@ -112,4 +119,8 @@ public class Simulado extends BaseEntity {
     public void setPrevAcertos(Integer prevAcertos) { this.prevAcertos = prevAcertos; }
     public Integer getPrevErros() { return prevErros; }
     public void setPrevErros(Integer prevErros) { this.prevErros = prevErros; }
+    public Double getAproveitamento() { return aproveitamento; }
+    public void setAproveitamento(Double aproveitamento) { this.aproveitamento = aproveitamento; }
+    public Integer getScoreTotal() { return scoreTotal; }
+    public void setScoreTotal(Integer scoreTotal) { this.scoreTotal = scoreTotal; }
 }

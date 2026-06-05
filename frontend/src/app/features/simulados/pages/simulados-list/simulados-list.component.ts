@@ -26,6 +26,7 @@ export class SimuladosListComponent implements OnInit {
   loading = this.store.selectSignal<boolean>(selectSimuladosLoading);
   filters = this.store.selectSignal<SimuladoFilters>(selectSimuladosFilters);
   totalCount = this.store.selectSignal<number>(selectSimuladosTotalCount);
+  currentSort = signal<{column: string, direction: 'asc' | 'desc'} | null>({ column: 'dataRealizacao', direction: 'desc' });
 
   ngOnInit() {
     this.loadInitial();
@@ -60,6 +61,25 @@ export class SimuladosListComponent implements OnInit {
       filters, 
       append: false 
     }));
+  }
+
+  onSort(column: string) {
+    const current = this.currentSort();
+    let direction: 'asc' | 'desc' = 'asc';
+    
+    if (current && current.column === column) {
+      direction = current.direction === 'asc' ? 'desc' : 'asc';
+    }
+    
+    this.currentSort.set({ column, direction });
+    
+    const filters = { 
+      ...this.filters(), 
+      sort: `${column},${direction}` 
+    };
+    
+    this.store.dispatch(SimuladosActions.updateFilters({ filters }));
+    this.loadInitial();
   }
 
   openCreateModal() {

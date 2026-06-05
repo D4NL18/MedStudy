@@ -37,6 +37,7 @@ export class SessionModalComponent implements OnInit {
     tema: ['', Validators.required],
     totalQuestoes: [null as number | null, [Validators.required, Validators.min(1)]],
     acertos: [null as number | null, [Validators.required, Validators.min(0)]],
+    erros: [null as number | null, [Validators.required, Validators.min(0)]],
     data: [this.getLocalDate(), [Validators.required, this.futureDateValidator]],
     observacoes: ['']
   }, {
@@ -46,6 +47,8 @@ export class SessionModalComponent implements OnInit {
       return total !== null && acertos !== null && acertos > total ? { acertosInvalidos: true } : null;
     }
   });
+
+  lockedField: 'total' | 'acertos' | 'erros' | null = null;
 
   ngOnInit() {
     if (this.sessionToEdit) {
@@ -57,6 +60,53 @@ export class SessionModalComponent implements OnInit {
         data: this.sessionToEdit.dataSessao,
         observacoes: this.sessionToEdit.observacoes || ''
       });
+      // Inicializar cálculo reverso para erros em modo de edição
+      this.lockedField = 'erros';
+      this.sessionForm.get('erros')?.setValue(this.sessionToEdit.qtsFeitas - this.sessionToEdit.qtsCorretas);
+      this.sessionForm.get('erros')?.disable();
+    }
+  }
+
+  onInput(changedField: 'total' | 'acertos' | 'erros') {
+    const t = this.sessionForm.get('totalQuestoes');
+    const a = this.sessionForm.get('acertos');
+    const e = this.sessionForm.get('erros');
+    
+    const hasT = t?.value !== null && t?.value !== undefined;
+    const hasA = a?.value !== null && a?.value !== undefined;
+    const hasE = e?.value !== null && e?.value !== undefined;
+
+    if (hasT && hasA && !hasE && this.lockedField !== 'erros') {
+      this.lockedField = 'erros';
+      e?.disable({ emitEvent: false });
+    } else if (hasT && hasE && !hasA && this.lockedField !== 'acertos') {
+      this.lockedField = 'acertos';
+      a?.disable({ emitEvent: false });
+    } else if (hasA && hasE && !hasT && this.lockedField !== 'total') {
+      this.lockedField = 'total';
+      t?.disable({ emitEvent: false });
+    }
+
+    if (this.lockedField === 'erros' && hasT && hasA) {
+      e?.setValue(t.value - a.value, { emitEvent: false });
+    } else if (this.lockedField === 'acertos' && hasT && hasE) {
+      a?.setValue(t.value - e.value, { emitEvent: false });
+    } else if (this.lockedField === 'total' && hasA && hasE) {
+      t?.setValue(a.value + e.value, { emitEvent: false });
+    }
+
+    if (this.lockedField === 'erros' && (!hasT || !hasA)) {
+      this.lockedField = null;
+      e?.enable({ emitEvent: false });
+      e?.setValue(null, { emitEvent: false });
+    } else if (this.lockedField === 'acertos' && (!hasT || !hasE)) {
+      this.lockedField = null;
+      a?.enable({ emitEvent: false });
+      a?.setValue(null, { emitEvent: false });
+    } else if (this.lockedField === 'total' && (!hasA || !hasE)) {
+      this.lockedField = null;
+      t?.enable({ emitEvent: false });
+      t?.setValue(null, { emitEvent: false });
     }
   }
 

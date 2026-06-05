@@ -2,8 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BancoService } from '../../core/services/banco.service';
 import * as BancoActions from './banco.actions';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, withLatestFrom } from 'rxjs';
 import { QuestionSession } from '../../core/models/question-session.model';
+import { Store } from '@ngrx/store';
+import { selectBancoFilters } from './banco.selectors';
 
 import { ToastService } from '../../core/services/toast.service';
 
@@ -12,6 +14,7 @@ export class BancoEffects {
   private actions$ = inject(Actions);
   private bancoService = inject(BancoService);
   private toastService = inject(ToastService);
+  private store = inject(Store);
 
   private badgeMap: Record<string, string> = {
     'STREAK_7': 'Mestre da Ofensiva',
@@ -104,6 +107,14 @@ export class BancoEffects {
         BancoActions.deleteSessionSuccess
       ),
       map(() => ({ type: '[Dashboard] Load Dashboard' }))
+    )
+  );
+
+  reloadAfterCreate$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BancoActions.createSessionSuccess),
+      withLatestFrom(this.store.select(selectBancoFilters)),
+      map(([action, filters]) => BancoActions.loadSessions({ filters, append: false }))
     )
   );
 }
