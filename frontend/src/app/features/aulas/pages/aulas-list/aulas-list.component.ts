@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
@@ -10,6 +10,7 @@ import { Lesson, LessonPriority, LessonSummary } from '../../../../core/models/l
 import { LessonService } from '../../../../core/services/lesson.service';
 import { LessonModalComponent } from '../../components/lesson-modal/lesson-modal.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-aulas-list',
@@ -31,9 +32,21 @@ export class AulasListComponent implements OnInit {
   pageIndex = 0;
   pageSize = 10;
   currentFilters: any = {};
+  currentSort = signal<{column: string, direction: 'asc' | 'desc'} | null>({ column: 'dataAula', direction: 'desc' });
+  private searchSubject = new Subject<string>();
 
   ngOnInit() {
+    this.currentFilters.sort = `${this.currentSort()?.column},${this.currentSort()?.direction}`;
     this.loadLessons();
+
+    this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.currentFilters.tema = term || undefined;
+      this.pageIndex = 0;
+      this.loadLessons();
+    });
   }
 
   loadLessons() {
@@ -42,7 +55,6 @@ export class AulasListComponent implements OnInit {
       page: this.pageIndex,
       size: this.pageSize
     }));
-    this.summary$ = this.lessonService.getSummary();
   }
 
   onPageChange(event: PageEvent) {
@@ -103,7 +115,24 @@ export class AulasListComponent implements OnInit {
   }
 
   onSearch(term: string) {
-    this.currentFilters.tema = term || undefined;
+    this.searchSubject.next(term);
+  }
+
+  onSort(column: string) {
+    const current = this.currentSort();
+    let direction: 'asc' | 'desc' = 'asc';
+    
+    if (current && current.column === column) {
+      direction = current.direction === 'asc' ? 'desc' : 'asc';
+    }
+    
+    this.currentSort.set({ column, direction });
+    
+    this.currentFilters = { 
+      ...this.currentFilters, 
+      sort: `${column},${direction}` 
+    };
+    
     this.pageIndex = 0;
     this.loadLessons();
   }

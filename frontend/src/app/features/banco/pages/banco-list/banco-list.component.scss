@@ -38,6 +38,13 @@
       background: rgba(255, 255, 255, 0.15);
       border-color: var(--primary-color);
     }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      pointer-events: none;
+    }
   }
 
   .btn-add {

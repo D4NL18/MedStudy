@@ -5,13 +5,15 @@
       <p>Seu sistema de estudos inteligente está pronto para hoje.</p>
     </div>
     <div class="header-actions">
-      <button class="btn-export csv" (click)="exportCsv()" title="Exportar para Excel (CSV)">
-        <lucide-icon name="file-spreadsheet"></lucide-icon>
-        CSV
+      <button class="btn-export csv" (click)="exportCsv()" [disabled]="isExportingCsv()" title="Exportar para Excel (CSV)">
+        <lucide-icon name="file-spreadsheet" *ngIf="!isExportingCsv()"></lucide-icon>
+        <div class="spinner" *ngIf="isExportingCsv()" style="width: 14px; height: 14px; border-width: 2px;"></div>
+        {{ isExportingCsv() ? 'Baixando...' : 'CSV' }}
       </button>
-      <button class="btn-export pdf" (click)="exportPdf()" title="Gerar Relatório Profissional (PDF)">
-        <lucide-icon name="file-text"></lucide-icon>
-        Relatório PDF
+      <button class="btn-export pdf" (click)="exportPdf()" [disabled]="isExportingPdf()" title="Gerar Relatório Profissional (PDF)">
+        <lucide-icon name="file-text" *ngIf="!isExportingPdf()"></lucide-icon>
+        <div class="spinner" *ngIf="isExportingPdf()" style="width: 14px; height: 14px; border-width: 2px;"></div>
+        {{ isExportingPdf() ? 'Baixando...' : 'Relatório PDF' }}
       </button>
     </div>
     <div class="progress-indicator glass">

@@ -19,4 +19,5 @@ export interface QuestionSessionFilters {
   endDate?: string;
   page: number;
   size: number;
+  sort?: string;
 }

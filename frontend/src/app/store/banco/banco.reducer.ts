@@ -18,7 +18,8 @@ export const initialState: BancoState = adapter.getInitialState({
   totalCount: 0,
   filters: {
     page: 0,
-    size: 10
+    size: 10,
+    sort: 'dataSessao,desc'
   }
 });
 

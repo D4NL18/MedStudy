@@ -130,6 +130,12 @@
   border-radius: 12px;
   background: var(--color-surface);
   border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: opacity 0.3s ease;
+
+  &.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 
   table {
     width: 100%;
@@ -357,17 +363,6 @@
 .error-state {
   color: #EF4444;
   lucide-icon { opacity: 0.8; }
-}
-
-.loading-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
 }
 
 .spinner {

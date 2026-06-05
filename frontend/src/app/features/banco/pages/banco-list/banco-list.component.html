@@ -5,8 +5,10 @@
       <p>Gerencie suas sessões de estudo e acompanhe seu progresso detalhado.</p>
     </div>
     <div class="header-actions">
-      <button class="btn-export glass" (click)="exportCsv()" title="Exportar filtrados para CSV">
-        <span class="icon">📊</span> Exportar CSV
+      <button class="btn-export glass" (click)="exportCsv()" [disabled]="isExportingCsv()" title="Exportar filtrados para CSV">
+        <span class="icon" *ngIf="!isExportingCsv()">📊</span>
+        <div class="spinner" *ngIf="isExportingCsv()" style="width: 14px; height: 14px; border-width: 2px;"></div>
+        {{ isExportingCsv() ? 'Baixando...' : 'Exportar CSV' }}
       </button>
       <button class="btn-add glass" (click)="openCreateModal()">
         <span class="icon">+</span> Nova Sessão
@@ -27,12 +29,12 @@
     <table class="modern-table">
       <thead>
         <tr>
-          <th>Data</th>
-          <th>Grande Área</th>
-          <th>Tema</th>
-          <th class="text-center">Questões</th>
-          <th class="text-center">Acertos</th>
-          <th class="text-center">Performance</th>
+          <th (click)="onSort('dataSessao')" class="sortable" style="cursor: pointer;">Data <span *ngIf="currentSort()?.column === 'dataSessao'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('grandeArea')" class="sortable" style="cursor: pointer;">Grande Área <span *ngIf="currentSort()?.column === 'grandeArea'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('tema')" class="sortable" style="cursor: pointer;">Tema <span *ngIf="currentSort()?.column === 'tema'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('qtsFeitas')" class="text-center sortable" style="cursor: pointer;">Questões <span *ngIf="currentSort()?.column === 'qtsFeitas'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('qtsCorretas')" class="text-center sortable" style="cursor: pointer;">Acertos <span *ngIf="currentSort()?.column === 'qtsCorretas'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+          <th (click)="onSort('performance')" class="text-center sortable" style="cursor: pointer;">Performance <span *ngIf="currentSort()?.column === 'performance'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
           <th>Ações</th>
         </tr>
       </thead>

@@ -28,6 +28,8 @@ export class BancoListComponent implements OnInit {
   loading = this.store.selectSignal<boolean>(selectBancoLoading);
   filters = this.store.selectSignal<QuestionSessionFilters>(selectBancoFilters);
   totalCount = this.store.selectSignal<number>(selectBancoTotalCount);
+  currentSort = signal<{column: string, direction: 'asc' | 'desc'} | null>({ column: 'dataSessao', direction: 'desc' });
+  isExportingCsv = signal(false);
 
   ngOnInit() {
     this.loadInitial();
@@ -62,6 +64,25 @@ export class BancoListComponent implements OnInit {
       filters, 
       append: false 
     }));
+  }
+
+  onSort(column: string) {
+    const current = this.currentSort();
+    let direction: 'asc' | 'desc' = 'asc';
+    
+    if (current && current.column === column) {
+      direction = current.direction === 'asc' ? 'desc' : 'asc';
+    }
+    
+    this.currentSort.set({ column, direction });
+    
+    const filters = { 
+      ...this.filters(), 
+      sort: `${column},${direction}` 
+    };
+    
+    this.store.dispatch(BancoActions.updateFilters({ filters }));
+    this.loadInitial();
   }
 
   openCreateModal() {
@@ -108,9 +129,14 @@ export class BancoListComponent implements OnInit {
   }
 
   exportCsv() {
+    this.isExportingCsv.set(true);
     const filters = this.filters();
-    this.exportService.exportCsv(filters).subscribe(blob => {
-      this.exportService.downloadFile(blob, 'banco-questoes.csv');
+    this.exportService.exportCsv(filters).subscribe({
+      next: blob => {
+        this.exportService.downloadFile(blob, 'banco-questoes.csv');
+        this.isExportingCsv.set(false);
+      },
+      error: () => this.isExportingCsv.set(false)
     });
   }
 }

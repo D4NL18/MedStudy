@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -44,6 +44,9 @@ export class DashboardComponent implements OnInit {
   loading = toSignal(this.store.select(selectDashboardLoading));
   areaAnalytics = toSignal(this.store.select(selectAreaAnalytics));
   
+  isExportingCsv = signal(false);
+  isExportingPdf = signal(false);
+  
   topLessons = [
     { tema: 'Puericultura', grandeArea: 'Pediatria', prioridade: 'Alta' },
     { tema: 'Hemorragias', grandeArea: 'GO', prioridade: 'Alta' },
@@ -67,46 +70,61 @@ export class DashboardComponent implements OnInit {
   }
 
   async exportPdf() {
-    const charts: { [key: string]: string } = {};
-    const chartElements = ['evolution-chart', 'distribution-chart'];
+    this.isExportingPdf.set(true);
+    try {
+      const charts: { [key: string]: string } = {};
+      const chartElements = ['evolution-chart', 'distribution-chart'];
 
-    // Adiciona classe global temporária para forçar as fontes e eixos do gráfico a ficarem escuros no PDF
-    document.body.classList.add('pdf-export-mode');
+      // Adiciona classe global temporária para forçar as fontes e eixos do gráfico a ficarem escuros no PDF
+      document.body.classList.add('pdf-export-mode');
 
-    for (const id of chartElements) {
-      const element = document.getElementById(id);
-      if (element) {
-        // Force fixed width before capture so the layout doesn't get squashed
-        const originalWidth = element.style.width;
-        element.style.width = '800px';
-        
-        // Aguarda 500ms para o ngx-charts recalcular o SVG e rodar a animação de resize
-        await new Promise(resolve => setTimeout(resolve, 500));
+      for (const id of chartElements) {
+        const element = document.getElementById(id);
+        if (element) {
+          // Force fixed width before capture so the layout doesn't get squashed
+          const originalWidth = element.style.width;
+          element.style.width = '800px';
+          
+          // Aguarda 500ms para o ngx-charts recalcular o SVG e rodar a animação de resize
+          await new Promise(resolve => setTimeout(resolve, 500));
 
-        const html2canvasModule = await import('html2canvas');
-        const html2canvas = html2canvasModule.default;
+          const html2canvasModule = await import('html2canvas');
+          const html2canvas = html2canvasModule.default;
 
-        const canvas = await html2canvas(element, {
-          backgroundColor: '#ffffff', // Force white background for PDF readability
-          scale: 2
-        });
-        
-        element.style.width = originalWidth;
-        charts[id] = canvas.toDataURL('image/png');
+          const canvas = await html2canvas(element, {
+            backgroundColor: '#ffffff', // Force white background for PDF readability
+            scale: 2
+          });
+          
+          element.style.width = originalWidth;
+          charts[id] = canvas.toDataURL('image/png');
+        }
       }
+
+      document.body.classList.remove('pdf-export-mode');
+
+      this.exportService.exportPdf('Relatório de Desempenho - MedStudy', charts).subscribe({
+        next: blob => {
+          this.exportService.downloadFile(blob, 'relatorio-medstudy.pdf');
+          this.isExportingPdf.set(false);
+        },
+        error: () => this.isExportingPdf.set(false)
+      });
+    } catch (e) {
+      this.isExportingPdf.set(false);
+      document.body.classList.remove('pdf-export-mode');
     }
-
-    document.body.classList.remove('pdf-export-mode');
-
-    this.exportService.exportPdf('Relatório de Desempenho - MedStudy', charts).subscribe(blob => {
-      this.exportService.downloadFile(blob, 'relatorio-medstudy.pdf');
-    });
   }
 
   exportCsv() {
+    this.isExportingCsv.set(true);
     // No specific filters for dashboard global export
-    this.exportService.exportCsv({}).subscribe(blob => {
-      this.exportService.downloadFile(blob, 'historico-sessoes.csv');
+    this.exportService.exportCsv({}).subscribe({
+      next: blob => {
+        this.exportService.downloadFile(blob, 'historico-sessoes.csv');
+        this.isExportingCsv.set(false);
+      },
+      error: () => this.isExportingCsv.set(false)
     });
   }
 }

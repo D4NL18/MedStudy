@@ -19,6 +19,7 @@ export class BancoService {
     if (filters.tema) params = params.set('tema', filters.tema);
     if (filters.startDate) params = params.set('startDate', filters.startDate);
     if (filters.endDate) params = params.set('endDate', filters.endDate);
+    if (filters.sort) params = params.set('sort', filters.sort);
 
     return this.http.get<{ content: QuestionSession[], totalElements: number }>(this.API_URL, { params });
   }

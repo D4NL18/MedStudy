@@ -62,18 +62,18 @@
       </select>
     </div>
 
-    <div class="table-container card">
+    <div class="table-container card" [class.is-loading]="loading$ | async">
       <table>
         <thead>
           <tr>
-            <th>Área</th>
-            <th>Subárea</th>
-            <th>Tema</th>
-            <th>Prioridade</th>
-            <th>Status</th>
-            <th>Data Aula</th>
-            <th>% Acerto</th>
-            <th>Alertas</th>
+            <th (click)="onSort('grandeArea')" class="sortable" style="cursor: pointer;">Área <span *ngIf="currentSort()?.column === 'grandeArea'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+            <th (click)="onSort('subArea')" class="sortable" style="cursor: pointer;">Subárea <span *ngIf="currentSort()?.column === 'subArea'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+            <th (click)="onSort('tema')" class="sortable" style="cursor: pointer;">Tema <span *ngIf="currentSort()?.column === 'tema'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+            <th (click)="onSort('prioridade')" class="sortable" style="cursor: pointer;">Prioridade <span *ngIf="currentSort()?.column === 'prioridade'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+            <th (click)="onSort('aulaAssistida')" class="sortable" style="cursor: pointer;">Status <span *ngIf="currentSort()?.column === 'aulaAssistida'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+            <th (click)="onSort('dataAula')" class="sortable" style="cursor: pointer;">Data Aula <span *ngIf="currentSort()?.column === 'dataAula'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+            <th (click)="onSort('percentAcerto')" class="sortable" style="cursor: pointer;">% Acerto <span *ngIf="currentSort()?.column === 'percentAcerto'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
+            <th (click)="onSort('reforco')" class="sortable" style="cursor: pointer;">Alertas <span *ngIf="currentSort()?.column === 'reforco'">{{ currentSort()?.direction === 'asc' ? '↑' : '↓' }}</span></th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -146,8 +146,4 @@
       <p>Erro ao carregar aulas. Verifique sua conexão.</p>
     </div>
   </ng-template>
-
-  <div class="loading-overlay" *ngIf="loading$ | async">
-    <div class="spinner"></div>
-  </div>
 </div>

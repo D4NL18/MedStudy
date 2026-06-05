@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDate;
 
@@ -60,7 +61,17 @@ public class StudySession extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 
+    @Formula("CASE WHEN qts_feitas > 0 THEN (CAST(qts_corretas AS float) / qts_feitas) * 100 ELSE 0 END")
+    private Double performance;
+
     // Getters and Setters
+    public Double getPerformance() {
+        return performance;
+    }
+
+    public void setPerformance(Double performance) {
+        this.performance = performance;
+    }
     public Boolean getUrgente() {
         return urgente;
     }

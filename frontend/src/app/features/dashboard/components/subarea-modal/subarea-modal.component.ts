@@ -59,9 +59,11 @@ import { AreaAnalytics } from '../../../../store/dashboard/dashboard.actions';
                     <td [style.color]="perfTheme.getColor(topic.accuracy)">
                       {{ topic.accuracy | number:'1.1-1' }}%
                     </td>
-                    <td class="trend-cell" [class]="topic.trendShort >= 0 ? 'up' : 'down'">
-                      <lucide-icon [name]="topic.trendShort >= 0 ? 'trending-up' : 'trending-down'"></lucide-icon>
-                      {{ topic.trendShort | number:'1.1-1' }}%
+                    <td>
+                      <div class="trend-wrapper" [class]="topic.trendShort >= 0 ? 'up' : 'down'">
+                        <lucide-icon [name]="topic.trendShort >= 0 ? 'trending-up' : 'trending-down'"></lucide-icon>
+                        <span>{{ topic.trendShort | number:'1.1-1' }}%</span>
+                      </div>
                     </td>
                   </tr>
                 }
@@ -73,25 +75,28 @@ import { AreaAnalytics } from '../../../../store/dashboard/dashboard.actions';
     </div>
   `,
   styles: [`
-    .modal-container { padding: 24px; border-radius: 16px; color: var(--color-text); max-width: 800px; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .modal-container { padding: 24px; border-radius: 16px; color: var(--color-text); width: 800px; max-width: 95vw; max-height: 85vh; display: flex; flex-direction: column; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-shrink: 0; }
     .close-btn { background: none; border: none; color: var(--color-text); cursor: pointer; opacity: 0.7; }
     
-    .stats-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    .modal-content { display: flex; flex-direction: column; overflow: hidden; }
+    
+    .stats-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; flex-shrink: 0; }
     .stat-card { background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 12px; display: flex; flex-direction: column; }
     .stat-card .label { font-size: 12px; opacity: 0.7; margin-bottom: 4px; }
     .stat-card .value { font-size: 24px; font-weight: 700; }
     
     .trend { display: flex; align-items: center; gap: 8px; }
-    .trend.up { color: var(--color-success); }
-    .trend.down { color: var(--color-error); }
+    .trend.up, .trend-wrapper.up { color: var(--color-success); }
+    .trend.down, .trend-wrapper.down { color: var(--color-error); }
 
-    .topics-list h3 { margin-bottom: 16px; font-size: 18px; }
+    .topics-list { overflow-y: auto; padding-right: 8px; }
+    .topics-list h3 { margin-bottom: 16px; font-size: 18px; position: sticky; top: 0; background: var(--color-surface); padding-bottom: 8px; z-index: 10; margin-top: 0; }
     table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); opacity: 0.6; font-size: 12px; text-transform: uppercase; }
+    th { text-align: left; padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); opacity: 0.6; font-size: 12px; text-transform: uppercase; position: sticky; top: 40px; background: var(--color-surface); z-index: 10; }
     td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px; }
     
-    .trend-cell { display: flex; align-items: center; gap: 4px; }
+    .trend-wrapper { display: inline-flex; align-items: center; gap: 8px; }
     .loading-spinner { padding: 40px; text-align: center; opacity: 0.7; }
 
     :host ::ng-deep lucide-icon { width: 16px; height: 16px; }

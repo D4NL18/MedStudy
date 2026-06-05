@@ -60,6 +60,14 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
 
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        pointer-events: none;
+        box-shadow: none;
+      }
+
       &.pdf {
         background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
         color: white;
@@ -113,6 +121,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
+  align-items: start;
   @include respond-to('tablet') { grid-template-columns: 1fr; }
 }
 
@@ -191,7 +200,7 @@ td {
 .area-name { font-weight: 500; }
 .accuracy { font-weight: 700; }
 
-.trend { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+.trend { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; }
 .trend.up { color: var(--color-success); }
 .trend.down { color: var(--color-error); }
 
