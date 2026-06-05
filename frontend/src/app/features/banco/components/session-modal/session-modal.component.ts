@@ -72,41 +72,58 @@ export class SessionModalComponent implements OnInit {
     const a = this.sessionForm.get('acertos');
     const e = this.sessionForm.get('erros');
     
-    const hasT = t?.value !== null && t?.value !== undefined;
-    const hasA = a?.value !== null && a?.value !== undefined;
-    const hasE = e?.value !== null && e?.value !== undefined;
+    const valT = t?.value;
+    const valA = a?.value;
+    const valE = e?.value;
 
-    if (hasT && hasA && !hasE && this.lockedField !== 'erros') {
-      this.lockedField = 'erros';
-      e?.disable({ emitEvent: false });
-    } else if (hasT && hasE && !hasA && this.lockedField !== 'acertos') {
-      this.lockedField = 'acertos';
-      a?.disable({ emitEvent: false });
-    } else if (hasA && hasE && !hasT && this.lockedField !== 'total') {
-      this.lockedField = 'total';
-      t?.disable({ emitEvent: false });
-    }
+    const hasT = valT !== null && valT !== undefined;
+    const hasA = valA !== null && valA !== undefined;
+    const hasE = valE !== null && valE !== undefined;
 
-    if (this.lockedField === 'erros' && hasT && hasA) {
-      e?.setValue(t.value - a.value, { emitEvent: false });
-    } else if (this.lockedField === 'acertos' && hasT && hasE) {
-      a?.setValue(t.value - e.value, { emitEvent: false });
-    } else if (this.lockedField === 'total' && hasA && hasE) {
-      t?.setValue(a.value + e.value, { emitEvent: false });
-    }
-
-    if (this.lockedField === 'erros' && (!hasT || !hasA)) {
+    // 1. Destravar se o usuário apagou um dos campos que originou o bloqueio
+    if (this.lockedField === 'erros' && changedField !== 'erros' && (!hasT || !hasA)) {
       this.lockedField = null;
       e?.enable({ emitEvent: false });
       e?.setValue(null, { emitEvent: false });
-    } else if (this.lockedField === 'acertos' && (!hasT || !hasE)) {
+    } else if (this.lockedField === 'acertos' && changedField !== 'acertos' && (!hasT || !hasE)) {
       this.lockedField = null;
       a?.enable({ emitEvent: false });
       a?.setValue(null, { emitEvent: false });
-    } else if (this.lockedField === 'total' && (!hasA || !hasE)) {
+    } else if (this.lockedField === 'total' && changedField !== 'total' && (!hasA || !hasE)) {
       this.lockedField = null;
       t?.enable({ emitEvent: false });
       t?.setValue(null, { emitEvent: false });
+    }
+
+    // 2. Reavaliar o que está preenchido agora
+    const newHasT = t?.value !== null && t?.value !== undefined;
+    const newHasA = a?.value !== null && a?.value !== undefined;
+    const newHasE = e?.value !== null && e?.value !== undefined;
+
+    // 3. Aplicar novo bloqueio se tivermos 2 campos preenchidos e nenhum bloqueio ativo
+    if (this.lockedField === null) {
+      if (newHasT && newHasA && !newHasE) {
+        this.lockedField = 'erros';
+        e?.disable({ emitEvent: false });
+      } else if (newHasT && newHasE && !newHasA) {
+        this.lockedField = 'acertos';
+        a?.disable({ emitEvent: false });
+      } else if (newHasA && newHasE && !newHasT) {
+        this.lockedField = 'total';
+        t?.disable({ emitEvent: false });
+      }
+    }
+
+    // 4. Calcular o valor do campo bloqueado e impedir números negativos
+    if (this.lockedField === 'erros' && newHasT && newHasA) {
+      const calc = (t?.value || 0) - (a?.value || 0);
+      e?.setValue(Math.max(0, calc), { emitEvent: false });
+    } else if (this.lockedField === 'acertos' && newHasT && newHasE) {
+      const calc = (t?.value || 0) - (e?.value || 0);
+      a?.setValue(Math.max(0, calc), { emitEvent: false });
+    } else if (this.lockedField === 'total' && newHasA && newHasE) {
+      const calc = (a?.value || 0) + (e?.value || 0);
+      t?.setValue(Math.max(0, calc), { emitEvent: false });
     }
   }
 

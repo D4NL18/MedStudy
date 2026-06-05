@@ -25,24 +25,33 @@
     </div>
 
     <div class="form-grid">
-      <div class="form-group">
-        <label>Total de Questões</label>
+      <div class="form-group" [class.is-locked]="lockedField === 'total'">
+        <label>
+          Total de Questões
+          <span class="locked-badge" *ngIf="lockedField === 'total'">🔒 Auto</span>
+        </label>
         <input type="number" formControlName="totalQuestoes" placeholder="0" class="glass-input" (input)="onInput('total')">
         <div class="error" *ngIf="sessionForm.get('totalQuestoes')?.touched && sessionForm.get('totalQuestoes')?.errors?.['required']">
           Obrigatório.
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Acertos</label>
+      <div class="form-group" [class.is-locked]="lockedField === 'acertos'">
+        <label>
+          Acertos
+          <span class="locked-badge" *ngIf="lockedField === 'acertos'">🔒 Auto</span>
+        </label>
         <input type="number" formControlName="acertos" placeholder="0" class="glass-input" (input)="onInput('acertos')">
         <div class="error" *ngIf="sessionForm.get('acertos')?.touched && (sessionForm.get('acertos')?.errors?.['required'] || sessionForm.errors?.['acertosInvalidos'])">
           {{ sessionForm.errors?.['acertosInvalidos'] ? 'Inválido' : 'Obrigatório' }}
         </div>
       </div>
       
-      <div class="form-group">
-        <label>Erros</label>
+      <div class="form-group" [class.is-locked]="lockedField === 'erros'">
+        <label>
+          Erros
+          <span class="locked-badge" *ngIf="lockedField === 'erros'">🔒 Auto</span>
+        </label>
         <input type="number" formControlName="erros" placeholder="0" class="glass-input" (input)="onInput('erros')">
         <div class="error" *ngIf="sessionForm.get('erros')?.touched && sessionForm.get('erros')?.errors?.['required']">
           Obrigatório.
