@@ -5,36 +5,40 @@
   </div>
 
   <div class="stats-row">
-    <div class="stat-card glass atrasadas" [class.active]="activeTab === 'ATRASADAS'" (click)="setActiveTab('ATRASADAS')">
+    <div class="stat-card glass atrasadas" [class.active]="activeTab === 'ATRASADAS'" (click)="setActiveTab('ATRASADAS')" title="Clique para ver as revisões atrasadas">
       <div class="card-header">
         <lucide-icon name="alert-circle" [size]="20"></lucide-icon>
         <span>Revisões Atrasadas</span>
       </div>
       <span class="value">{{ (summary$ | async)?.atrasadas || 0 }}</span>
+      <div class="click-hint">Clique para filtrar</div>
     </div>
 
-    <div class="stat-card glass hoje" [class.active]="activeTab === 'HOJE'" (click)="setActiveTab('HOJE')">
+    <div class="stat-card glass hoje" [class.active]="activeTab === 'HOJE'" (click)="setActiveTab('HOJE')" title="Clique para ver as revisões de hoje">
       <div class="card-header">
         <lucide-icon name="clock" [size]="20"></lucide-icon>
         <span>Para Revisar Hoje</span>
       </div>
       <span class="value">{{ (summary$ | async)?.hoje || 0 }}</span>
+      <div class="click-hint">Clique para filtrar</div>
     </div>
 
-    <div class="stat-card glass futuras" [class.active]="activeTab === 'FUTURAS'" (click)="setActiveTab('FUTURAS')">
+    <div class="stat-card glass futuras" [class.active]="activeTab === 'FUTURAS'" (click)="setActiveTab('FUTURAS')" title="Clique para ver as revisões futuras">
       <div class="card-header">
         <lucide-icon name="calendar" [size]="20"></lucide-icon>
         <span>Revisões Futuras</span>
       </div>
       <span class="value">{{ (summary$ | async)?.futuras || 0 }}</span>
+      <div class="click-hint">Clique para filtrar</div>
     </div>
 
-    <div class="stat-card glass concluidas" [class.active]="activeTab === 'CONCLUIDAS'" (click)="setActiveTab('CONCLUIDAS')">
+    <div class="stat-card glass concluidas" [class.active]="activeTab === 'CONCLUIDAS'" (click)="setActiveTab('CONCLUIDAS')" title="Clique para ver as revisões realizadas">
       <div class="card-header">
         <lucide-icon name="check-circle" [size]="20"></lucide-icon>
         <span>Realizadas</span>
       </div>
       <span class="value">{{ (summary$ | async)?.concluidas || 0 }}</span>
+      <div class="click-hint">Clique para filtrar</div>
     </div>
   </div>
 
@@ -69,9 +73,10 @@
             <td data-label="Revisão Programada">{{ session.dataProximaRevisao | date:'dd/MM/yyyy' }}</td>
             <td data-label="% Último Acerto">{{ getAccuracy(session) }}%</td>
             <td class="action-cell" data-label="Ação">
-              <button class="action-btn" (click)="startRevision(session.id)" 
-                      [disabled]="session.revisaoConcluida">
-                <lucide-icon [name]="session.revisaoConcluida ? 'check-circle' : 'play'" [size]="20"></lucide-icon>
+              <button class="action-btn" (click)="startRevision(session)" 
+                      [disabled]="session.revisaoConcluida"
+                      title="Concluir revisão">
+                <lucide-icon [name]="session.revisaoConcluida ? 'check-circle' : 'circle'" [size]="20"></lucide-icon>
               </button>
             </td>
           </tr>

@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
 import { RevisionActions } from '../../../../store/revision/revision.actions';
 import { selectSessions, selectSummary, selectLoading } from '../../../../store/revision/revision.reducer';
-import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
+import { RevisionService } from '../../../../core/services/revision.service';
 
 type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
 
@@ -20,6 +21,8 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
 })
 export class RevisaoListComponent implements OnInit {
   private store = inject(Store);
+  private router = inject(Router);
+  private revisionService = inject(RevisionService);
   
   summary$ = this.store.select(selectSummary);
   sessions$ = this.store.select(selectSessions);
@@ -65,8 +68,13 @@ export class RevisaoListComponent implements OnInit {
     return Math.round((session.qtsCorretas / session.qtsFeitas) * 100);
   }
 
-  startRevision(sessionId: string) {
-    this.store.dispatch(FlashcardsActions.loadStudyQueue());
+  startRevision(session: any) {
+    if (session.id && !session.revisaoConcluida) {
+      this.revisionService.concluirRevisao(session.id).subscribe(() => {
+        this.store.dispatch(RevisionActions.loadSummary());
+        this.loadSessions();
+      });
+    }
   }
 
   getTabIcon(tab: RevisionTab): string {

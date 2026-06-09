@@ -3,6 +3,7 @@ import { Router, CanActivateFn } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectIsAuthenticated } from '../../store/auth/auth.selectors';
 import { map, take } from 'rxjs';
+import * as AuthActions from '../../store/auth/auth.actions';
 
 export const authGuard: CanActivateFn = () => {
   const store = inject(Store);
@@ -14,8 +15,8 @@ export const authGuard: CanActivateFn = () => {
       if (isAuthenticated) {
         return true;
       } else {
-        router.navigate(['/login']);
-        return false;
+        store.dispatch(AuthActions.logout()); // Clears invalid/expired token
+        return false; // Redirection is handled by the logout effect
       }
     })
   );

@@ -67,6 +67,13 @@ public class StudySessionController {
         service.deleteSession(id);
     }
 
+    @PatchMapping("/{id}/concluir")
+    @Operation(summary = "Marcar revisão da sessão como concluída")
+    public ResponseEntity<Void> markAsConcluded(@PathVariable UUID id) {
+        service.concluirRevisao(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/metrics")
     @Operation(summary = "Obter métricas agregadas de desempenho e streak")
     public ResponseEntity<StudySessionMetricsResponse> getMetrics() {

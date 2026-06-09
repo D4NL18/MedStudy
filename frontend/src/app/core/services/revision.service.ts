@@ -20,4 +20,8 @@ export class RevisionService {
     const params = new HttpParams().set('tipo', filter);
     return this.http.get<StudySession[]>(this.apiUrl, { params });
   }
+
+  concluirRevisao(id: string): Observable<void> {
+    return this.http.patch<void>(`/api/study-sessions/${id}/concluir`, {});
+  }
 }

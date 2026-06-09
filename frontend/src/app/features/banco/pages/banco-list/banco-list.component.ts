@@ -10,6 +10,7 @@ import { SessionModalComponent } from '../../components/session-modal/session-mo
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ExportService } from '../../../../core/services/export/export.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-banco-list',
@@ -22,6 +23,7 @@ export class BancoListComponent implements OnInit {
   private store = inject(Store);
   private dialog = inject(MatDialog);
   private exportService = inject(ExportService);
+  private route = inject(ActivatedRoute);
   private searchSubject = new Subject<string>();
 
   sessions = this.store.selectSignal<QuestionSession[]>(selectAllSessions);
@@ -32,14 +34,25 @@ export class BancoListComponent implements OnInit {
   isExportingCsv = signal(false);
 
   ngOnInit() {
-    this.loadInitial();
+    this.route.queryParams.subscribe(params => {
+      if (params['tema']) {
+        this.store.dispatch(BancoActions.updateFilters({ 
+          filters: { ...this.filters(), tema: params['tema'], page: 0 } 
+        }));
+      } else if (params['area']) {
+        this.store.dispatch(BancoActions.updateFilters({ 
+          filters: { ...this.filters(), tema: params['area'], page: 0 } 
+        }));
+      }
+      this.loadInitial();
+    });
 
     this.searchSubject.pipe(
       debounceTime(400),
       distinctUntilChanged()
     ).subscribe(term => {
       this.store.dispatch(BancoActions.updateFilters({ 
-        filters: { tema: term, page: 0 } 
+        filters: { ...this.filters(), tema: term, page: 0 } 
       }));
       this.loadInitial();
     });

@@ -18,7 +18,7 @@
 
   <div class="filters-bar glass">
     <div class="search-box">
-      <input type="text" placeholder="Filtrar por tema ou área..." (input)="onSearch($event)">
+      <input type="text" placeholder="Filtrar por tema ou área..." (input)="onSearch($event)" [value]="filters().tema || ''">
     </div>
     <div class="filter-actions">
       <span class="results-count">{{ totalCount() }} sessões encontradas</span>

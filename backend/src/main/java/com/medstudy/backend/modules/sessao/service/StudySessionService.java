@@ -133,10 +133,23 @@ public class StudySessionService {
         if (request.dataProximaRevisao() != null) {
             entity.setDataProximaRevisao(request.dataProximaRevisao());
         } else {
-            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
+            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao(), sessionsBefore.stream().filter(s -> s.getTema() != null && s.getTema().equals(request.tema())).toList()));
         }
 
         StudySession saved = repository.save(entity);
+        
+        // Mark previous revisions for the same tema as concluded
+        List<StudySession> pendingRevisions = repository.findAll(
+            Specification.where(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()))
+                .and(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasTema(request.tema()))
+                .and(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasRevisaoConcluida(false))
+        );
+        for (StudySession pending : pendingRevisions) {
+            if (!pending.getId().equals(saved.getId())) {
+                pending.setRevisaoConcluida(true);
+                repository.save(pending);
+            }
+        }
         
         // Gamificação: Check for badges
         java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId());
@@ -194,7 +207,7 @@ public class StudySessionService {
         if (request.dataProximaRevisao() != null) {
             entity.setDataProximaRevisao(request.dataProximaRevisao());
         } else {
-            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao()));
+            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao(), sessionsBefore.stream().filter(s -> s.getTema() != null && s.getTema().equals(request.tema())).toList()));
         }
 
         StudySession saved = repository.save(entity);
@@ -216,6 +229,12 @@ public class StudySessionService {
     public void deleteSession(UUID id) {
         StudySession entity = getSessionAndVerifyOwnership(id);
         repository.delete(entity);
+    }
+
+    public void concluirRevisao(UUID id) {
+        StudySession entity = getSessionAndVerifyOwnership(id);
+        entity.setRevisaoConcluida(true);
+        repository.save(entity);
     }
 
     public StudySessionMetricsResponse getMetrics() {
@@ -254,13 +273,18 @@ public class StudySessionService {
         return entity;
     }
 
-    private LocalDate calculateNextRevision(double percentual, LocalDate dataSessao) {
+    private LocalDate calculateNextRevision(double percentual, LocalDate dataSessao, List<StudySession> pastSessionsForTema) {
         int diasParaRevisao;
 
+        long reviewsBoas = pastSessionsForTema == null ? 0 : pastSessionsForTema.stream()
+            .filter(s -> s.getQtsFeitas() != null && s.getQtsFeitas() > 0 && 
+                        ((double) (s.getQtsCorretas() != null ? s.getQtsCorretas() : 0) / s.getQtsFeitas() * 100) >= 75)
+            .count();
+
         if (percentual < 50) diasParaRevisao = 1;
-        else if (percentual < 75) diasParaRevisao = 3;
-        else if (percentual < 90) diasParaRevisao = 7;
-        else diasParaRevisao = 15;
+        else if (percentual < 75) diasParaRevisao = 2 + (int) reviewsBoas;
+        else if (percentual < 90) diasParaRevisao = 5 + (int) (reviewsBoas * 3);
+        else diasParaRevisao = 10 + (int) (reviewsBoas * 5);
 
         return dataSessao.plusDays(diasParaRevisao);
     }
