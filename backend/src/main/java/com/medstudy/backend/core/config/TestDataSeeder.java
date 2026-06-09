@@ -50,7 +50,7 @@ public class TestDataSeeder implements CommandLineRunner {
     }
 
     private void seedForUser(User user) {
-        if (sessionRepository.countByUserId(user.getId()) < 25) {
+        if (sessionRepository.countByUserId(user.getId()) < 100) {
             seedSessions(user);
         }
         if (lessonRepository.countByUserId(user.getId()) < 25) {
@@ -65,10 +65,19 @@ public class TestDataSeeder implements CommandLineRunner {
     }
 
     private void seedSessions(User user) {
-        for (int i = 1; i <= 25; i++) {
-            createSession(user, "Clínica Médica", "Cardiologia " + i, 10, 8);
+        for (int i = 1; i <= 100; i++) {
+            // Distribute them: 40 atrasadas, 20 hoje, 40 futuras
+            int daysOffset;
+            if (i <= 40) {
+                daysOffset = -(i % 10 + 1); // 1 to 10 days ago
+            } else if (i <= 60) {
+                daysOffset = 0; // Today
+            } else {
+                daysOffset = (i % 10 + 1); // 1 to 10 days in the future
+            }
+            createSession(user, "Clínica Médica", "Tema Teste " + i, 10, 8, daysOffset);
         }
-        System.out.println(">>> TestDataSeeder: 25 sessões de estudo criadas para " + user.getEmail());
+        System.out.println(">>> TestDataSeeder: 100 sessões de estudo criadas para " + user.getEmail());
     }
 
     private void seedLessons(User user) {
@@ -109,14 +118,16 @@ public class TestDataSeeder implements CommandLineRunner {
         lessonRepository.save(lesson);
     }
 
-    private void createSession(User user, String area, String tema, int total, int acertos) {
+    private void createSession(User user, String area, String tema, int total, int acertos, int daysOffset) {
         StudySession session = new StudySession();
         session.setUser(user);
         session.setGrandeArea(area);
         session.setTema(tema);
-        session.setDataSessao(LocalDate.now());
+        session.setDataSessao(LocalDate.now().minusDays(30)); // Done 30 days ago
         session.setQtsFeitas(total);
         session.setQtsCorretas(acertos);
+        session.setDataProximaRevisao(LocalDate.now().plusDays(daysOffset));
+        session.setRevisaoConcluida(false);
         sessionRepository.save(session);
     }
 

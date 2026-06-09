@@ -48,8 +48,11 @@
         <lucide-icon [name]="getTabIcon(activeTab)" [size]="20"></lucide-icon>
         <span>{{ getTabLabel(activeTab) }}</span>
       </div>
-      <div class="header-right">
-        <span class="badge">{{ (sessions$ | async)?.length }}</span>
+      <div class="header-right" style="display: flex; gap: 1rem; align-items: center;">
+        <div class="search-box">
+          <input type="text" [formControl]="searchControl" placeholder="Buscar por tema ou área..." class="search-input">
+        </div>
+        <span class="badge">{{ (totalElements$ | async) || (sessions$ | async)?.length || 0 }}</span>
       </div>
     </div>
 
@@ -82,6 +85,25 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls" *ngIf="{ current: currentPage$ | async, total: totalPages$ | async } as pageData">
+        <ng-container *ngIf="pageData.total && pageData.total > 1">
+          <button class="page-btn" 
+                  [disabled]="pageData.current === 0" 
+                  (click)="changePage((pageData.current || 0) - 1)">
+            Anterior
+          </button>
+          <span class="page-info">
+            Página {{ (pageData.current || 0) + 1 }} de {{ pageData.total }}
+          </span>
+          <button class="page-btn" 
+                  [disabled]="(pageData.current || 0) >= pageData.total - 1" 
+                  (click)="changePage((pageData.current || 0) + 1)">
+            Próxima
+          </button>
+        </ng-container>
+      </div>
 
       <div class="empty-state" *ngIf="(sessions$ | async)?.length === 0 && !(loading$ | async)">
         <lucide-icon name="check-circle" [size]="48"></lucide-icon>

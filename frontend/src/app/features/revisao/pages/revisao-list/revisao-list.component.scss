@@ -111,6 +111,29 @@
   &.hoje .list-header { background: linear-gradient(90deg, #F59E0B, #D97706); }
   &.futuras .list-header { background: linear-gradient(90deg, #10B981, #059669); }
   &.concluidas .list-header { background: linear-gradient(90deg, #455A64, #263238); }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    padding: 0 var(--spacing-sm);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .search-input {
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      outline: none;
+      width: 200px;
+      
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
 }
 
 .table-container {
@@ -157,6 +180,45 @@
   padding: var(--spacing-3xl);
   color: var(--color-text-secondary);
   h3 { color: var(--color-text); margin-bottom: 8px; }
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+
+  .page-btn {
+    background: var(--color-surface-glass);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(var(--color-accent-rgb), 0.1);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .page-info {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
 }
 
 .spinner {

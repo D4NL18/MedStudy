@@ -2,9 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 import { RevisionActions } from '../../../../store/revision/revision.actions';
-import { selectSessions, selectSummary, selectLoading } from '../../../../store/revision/revision.reducer';
+import { selectSessions, selectSummary, selectLoading, selectCurrentPage, selectTotalPages, selectPageSize, selectTotalElements } from '../../../../store/revision/revision.reducer';
 import { RevisionService } from '../../../../core/services/revision.service';
 
 type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
@@ -14,6 +16,7 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
   standalone: true,
   imports: [
     CommonModule, 
+    ReactiveFormsModule,
     LucideAngularModule
   ],
   templateUrl: './revisao-list.component.html',
@@ -27,6 +30,12 @@ export class RevisaoListComponent implements OnInit {
   summary$ = this.store.select(selectSummary);
   sessions$ = this.store.select(selectSessions);
   loading$ = this.store.select(selectLoading);
+  currentPage$ = this.store.select(selectCurrentPage);
+  totalPages$ = this.store.select(selectTotalPages);
+  pageSize$ = this.store.select(selectPageSize);
+  totalElements$ = this.store.select(selectTotalElements);
+
+  searchControl = new FormControl('');
 
   activeTab: RevisionTab = 'HOJE';
   tabs: { id: RevisionTab, label: string }[] = [
@@ -39,15 +48,43 @@ export class RevisaoListComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(RevisionActions.loadSummary());
     this.loadSessions();
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.store.dispatch(RevisionActions.loadSessions({ 
+        filter: this.activeTab, 
+        page: 0, 
+        search: searchTerm || '' 
+      }));
+    });
   }
 
   setActiveTab(tab: RevisionTab) {
     this.activeTab = tab;
-    this.loadSessions();
+    this.searchControl.setValue('', { emitEvent: false });
+    this.store.dispatch(RevisionActions.loadSessions({ 
+      filter: this.activeTab, 
+      page: 0, 
+      search: '' 
+    }));
   }
 
   loadSessions() {
-    this.store.dispatch(RevisionActions.loadSessions({ filter: this.activeTab }));
+    this.store.dispatch(RevisionActions.loadSessions({ 
+      filter: this.activeTab, 
+      page: 0, 
+      search: this.searchControl.value || '' 
+    }));
+  }
+
+  changePage(newPage: number) {
+    this.store.dispatch(RevisionActions.loadSessions({ 
+      filter: this.activeTab, 
+      page: newPage,
+      search: this.searchControl.value || '' 
+    }));
   }
 
   getIndicatorPos(): number {

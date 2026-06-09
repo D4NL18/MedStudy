@@ -12,8 +12,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications;
+import com.medstudy.backend.modules.sessao.entity.StudySession;
+
 import java.time.LocalDate;
-import java.util.List;
+import java.util.UUID;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -66,32 +72,15 @@ public class RevisionService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudySessionResponse> getSessions(String tipo) {
+    public Page<StudySessionResponse> getSessions(String tipo, String search, Pageable pageable) {
         User user = getCurrentUser();
         UUID userId = user.getId();
         LocalDate today = LocalDate.now();
         
-        List<com.medstudy.backend.modules.sessao.entity.StudySession> sessions;
+        Specification<StudySession> spec = Specification.where(StudySessionSpecifications.hasUserId(userId))
+            .and(StudySessionSpecifications.hasTipoRevision(tipo, today))
+            .and(StudySessionSpecifications.search(search));
         
-        switch (tipo != null ? tipo.toUpperCase() : "") {
-            case "ATRASADAS":
-                sessions = sessionRepository.findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(userId, today);
-                break;
-            case "HOJE":
-                sessions = sessionRepository.findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(userId, today);
-                break;
-            case "FUTURAS":
-                sessions = sessionRepository.findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(userId, today);
-                break;
-            case "CONCLUIDAS":
-                sessions = sessionRepository.findByUserIdAndRevisaoConcluidaTrue(userId);
-                break;
-            default:
-                // Fallback to HOJE if unknown
-                sessions = sessionRepository.findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(userId, today);
-                break;
-        }
-        
-        return sessions.stream().map(mapper::toResponse).collect(Collectors.toList());
+        return sessionRepository.findAll(spec, pageable).map(mapper::toResponse);
     }
 }

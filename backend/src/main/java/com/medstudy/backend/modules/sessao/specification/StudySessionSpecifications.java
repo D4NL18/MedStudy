@@ -80,4 +80,23 @@ public class StudySessionSpecifications {
             );
         };
     }
+
+    public static Specification<StudySession> hasTipoRevision(String tipo, java.time.LocalDate today) {
+        return (root, query, cb) -> {
+            if (tipo == null) return null;
+            
+            switch (tipo.toUpperCase()) {
+                case "ATRASADAS":
+                    return cb.and(cb.isFalse(root.get("revisaoConcluida")), cb.lessThan(root.get("dataProximaRevisao"), today));
+                case "HOJE":
+                    return cb.and(cb.isFalse(root.get("revisaoConcluida")), cb.equal(root.get("dataProximaRevisao"), today));
+                case "FUTURAS":
+                    return cb.and(cb.isFalse(root.get("revisaoConcluida")), cb.greaterThan(root.get("dataProximaRevisao"), today));
+                case "CONCLUIDAS":
+                    return cb.isTrue(root.get("revisaoConcluida"));
+                default:
+                    return cb.and(cb.isFalse(root.get("revisaoConcluida")), cb.equal(root.get("dataProximaRevisao"), today));
+            }
+        };
+    }
 }

@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springdoc.core.annotations.ParameterObject;
 
 @RestController
 @RequestMapping("/api/revisoes")
@@ -24,8 +28,10 @@ public class RevisionController {
     }
 
     @GetMapping
-    public ResponseEntity<java.util.List<StudySessionResponse>> getSessions(
-            @org.springframework.web.bind.annotation.RequestParam(required = false, defaultValue = "HOJE") String tipo) {
-        return ResponseEntity.ok(service.getSessions(tipo));
+    public ResponseEntity<Page<StudySessionResponse>> getSessions(
+            @RequestParam(required = false, defaultValue = "HOJE") String tipo,
+            @RequestParam(required = false) String search,
+            @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(service.getSessions(tipo, search, pageable));
     }
 }
