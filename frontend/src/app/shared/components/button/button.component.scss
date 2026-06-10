@@ -1,0 +1,99 @@
+@use '../../../../styles/themes' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    &:hover {
+      transform: none;
+    }
+  }
+
+  &.btn-primary {
+    background: var(--color-accent);
+    color: #fff;
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 12px rgba(var(--color-accent-rgb), 0.3);
+    }
+  }
+
+  &.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    &:hover:not(:disabled) {
+      background: rgba(var(--color-text-rgb), 0.05);
+    }
+  }
+
+  &.btn-destructive {
+    background: #EF4444;
+    color: #fff;
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+  }
+
+  &.btn-outline {
+    background: transparent;
+    border: 2px solid var(--color-accent);
+    color: var(--color-accent);
+    &:hover:not(:disabled) {
+      background: rgba(var(--color-accent-rgb), 0.1);
+    }
+  }
+
+  &.btn-ghost {
+    background: transparent;
+    color: var(--color-text);
+    &:hover:not(:disabled) {
+      background: rgba(var(--color-text-rgb), 0.05);
+    }
+  }
+
+  &.btn-cta {
+    background: linear-gradient(135deg, var(--color-accent) 0%, #4facfe 100%);
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 14px 28px;
+    box-shadow: 0 4px 15px rgba(var(--color-accent-rgb), 0.3);
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(var(--color-accent-rgb), 0.4);
+    }
+  }
+
+  &.btn-icon-only {
+    padding: 10px;
+    border-radius: 50%;
+    .content:empty {
+      display: none;
+    }
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  lucide-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
