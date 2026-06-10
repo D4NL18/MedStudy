@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
-import { AVATAR_PRESETS, AvatarPreset } from '../../../core/constants/avatar-presets';
+import { AVATAR_PRESETS, AvatarPreset } from '@core/constants/avatar-presets';
 
 @Component({
   selector: 'app-avatar',

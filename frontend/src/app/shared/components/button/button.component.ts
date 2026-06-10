@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'cta' | 'icon' | 'destructive' | 'outline' | 'ghost';
+export type ButtonVariant = 'primary' | 'secondary' | 'cta' | 'icon' | 'destructive' | 'outline' | 'ghost' | string;
 
 @Component({
   selector: 'app-button',
@@ -20,7 +20,9 @@ export class ButtonComponent {
   @Output() onClick = new EventEmitter<Event>();
 
   get buttonClasses(): string {
-    return `btn btn-${this.variant} ${this.icon && !this.hasContent() ? 'btn-icon-only' : ''}`;
+    const v = this.variant || 'primary';
+    const baseClass = (v.startsWith('btn-') || v.includes(' ')) ? v : `btn-${v}`;
+    return `btn ${baseClass} ${this.icon && !this.hasContent() ? 'btn-icon-only' : ''}`;
   }
 
   // To check if there is projected content, though usually we can just rely on css empty

@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class ModalLayoutComponent {
   @Input() title = '';
   @Input() loading = false;
+  @Input() saveText = 'Salvar Registro';
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<void>();
 }

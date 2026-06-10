@@ -13,7 +13,7 @@
   <footer class="modal-footer">
     <button class="btn-secondary" (click)="close.emit()" [disabled]="loading">Cancelar</button>
     <button class="btn-primary" (click)="save.emit()" [disabled]="loading">
-      {{ loading ? 'Salvando...' : 'Salvar Registro' }}
+      {{ loading ? 'Salvando...' : saveText }}
     </button>
   </footer>
 </div>

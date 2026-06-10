@@ -6,9 +6,9 @@
         <div class="fill" [style.width.%]="getProgress((currentIndex$ | async)!, (queue$ | async)?.length || 0)"></div>
       </div>
     </div>
-    <button class="close-btn" (click)="close()" aria-label="Fechar estudo">
+    <app-button variant="close-btn" (onClick)="close()" aria-label="Fechar estudo">
       <lucide-icon name="x" [size]="24"></lucide-icon>
-    </button>
+    </app-button>
   </div>
 
   <!-- Card State -->
@@ -41,51 +41,51 @@
   <div class="zoom-backdrop" *ngIf="isZoomed()" (click)="closeZoom($event)">
     <div class="zoom-container" (click)="$event.stopPropagation()">
       <img [src]="zoomImageUrl()" alt="Zoomed Image">
-      <button class="close-zoom-btn" (click)="closeZoom($event)" aria-label="Fechar zoom da imagem">
+      <app-button variant="close-zoom-btn" (onClick)="closeZoom($event)" aria-label="Fechar zoom da imagem">
         <lucide-icon name="x" [size]="32"></lucide-icon>
-      </button>
+      </app-button>
     </div>
   </div>
 
   <!-- Actions -->
   <div class="actions result-step" *ngIf="currentCard() && isFlipped() && !hasResult()">
-    <button class="result-btn wrong" (click)="setResult(true)">
+    <app-button variant="result-btn wrong" (onClick)="setResult(true)">
       <lucide-icon name="x-circle" [size]="32"></lucide-icon>
       <span>Errei</span>
-    </button>
-    <button class="result-btn correct" (click)="setResult(false)">
+    </app-button>
+    <app-button variant="result-btn correct" (onClick)="setResult(false)">
       <lucide-icon name="check-circle" [size]="32"></lucide-icon>
       <span>Acertei</span>
-    </button>
+    </app-button>
   </div>
 
   <div class="actions difficulty-step" *ngIf="currentCard() && hasResult()">
-    <button class="diff-btn hard" (click)="rate('HARD')">
+    <app-button variant="diff-btn hard" (onClick)="rate('HARD')">
       <lucide-icon name="alert-triangle" [size]="24"></lucide-icon>
       <span>Difícil</span>
-    </button>
-    <button class="diff-btn medium" (click)="rate('MEDIUM')">
+    </app-button>
+    <app-button variant="diff-btn medium" (onClick)="rate('MEDIUM')">
       <lucide-icon name="clock" [size]="24"></lucide-icon>
       <span>Médio</span>
-    </button>
-    <button class="diff-btn easy" (click)="rate('EASY')">
+    </app-button>
+    <app-button variant="diff-btn easy" (onClick)="rate('EASY')">
       <lucide-icon name="check" [size]="24"></lucide-icon>
       <span>Fácil</span>
-    </button>
+    </app-button>
   </div>
 
   <!-- Empty State -->
   <div class="no-cards" *ngIf="isEmpty$ | async">
     <h3>Nada por aqui!</h3>
     <p>Você não tem cards para revisar hoje. Ótimo trabalho!</p>
-    <button class="finish-btn" (click)="close()">Voltar</button>
+    <app-button variant="finish-btn" (onClick)="close()">Voltar</app-button>
   </div>
 
   <!-- Finished State -->
   <div class="no-cards" *ngIf="isSessionOver$ | async">
     <h3>Sessão Finalizada!</h3>
     <p>Você revisou todos os cartões desta sessão.</p>
-    <button class="finish-btn" (click)="close()">Concluir</button>
+    <app-button variant="finish-btn" (onClick)="close()">Concluir</app-button>
   </div>
 
   <div class="loading-state" *ngIf="loading$ | async">

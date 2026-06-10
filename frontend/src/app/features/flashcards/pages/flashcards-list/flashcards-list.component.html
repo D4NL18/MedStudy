@@ -5,18 +5,18 @@
       <p>Seu deck pessoal com repetição espaçada</p>
     </div>
     <div class="actions">
-      <button class="btn-outline" (click)="resetProgress()">
+      <app-button variant="btn-outline" (onClick)="resetProgress()">
         <lucide-icon name="rotate-cw" [size]="18"></lucide-icon>
         Resetar Progresso
-      </button>
-      <button class="btn-primary" routerLink="/flashcards/novo">
+      </app-button>
+      <app-button variant="btn-primary" routerLink="/flashcards/novo">
         <lucide-icon name="plus" [size]="18"></lucide-icon>
         Novo Card
-      </button>
-      <button class="btn-success" (click)="startStudy()">
+      </app-button>
+      <app-button variant="btn-success" (onClick)="startStudy()">
         <lucide-icon name="play" [size]="18"></lucide-icon>
         Estudar Hoje
-      </button>
+      </app-button>
     </div>
   </div>
 
@@ -76,10 +76,10 @@
              <span *ngIf="!card.dificuldadeUltima">—</span>
           </td>
           <td class="actions-cell">
-            <button class="icon-btn" aria-label="Editar flashcard"><lucide-icon name="edit" [size]="16"></lucide-icon></button>
-            <button class="icon-btn delete" (click)="deleteCard(card.id)" aria-label="Excluir flashcard">
+            <app-button variant="icon-btn" aria-label="Editar flashcard"><lucide-icon name="edit" [size]="16"></lucide-icon></app-button>
+            <app-button variant="icon-btn delete" (onClick)="deleteCard(card.id)" aria-label="Excluir flashcard">
               <lucide-icon name="trash-2" [size]="16"></lucide-icon>
-            </button>
+            </app-button>
           </td>
         </tr>
       </tbody>

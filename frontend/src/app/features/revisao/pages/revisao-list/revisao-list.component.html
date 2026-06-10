@@ -76,11 +76,11 @@
             <td data-label="Revisão Programada">{{ session.dataProximaRevisao | date:'dd/MM/yyyy' }}</td>
             <td data-label="% Último Acerto">{{ getAccuracy(session) }}%</td>
             <td class="action-cell" data-label="Ação">
-              <button class="action-btn" (click)="startRevision(session)" 
+              <app-button variant="action-btn" (onClick)="startRevision(session)" 
                       [disabled]="session.revisaoConcluida"
                       title="Concluir revisão">
                 <lucide-icon [name]="session.revisaoConcluida ? 'check-circle' : 'circle'" [size]="20"></lucide-icon>
-              </button>
+              </app-button>
             </td>
           </tr>
         </tbody>
@@ -89,19 +89,19 @@
       <!-- Pagination Controls -->
       <div class="pagination-controls" *ngIf="{ current: currentPage$ | async, total: totalPages$ | async } as pageData">
         <ng-container *ngIf="pageData.total && pageData.total > 1">
-          <button class="page-btn" 
+          <app-button variant="page-btn" 
                   [disabled]="pageData.current === 0" 
-                  (click)="changePage((pageData.current || 0) - 1)">
+                  (onClick)="changePage((pageData.current || 0) - 1)">
             Anterior
-          </button>
+          </app-button>
           <span class="page-info">
             Página {{ (pageData.current || 0) + 1 }} de {{ pageData.total }}
           </span>
-          <button class="page-btn" 
+          <app-button variant="page-btn" 
                   [disabled]="(pageData.current || 0) >= pageData.total - 1" 
                   (click)="changePage((pageData.current || 0) + 1)">
             Próxima
-          </button>
+          </app-button>
         </ng-container>
       </div>
 

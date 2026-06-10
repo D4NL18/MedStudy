@@ -11,62 +11,62 @@
 
   <!-- Tabs Navigation -->
   <div class="tabs-nav glass">
-    <button 
-      class="tab-btn" 
+    <app-button 
+      variant="tab-btn" 
       [class.active]="activeTab() === 'feed'" 
-      (click)="changeTab('feed')"
+      (onClick)="changeTab('feed')"
     >
       <lucide-icon name="activity" [size]="18"></lucide-icon>
       <span>Feed de Atividades</span>
-    </button>
+    </app-button>
 
-    <button 
-      class="tab-btn" 
+    <app-button 
+      variant="tab-btn" 
       [class.active]="activeTab() === 'friends'" 
-      (click)="changeTab('friends')"
+      (onClick)="changeTab('friends')"
     >
       <lucide-icon name="users" [size]="18"></lucide-icon>
       <span>Meus Amigos</span>
       <span class="count-badge" *ngIf="friends().length > 0">{{ friends().length }}</span>
-    </button>
+    </app-button>
 
-    <button 
-      class="tab-btn" 
+    <app-button 
+      variant="tab-btn" 
       [class.active]="activeTab() === 'pending'" 
-      (click)="changeTab('pending')"
+      (onClick)="changeTab('pending')"
     >
       <lucide-icon name="user-check" [size]="18"></lucide-icon>
       <span>Solicitações</span>
       <span class="count-badge pending" *ngIf="pendingRequests().length > 0">{{ pendingRequests().length }}</span>
-    </button>
+    </app-button>
 
-    <button 
-      class="tab-btn" 
+    <app-button 
+      variant="tab-btn" 
       [class.active]="activeTab() === 'search'" 
-      (click)="changeTab('search')"
+      (onClick)="changeTab('search')"
     >
       <lucide-icon name="search" [size]="18"></lucide-icon>
       <span>Buscar Estudantes</span>
-    </button>
+    </app-button>
 
-    <button 
-      class="tab-btn" 
+    <app-button 
+      variant="tab-btn" 
       [class.active]="activeTab() === 'blocked'" 
-      (click)="changeTab('blocked')"
+      (onClick)="changeTab('blocked')"
     >
       <lucide-icon name="ban" [size]="18"></lucide-icon>
       <span>Bloqueados</span>
-    </button>
+    </app-button>
 
-    <button 
-      class="tab-btn" 
+    <app-button 
+      variant="tab-btn" 
       [class.active]="activeTab() === 'notifications'" 
-      (click)="changeTab('notifications')"
+      (onClick)="changeTab('notifications')"
     >
       <lucide-icon name="bell" [size]="18"></lucide-icon>
       <span>Alertas</span>
       <span class="count-badge unread" *ngIf="unreadNotificationsCount() > 0">{{ unreadNotificationsCount() }}</span>
-    </button>
+    </app-button>
   </div>
 
   <!-- Content Area -->
@@ -119,12 +119,12 @@
 
               <!-- Friend Actions -->
               <div class="action-buttons">
-                <button class="btn-action block" (click)="blockUser(friend)" title="Bloquear Estudante">
+                <app-button variant="btn-action block" (onClick)="blockUser(friend)" title="Bloquear Estudante">
                   <lucide-icon name="ban" [size]="16"></lucide-icon>
-                </button>
-                <button class="btn-action remove" (click)="removeFriend(friend)" title="Remover Amigo">
+                </app-button>
+                <app-button variant="btn-action remove" (onClick)="removeFriend(friend)" title="Remover Amigo">
                   <lucide-icon name="user-minus" [size]="16"></lucide-icon>
-                </button>
+                </app-button>
               </div>
             </div>
           </div>
@@ -135,9 +135,9 @@
             <lucide-icon name="users" [size]="48"></lucide-icon>
             <h3>Nenhum amigo conectado ainda</h3>
             <p>Vá na aba de busca para encontrar colegas de faculdade e começar a acompanhar seus progressos de estudos!</p>
-            <button class="btn-primary" (click)="changeTab('search')">
+            <app-button variant="btn-primary" (onClick)="changeTab('search')">
               <lucide-icon name="search" [size]="16"></lucide-icon> Buscar Colegas
-            </button>
+            </app-button>
           </div>
         </ng-template>
       </div>
@@ -163,12 +163,12 @@
             </div>
 
             <div class="card-footer actions-center">
-              <button class="btn-accept" (click)="acceptFriendRequest(req)">
+              <app-button variant="btn-accept" (onClick)="acceptFriendRequest(req)">
                 <lucide-icon name="user-check" [size]="16"></lucide-icon> Aceitar
-              </button>
-              <button class="btn-decline" (click)="declineFriendRequest(req)">
+              </app-button>
+              <app-button variant="btn-decline" (onClick)="declineFriendRequest(req)">
                 <lucide-icon name="user-x" [size]="16"></lucide-icon> Recusar
-              </button>
+              </app-button>
             </div>
           </div>
         </div>
@@ -224,13 +224,13 @@
               <!-- Actions based on status -->
               <div class="status-actions">
                 <!-- Case: NONE -->
-                <button 
-                  class="btn-primary-sm" 
+                <app-button 
+                  variant="btn-primary-sm" 
                   *ngIf="profile.relationshipStatus === 'NONE'" 
-                  (click)="sendFriendRequest(profile)"
+                  (onClick)="sendFriendRequest(profile)"
                 >
                   <lucide-icon name="user-plus" [size]="14"></lucide-icon> Adicionar
-                </button>
+                </app-button>
 
                 <!-- Case: PENDING -->
                 <div class="pending-status-group" *ngIf="profile.relationshipStatus === 'PENDING'">
@@ -241,12 +241,12 @@
                   
                   <!-- Received by current user -->
                   <div class="received-actions" *ngIf="!profile.isRequester">
-                    <button class="btn-accept-sm" (click)="acceptFriendRequest(profile)" title="Aceitar">
+                    <app-button variant="btn-accept-sm" (onClick)="acceptFriendRequest(profile)" title="Aceitar">
                       <lucide-icon name="user-check" [size]="14"></lucide-icon> Aceitar
-                    </button>
-                    <button class="btn-decline-sm" (click)="declineFriendRequest(profile)" title="Recusar">
+                    </app-button>
+                    <app-button variant="btn-decline-sm" (onClick)="declineFriendRequest(profile)" title="Recusar">
                       <lucide-icon name="user-x" [size]="14"></lucide-icon>
-                    </button>
+                    </app-button>
                   </div>
                 </div>
 
@@ -262,32 +262,32 @@
                 </div>
 
                 <!-- Case: BLOCKED -->
-                <button 
-                  class="btn-secondary-sm" 
+                <app-button 
+                  variant="btn-secondary-sm" 
                   *ngIf="profile.relationshipStatus === 'BLOCKED'" 
-                  (click)="unblockUser(profile)"
+                  (onClick)="unblockUser(profile)"
                 >
                   Desbloquear
-                </button>
+                </app-button>
               </div>
 
               <!-- Generic block from search card -->
-              <button 
-                class="btn-action block" 
+              <app-button 
+                variant="btn-action block" 
                 *ngIf="profile.relationshipStatus !== 'BLOCKED' && profile.relationshipStatus !== 'ACCEPTED'" 
-                (click)="blockUser(profile)" 
+                (onClick)="blockUser(profile)" 
                 title="Bloquear"
               >
                 <lucide-icon name="ban" [size]="14"></lucide-icon>
-              </button>
-              <button 
-                class="btn-action remove" 
+              </app-button>
+              <app-button 
+                variant="btn-action remove" 
                 *ngIf="profile.relationshipStatus === 'ACCEPTED'" 
-                (click)="removeFriend(profile)" 
+                (onClick)="removeFriend(profile)" 
                 title="Remover Amigo"
               >
                 <lucide-icon name="user-minus" [size]="14"></lucide-icon>
-              </button>
+              </app-button>
             </div>
           </div>
         </div>
@@ -319,9 +319,9 @@
             </div>
 
             <div class="card-footer actions-center">
-              <button class="btn-unblock" (click)="unblockUser(blocked)">
+              <app-button variant="btn-unblock" (onClick)="unblockUser(blocked)">
                 <lucide-icon name="user-check" [size]="16"></lucide-icon> Desbloquear
-              </button>
+              </app-button>
             </div>
           </div>
         </div>
@@ -340,13 +340,13 @@
         <div class="notifications-section glass">
           <div class="section-header">
             <h3>🔔 Alertas e Notificações Sociais</h3>
-            <button 
-              class="btn-mark-all glass" 
+            <app-button 
+              variant="btn-mark-all glass" 
               *ngIf="notifications().length > 0" 
               (click)="markAllNotificationsAsRead()"
             >
               Marcar todas como lidas
-            </button>
+            </app-button>
           </div>
 
           <div class="notifications-list" *ngIf="notifications().length > 0; else noNotifications">
@@ -391,9 +391,9 @@
   <!-- Detailed Profile Modal with Glassmorphic Privacy Overlay -->
   <div class="modal-backdrop fade-in" *ngIf="selectedProfileDetail()" (click)="closeDetailModal()">
     <div class="modal-content glass pop-in" (click)="$event.stopPropagation()">
-      <button class="btn-close-modal" (click)="closeDetailModal()">
+      <app-button variant="btn-close-modal" (onClick)="closeDetailModal()">
         <lucide-icon name="x" [size]="20"></lucide-icon>
-      </button>
+      </app-button>
 
       <div class="modal-loading-overlay" *ngIf="modalLoading()">
         <div class="spinner"></div>
@@ -412,25 +412,25 @@
             
             <div class="overlay-actions">
               <!-- Action Button based on friendship status -->
-              <button 
-                class="btn-primary" 
+              <app-button 
+                variant="btn-primary" 
                 *ngIf="p.friendshipStatus === 'NONE'"
-                (click)="sendFriendRequestFromModal(p)"
+                (onClick)="sendFriendRequestFromModal(p)"
               >
                 <lucide-icon name="user-plus" [size]="16"></lucide-icon> Adicionar Amigo
-              </button>
+              </app-button>
               
               <span class="badge-status pending" *ngIf="p.friendshipStatus === 'PENDING' && p.isRequester">
                 <lucide-icon name="clock" [size]="14"></lucide-icon> Solicitação Enviada
               </span>
 
               <div class="received-actions-modal" *ngIf="p.friendshipStatus === 'PENDING' && !p.isRequester">
-                <button class="btn-accept" (click)="acceptFriendRequestFromModal(p)">
+                <app-button variant="btn-accept" (onClick)="acceptFriendRequestFromModal(p)">
                   <lucide-icon name="user-check" [size]="16"></lucide-icon> Aceitar
-                </button>
-                <button class="btn-decline" (click)="declineFriendRequestFromModal(p)">
+                </app-button>
+                <app-button variant="btn-decline" (onClick)="declineFriendRequestFromModal(p)">
                   <lucide-icon name="user-x" [size]="16"></lucide-icon> Recusar
-                </button>
+                </app-button>
               </div>
 
               <span class="badge-status accepted" *ngIf="p.friendshipStatus === 'ACCEPTED'">

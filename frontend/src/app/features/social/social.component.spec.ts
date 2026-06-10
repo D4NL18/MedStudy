@@ -1,8 +1,8 @@
 import { MockBuilder, MockRender } from 'ng-mocks';
 import { SocialComponent } from './social.component';
-import { SocialService } from '../../core/services/social.service';
-import { ToastService } from '../../core/services/toast.service';
-import { ProfileService } from '../../core/services/profile.service';
+import { SocialService } from '@core/services/social.service';
+import { ToastService } from '@core/services/toast.service';
+import { ProfileService } from '@core/services/profile.service';
 import { of } from 'rxjs';
 
 describe('SocialComponent', () => {

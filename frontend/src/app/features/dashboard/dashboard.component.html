@@ -5,16 +5,16 @@
       <p>Seu sistema de estudos inteligente está pronto para hoje.</p>
     </div>
     <div class="header-actions">
-      <button class="btn-export csv" (click)="exportCsv()" [disabled]="isExportingCsv()" title="Exportar para Excel (CSV)">
+      <app-button variant="btn-export csv" (onClick)="exportCsv()" [disabled]="isExportingCsv()" title="Exportar para Excel (CSV)">
         <lucide-icon name="file-spreadsheet" *ngIf="!isExportingCsv()"></lucide-icon>
         <div class="spinner" *ngIf="isExportingCsv()" style="width: 14px; height: 14px; border-width: 2px;"></div>
         {{ isExportingCsv() ? 'Baixando...' : 'CSV' }}
-      </button>
-      <button class="btn-export pdf" (click)="exportPdf()" [disabled]="isExportingPdf()" title="Gerar Relatório Profissional (PDF)">
+      </app-button>
+      <app-button variant="btn-export pdf" (onClick)="exportPdf()" [disabled]="isExportingPdf()" title="Gerar Relatório Profissional (PDF)">
         <lucide-icon name="file-text" *ngIf="!isExportingPdf()"></lucide-icon>
         <div class="spinner" *ngIf="isExportingPdf()" style="width: 14px; height: 14px; border-width: 2px;"></div>
         {{ isExportingPdf() ? 'Baixando...' : 'Relatório PDF' }}
-      </button>
+      </app-button>
     </div>
     <div class="progress-indicator glass">
       <div class="label">Progresso Teórico</div>
@@ -97,9 +97,9 @@
                       {{ area.trendLong | number:'1.1-1' }}%
                     </td>
                     <td>
-                      <button class="btn-detail" (click)="openSubareaDetails(area)" aria-label="Ver detalhes">
+                      <app-button variant="btn-detail" (onClick)="openSubareaDetails(area)" aria-label="Ver detalhes">
                         <lucide-icon name="maximize-2"></lucide-icon>
-                      </button>
+                      </app-button>
                     </td>
                   </tr>
                 }
@@ -163,7 +163,7 @@
             </div>
           </ng-template>
 
-          <button class="btn-ver-todos" routerLink="/perfil">Ver todas as medalhas</button>
+          <app-button variant="btn-ver-todos" routerLink="/perfil">Ver todas as medalhas</app-button>
         </section>
       </div>
     }

@@ -2,16 +2,16 @@ import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { CompeticoesComponent } from './competicoes.component';
 import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
-import { SocialService } from '../../core/services/social.service';
-import { ToastService } from '../../core/services/toast.service';
+import { SocialService } from '@core/services/social.service';
+import { ToastService } from '@core/services/toast.service';
 import { of } from 'rxjs';
-import { CompetitionActions } from '../../store/competition/competition.actions';
+import { CompetitionActions } from '@store/competition/competition.actions';
 import { 
   CompetitionType, 
   MetricType, 
   CompetitionStatus, 
   ParticipantStatus 
-} from '../../core/models/competition.model';
+} from '@core/models/competition.model';
 
 describe('CompeticoesComponent', () => {
   MockInstance.scope();

@@ -67,9 +67,9 @@
             placeholder="Mínimo 8 caracteres"
             [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
           >
-          <button type="button" class="btn-toggle" (click)="togglePassword()" aria-label="Alternar visibilidade da senha">
+          <app-button type="button" variant="btn-toggle" (onClick)="togglePassword()" aria-label="Alternar visibilidade da senha">
             {{ showPassword() ? '🙈' : '👁️' }}
-          </button>
+          </app-button>
         </div>
         <div class="error-badge" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" style="margin-top: 4px; padding: 6px; background: transparent; border: none;">
           <small *ngIf="registerForm.get('password')?.errors?.['required']">A senha é obrigatória.</small>
@@ -78,13 +78,13 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-login" [disabled]="registerForm.invalid || isLoading">
+      <app-button type="submit" variant="btn-login" [disabled]="registerForm.invalid || isLoading">
         @if (isLoading) {
           <span class="spinner"></span>
         } @else {
           Registrar
         }
-      </button>
+      </app-button>
       
       <p style="font-size: 0.75rem; color: var(--color-text); text-align: center; opacity: 0.8;">
         Ao se cadastrar, você concorda com nossos <a routerLink="/termos" style="color: var(--color-accent);">Termos</a> e <a routerLink="/privacidade" style="color: var(--color-accent);">Privacidade</a>.

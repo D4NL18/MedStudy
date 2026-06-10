@@ -1,3 +1,4 @@
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, OnInit, inject, signal, DestroyRef, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -16,8 +17,7 @@ import { FeedDashboardComponent } from './feed/feed-dashboard.component';
 @Component({
   selector: 'app-social',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [ButtonComponent, CommonModule,
     ReactiveFormsModule,
     LucideAngularModule,
     AvatarComponent,
