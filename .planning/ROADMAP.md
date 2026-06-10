@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-15 (shipped 2026-05-11) [v1.0-ROADMAP.md](.planning/milestones/v1.0-ROADMAP.md)
 - ✅ **v1.1 Legacy Convergence** — Phases 16-21 (shipped 2026-05-18) [v1.1-ROADMAP.md](.planning/milestones/v1.1-ROADMAP.md)
-- 🚧 **v1.2 Socialização Aprofundada** — Phases 22-27 (in progress)
+- ✅ **v1.2 Socialização Aprofundada** — Phases 22-28 (shipped 2026-06-10) [v1.2-ROADMAP.md](.planning/milestones/v1.2-ROADMAP.md)
 
 ## Phases
 
@@ -27,67 +27,18 @@
 
 </details>
 
----
+<details>
+<summary>✅ v1.2 Socialização Aprofundada (Phases 22-28) — SHIPPED 2026-06-10</summary>
 
-### Phase 22 — Perfis de Usuário & Cadastro de Informações
-**Goal:** Criar a infraestrutura de perfis com informações básicas, identificador único (@handle) e visualização pública/privada.
-**Requirements:** PROF-01, PROF-02
-**Deliverables:**
-- Backend: Schema de Profile associado ao User com campo único de `@handle` (username).
-- Backend: Endpoints de CRUD de informações de perfil (nome, @handle, semestre, faculdade, avatar).
-- UI: Tela de Edição de Perfil nas configurações.
-- UI: Tela de Perfil Público amigável exibindo badges conquistadas.
+- [x] Phase 22: Perfis de Usuário & Cadastro de Informações
+- [x] Phase 23: Sistema de Conexões (Amigos) & Busca
+- [x] Phase 24: Configurações Granulares de Privacidade
+- [x] Phase 25: Grupos de Competição Automatizados (Gymrats style)
+- [x] Phase 26: Tela de Registro de Usuário
+- [x] Phase 27: Redução de Custos, Paginação & Rate Limiting
+- [x] Phase 28: Feed de Atividades & Interações Silenciosas
 
-### Phase 23 — Sistema de Conexões (Amigos) & Busca
-**Goal:** Permitir adicionar, aceitar, recusar amizades e realizar pesquisas na base por nome ou handle.
-**Requirements:** FRND-01, FRND-02
-**Deliverables:**
-- Backend: Tabela/Entidade de Friendships (Pending, Accepted, Blocked).
-- Backend: Busca otimizada de usuários por nome, @handle ou faculdade.
-- UI: Painel Social na barra de navegação/módulo com listagem de amigos e solicitações pendentes.
-- UI: Barra de busca com suporte a busca rápida por `@handle` e botão de "Adicionar Amigo".
-
-### Phase 24 — Configurações Granulares de Privacidade
-**Goal:** Garantir privacidade total e proteção de dados sensíveis na rede social do app.
-**Requirements:** PRIV-01, PRIV-02
-**Deliverables:**
-- Backend: Filtros automáticos em buscas e perfis baseados nas restrições salvas pelo usuário.
-- UI: Painel de Configurações de Privacidade detalhado (alternar visibilidade de Streak, Faculdade, Questões, Badges).
-- Backend/Frontend: Testes rigorosos de controle de acesso aos endpoints de perfil.
-
-### Phase 25 — Grupos de Competição Automatizados (Gymrats style)
-**Goal:** Criar competições baseadas em volume de questões resolvidas e duelos 1v1.
-**Requirements:** COMP-01, COMP-02, COMP-03, COMP-04
-**Deliverables:**
-- Backend: Modelos de Competição (título, duração, participantes, ranking).
-- Backend: Contador dinâmico de questões do banco agregando automaticamente aos desafios ativos.
-- UI: Dashboard de Competição de Grupos com gráficos e ranking dinâmico.
-- UI: Interface rápida de "Duelos 1v1" temporários.
-
-### Phase 26 — Tela de Registro de Usuário
-**Status**: `COMPLETED`
-**Goal:** Criar uma tela de registro para permitir que novos usuários criem uma conta no sistema.
-**Requirements:** AUTH-01
-**Deliverables:**
-- Backend: Endpoints de criação de conta e validação inicial de dados.
-- UI: Tela de registro amigável e responsiva com formulário de cadastro.
-
-### Phase 27 — Redução de Custos, Paginação & Rate Limiting
-**Status**: `COMPLETED`
-**Goal:** Otimizar a performance da aplicação e reduzir custos de infraestrutura através de paginação severa, lazy loading e mitigação de DDoS.
-**Requirements:** PERF-01, SEC-02
-**Deliverables:**
-- Backend: Endpoint de listagem paginados (Pageable), consultas Lazy no Hibernate, Rate Limiting (Bucket4j - 50/7 req/min).
-- Frontend: `mat-paginator` implementado em todas as listas longas e tratamento visual de `429 Too Many Requests`.
-
-### Phase 28 — Feed de Atividades & Interações Silenciosas
-**Status**: `COMPLETED`
-**Goal:** Implementar o feed de conquistas automatizadas e interações silenciosas de suporte.
-**Requirements:** FEED-01, FEED-02, FRND-03
-**Deliverables:**
-- Backend: Geração automática de eventos no Feed para amigos baseados em conquistas e metas de questões.
-- Backend: Sistema de reações (Clap, Cheer) e notificações reativas instantâneas.
-- UI: Feed de atividade social dinâmico no Dashboard principal.
+</details>
 
 ## Progress
 
@@ -95,13 +46,13 @@
 |-------|-----------|----------------|--------|-----------|
 | 1-15  | v1.0      | 100%           | Shipped | 2026-05-11|
 | 16-21 | v1.1      | 100%           | Shipped | 2026-05-18|
-| 22    | v1.2      | 1/1            | Complete | 2026-05-19|
-| 23    | v1.2      | 1/1            | Complete | 2026-05-19|
-| 24    | v1.2      | 1/1            | Complete | 2026-05-19|
-| 25    | v1.2      | 0/1            | Planned | -         |
-| 26    | v1.2      | 0/1            | Planned | -         |
-| 27    | v1.2      | 1/1            | Complete | 2026-05-28|
-| 28    | v1.2      | 1/1            | Complete | 2026-06-10|
+| 22    | v1.2      | 1/1            | Shipped | 2026-05-19|
+| 23    | v1.2      | 1/1            | Shipped | 2026-05-19|
+| 24    | v1.2      | 1/1            | Shipped | 2026-05-19|
+| 25    | v1.2      | 1/1            | Shipped | 2026-06-10|
+| 26    | v1.2      | 1/1            | Shipped | 2026-06-10|
+| 27    | v1.2      | 1/1            | Shipped | 2026-05-28|
+| 28    | v1.2      | 1/1            | Shipped | 2026-06-10|
 
 ---
-*Roadmap updated for v1.2 on 2026-05-19*
+*Roadmap updated for v1.3 on 2026-06-10*
