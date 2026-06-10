@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Socializacao Aprofundada
-status: planned
-last_updated: "2026-05-20T14:21:00.000Z"
+status: planning
+last_updated: "2026-06-10T16:30:07.123Z"
 last_activity: 2026-05-20
 progress:
-  total_phases: 26
-  completed_phases: 24
-  total_plans: 28
-  completed_plans: 27
-  percent: 96
+  total_phases: 30
+  completed_phases: 16
+  total_plans: 29
+  completed_plans: 24
+  percent: 83
 ---
 
 # STATE.md — MedStudy Project Memory
