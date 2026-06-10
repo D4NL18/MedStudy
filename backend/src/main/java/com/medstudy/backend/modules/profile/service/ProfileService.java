@@ -134,9 +134,7 @@ public class ProfileService {
             // Public profile OR viewed by friend: mask granular fields if toggles are off
             dto.setIsPrivate(false);
 
-            if (Boolean.TRUE.equals(profile.getShareFaculdade())) {
-                // leave as mapped (faculdade, semestre, isFormado are populated)
-            } else {
+            if (!Boolean.TRUE.equals(profile.getShareFaculdade())) {
                 dto.setFaculdade(null);
                 dto.setSemestre(null);
                 dto.setIsFormado(null);

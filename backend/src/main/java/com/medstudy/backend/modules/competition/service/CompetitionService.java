@@ -3,7 +3,13 @@ package com.medstudy.backend.modules.competition.service;
 import com.medstudy.backend.modules.competition.dto.CompetitionRequestDTO;
 import com.medstudy.backend.modules.competition.dto.CompetitionResponseDTO;
 import com.medstudy.backend.modules.competition.dto.LeaderboardEntryDTO;
-import com.medstudy.backend.modules.competition.entity.*;
+
+import com.medstudy.backend.modules.competition.entity.Competition;
+import com.medstudy.backend.modules.competition.entity.CompetitionParticipant;
+import com.medstudy.backend.modules.competition.entity.ParticipantStatus;
+import com.medstudy.backend.modules.competition.entity.MetricType;
+import com.medstudy.backend.modules.competition.entity.CompetitionStatus;
+import com.medstudy.backend.modules.competition.entity.CompetitionType;
 import com.medstudy.backend.modules.competition.mapper.CompetitionMapper;
 import com.medstudy.backend.modules.competition.repository.CompetitionParticipantRepository;
 import com.medstudy.backend.modules.competition.repository.CompetitionRepository;

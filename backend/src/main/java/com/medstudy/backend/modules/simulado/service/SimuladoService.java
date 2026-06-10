@@ -178,10 +178,8 @@ public class SimuladoService {
         if (t > 0 && a > 0 && e == 0) e = Math.max(0, t - a);
         else if (t > 0 && e > 0 && a == 0) a = Math.max(0, t - e);
         else if (a > 0 && e > 0 && t == 0) t = a + e;
-        else if (t > 0 && a > 0 && e > 0) {
-             if (a + e != t) {
-                 throw new IllegalArgumentException("Soma de acertos e erros não confere com o total");
-             }
+        else if (t > 0 && a > 0 && e > 0 && a + e != t) {
+            throw new IllegalArgumentException("Soma de acertos e erros não confere com o total");
         }
         
         if (a + e > t && t > 0) {

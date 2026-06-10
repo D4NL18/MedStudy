@@ -20,8 +20,7 @@ import com.medstudy.backend.modules.sessao.entity.StudySession;
 
 import java.time.LocalDate;
 import java.util.UUID;
-import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor

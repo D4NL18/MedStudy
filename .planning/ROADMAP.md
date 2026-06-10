@@ -5,8 +5,18 @@
 - ✅ **v1.0 MVP** — Phases 1-15 (shipped 2026-05-11) [v1.0-ROADMAP.md](.planning/milestones/v1.0-ROADMAP.md)
 - ✅ **v1.1 Legacy Convergence** — Phases 16-21 (shipped 2026-05-18) [v1.1-ROADMAP.md](.planning/milestones/v1.1-ROADMAP.md)
 - ✅ **v1.2 Socialização Aprofundada** — Phases 22-28 (shipped 2026-06-10) [v1.2-ROADMAP.md](.planning/milestones/v1.2-ROADMAP.md)
+- 🏃 **v1.3 Code Quality, Performance & UX Polish** — Phases 29-34 (Active)
 
 ## Phases
+
+### 🏃 v1.3 Code Quality, Performance & UX Polish (Phases 29-34)
+
+- [ ] Phase 29: Limpeza & Refatoração do Backend (Java/Spring Boot)
+- [ ] Phase 30: Arquitetura Frontend & Reuso de Componentes (Angular)
+- [ ] Phase 31: Hardening e Segurança Avançada (OWASP Deep Dive)
+- [ ] Phase 32: Expansão de Cobertura de Testes
+- [ ] Phase 33: UX Polish, Animações e Fluidez (Aesthetics)
+- [ ] Phase 34: Documentação em Código (Clean Comments & Javadoc/TSDoc)
 
 <details>
 <summary>✅ v1.0 MVP (Phases 1-15) — SHIPPED 2026-05-11</summary>

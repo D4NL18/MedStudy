@@ -1,7 +1,7 @@
 package com.medstudy.backend.modules.dashboard.service;
 
 import com.medstudy.backend.modules.dashboard.dto.DashboardResponse;
-import com.medstudy.backend.modules.sessao.entity.StudySession;
+
 import com.medstudy.backend.modules.sessao.repository.StudySessionRepository;
 import com.medstudy.backend.modules.simulado.entity.Simulado;
 import com.medstudy.backend.modules.simulado.repository.SimuladoRepository;
@@ -60,16 +60,15 @@ public class DashboardService {
         List<Simulado> simulados = simuladoRepository.findAllByUserId(userId);
         long totalSimulados = simulados.size();
         double avgScore = 0;
-        String bestArea = "N/A";
-        String worstArea = "N/A";
+
 
         if (totalSimulados > 0) {
             long simTotalQuest = 0;
             long simTotalCorrect = 0;
 
             for (Simulado s : simulados) {
-                simTotalQuest += (s.getCmTotal() + s.getCirTotal() + s.getPedTotal() + s.getGoTotal() + s.getPrevTotal());
-                simTotalCorrect += (s.getCmAcertos() + s.getCirAcertos() + s.getPedAcertos() + s.getGoAcertos() + s.getPrevAcertos());
+                simTotalQuest += s.getCmTotal() + s.getCirTotal() + s.getPedTotal() + s.getGoTotal() + s.getPrevTotal();
+                simTotalCorrect += s.getCmAcertos() + s.getCirAcertos() + s.getPedAcertos() + s.getGoAcertos() + s.getPrevAcertos();
             }
             avgScore = simTotalQuest > 0 ? (double) simTotalCorrect / simTotalQuest * 100 : 0.0;
             

@@ -82,7 +82,7 @@ public class StudySessionService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado no banco de dados"));
     }
 
-    private void broadcastSocialEvents(User currentUser, int streakBefore, java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges) {
+    private void broadcastSocialEvents(User currentUser, int streakBefore, List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges) {
         Profile profile = profileRepository.findByUserId(currentUser.getId()).orElse(null);
         if (profile == null) return;
 
@@ -90,7 +90,7 @@ public class StudySessionService {
         if (friendships.isEmpty()) return;
 
         // 1. Check Streak Increase
-        List<StudySession> sessionsAfter = repository.findAll(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()));
+        List<StudySession> sessionsAfter = repository.findAll(StudySessionSpecifications.hasUserId(currentUser.getId()));
         int streakAfter = calculateStreak(sessionsAfter);
         if (streakAfter > streakBefore && Boolean.TRUE.equals(profile.getShareStreak())) {
             String senderName = profile.getNomeCompleto();
@@ -134,7 +134,7 @@ public class StudySessionService {
         validateSession(request);
 
         User currentUser = getCurrentUser();
-        List<StudySession> sessionsBefore = repository.findAll(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()));
+        List<StudySession> sessionsBefore = repository.findAll(StudySessionSpecifications.hasUserId(currentUser.getId()));
         int streakBefore = calculateStreak(sessionsBefore);
 
         StudySession entity = mapper.toEntity(request);
@@ -152,9 +152,9 @@ public class StudySessionService {
         
         // Mark previous revisions for the same tema as concluded
         List<StudySession> pendingRevisions = repository.findAll(
-            Specification.where(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()))
-                .and(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasTema(request.tema()))
-                .and(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasRevisaoConcluida(false))
+            Specification.where(StudySessionSpecifications.hasUserId(currentUser.getId()))
+                .and(StudySessionSpecifications.hasTema(request.tema()))
+                .and(StudySessionSpecifications.hasRevisaoConcluida(false))
         );
         for (StudySession pending : pendingRevisions) {
             if (!pending.getId().equals(saved.getId())) {
@@ -164,7 +164,7 @@ public class StudySessionService {
         }
         
         // Gamificação: Check for badges
-        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.QUESTION_SESSION);
+        List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.QUESTION_SESSION);
         
         // Legacy rule: Update lesson performance
         updateLessonPerformance(saved.getTema(), currentUser);
@@ -201,7 +201,7 @@ public class StudySessionService {
         StudySession entity = getSessionAndVerifyOwnership(id);
 
         User currentUser = getCurrentUser();
-        List<StudySession> sessionsBefore = repository.findAll(com.medstudy.backend.modules.sessao.specification.StudySessionSpecifications.hasUserId(currentUser.getId()));
+        List<StudySession> sessionsBefore = repository.findAll(StudySessionSpecifications.hasUserId(currentUser.getId()));
         int streakBefore = calculateStreak(sessionsBefore);
 
         entity.setGrandeArea(request.grandeArea());
@@ -225,7 +225,7 @@ public class StudySessionService {
         StudySession saved = repository.save(entity);
         
         // Gamificação: Check for badges
-        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.QUESTION_SESSION);
+        List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.QUESTION_SESSION);
         
         // Legacy rule: Update lesson performance
         updateLessonPerformance(saved.getTema(), currentUser);
