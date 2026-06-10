@@ -20,4 +20,8 @@ export class BadgeService {
   getUserBadges(): Observable<UserBadge[]> {
     return this.http.get<UserBadge[]>(this.apiUrl);
   }
+
+  getAllBadges(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/all`);
+  }
 }

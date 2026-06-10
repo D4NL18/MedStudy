@@ -9,7 +9,7 @@ export interface QuestionSession {
   dataProximaRevisao?: string;
   revisaoConcluida: boolean;
   observacoes?: string;
-  newlyEarnedBadges?: string[];
+  newlyEarnedBadges?: any[];
 }
 
 export interface QuestionSessionFilters {

@@ -53,7 +53,7 @@ class SimuladoServiceTest {
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(user);
-        lenient().when(badgeService.checkAndAwardBadges(any())).thenReturn(java.util.Collections.emptyList());
+        lenient().when(badgeService.checkAndAwardBadges(any(), any())).thenReturn(java.util.Collections.emptyList());
     }
 
     @Test

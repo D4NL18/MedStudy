@@ -11,6 +11,7 @@ import { Profile } from '../../core/models/profile.model';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { FeedDashboardComponent } from './feed/feed-dashboard.component';
 
 @Component({
   selector: 'app-social',
@@ -19,7 +20,8 @@ import { of } from 'rxjs';
     CommonModule,
     ReactiveFormsModule,
     LucideAngularModule,
-    AvatarComponent
+    AvatarComponent,
+    FeedDashboardComponent
   ],
   templateUrl: './social.component.html',
   styleUrl: './social.component.scss'
@@ -31,7 +33,7 @@ export class SocialComponent implements OnInit {
   private profileService = inject(ProfileService);
   private destroyRef = inject(DestroyRef);
 
-  activeTab = signal<'friends' | 'pending' | 'search' | 'blocked' | 'notifications'>('friends');
+  activeTab = signal<'feed' | 'friends' | 'pending' | 'search' | 'blocked' | 'notifications'>('feed');
   
   friends = signal<SocialProfile[]>([]);
   pendingRequests = signal<SocialProfile[]>([]);
@@ -264,7 +266,7 @@ export class SocialComponent implements OnInit {
     );
   }
 
-  changeTab(tab: 'friends' | 'pending' | 'search' | 'blocked' | 'notifications') {
+  changeTab(tab: 'feed' | 'friends' | 'pending' | 'search' | 'blocked' | 'notifications') {
     this.activeTab.set(tab);
     if (tab === 'friends') this.loadFriends();
     if (tab === 'pending') this.loadPendingRequests();

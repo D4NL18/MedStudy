@@ -20,6 +20,9 @@ public interface StudySessionRepository extends JpaRepository<StudySession, UUID
     @Query("SELECT SUM(s.qtsCorretas) FROM StudySession s WHERE s.user.id = :userId")
     Long sumTotalCorrectByUserId(@Param("userId") UUID userId);
 
+    @Query("SELECT COUNT(s) > 0 FROM StudySession s WHERE s.user.id = :userId AND s.qtsFeitas >= :minQuestions AND (s.qtsCorretas * 100.0 / s.qtsFeitas) >= :minPercent")
+    boolean existsByPrecisionGreaterThanEqual(@Param("userId") UUID userId, @Param("minQuestions") int minQuestions, @Param("minPercent") double minPercent);
+
     @Query("SELECT SUM(s.qtsFeitas) FROM StudySession s WHERE s.user.id = :userId AND MONTH(s.dataSessao) = :month AND YEAR(s.dataSessao) = :year")
     Long sumTotalQuestionsByUserIdAndMonth(@Param("userId") UUID userId, @Param("month") int month, @Param("year") int year);
 

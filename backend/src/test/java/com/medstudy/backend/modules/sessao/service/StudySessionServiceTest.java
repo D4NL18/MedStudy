@@ -34,6 +34,7 @@ class StudySessionServiceTest {
     private com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository;
     private com.medstudy.backend.modules.notificacao.service.NotificationService notificationService;
     private com.medstudy.backend.modules.competition.service.CompetitionService competitionService;
+    private org.springframework.context.ApplicationEventPublisher eventPublisher;
     private StudySessionService service;
 
     @BeforeEach
@@ -47,6 +48,7 @@ class StudySessionServiceTest {
         friendshipRepository = mock(com.medstudy.backend.modules.friendship.repository.FriendshipRepository.class);
         notificationService = mock(com.medstudy.backend.modules.notificacao.service.NotificationService.class);
         competitionService = mock(com.medstudy.backend.modules.competition.service.CompetitionService.class);
+        eventPublisher = mock(org.springframework.context.ApplicationEventPublisher.class);
         service = new StudySessionService(
             repository, 
             userRepository, 
@@ -56,7 +58,8 @@ class StudySessionServiceTest {
             profileRepository,
             friendshipRepository,
             notificationService,
-            competitionService
+            competitionService,
+            eventPublisher
         );
 
         // Mock Security Context
