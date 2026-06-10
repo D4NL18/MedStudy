@@ -38,6 +38,8 @@ public class StudySessionService {
     private final com.medstudy.backend.modules.notificacao.service.NotificationService notificationService;
     private final com.medstudy.backend.modules.competition.service.CompetitionService competitionService;
 
+    private final org.springframework.context.ApplicationEventPublisher eventPublisher;
+
     public StudySessionService(StudySessionRepository repository, 
                                UserRepository userRepository, 
                                StudySessionMapper mapper,
@@ -46,7 +48,8 @@ public class StudySessionService {
                                com.medstudy.backend.modules.profile.repository.ProfileRepository profileRepository,
                                com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository,
                                com.medstudy.backend.modules.notificacao.service.NotificationService notificationService,
-                               com.medstudy.backend.modules.competition.service.CompetitionService competitionService) {
+                               com.medstudy.backend.modules.competition.service.CompetitionService competitionService,
+                               org.springframework.context.ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.mapper = mapper;
@@ -56,6 +59,7 @@ public class StudySessionService {
         this.friendshipRepository = friendshipRepository;
         this.notificationService = notificationService;
         this.competitionService = competitionService;
+        this.eventPublisher = eventPublisher;
     }
 
     private User getCurrentUser() {
@@ -114,6 +118,14 @@ public class StudySessionService {
                         senderName + " conquistou a medalha '" + badge.getDisplayName() + "'!"
                     );
                 }
+                
+                // Publish Feed Event
+                eventPublisher.publishEvent(new com.medstudy.backend.modules.feed.events.FeedEventListener.BadgeEarnedEvent(
+                    currentUser.getId().getMostSignificantBits() & Long.MAX_VALUE, // mock Long for POC
+                    badge.name(),
+                    badge.getDisplayName(),
+                    badge.getDescription()
+                ));
             }
         }
     }
@@ -152,7 +164,7 @@ public class StudySessionService {
         }
         
         // Gamificação: Check for badges
-        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId());
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.QUESTION_SESSION);
         
         // Legacy rule: Update lesson performance
         updateLessonPerformance(saved.getTema(), currentUser);
@@ -213,7 +225,7 @@ public class StudySessionService {
         StudySession saved = repository.save(entity);
         
         // Gamificação: Check for badges
-        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId());
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.QUESTION_SESSION);
         
         // Legacy rule: Update lesson performance
         updateLessonPerformance(saved.getTema(), currentUser);

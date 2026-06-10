@@ -132,9 +132,10 @@
               <div class="badge-mini-icon">
                 <lucide-icon name="award"></lucide-icon>
               </div>
-              <div class="badge-mini-info">
+              <div class="badge-mini-info" style="display: flex; flex-direction: column;">
                 <span class="badge-name">{{ b.displayName }}</span>
-                <span class="badge-date">{{ b.earnedAt | date:'dd/MM' }}</span>
+                <span class="badge-desc" style="font-size: 0.75rem; color: #a1a1aa; line-height: 1.2; margin-top: 2px;">{{ b.description }}</span>
+                <span class="badge-date" style="margin-top: 4px;">{{ b.earnedAt | date:'dd/MM' }}</span>
               </div>
             </div>
           </div>

@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.medstudy.backend.modules.gamificacao.entity.BadgeType;
 
 @RestController
 @RequestMapping("/api/badges")
@@ -32,5 +34,10 @@ public class UserBadgeController {
                         ub.getEarnedAt()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/all")
+    public List<BadgeType> getAllBadges() {
+        return Arrays.asList(BadgeType.values());
     }
 }

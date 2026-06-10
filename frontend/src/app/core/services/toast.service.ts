@@ -25,12 +25,16 @@ export class ToastService {
     });
   }
 
-  badge(badgeName: string) {
-    this.snackBar.open(`🏆 Parabéns! Você conquistou: ${badgeName}`, 'UAU!', {
-      duration: 6000,
+  badge(badge: any) {
+    let msg = `🏆 Parabéns! Você conquistou: ${badge.displayName || badge.name || badge}`;
+    if (badge.description) {
+      msg += ` - ${badge.description}`;
+    }
+    this.snackBar.open(msg, 'UAU!', {
+      duration: 8000,
       panelClass: ['toast-badge'],
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom'
     });
   }
 }

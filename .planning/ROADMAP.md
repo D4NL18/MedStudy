@@ -81,7 +81,7 @@
 - Frontend: `mat-paginator` implementado em todas as listas longas e tratamento visual de `429 Too Many Requests`.
 
 ### Phase 28 — Feed de Atividades & Interações Silenciosas
-**Status**: `PLANNED`
+**Status**: `COMPLETED`
 **Goal:** Implementar o feed de conquistas automatizadas e interações silenciosas de suporte.
 **Requirements:** FEED-01, FEED-02, FRND-03
 **Deliverables:**
@@ -101,7 +101,7 @@
 | 25    | v1.2      | 0/1            | Planned | -         |
 | 26    | v1.2      | 0/1            | Planned | -         |
 | 27    | v1.2      | 1/1            | Complete | 2026-05-28|
-| 28    | v1.2      | 0/1            | Planned | -         |
+| 28    | v1.2      | 1/1            | Complete | 2026-06-10|
 
 ---
 *Roadmap updated for v1.2 on 2026-05-19*

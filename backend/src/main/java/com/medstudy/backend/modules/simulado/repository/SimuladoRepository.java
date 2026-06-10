@@ -19,5 +19,11 @@ public interface SimuladoRepository extends JpaRepository<Simulado, UUID>, JpaSp
 
     Optional<Simulado> findFirstByUserIdAndInstituicaoIgnoreCaseOrderByCreatedAtDesc(UUID userId, String instituicao);
 
+    @Query("SELECT COUNT(s) > 0 FROM Simulado s WHERE s.user.id = :userId " +
+           "AND (s.cmAcertos + s.cirAcertos + s.pedAcertos + s.goAcertos + s.prevAcertos) = " +
+           "(s.cmTotal + s.cirTotal + s.pedTotal + s.goTotal + s.prevTotal) " +
+           "AND (s.cmTotal + s.cirTotal + s.pedTotal + s.goTotal + s.prevTotal) > 0")
+    boolean existsFlawlessSimulado(@Param("userId") UUID userId);
+
     long countByUserId(UUID userId);
 }

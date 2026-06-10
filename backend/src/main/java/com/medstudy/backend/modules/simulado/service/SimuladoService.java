@@ -67,7 +67,7 @@ public class SimuladoService {
         Simulado saved = repository.save(entity);
         
         // Gamificação: Check for badges
-        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId());
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(currentUser.getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.SIMULADO_SESSION);
         
         return mapper.toResponse(saved, newBadges);
     }
@@ -120,7 +120,7 @@ public class SimuladoService {
         Simulado saved = repository.save(entity);
         
         // Gamificação: Check for badges
-        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(getSimuladoAndVerifyOwnership(id).getUser().getId());
+        java.util.List<com.medstudy.backend.modules.gamificacao.entity.BadgeType> newBadges = badgeService.checkAndAwardBadges(getSimuladoAndVerifyOwnership(id).getUser().getId(), com.medstudy.backend.modules.gamificacao.enums.BadgeContext.SIMULADO_SESSION);
         
         return mapper.toResponse(saved, newBadges);
     }
