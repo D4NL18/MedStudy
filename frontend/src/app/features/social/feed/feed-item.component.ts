@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FeedEvent, FeedService } from './feed.service';
-
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from '@shared/components/button/button.component';
 
 @Component({
   selector: 'app-feed-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   template: `
     <div class="feed-item-card glass">
       <div class="card-glow"></div>
@@ -41,12 +41,12 @@ import { CommonModule } from '@angular/common';
       </div>
       
       <div class="feed-actions">
-        <button (click)="onInteract('CLAP')" [disabled]="interacted" class="btn-interact clap" [class.active]="interacted">
+        <app-button variant="ghost" customClass="btn-interact clap" [class.active]="interacted" [disabled]="interacted" (onClick)="onInteract('CLAP')">
           <span class="icon">👏</span> Parabéns!
-        </button>
-        <button (click)="onInteract('CHEER')" [disabled]="interacted" class="btn-interact cheer" [class.active]="interacted">
+        </app-button>
+        <app-button variant="ghost" customClass="btn-interact cheer" [class.active]="interacted" [disabled]="interacted" (onClick)="onInteract('CHEER')">
           <span class="icon">🎉</span> Uau!
-        </button>
+        </app-button>
       </div>
     </div>
   `,

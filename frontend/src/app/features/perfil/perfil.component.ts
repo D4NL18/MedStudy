@@ -6,6 +6,8 @@ import { LucideAngularModule } from 'lucide-angular';
 import { ThemeService, AppTheme } from '@core/services/theme.service';
 import { BadgeService, UserBadge } from '@core/services/badge.service';
 import { AvatarComponent } from '@shared/components/avatar/avatar.component';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 import { AVATAR_PRESETS, AvatarPreset } from '@core/constants/avatar-presets';
 import { ProfileActions } from '@store/profile/profile.actions';
 import { selectProfile, selectLoading } from '@store/profile/profile.reducer';
@@ -18,7 +20,7 @@ import { combineLatest } from 'rxjs';
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, AvatarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, AvatarComponent, ButtonComponent, ModalLayoutComponent],
   template: `
     <div class="perfil-container fade-in">
       <header class="perfil-header glass">
@@ -38,10 +40,10 @@ import { combineLatest } from 'rxjs';
           <div class="section-header">
             <div class="header-main">
               <h3>👤 Dados do Perfil</h3>
-              <button class="edit-toggle-btn glass" *ngIf="!isEditing() && profile()" (click)="startEditing()">
+              <app-button variant="ghost" customClass="edit-toggle-btn glass" *ngIf="!isEditing() && profile()" (onClick)="startEditing()">
                 <lucide-icon name="edit-2" [size]="16"></lucide-icon>
                 <span>Editar</span>
-              </button>
+              </app-button>
             </div>
             <p>Seus dados acadêmicos e identificação no MedStudy</p>
           </div>
@@ -129,10 +131,10 @@ import { combineLatest } from 'rxjs';
             </div>
 
             <div class="form-actions">
-              <button type="button" class="btn btn-secondary glass" (click)="cancelEditing()">Cancelar</button>
-              <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid || saving()">
+              <app-button type="button" variant="secondary" customClass="glass" (onClick)="cancelEditing()">Cancelar</app-button>
+              <app-button type="submit" variant="primary" [disabled]="editForm.invalid || saving()">
                 {{ saving() ? 'Salvando...' : 'Salvar Alterações' }}
-              </button>
+              </app-button>
             </div>
           </form>
         </section>
@@ -144,13 +146,14 @@ import { combineLatest } from 'rxjs';
             <p>Escolha o tema que melhor combina com seu estudo</p>
           </div>
           <div class="theme-grid">
-            <button *ngFor="let t of themes" 
+            <div *ngFor="let t of themes" 
+                    role="button" tabindex="0"
                     class="theme-card"
                     [class.active]="themeService.activeTheme() === t"
                     (click)="changeTheme(t)">
               <div class="color-preview" [attr.data-theme]="t"></div>
               <span>{{ t | titlecase }}</span>
-            </button>
+            </div>
           </div>
         </section>
       </div>
@@ -192,9 +195,9 @@ import { combineLatest } from 'rxjs';
         </div>
         
         <div style="display: flex; justify-content: center; margin-top: 20px;">
-          <button class="btn btn-secondary glass" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; color: #e2e8f0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer;" (click)="showAllBadgesModal.set(true)">
+          <app-button variant="secondary" customClass="glass" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; color: #e2e8f0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer;" (onClick)="showAllBadgesModal.set(true)">
             Ver todas as conquistas
-          </button>
+          </app-button>
         </div>
       </section>
 
@@ -291,46 +294,40 @@ import { combineLatest } from 'rxjs';
         </section>
 
       <!-- Modal Todas as Conquistas -->
-      <div class="modal-overlay" *ngIf="showAllBadgesModal()" (click)="showAllBadgesModal.set(false)" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px;">
-        <div class="modal-content glass" (click)="$event.stopPropagation()" style="background: rgba(30, 30, 40, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; width: 100%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;">
-          <div class="modal-header" style="padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700;">🏆 Todas as Conquistas</h3>
-            <button class="close-btn" (click)="showAllBadgesModal.set(false)" style="background: transparent; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 8px;">
-              <lucide-icon name="x"></lucide-icon>
-            </button>
-          </div>
-          <div class="modal-body" style="padding: 24px; overflow-y: auto;">
-            <div class="badges-grid">
-              <div *ngFor="let badge of badgesWithProgress()" 
-                   class="badge-item" 
-                   [class.locked]="!isEarned(badge.name)">
-                <div class="badge-icon">
-                  <lucide-icon [name]="badge.icon"></lucide-icon>
+      <app-modal-layout *ngIf="showAllBadgesModal()"
+                        [fullScreenOverlay]="true" 
+                        [useDefaultFooter]="false" 
+                        title="🏆 Todas as Conquistas" 
+                        (close)="showAllBadgesModal.set(false)">
+        <div class="badges-grid" style="padding: 10px;">
+          <div *ngFor="let badge of badgesWithProgress()" 
+               class="badge-item" 
+               [class.locked]="!isEarned(badge.name)">
+            <div class="badge-icon">
+              <lucide-icon [name]="badge.icon"></lucide-icon>
+            </div>
+            <div class="badge-info" style="width: 100%;">
+              <h4>{{ badge.displayName }}</h4>
+              <p>{{ badge.description }}</p>
+              <span class="earned-date" *ngIf="getEarnedDate(badge.name)">
+                Conquistada em {{ getEarnedDate(badge.name) | date:'dd/MM/yyyy' }}
+              </span>
+              <span class="locked-text" *ngIf="!isEarned(badge.name)">
+                Bloqueada
+              </span>
+              <div class="badge-progress mt-4" *ngIf="!isEarned(badge.name) && badge.progress">
+                <div class="progress-info" style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px;">
+                  <span>Progresso</span>
+                  <span>{{ badge.progress.current }} / {{ badge.progress.target }}</span>
                 </div>
-                <div class="badge-info" style="width: 100%;">
-                  <h4>{{ badge.displayName }}</h4>
-                  <p>{{ badge.description }}</p>
-                  <span class="earned-date" *ngIf="getEarnedDate(badge.name)">
-                    Conquistada em {{ getEarnedDate(badge.name) | date:'dd/MM/yyyy' }}
-                  </span>
-                  <span class="locked-text" *ngIf="!isEarned(badge.name)">
-                    Bloqueada
-                  </span>
-                  <div class="badge-progress mt-4" *ngIf="!isEarned(badge.name) && badge.progress">
-                    <div class="progress-info" style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px;">
-                      <span>Progresso</span>
-                      <span>{{ badge.progress.current }} / {{ badge.progress.target }}</span>
-                    </div>
-                    <div class="progress-bar-bg" style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-                      <div class="progress-bar-fill" [style.width.%]="badge.progress.percent" style="height: 100%; background: #6366f1; transition: width 0.3s ease;"></div>
-                    </div>
-                  </div>
+                <div class="progress-bar-bg" style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                  <div class="progress-bar-fill" [style.width.%]="badge.progress.percent" style="height: 100%; background: #6366f1; transition: width 0.3s ease;"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </app-modal-layout>
     </div>
   `,
   styleUrls: ['./perfil.component.scss']

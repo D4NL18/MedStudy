@@ -12,8 +12,8 @@ import { LucideAngularModule } from 'lucide-angular';
       <header class="ranking-header">
         <h2>🚨 Temas com Maior Taxa de Erro</h2>
         <div class="filter-toggle">
-          <button [class.active]="period() === 'LAST_60_DAYS'" (click)="setPeriod('LAST_60_DAYS')">60d</button>
-          <button [class.active]="period() === 'TOTAL'" (click)="setPeriod('TOTAL')">Total</button>
+          <div role="button" tabindex="0" class="filter-btn" [class.active]="period() === 'LAST_60_DAYS'" (click)="setPeriod('LAST_60_DAYS')">60d</div>
+          <div role="button" tabindex="0" class="filter-btn" [class.active]="period() === 'TOTAL'" (click)="setPeriod('TOTAL')">Total</div>
         </div>
       </header>
 
@@ -49,11 +49,11 @@ import { LucideAngularModule } from 'lucide-angular';
     .ranking-header h2 { margin: 0; font-size: 16px; font-weight: 600; }
     
     .filter-toggle { display: flex; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 2px; }
-    .filter-toggle button { 
+    .filter-toggle .filter-btn { 
       background: none; border: none; color: var(--color-text); padding: 4px 12px; 
       border-radius: 18px; font-size: 11px; cursor: pointer; opacity: 0.6; transition: all 0.2s;
     }
-    .filter-toggle button.active { background: var(--color-primary); opacity: 1; }
+    .filter-toggle .filter-btn.active { background: var(--color-primary); opacity: 1; }
 
     .ranking-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
     .ranking-item { display: grid; grid-template-columns: 32px 1fr auto; grid-template-rows: auto auto; gap: 4px 12px; align-items: center; }

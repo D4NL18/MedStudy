@@ -389,18 +389,25 @@
   </div>
 
   <!-- Detailed Profile Modal with Glassmorphic Privacy Overlay -->
-  <div class="modal-backdrop fade-in" *ngIf="selectedProfileDetail()" (click)="closeDetailModal()">
-    <div class="modal-content glass pop-in" (click)="$event.stopPropagation()">
-      <app-button variant="btn-close-modal" (onClick)="closeDetailModal()">
-        <lucide-icon name="x" [size]="20"></lucide-icon>
-      </app-button>
-
-      <div class="modal-loading-overlay" *ngIf="modalLoading()">
-        <div class="spinner"></div>
-        <p>Carregando perfil...</p>
+  <ng-container *ngIf="selectedProfileDetail()">
+    <ng-container *ngIf="modalLoading()">
+      <div class="modal-backdrop fade-in" (click)="closeDetailModal()">
+        <div class="modal-content glass pop-in" (click)="$event.stopPropagation()">
+          <div class="modal-loading-overlay">
+            <div class="spinner"></div>
+            <p>Carregando perfil...</p>
+          </div>
+        </div>
       </div>
+    </ng-container>
 
-      <ng-container *ngIf="!modalLoading() && selectedProfileDetail() as p">
+    <ng-container *ngIf="!modalLoading() && selectedProfileDetail() as p">
+      <app-modal-layout 
+        [fullScreenOverlay]="true" 
+        [useDefaultFooter]="false" 
+        [title]="p.nomeCompleto" 
+        (close)="closeDetailModal()">
+        
         <!-- Private Profile Overlay -->
         <div class="private-overlay glassmorphic" *ngIf="p.isPrivate">
           <div class="overlay-content">
@@ -444,7 +451,6 @@
         <div class="modal-profile-header">
           <app-avatar [presetId]="p.avatarPresetId" size="xl"></app-avatar>
           <div class="modal-user-details">
-            <h2>{{ p.nomeCompleto }}</h2>
             <span class="modal-handle">&#64;{{ p.handle }}</span>
             <div class="friendship-status-badge" *ngIf="p.friendshipStatus !== 'NONE'">
               <span class="badge-status accepted" *ngIf="p.friendshipStatus === 'ACCEPTED'">
@@ -506,7 +512,7 @@
             </div>
           </div>
         </div>
-      </ng-container>
-    </div>
-  </div>
+      </app-modal-layout>
+    </ng-container>
+  </ng-container>
 </div>

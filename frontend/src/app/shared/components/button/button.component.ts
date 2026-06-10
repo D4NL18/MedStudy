@@ -16,13 +16,15 @@ export class ButtonComponent {
   @Input() disabled = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Input() icon?: string;
+  @Input() customClass = '';
 
   @Output() onClick = new EventEmitter<Event>();
 
   get buttonClasses(): string {
     const v = this.variant || 'primary';
     const baseClass = (v.startsWith('btn-') || v.includes(' ')) ? v : `btn-${v}`;
-    return `btn ${baseClass} ${this.icon && !this.hasContent() ? 'btn-icon-only' : ''}`;
+    const classes = `btn ${baseClass} ${this.icon && !this.hasContent() ? 'btn-icon-only' : ''}`;
+    return this.customClass ? `${classes} ${this.customClass}`.trim() : classes.trim();
   }
 
   // To check if there is projected content, though usually we can just rely on css empty

@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
 import { AvatarComponent } from '@shared/components/avatar/avatar.component';
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { AVATAR_PRESETS, AvatarPreset } from '@core/constants/avatar-presets';
 import { ProfileActions } from '@store/profile/profile.actions';
 import { selectProfile, selectLoading, selectHandleAvailability, selectHandleChecking } from '@store/profile/profile.reducer';
@@ -12,7 +13,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'app-onboarding',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, AvatarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, AvatarComponent, ButtonComponent],
   template: `
     <div class="onboarding-overlay" *ngIf="showOnboarding()">
       <div class="onboarding-card glass fade-in">
@@ -159,19 +160,19 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 
         <!-- Actions -->
         <div class="onboarding-actions">
-          <button class="btn btn-secondary glass" 
+          <app-button variant="secondary" customClass="glass" 
                   *ngIf="step > 1" 
-                  (click)="prevStep()">
+                  (onClick)="prevStep()">
             Voltar
-          </button>
+          </app-button>
           <div class="spacer"></div>
-          <button class="btn btn-primary" 
+          <app-button variant="primary" 
                   [disabled]="isNextDisabled()"
-                  (click)="nextStep()">
+                  (onClick)="nextStep()">
             <span *ngIf="step < 3">Próximo</span>
             <span *ngIf="step === 3 && !savingProfile()">Concluir Cadastro 🎉</span>
             <span *ngIf="step === 3 && savingProfile()">Salvando...</span>
-          </button>
+          </app-button>
         </div>
       </div>
     </div>

@@ -4,15 +4,16 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SocialService, SocialProfile, SocialNotification } from '../../core/services/social.service';
-import { NotificationService } from '../../core/services/notification.service';
-import { ToastService } from '../../core/services/toast.service';
-import { ProfileService } from '../../core/services/profile.service';
-import { Profile } from '../../core/models/profile.model';
-import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { SocialService, SocialProfile, SocialNotification } from '@core/services/social.service';
+import { NotificationService } from '@core/services/notification.service';
+import { ToastService } from '@core/services/toast.service';
+import { ProfileService } from '@core/services/profile.service';
+import { Profile } from '@core/models/profile.model';
+import { AvatarComponent } from '@shared/components/avatar/avatar.component';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FeedDashboardComponent } from './feed/feed-dashboard.component';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 
 @Component({
   selector: 'app-social',
@@ -21,7 +22,8 @@ import { FeedDashboardComponent } from './feed/feed-dashboard.component';
     ReactiveFormsModule,
     LucideAngularModule,
     AvatarComponent,
-    FeedDashboardComponent
+    FeedDashboardComponent,
+    ModalLayoutComponent
   ],
   templateUrl: './social.component.html',
   styleUrl: './social.component.scss'

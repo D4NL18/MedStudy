@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { LucideAngularModule } from 'lucide-angular';
-import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
-import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '../../../../store/flashcards/flashcards.reducer';
-import { FlashcardDifficulty } from '../../../../core/models/flashcard.model';
-import { MarkdownRendererComponent } from '../../../../shared/components/markdown-renderer/markdown-renderer.component';
+import { FlashcardsActions } from '@store/flashcards/flashcards.actions';
+import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '@store/flashcards/flashcards.reducer';
+import { FlashcardDifficulty } from '@core/models/flashcard.model';
+import { MarkdownRendererComponent } from '@shared/components/markdown-renderer/markdown-renderer.component';
 import { tap } from 'rxjs';
 
 @Component({

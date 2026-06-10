@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Socializacao Aprofundada
-status: planning
-last_updated: "2026-06-10T16:30:07.123Z"
-last_activity: 2026-05-20
+status: executing
+last_updated: "2026-06-10T16:47:01.199Z"
+last_activity: 2026-06-10 -- Phase 30 execution started
 progress:
   total_phases: 30
   completed_phases: 16
-  total_plans: 29
+  total_plans: 32
   completed_plans: 24
-  percent: 83
+  percent: 75
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -22,7 +22,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-11)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:**
 
-Phase 24 — configuracoes-granulares-de-privacidade
+Phase 30 — arquitetura-frontend-reuso-de-componentes-angular
 
     - Garantir conformidade de privacidade total e filtros automáticos no backend.
     - Implementar painel de configurações granulares no frontend.
@@ -36,7 +36,7 @@ Phase 24 — configuracoes-granulares-de-privacidade
 **Milestone:** v1.2 — Socialização Aprofundada
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** In Planning
+**Status:** Executing Phase 30
 
 ---
 
@@ -61,7 +61,7 @@ Phase 24 — configuracoes-granulares-de-privacidade
 
 ## Current Position
 
-Phase: 25 (grupos-de-competicao-automatizados) — PLANNING
-Plan: 0 of 1
-Status: Planning in progress
-Last activity: 2026-05-20
+Phase: 30 (arquitetura-frontend-reuso-de-componentes-angular) — EXECUTING
+Plan: 1 of 3
+Status: Executing Phase 30
+Last activity: 2026-06-10 -- Phase 30 execution started
