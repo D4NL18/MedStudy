@@ -11,12 +11,23 @@
 
 ### 🏃 v1.3 Code Quality, Performance & UX Polish (Phases 29-34)
 
-- [ ] Phase 29: Limpeza & Refatoração do Backend (Java/Spring Boot)
-- [ ] Phase 30: Arquitetura Frontend & Reuso de Componentes (Angular)
-- [ ] Phase 31: Hardening e Segurança Avançada (OWASP Deep Dive)
-- [ ] Phase 32: Expansão de Cobertura de Testes
-- [ ] Phase 33: UX Polish, Animações e Fluidez (Aesthetics)
-- [ ] Phase 34: Documentação em Código (Clean Comments & Javadoc/TSDoc)
+### Phase 29: Limpeza & Refatoração do Backend (Java/Spring Boot)
+- Status: Completed
+
+### Phase 30: Arquitetura Frontend & Reuso de Componentes (Angular)
+- Status: Pending
+
+### Phase 31: Hardening e Segurança Avançada (OWASP Deep Dive)
+- Status: Pending
+
+### Phase 32: Expansão de Cobertura de Testes
+- Status: Pending
+
+### Phase 33: UX Polish, Animações e Fluidez (Aesthetics)
+- Status: Pending
+
+### Phase 34: Documentação em Código (Clean Comments & Javadoc/TSDoc)
+- Status: Pending
 
 <details>
 <summary>✅ v1.0 MVP (Phases 1-15) — SHIPPED 2026-05-11</summary>
