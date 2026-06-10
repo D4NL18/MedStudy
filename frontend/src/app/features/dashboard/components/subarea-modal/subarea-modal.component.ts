@@ -2,10 +2,10 @@ import { Component, Inject, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { LucideAngularModule } from 'lucide-angular';
-import { AnalyticsService } from '../../../../core/services/analytics.service';
-import { PerformanceThemeService } from '../../../../core/services/performance-theme.service';
+import { AnalyticsService } from '@core/services/analytics.service';
+import { PerformanceThemeService } from '@core/services/performance-theme.service';
 // Wait, I should use the one in dashboard.actions or analytics.actions
-import { AreaAnalytics } from '../../../../store/dashboard/dashboard.actions';
+import { AreaAnalytics } from '@store/dashboard/dashboard.actions';
 
 @Component({
   selector: 'app-subarea-modal',

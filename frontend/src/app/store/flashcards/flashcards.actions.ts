@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { Flashcard, FlashcardStudyRating } from '../../core/models/flashcard.model';
+import { Flashcard, FlashcardStudyRating } from '@core/models/flashcard.model';
 
 export const FlashcardsActions = createActionGroup({
   source: 'Flashcards',

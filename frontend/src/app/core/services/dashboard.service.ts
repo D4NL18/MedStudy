@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { DashboardKPIs } from '../../store/dashboard/dashboard.actions';
+import { DashboardKPIs } from '@store/dashboard/dashboard.actions';
 
 @Injectable({
   providedIn: 'root'

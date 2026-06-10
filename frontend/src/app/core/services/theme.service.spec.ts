@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { ThemeService, AppTheme } from './theme.service';
 import { DOCUMENT } from '@angular/common';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import * as ThemeActions from '../../store/theme/theme.actions';
-import { selectActiveTheme } from '../../store/theme/theme.selectors';
+import * as ThemeActions from '@store/theme/theme.actions';
+import { selectActiveTheme } from '@store/theme/theme.selectors';
 
 describe('ThemeService', () => {
   let service: ThemeService;

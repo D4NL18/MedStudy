@@ -4,8 +4,8 @@ import { RevisaoListComponent } from './revisao-list.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
-import { RevisionActions } from '../../../../store/revision/revision.actions';
-import { createMockRevisionSession } from '../../../../testing/fixtures/revision.fixture';
+import { RevisionActions } from '@store/revision/revision.actions';
+import { createMockRevisionSession } from '@testing/fixtures/revision.fixture';
 
 describe('RevisaoListComponent', () => {
   MockInstance.scope();

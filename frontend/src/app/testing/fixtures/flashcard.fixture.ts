@@ -1,4 +1,4 @@
-import { Flashcard, FlashcardDifficulty } from '../../core/models/flashcard.model';
+import { Flashcard, FlashcardDifficulty } from '@core/models/flashcard.model';
 
 export const createMockFlashcard = (overrides?: Partial<Flashcard>): Flashcard => ({
   id: '1',

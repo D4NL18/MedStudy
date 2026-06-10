@@ -1,4 +1,4 @@
-import { QuestionSession } from '../../core/models/question-session.model';
+import { QuestionSession } from '@core/models/question-session.model';
 
 export const createMockSession = (overrides?: Partial<QuestionSession>): QuestionSession => ({
   id: '1',

@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectIsAuthenticated } from '../../store/auth/auth.selectors';
+import { selectIsAuthenticated } from '@store/auth/auth.selectors';
 import { map, take } from 'rxjs';
-import * as AuthActions from '../../store/auth/auth.actions';
+import * as AuthActions from '@store/auth/auth.actions';
 
 export const authGuard: CanActivateFn = () => {
   const store = inject(Store);

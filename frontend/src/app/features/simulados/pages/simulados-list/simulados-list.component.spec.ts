@@ -3,7 +3,7 @@ import { SimuladosListComponent } from './simulados-list.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
-import { SentinelComponent } from '../../../../shared/components/sentinel/sentinel.component';
+import { SentinelComponent } from '@shared/components/sentinel/sentinel.component';
 
 describe('SimuladosListComponent', () => {
   MockInstance.scope();

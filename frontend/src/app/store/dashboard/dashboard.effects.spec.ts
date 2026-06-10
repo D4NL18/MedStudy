@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
 import { DashboardEffects } from './dashboard.effects';
-import { DashboardService } from '../../core/services/dashboard.service';
+import { DashboardService } from '@core/services/dashboard.service';
 import * as DashboardActions from './dashboard.actions';
 
 describe('DashboardEffects', () => {

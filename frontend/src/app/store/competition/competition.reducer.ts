@@ -1,5 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { Competition, LeaderboardEntry } from '../../core/models/competition.model';
+import { Competition, LeaderboardEntry } from '@core/models/competition.model';
 import { CompetitionActions } from './competition.actions';
 
 export interface CompetitionState {

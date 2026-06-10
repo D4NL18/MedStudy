@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { FlashcardService } from '../../core/services/flashcard.service';
+import { FlashcardService } from '@core/services/flashcard.service';
 import { FlashcardsActions } from './flashcards.actions';
 import { RevisionActions } from '../revision/revision.actions';
 import { Store } from '@ngrx/store';

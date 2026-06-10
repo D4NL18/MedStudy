@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockInstance } from 'ng-mocks';
 import { LessonModalComponent } from './lesson-modal.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ModalLayoutComponent } from '../../../../shared/components/modal-layout/modal-layout.component';
-import { createMockLesson } from '../../../../testing/fixtures/lesson.fixture';
-import { LessonPriority } from '../../../../core/models/lesson.model';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import { createMockLesson } from '@testing/fixtures/lesson.fixture';
+import { LessonPriority } from '@core/models/lesson.model';
 
 describe('LessonModalComponent', () => {
   MockInstance.scope();

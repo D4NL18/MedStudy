@@ -1,7 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { isDevMode } from '@angular/core';
-import { environment as devEnvironment } from '../../../environments/environment';
-import { environment as prodEnvironment } from '../../../environments/environment.prod';
+import { environment as devEnvironment } from '@env/environment';
+import { environment as prodEnvironment } from '@env/environment.prod';
 
 export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.url.startsWith('/api')) {

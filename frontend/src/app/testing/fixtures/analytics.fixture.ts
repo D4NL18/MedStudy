@@ -1,4 +1,4 @@
-import { AreaAnalytics } from '../../store/analytics/analytics.actions';
+import { AreaAnalytics } from '@store/analytics/analytics.actions';
 
 export const createMockAreaAnalytics = (overrides?: Partial<AreaAnalytics>): AreaAnalytics => ({
   grandeArea: 'Clínica Médica',

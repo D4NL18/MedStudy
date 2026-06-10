@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { AppTheme } from '../../core/services/theme.service';
+import { AppTheme } from '@core/services/theme.service';
 
 export const setTheme = createAction(
   '[Theme] Set Theme',

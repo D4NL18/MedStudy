@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { QuestionSession, QuestionSessionFilters } from '../../core/models/question-session.model';
+import { QuestionSession, QuestionSessionFilters } from '@core/models/question-session.model';
 import * as BancoActions from './banco.actions';
 
 export interface BancoState extends EntityState<QuestionSession> {

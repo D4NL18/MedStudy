@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { RevisionSummary, StudySession, PaginatedResponse } from '../../core/models/revision.model';
+import { RevisionSummary, StudySession, PaginatedResponse } from '@core/models/revision.model';
 
 export const RevisionActions = createActionGroup({
   source: 'Revision',

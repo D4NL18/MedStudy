@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { authGuard } from './auth.guard';
-import { selectIsAuthenticated } from '../../store/auth/auth.selectors';
+import { selectIsAuthenticated } from '@store/auth/auth.selectors';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { of } from 'rxjs';
 

@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { Competition, CompetitionRequest, LeaderboardEntry } from '../../core/models/competition.model';
+import { Competition, CompetitionRequest, LeaderboardEntry } from '@core/models/competition.model';
 
 export const CompetitionActions = createActionGroup({
   source: 'Competition',

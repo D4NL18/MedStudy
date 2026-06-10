@@ -1,15 +1,16 @@
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import * as AuthActions from '../../../store/auth/auth.actions';
-import { selectAuthError, selectAuthLoading } from '../../../store/auth/auth.selectors';
+import * as AuthActions from '@store/auth/auth.actions';
+import { selectAuthError, selectAuthLoading } from '@store/auth/auth.selectors';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { SimuladosService } from '../../core/services/simulados.service';
+import { SimuladosService } from '@core/services/simulados.service';
 import * as SimuladosActions from './simulados.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 
-import { ToastService } from '../../core/services/toast.service';
+import { ToastService } from '@core/services/toast.service';
 
 @Injectable()
 export class SimuladosEffects {

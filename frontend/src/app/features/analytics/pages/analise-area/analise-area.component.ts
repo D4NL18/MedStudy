@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { ThemeService } from '../../../../core/services/theme.service';
-import { selectAreaAnalytics, selectAnalyticsLoading } from '../../../../store/analytics/analytics.selectors';
-import { loadAreaAnalytics, AreaAnalytics } from '../../../../store/analytics/analytics.actions';
+import { ThemeService } from '@core/services/theme.service';
+import { selectAreaAnalytics, selectAnalyticsLoading } from '@store/analytics/analytics.selectors';
+import { loadAreaAnalytics, AreaAnalytics } from '@store/analytics/analytics.actions';
 
 @Component({
   selector: 'app-analise-area',

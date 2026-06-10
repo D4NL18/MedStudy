@@ -1,9 +1,9 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectToken } from '../../store/auth/auth.selectors';
+import { selectToken } from '@store/auth/auth.selectors';
 import { catchError, throwError } from 'rxjs';
-import * as AuthActions from '../../store/auth/auth.actions';
+import * as AuthActions from '@store/auth/auth.actions';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(Store);

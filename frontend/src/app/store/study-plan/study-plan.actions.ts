@@ -1,5 +1,5 @@
 import { createActionGroup, props } from '@ngrx/store';
-import { Lesson } from '../../core/models/lesson.model';
+import { Lesson } from '@core/models/lesson.model';
 
 export const StudyPlanActions = createActionGroup({
   source: 'Study Plan',

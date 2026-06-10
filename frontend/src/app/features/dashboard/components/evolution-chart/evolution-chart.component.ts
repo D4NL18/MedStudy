@@ -1,9 +1,9 @@
 import { Component, OnInit, inject, signal, effect, computed, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { Store } from '@ngrx/store';
-import { selectDashboardKPIs } from '../../../../store/dashboard/dashboard.selectors';
+import { selectDashboardKPIs } from '@store/dashboard/dashboard.selectors';
 import { toSignal } from '@angular/core/rxjs-interop';
 // @ts-ignore
 import * as shape from 'd3-shape';

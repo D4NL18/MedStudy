@@ -5,9 +5,9 @@ import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { LucideAngularModule } from 'lucide-angular';
 import { of } from 'rxjs';
-import { StudyPlanActions } from '../../../../store/study-plan/study-plan.actions';
-import { createMockLesson } from '../../../../testing/fixtures/lesson.fixture';
-import { LessonPriority } from '../../../../core/models/lesson.model';
+import { StudyPlanActions } from '@store/study-plan/study-plan.actions';
+import { createMockLesson } from '@testing/fixtures/lesson.fixture';
+import { LessonPriority } from '@core/models/lesson.model';
 
 describe('AulasListComponent', () => {
   MockInstance.scope();

@@ -2,8 +2,8 @@ import { Injectable, effect, Inject, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
-import * as ThemeActions from '../../store/theme/theme.actions';
-import { selectActiveTheme } from '../../store/theme/theme.selectors';
+import * as ThemeActions from '@store/theme/theme.actions';
+import { selectActiveTheme } from '@store/theme/theme.selectors';
 
 export type AppTheme = 'rosa' | 'claro' | 'escuro' | 'verde' | 'azul' | 'vermelho' | 'roxo' | 'laranja';
 

@@ -1,3 +1,4 @@
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -5,16 +6,16 @@ import { Store } from '@ngrx/store';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
-import { RevisionActions } from '../../../../store/revision/revision.actions';
-import { selectSessions, selectSummary, selectLoading, selectCurrentPage, selectTotalPages, selectPageSize, selectTotalElements } from '../../../../store/revision/revision.reducer';
-import { RevisionService } from '../../../../core/services/revision.service';
+import { RevisionActions } from '@store/revision/revision.actions';
+import { selectSessions, selectSummary, selectLoading, selectCurrentPage, selectTotalPages, selectPageSize, selectTotalElements } from '@store/revision/revision.reducer';
+import { RevisionService } from '@core/services/revision.service';
 
 type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
 
 @Component({
   selector: 'app-revisao-list',
   standalone: true,
-  imports: [
+  imports: [ButtonComponent, 
     CommonModule, 
     ReactiveFormsModule,
     LucideAngularModule

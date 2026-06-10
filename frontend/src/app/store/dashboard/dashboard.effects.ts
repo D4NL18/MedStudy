@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
-import { DashboardService } from '../../core/services/dashboard.service';
+import { DashboardService } from '@core/services/dashboard.service';
 import * as DashboardActions from './dashboard.actions';
 
 @Injectable()

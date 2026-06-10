@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectIsAuthenticated } from '../../store/auth/auth.selectors';
+import { selectIsAuthenticated } from '@store/auth/auth.selectors';
 import { map, take } from 'rxjs';
 
 export const guestGuard: CanActivateFn = () => {

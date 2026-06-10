@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
 import { StudyPlanEffects } from './study-plan.effects';
-import { LessonService } from '../../core/services/lesson.service';
+import { LessonService } from '@core/services/lesson.service';
 import { StudyPlanActions } from './study-plan.actions';
-import { createMockLesson } from '../../testing/fixtures/lesson.fixture';
+import { createMockLesson } from '@testing/fixtures/lesson.fixture';
 
 describe('StudyPlanEffects', () => {
   let actions$: Observable<any>;

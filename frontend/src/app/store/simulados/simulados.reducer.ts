@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { Simulado, SimuladoFilters } from '../../core/models/simulado.model';
+import { Simulado, SimuladoFilters } from '@core/models/simulado.model';
 import * as SimuladosActions from './simulados.actions';
 
 export interface SimuladosState extends EntityState<Simulado> {

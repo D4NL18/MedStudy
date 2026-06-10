@@ -5,9 +5,9 @@ import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
-import { MarkdownRendererComponent } from '../../../../shared/components/markdown-renderer/markdown-renderer.component';
-import { createMockFlashcard } from '../../../../testing/fixtures/flashcard.fixture';
-import { selectQueue, selectCurrentIndex } from '../../../../store/flashcards/flashcards.reducer';
+import { MarkdownRendererComponent } from '@shared/components/markdown-renderer/markdown-renderer.component';
+import { createMockFlashcard } from '@testing/fixtures/flashcard.fixture';
+import { selectQueue, selectCurrentIndex } from '@store/flashcards/flashcards.reducer';
 
 describe('FlashcardsStudyComponent', () => {
   MockInstance.scope();

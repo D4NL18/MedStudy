@@ -1,3 +1,4 @@
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -12,7 +13,7 @@ import { tap } from 'rxjs';
 @Component({
   selector: 'app-flashcards-study',
   standalone: true,
-  imports: [
+  imports: [ButtonComponent, 
     CommonModule, 
     LucideAngularModule, 
     MarkdownRendererComponent
@@ -78,7 +79,7 @@ export class FlashcardsStudyComponent {
     this.isFlipped.update(v => !v);
   }
 
-  closeZoom(event?: MouseEvent) {
+  closeZoom(event?: Event) {
     if (event) event.stopPropagation();
     this.isZoomed.set(false);
     this.zoomImageUrl.set('');

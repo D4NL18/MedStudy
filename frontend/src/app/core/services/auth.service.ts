@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthResponse } from '../../store/auth/auth.actions';
+import { AuthResponse } from '@store/auth/auth.actions';
 export interface RegisterRequest {
   name: string;
   email: string;

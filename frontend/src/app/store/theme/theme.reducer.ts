@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { AppTheme } from '../../core/services/theme.service';
+import { AppTheme } from '@core/services/theme.service';
 import * as ThemeActions from './theme.actions';
 
 export interface ThemeState {

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { QuestionSession, QuestionSessionFilters } from '../../core/models/question-session.model';
+import { QuestionSession, QuestionSessionFilters } from '@core/models/question-session.model';
 
 export const loadSessions = createAction(
   '[Banco] Load Sessions',

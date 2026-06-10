@@ -1,4 +1,4 @@
-import { Simulado } from '../../core/models/simulado.model';
+import { Simulado } from '@core/models/simulado.model';
 
 export const createMockSimulado = (overrides?: Partial<Simulado>): Simulado => ({
   id: '1',

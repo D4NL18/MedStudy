@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AreaAnalytics, TopicAnalytics } from '../../store/analytics/analytics.actions';
+import { AreaAnalytics, TopicAnalytics } from '@store/analytics/analytics.actions';
 
 @Injectable({
   providedIn: 'root'

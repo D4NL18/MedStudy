@@ -2,7 +2,7 @@ import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { OnboardingComponent } from './onboarding.component';
 import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
-import { ProfileActions } from '../../../store/profile/profile.actions';
+import { ProfileActions } from '@store/profile/profile.actions';
 
 describe('OnboardingComponent', () => {
   MockInstance.scope();

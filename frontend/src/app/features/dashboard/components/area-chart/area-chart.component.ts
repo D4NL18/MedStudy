@@ -1,9 +1,9 @@
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { Store } from '@ngrx/store';
-import { selectAreaAnalytics } from '../../../../store/dashboard/dashboard.selectors';
+import { selectAreaAnalytics } from '@store/dashboard/dashboard.selectors';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({

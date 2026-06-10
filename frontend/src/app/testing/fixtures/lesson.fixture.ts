@@ -1,4 +1,4 @@
-import { Lesson, LessonPriority } from '../../core/models/lesson.model';
+import { Lesson, LessonPriority } from '@core/models/lesson.model';
 
 export const createMockLesson = (overrides?: Partial<Lesson>): Lesson => ({
   id: '1',

@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { selectTopicAnalytics, selectAnalyticsLoading } from '../../../../store/analytics/analytics.selectors';
-import { loadTopicAnalytics } from '../../../../store/analytics/analytics.actions';
+import { selectTopicAnalytics, selectAnalyticsLoading } from '@store/analytics/analytics.selectors';
+import { loadTopicAnalytics } from '@store/analytics/analytics.actions';
 
 @Component({
   selector: 'app-analise-tema',

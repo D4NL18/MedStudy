@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { CompetitionService } from '../../core/services/competition.service';
-import { ToastService } from '../../core/services/toast.service';
+import { CompetitionService } from '@core/services/competition.service';
+import { ToastService } from '@core/services/toast.service';
 import { CompetitionActions } from './competition.actions';
 import * as AuthActions from '../auth/auth.actions';
 

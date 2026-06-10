@@ -3,14 +3,14 @@ import { ShellComponent } from './shell.component';
 import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { FlashcardsStudyComponent } from '../../features/flashcards/pages/flashcards-study/flashcards-study.component';
-import { NotificationService } from '../../core/services/notification.service';
+import { FlashcardsStudyComponent } from '@features/flashcards/pages/flashcards-study/flashcards-study.component';
+import { NotificationService } from '@core/services/notification.service';
 import { of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 
-import { PwaService } from '../../core/services/pwa.service';
+import { PwaService } from '@core/services/pwa.service';
 
 describe('ShellComponent', () => {
   MockInstance.scope();

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
 import { AnalyticsEffects } from './analytics.effects';
-import { AnalyticsService } from '../../core/services/analytics.service';
+import { AnalyticsService } from '@core/services/analytics.service';
 import * as AnalyticsActions from './analytics.actions';
 
 describe('AnalyticsEffects', () => {

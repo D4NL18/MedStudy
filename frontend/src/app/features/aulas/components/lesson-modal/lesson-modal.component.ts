@@ -2,8 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ModalLayoutComponent } from '../../../../shared/components/modal-layout/modal-layout.component';
-import { Lesson, LessonPriority } from '../../../../core/models/lesson.model';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import { Lesson, LessonPriority } from '@core/models/lesson.model';
 
 @Component({
   selector: 'app-lesson-modal',

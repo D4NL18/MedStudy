@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { BancoService } from '../../core/services/banco.service';
+import { BancoService } from '@core/services/banco.service';
 import * as BancoActions from './banco.actions';
 import { catchError, map, mergeMap, of, withLatestFrom } from 'rxjs';
-import { QuestionSession } from '../../core/models/question-session.model';
+import { QuestionSession } from '@core/models/question-session.model';
 import { Store } from '@ngrx/store';
 import { selectBancoFilters } from './banco.selectors';
 
-import { ToastService } from '../../core/services/toast.service';
+import { ToastService } from '@core/services/toast.service';
 
 @Injectable()
 export class BancoEffects {

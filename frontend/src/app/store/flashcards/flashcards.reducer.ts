@@ -1,5 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { Flashcard } from '../../core/models/flashcard.model';
+import { Flashcard } from '@core/models/flashcard.model';
 import { FlashcardsActions } from './flashcards.actions';
 
 export interface FlashcardsState {

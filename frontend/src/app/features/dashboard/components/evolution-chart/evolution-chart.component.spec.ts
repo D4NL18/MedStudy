@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockRender } from 'ng-mocks';
 import { EvolutionChartComponent } from './evolution-chart.component';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { selectDashboardKPIs } from '../../../../store/dashboard/dashboard.selectors';
+import { selectDashboardKPIs } from '@store/dashboard/dashboard.selectors';
 
 describe('EvolutionChartComponent', () => {
   beforeEach(() => {

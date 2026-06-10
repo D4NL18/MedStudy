@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnalyticsService } from '../../../../core/services/analytics.service';
+import { AnalyticsService } from '@core/services/analytics.service';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({

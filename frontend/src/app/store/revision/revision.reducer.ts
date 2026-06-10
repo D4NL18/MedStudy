@@ -1,5 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { RevisionSummary, StudySession } from '../../core/models/revision.model';
+import { RevisionSummary, StudySession } from '@core/models/revision.model';
 import { RevisionActions } from './revision.actions';
 
 export interface RevisionState {

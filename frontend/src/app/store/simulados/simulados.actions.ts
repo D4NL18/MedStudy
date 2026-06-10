@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Simulado, SimuladoFilters } from '../../core/models/simulado.model';
+import { Simulado, SimuladoFilters } from '@core/models/simulado.model';
 
 export const loadSimulados = createAction(
   '[Simulados] Load Simulados',

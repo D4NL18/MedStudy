@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
-import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
-import { AVATAR_PRESETS, AvatarPreset } from '../../../core/constants/avatar-presets';
-import { ProfileActions } from '../../../store/profile/profile.actions';
-import { selectProfile, selectLoading, selectHandleAvailability, selectHandleChecking } from '../../../store/profile/profile.reducer';
+import { AvatarComponent } from '@shared/components/avatar/avatar.component';
+import { AVATAR_PRESETS, AvatarPreset } from '@core/constants/avatar-presets';
+import { ProfileActions } from '@store/profile/profile.actions';
+import { selectProfile, selectLoading, selectHandleAvailability, selectHandleChecking } from '@store/profile/profile.reducer';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({

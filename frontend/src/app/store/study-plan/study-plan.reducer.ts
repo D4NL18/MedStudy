@@ -1,5 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { Lesson } from '../../core/models/lesson.model';
+import { Lesson } from '@core/models/lesson.model';
 import { StudyPlanActions } from './study-plan.actions';
 
 export interface StudyPlanState {

@@ -3,7 +3,7 @@ import { MockBuilder, MockInstance } from 'ng-mocks';
 import { SessionModalComponent } from './session-modal.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { ModalLayoutComponent } from '../../../../shared/components/modal-layout/modal-layout.component';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 
 describe('SessionModalComponent', () => {
   MockInstance.scope();

@@ -1,6 +1,6 @@
 import { reducer, initialState } from './flashcards.reducer';
 import { FlashcardsActions } from './flashcards.actions';
-import { createMockFlashcard } from '../../testing/fixtures/flashcard.fixture';
+import { createMockFlashcard } from '@testing/fixtures/flashcard.fixture';
 
 describe('FlashcardsReducer', () => {
   it('should return the initial state', () => {

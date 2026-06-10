@@ -1,16 +1,18 @@
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, inject, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
-import { FlashcardService } from '../../../../core/services/flashcard.service';
-import { ImagePasteDirective } from '../../../../shared/directives/image-paste.directive';
-import { ImageCompressorService } from '../../../../core/services/image-compressor.service';
+import { FlashcardService } from '@core/services/flashcard.service';
+import { ImagePasteDirective } from '@shared/directives/image-paste.directive';
+import { ImageCompressorService } from '@core/services/image-compressor.service';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 
 @Component({
   selector: 'app-flashcard-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ImagePasteDirective, LucideAngularModule],
+  imports: [ButtonComponent, CommonModule, FormsModule, ImagePasteDirective, LucideAngularModule, ModalLayoutComponent],
   templateUrl: './flashcard-form.component.html',
   styleUrl: './flashcard-form.component.scss'
 })

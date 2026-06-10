@@ -3,10 +3,10 @@ import { MockBuilder, MockInstance } from 'ng-mocks';
 import { SimuladoModalComponent } from './simulado-modal.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ModalLayoutComponent } from '../../../../shared/components/modal-layout/modal-layout.component';
-import { SimuladosService } from '../../../../core/services/simulados.service';
-import * as SimuladosActions from '../../../../store/simulados/simulados.actions';
-import { createMockSimulado } from '../../../../testing/fixtures/simulado.fixture';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import { SimuladosService } from '@core/services/simulados.service';
+import * as SimuladosActions from '@store/simulados/simulados.actions';
+import { createMockSimulado } from '@testing/fixtures/simulado.fixture';
 
 describe('SimuladoModalComponent', () => {
   MockInstance.scope();
