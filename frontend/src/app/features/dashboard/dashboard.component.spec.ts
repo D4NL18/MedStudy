@@ -7,7 +7,6 @@ import { selectDashboardKPIs, selectDashboardLoading } from '../../store/dashboa
 import { EvolutionChartComponent } from './components/evolution-chart/evolution-chart.component';
 import { AreaChartComponent } from './components/area-chart/area-chart.component';
 import { DistributionChartComponent } from './components/distribution-chart/distribution-chart.component';
-import { of } from 'rxjs';
 import { loadDashboard } from '../../store/dashboard/dashboard.actions';
 
 describe('DashboardComponent', () => {

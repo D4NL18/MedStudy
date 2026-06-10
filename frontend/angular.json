@@ -3,7 +3,10 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -71,7 +74,6 @@
               "outputHashing": "all",
               "serviceWorker": "ngsw-config.json"
             },
-
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -123,6 +125,15 @@
             },
             "scripts": [],
             "karmaConfig": "karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }

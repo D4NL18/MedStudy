@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { Lesson, LessonSummary } from '../models/lesson.model';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class LessonService {
 
   constructor(private http: HttpClient) {}
 
-  getLessons(page: number = 0, size: number = 10, filters?: any): Observable<{content: Lesson[], totalElements: number}> {
+  getLessons(page = 0, size = 10, filters?: any): Observable<{content: Lesson[], totalElements: number}> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());

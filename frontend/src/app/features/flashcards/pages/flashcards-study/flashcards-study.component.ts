@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
@@ -7,7 +7,7 @@ import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actio
 import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '../../../../store/flashcards/flashcards.reducer';
 import { FlashcardDifficulty } from '../../../../core/models/flashcard.model';
 import { MarkdownRendererComponent } from '../../../../shared/components/markdown-renderer/markdown-renderer.component';
-import { take, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-flashcards-study',

@@ -1,5 +1,4 @@
-import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { FlashcardsStudyComponent } from './flashcards-study.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
@@ -7,9 +6,8 @@ import { Actions } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 import { MarkdownRendererComponent } from '../../../../shared/components/markdown-renderer/markdown-renderer.component';
-import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
 import { createMockFlashcard } from '../../../../testing/fixtures/flashcard.fixture';
-import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '../../../../store/flashcards/flashcards.reducer';
+import { selectQueue, selectCurrentIndex } from '../../../../store/flashcards/flashcards.reducer';
 
 describe('FlashcardsStudyComponent', () => {
   MockInstance.scope();

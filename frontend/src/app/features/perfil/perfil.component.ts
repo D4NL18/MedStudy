@@ -14,7 +14,6 @@ import { selectDashboardKPIs } from '../../store/dashboard/dashboard.selectors';
 import * as DashboardActions from '../../store/dashboard/dashboard.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest } from 'rxjs';
-import { effect } from '@angular/core';
 
 @Component({
   selector: 'app-perfil',

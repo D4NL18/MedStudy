@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { FlashcardFormComponent } from './flashcard-form.component';
 import { FlashcardService } from '../../../../core/services/flashcard.service';
 import { Router } from '@angular/router';

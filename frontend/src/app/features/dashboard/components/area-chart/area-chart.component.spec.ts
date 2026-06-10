@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockRender } from 'ng-mocks';
 import { AreaChartComponent } from './area-chart.component';
 import { ThemeService } from '../../../../core/services/theme.service';

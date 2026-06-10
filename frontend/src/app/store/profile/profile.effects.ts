@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ProfileService } from '../../core/services/profile.service';
 import { ProfileActions } from './profile.actions';
 import * as AuthActions from '../auth/auth.actions';
-import { catchError, map, mergeMap, tap, of } from 'rxjs';
+import { catchError, map, mergeMap, of } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
 
 @Injectable()

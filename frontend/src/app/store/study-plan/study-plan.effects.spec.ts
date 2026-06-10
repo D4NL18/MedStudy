@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { StudyPlanEffects } from './study-plan.effects';
 import { LessonService } from '../../core/services/lesson.service';
 import { StudyPlanActions } from './study-plan.actions';

@@ -1,4 +1,4 @@
-import { Component, inject, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';

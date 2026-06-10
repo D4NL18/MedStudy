@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks } from 'ng-mocks';
+import { MockBuilder, MockRender } from 'ng-mocks';
 import { EvolutionChartComponent } from './evolution-chart.component';
 import { ThemeService } from '../../../../core/services/theme.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';

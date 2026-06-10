@@ -1,8 +1,7 @@
-import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { OnboardingComponent } from './onboarding.component';
 import { Store } from '@ngrx/store';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { ProfileActions } from '../../../store/profile/profile.actions';
 
 describe('OnboardingComponent', () => {

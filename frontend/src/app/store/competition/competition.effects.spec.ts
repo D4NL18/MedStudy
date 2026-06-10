@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CompetitionEffects } from './competition.effects';
 import { CompetitionService } from '../../core/services/competition.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -9,8 +9,7 @@ import {
   Competition, 
   CompetitionType, 
   MetricType, 
-  CompetitionStatus, 
-  ParticipantStatus 
+  CompetitionStatus 
 } from '../../core/models/competition.model';
 
 describe('CompetitionEffects', () => {

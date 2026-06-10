@@ -10,7 +10,7 @@ export class ExportService {
 
   constructor(private http: HttpClient) {}
 
-  exportPdf(title: String, charts: { [key: string]: string }): Observable<Blob> {
+  exportPdf(title: string, charts: Record<string, string>): Observable<Blob> {
     return this.http.post(`${this.apiUrl}/pdf`, { title, charts }, {
       responseType: 'blob'
     });

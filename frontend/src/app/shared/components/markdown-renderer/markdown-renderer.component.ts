@@ -10,7 +10,7 @@ import { MarkdownModule } from 'ngx-markdown';
 })
 export class MarkdownRendererComponent implements OnChanges {
   @Input() data: any = '';
-  processedData: string = '';
+  processedData = '';
   private cdr = inject(ChangeDetectorRef);
 
   ngOnChanges() {

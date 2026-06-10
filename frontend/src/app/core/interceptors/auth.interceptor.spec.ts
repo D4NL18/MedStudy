@@ -3,7 +3,6 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { authInterceptor } from './auth.interceptor';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import * as AuthActions from '../../store/auth/auth.actions';
 
 describe('authInterceptor', () => {
   let httpMock: HttpTestingController;

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RevisionEffects } from './revision.effects';
 import { RevisionService } from '../../core/services/revision.service';
 import { RevisionActions } from './revision.actions';

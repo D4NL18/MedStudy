@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { selectUser } from '../../store/auth/auth.selectors';
-import * as AuthActions from '../../store/auth/auth.actions';
-import { ThemeService, AppTheme } from '../../core/services/theme.service';
 import { PerformanceThemeService } from '../../core/services/performance-theme.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { selectDashboardKPIs, selectDashboardLoading, selectAreaAnalytics } from '../../store/dashboard/dashboard.selectors';
@@ -72,7 +70,7 @@ export class DashboardComponent implements OnInit {
   async exportPdf() {
     this.isExportingPdf.set(true);
     try {
-      const charts: { [key: string]: string } = {};
+      const charts: Record<string, string> = {};
       const chartElements = ['evolution-chart', 'distribution-chart'];
 
       // Adiciona classe global temporária para forçar as fontes e eixos do gráfico a ficarem escuros no PDF

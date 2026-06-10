@@ -4,7 +4,7 @@ import { CompetitionActions } from './competition.actions';
 
 export interface CompetitionState {
   competitions: Competition[];
-  leaderboards: { [id: string]: LeaderboardEntry[] };
+  leaderboards: Record<string, LeaderboardEntry[]>;
   loading: boolean;
   creating: boolean;
   error: string | null;

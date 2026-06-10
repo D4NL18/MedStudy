@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './modal-layout.component.scss'
 })
 export class ModalLayoutComponent {
-  @Input() title: string = '';
-  @Input() loading: boolean = false;
+  @Input() title = '';
+  @Input() loading = false;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<void>();
 }

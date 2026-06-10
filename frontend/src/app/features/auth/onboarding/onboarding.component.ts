@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -184,8 +184,8 @@ export class OnboardingComponent implements OnInit {
 
   step = 1;
   showSchools = false;
-  selectedCategory: string = 'Clínica Médica';
-  selectedAvatarId: string = 'clinica_geral';
+  selectedCategory = 'Clínica Médica';
+  selectedAvatarId = 'clinica_geral';
 
   // Forms
   basicForm!: FormGroup;

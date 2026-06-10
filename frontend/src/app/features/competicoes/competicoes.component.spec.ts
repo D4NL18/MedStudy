@@ -1,4 +1,3 @@
-import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { CompeticoesComponent } from './competicoes.component';
 import { Store } from '@ngrx/store';

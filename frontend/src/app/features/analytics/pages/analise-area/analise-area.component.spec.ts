@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockInstance } from 'ng-mocks';
 import { AnaliseAreaComponent } from './analise-area.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ThemeService } from '../../../../core/services/theme.service';
 import { Router } from '@angular/router';
 import { loadAreaAnalytics } from '../../../../store/analytics/analytics.actions';
-import { selectAreaAnalytics, selectAnalyticsLoading } from '../../../../store/analytics/analytics.selectors';
+import { selectAreaAnalytics } from '../../../../store/analytics/analytics.selectors';
 import { createMockAreaAnalytics } from '../../../../testing/fixtures/analytics.fixture';
 import { signal } from '@angular/core';
 
