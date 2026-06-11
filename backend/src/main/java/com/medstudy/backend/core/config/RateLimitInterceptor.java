@@ -26,10 +26,13 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String key;
         Bucket bucket;
         
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            // Logado: Limite de 5000 requests / minuto (aumentado para migração)
+        if (request.getRequestURI().startsWith("/api/auth")) {
+            key = "auth:" + clientIp;
+            bucket = cache.computeIfAbsent(key, k -> createNewBucket(5, Duration.ofMinutes(1)));
+        } else if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Logado: Limite de 100 requests / minuto
             key = "user:" + authorizationHeader; 
-            bucket = cache.computeIfAbsent(key, k -> createNewBucket(5000, Duration.ofMinutes(1)));
+            bucket = cache.computeIfAbsent(key, k -> createNewBucket(100, Duration.ofMinutes(1)));
         } else {
             // Anonimo: Limite de 7 requests / minuto
             key = "ip:" + clientIp;
