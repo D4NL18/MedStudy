@@ -1,4 +1,4 @@
-<div [class]="cardClasses">
+<div [class]="cardClasses" appRipple [appRippleDisabled]="!hoverable">
   <div class="card-header">
     <ng-content select="[card-header], card-header"></ng-content>
   </div>

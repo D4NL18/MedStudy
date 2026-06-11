@@ -4,24 +4,30 @@ import { Observable } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { FeedItemComponent } from './feed-item.component';
+import { FeedSkeletonComponent } from './components/feed-skeleton/feed-skeleton.component';
 
 @Component({
   selector: 'app-feed-dashboard',
   standalone: true,
-  imports: [CommonModule, FeedItemComponent],
+  imports: [CommonModule, FeedItemComponent, FeedSkeletonComponent],
   template: `
     <div class="feed-dashboard-container fade-in">
-      <div class="feed-list" *ngIf="events$ | async as events">
-        <app-feed-item 
-          *ngFor="let event of events" 
-          [event]="event" 
-          [currentUserId]="currentUserId">
-        </app-feed-item>
-        
-        <div *ngIf="events.length === 0" class="empty-state">
-          No recent activities.
+      <ng-container *ngIf="events$ | async as events; else loading">
+        <div class="feed-list">
+          <app-feed-item 
+            *ngFor="let event of events" 
+            [event]="event" 
+            [currentUserId]="currentUserId">
+          </app-feed-item>
+          
+          <div *ngIf="events.length === 0" class="empty-state">
+            No recent activities.
+          </div>
         </div>
-      </div>
+      </ng-container>
+      <ng-template #loading>
+        <app-feed-skeleton></app-feed-skeleton>
+      </ng-template>
     </div>
   `,
   styles: [`

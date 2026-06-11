@@ -19,3 +19,9 @@ jwt:
   mail:
     host: localhost
     port: 25
+
+rate:
+  limit:
+    auth: 5
+    user: 20
+    anonymous: 7

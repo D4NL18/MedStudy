@@ -16,6 +16,7 @@ import { SubareaModalComponent } from './components/subarea-modal/subarea-modal.
 import { LucideAngularModule } from 'lucide-angular';
 import { ExportService } from '@core/services/export/export.service';
 import { RouterLink } from '@angular/router';
+import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dashboard-skeleton.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +28,7 @@ import { RouterLink } from '@angular/router';
     DistributionChartComponent,
     TopErrorsRankingComponent,
     MatDialogModule,
+    DashboardSkeletonComponent,
     RouterLink
   ],
   templateUrl: './dashboard.component.html',

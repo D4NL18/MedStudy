@@ -1,15 +1,17 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
+import { RippleDirective } from '../../directives/ripple/ripple.directive';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'cta' | 'icon' | 'destructive' | 'outline' | 'ghost' | string;
 
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, RippleDirective],
   templateUrl: './button.component.html',
-  styleUrl: './button.component.scss'
+  styleUrl: './button.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonComponent {
   @Input() variant: ButtonVariant = 'primary';

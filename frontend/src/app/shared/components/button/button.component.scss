@@ -97,3 +97,6 @@
     height: 20px;
   }
 }
+&:active {
+  transform: scale(0.98);
+}

@@ -118,3 +118,58 @@ A infraestrutura local é provisionada para garantir um ambiente agnóstico e de
    ```
    > *Acesso à Interface Web: `http://localhost:4200`*
    > *Acesso ao OpenAPI/Swagger Interativo: `http://localhost:8080/api/docs`*
+
+---
+
+## 7. Padrões de Engenharia e Clean Code
+
+A manutenção da excelência técnica é inegociável. Para assegurar a escalabilidade, a legibilidade e a estabilidade da base de código do MedStudy, todos os desenvolvedores devem aderir estritamente às seguintes diretrizes e convenções de Clean Code:
+
+### 7.1. Tipagem Forte e Contratos Rigorosos
+- **Tipagem Estrita Obrigatória**: É expressamente proibido o uso do tipo `any` no TypeScript (Frontend) ou a omissão de tipos genéricos no Java (Backend). Todos os retornos de funções, parâmetros e variáveis devem possuir tipagem explícita e formalmente definida.
+- **Utilização Sistemática de Interfaces e DTOs**: A comunicação entre camadas — e em especial o tráfego de dados via API — deve ser mediada por Interfaces (no Frontend) e por DTOs (Data Transfer Objects, no Backend). As entidades do banco de dados (Models) jamais devem ser expostas diretamente nas respostas da API.
+- **Imutabilidade e Records**: No Backend (Java 21), utilize ativamente a estrutura `record` para DTOs, favorecendo a imutabilidade dos dados em trânsito e reduzindo códigos *boilerplate*.
+
+### 7.2. Princípio da Responsabilidade Única (SRP)
+- **Desacoplamento Sistêmico**: Componentes e Serviços devem possuir uma única razão para mudar. Funções não devem exceder o escopo de suas responsabilidades originais. Se um serviço está formatando dados, validando fluxos e executando lógica de negócio simultaneamente, ele deve ser particionado em componentes menores e mais coesos.
+- **Injeção de Dependências Otimizada**: Favoreça a injeção de dependências via construtor (tanto no Spring Boot quanto no Angular) para garantir a integridade da classe e maximizar a cobertura e a facilidade na criação de testes unitários.
+
+### 7.3. Nomenclatura Intencional e Expressividade
+- **Nomes Altamente Descritivos**: Variáveis, métodos e classes devem revelar sua intenção intrínseca de forma cristalina. Evite abreviações (ex: prefira `calculateMonthlyStreakAnalytics` em vez de `calcMthStrk`). O código deve ser autoexplicativo, reduzindo a dependência excessiva de comentários em linha.
+- **Eliminação de *Magic Numbers/Strings***: Valores literais soltos no código que ditam regras de negócio devem ser impreterivelmente encapsulados em Constantes globais nomeadas ou `Enums` (ex: `MAX_LOGIN_ATTEMPTS = 5`).
+
+### 7.4. Resiliência e Tratamento de Erros
+- **Falha Rápida (Fail-Fast)**: Valide os dados nas fronteiras do sistema (nos *Controllers* com `@Valid` e no Frontend utilizando *Reactive Forms*). Inputs corrompidos devem ser barrados antes de tocarem a camada de domínio.
+- **Padronização Global de Exceções**: O Backend não deve retornar *stack traces* não tratados. Utilize exceções de domínio (ex: `UserNotAuthorizedException`) geridas por um `GlobalExceptionHandler` (`@ControllerAdvice`) para garantir que todos os erros de API sigam um contrato visual previsível.
+
+---
+
+## 8. Workflow de Desenvolvimento (Como Criar Novas Funcionalidades)
+
+Para garantir a consistência e previsibilidade ao longo de todo o ciclo de desenvolvimento, a implementação de qualquer nova funcionalidade (seja ela um pequeno componente, uma nova página ou um CRUD completo) deve seguir rigorosamente o *Pipeline* de Engenharia estabelecido abaixo.
+
+### Passo 1: Construção e Tipagem no Backend (Spring Boot)
+Toda funcionalidade que manipula dados duráveis se inicia obrigatoriamente no Backend:
+1. **Entidade (Model)**: Crie a sua classe de domínio mapeada (anotação `@Entity`) no pacote do módulo correspondente em `src/main/java/.../modules/seu_modulo/entity/`.
+2. **Repositório**: Defina a interface herdando de `JpaRepository` dentro de `.../repository/` para habilitar a persistência no banco de dados.
+3. **DTOs e Contratos (Records)**: Estabeleça as fronteiras de entrada e saída da API mapeando-as como `Records` (Java 21) na pasta `.../dto/` (Ex: `CreateFeatureRequest`, `FeatureResponse`). Nunca trafegue a sua Entidade de Banco de Dados de volta para o cliente.
+4. **Service (Regras de Negócio)**: Crie uma classe anotada com `@Service` para abrigar a lógica puramente transacional da funcionalidade. É **expressamente proibido** alocar regras de negócio ou lógicas operacionais em *Controllers*.
+5. **Controller (Entrypoint)**: Exponha o seu recurso na API REST através de um `@RestController`. Garanta que a semântica dos verbos HTTP (`GET`, `POST`, `PUT`, `DELETE`) seja tratada rigorosamente.
+6. **Testes do Backend (Prevenção de Regressões)**: 
+   - Desenvolva os testes isolados para o seu `Service` dentro de `src/test/java/...` utilizando a biblioteca **Mockito**.
+   - Execute localmente `./mvnw test` e valide não apenas o seu novo teste, mas certifique-se de que a malha inteira compila e finaliza sem quebrar outras áreas (Zero Regressão).
+
+### Passo 2: Consumo e Interface no Frontend (Angular 18)
+Com o Backend operante, avance para a SPA respeitando a sua arquitetura baseada em *Standalone Components*:
+1. **Modelos Base (Interfaces)**: Espelhe exatamente o DTO/Record exposto pelo Backend declarando uma `Interface` TypeScript dedicada, idealmente em `/shared/models/`.
+2. **Serviços (API Calls)**: Isole a lógica de comunicação HTTP através de um novo serviço injetável (`@Injectable`) localizado em `/core/services/` (ou dentro do seu escopo de feature), tipando o retorno via `Observable<T>`.
+3. **Páginas e Componentes**:
+   - Para interfaces completas de rota (Páginas), hospede-as em `/features/seu_modulo/pages/`.
+   - Para as menores unidades fragmentadas e reutilizáveis (modais, tabelas personalizadas, formulários base), crie-as em `/features/seu_modulo/components/` ou em `/shared/components/`.
+4. **Fidelidade ao Design System e UI**: A interface de usuário do seu componente deve herdar exclusivamente as variáveis globais de CSS/SCSS (tipografia, bordas e espaçamentos). O componente deve ser fluido o suficiente para não quebrar a coesão quando o aluno alternar entre o *Light/Dark Mode* ou navegar por um dos outros 6 temas coloridos suportados pela aplicação. Valores estáticos ou *hardcoded* em arquivos CSS paralelos serão rejeitados.
+
+### Passo 3: Auditoria Final de Qualidade
+Antes de acoplar sua *feature* ao branch principal (*Pull Request*), siga este *checklist* mandatório de mitigação de riscos:
+1. **Testes Visuais e Locais (Jasmine/Karma)**: Acesse o arquivo gerado `.spec.ts` respectivo ao seu componente para mapear e testar os cenários de interação e renderização fundamentais. Execute `npm test` no terminal do frontend, validando se o seu novo código não comprometeu outros diretórios.
+2. **Auditoria de UX Manual (Smoke Test)**: Suba as aplicações localmente e navegue pela rota desenvolvida em `http://localhost:4200`. Inspecione o terminal e certifique-se de que nenhum fluxo dispara falhas ou resíduos não tratados no *DevTools* do navegador.
+3. **Zero Impacto (Princípio de Não Agressão)**: Caso a sua implementação exija refatorar um `Service` ou `Component` clássico e preexistente para se adaptar, é seu dever confirmar que o fluxo antigo dependente desta classe não foi fragmentado, repetindo exaustivamente testes manuais na ponta de acesso do usuário anterior.

@@ -83,3 +83,6 @@
     background: rgba(0, 0, 0, 0.02);
   }
 }
+.card-hoverable:active {
+  transform: scale(0.98);
+}
