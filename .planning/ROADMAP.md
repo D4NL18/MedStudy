@@ -26,6 +26,9 @@
 ### Phase 33: UX Polish, Animações e Fluidez (Aesthetics)
 - Status: Pending
 
+### Phase 33.1: Padronização e Documentação de DTOs (INSERTED)
+- Status: Pending
+
 ### Phase 34: Documentação em Código (Clean Comments & Javadoc/TSDoc)
 - Status: Pending
 
