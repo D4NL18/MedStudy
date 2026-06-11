@@ -18,7 +18,7 @@
 - Status: Pending
 
 ### Phase 31: Hardening e Segurança Avançada (OWASP Deep Dive)
-- Status: Pending
+- Status: Completed
 
 ### Phase 32: Expansão de Cobertura de Testes
 - Status: Pending
@@ -74,6 +74,8 @@
 | 26    | v1.2      | 1/1            | Shipped | 2026-06-10|
 | 27    | v1.2      | 1/1            | Shipped | 2026-05-28|
 | 28    | v1.2      | 1/1            | Shipped | 2026-06-10|
+| 30    | v1.3      | 1/1            | Completed | 2026-06-10|
+| 31    | v1.3      | 1/1            | Completed | 2026-06-11|
 
 ---
-*Roadmap updated for v1.3 on 2026-06-10*
+*Roadmap updated for v1.3 on 2026-06-11*
