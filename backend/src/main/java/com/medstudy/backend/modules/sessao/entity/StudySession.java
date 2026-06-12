@@ -17,6 +17,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "study_sessions")
+/** Entity representing a study session record created by a user. */
 public class StudySession extends BaseEntity {
 
     @PrePersist
@@ -64,7 +65,7 @@ public class StudySession extends BaseEntity {
     @Formula("CASE WHEN qts_feitas > 0 THEN (CAST(qts_corretas AS float) / qts_feitas) * 100 ELSE 0 END")
     private Double performance;
 
-    // Getters and Setters
+    // No need for explicit getters and setters, using JPA with BaseEntity
     public Double getPerformance() {
         return performance;
     }

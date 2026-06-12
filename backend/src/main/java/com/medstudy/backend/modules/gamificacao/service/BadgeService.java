@@ -17,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service responsible for evaluating and awarding gamification badges to users.
+ * <p>
+ * Checks various badge categories (streak, question count, precision, simulado count, flawless simulado)
+ * based on the provided {@link BadgeContext} and awards newly earned badges to the user.
+ * </p>
+ */
 @Service
 @Transactional
 public class BadgeService {

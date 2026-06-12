@@ -1,15 +1,20 @@
 import { Component, inject, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { ModalLayoutComponent } from '../../../../shared/components/modal-layout/modal-layout.component';
-import * as SimuladosActions from '../../../../store/simulados/simulados.actions';
-import { selectSimuladosLoading } from '../../../../store/simulados/simulados.selectors';
-import { Simulado } from '../../../../core/models/simulado.model';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import * as SimuladosActions from '@store/simulados/simulados.actions';
+import { selectSimuladosLoading } from '@store/simulados/simulados.selectors';
+import { Simulado } from '@core/models/simulado.model';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
-import { SimuladosService } from '../../../../core/services/simulados.service';
+import { SimuladosService } from '@core/services/simulados.service';
 
+
+/**
+ * Angular component for the Simulado Modal feature.
+ * @description Handles the presentation logic and user interactions for the Simulado Modal view.
+ */
 @Component({
   selector: 'app-simulado-modal',
   standalone: true,

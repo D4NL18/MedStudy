@@ -1,10 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { LessonService } from '../../core/services/lesson.service';
-import { ToastService } from '../../core/services/toast.service';
+import { LessonService } from '@core/services/lesson.service';
+import { ToastService } from '@core/services/toast.service';
 import { StudyPlanActions } from './study-plan.actions';
 
+
+/**
+ * NgRx effects for the Study Plan feature slice.
+ * @description Handles side effects such as HTTP calls in response to Study Plan actions.
+ */
 @Injectable()
 export class StudyPlanEffects {
   private actions$ = inject(Actions);

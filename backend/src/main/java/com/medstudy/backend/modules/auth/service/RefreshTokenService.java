@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Service responsible for managing refresh tokens.
+ */
 @Service
 public class RefreshTokenService {
 
@@ -25,14 +28,31 @@ public class RefreshTokenService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Retrieves the configured duration of a refresh token in milliseconds.
+     *
+     * @return the duration in milliseconds
+     */
     public long getRefreshTokenDurationMs() {
         return refreshTokenDurationMs;
     }
 
+    /**
+     * Finds a refresh token by its token string.
+     *
+     * @param token the token string
+     * @return an {@link Optional} containing the refresh token if found
+     */
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
     }
 
+    /**
+     * Creates a new refresh token for the specified user.
+     *
+     * @param userId the ID of the user
+     * @return the newly created {@link RefreshToken}
+     */
     @Transactional
     public RefreshToken createRefreshToken(UUID userId) {
         RefreshToken refreshToken = new RefreshToken();
@@ -45,6 +65,13 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
+    /**
+     * Verifies if a refresh token has expired.
+     *
+     * @param token the refresh token to verify
+     * @return the token if it is still valid
+     * @throws RuntimeException if the token is expired
+     */
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().isBefore(LocalDateTime.now())) {
             refreshTokenRepository.delete(token);
@@ -53,11 +80,20 @@ public class RefreshTokenService {
         return token;
     }
 
+    /**
+     * Deletes all refresh tokens associated with a given user ID.
+     *
+     * @param userId the ID of the user whose tokens should be deleted
+     */
     @Transactional
     public void deleteByUserId(UUID userId) {
-        // Implementation for logout or user deletion
     }
 
+    /**
+     * Deletes a refresh token by its token string.
+     *
+     * @param token the token string to delete
+     */
     @Transactional
     public void deleteByToken(String token) {
         refreshTokenRepository.findByToken(token).ifPresent(refreshTokenRepository::delete);

@@ -3,11 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { ModalLayoutComponent } from '../../../../shared/components/modal-layout/modal-layout.component';
-import * as BancoActions from '../../../../store/banco/banco.actions';
-import { selectBancoLoading } from '../../../../store/banco/banco.selectors';
-import { QuestionSession } from '../../../../core/models/question-session.model';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import * as BancoActions from '@store/banco/banco.actions';
+import { selectBancoLoading } from '@store/banco/banco.selectors';
+import { QuestionSession } from '@core/models/question-session.model';
 
+
+/**
+ * Angular component for the Session Modal feature.
+ * @description Handles the presentation logic and user interactions for the Session Modal view.
+ */
 @Component({
   selector: 'app-session-modal',
   standalone: true,

@@ -1,6 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+
+/**
+ * Angular service responsible for Toast-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Toast operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

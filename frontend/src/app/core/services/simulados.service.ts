@@ -3,6 +3,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Simulado, SimuladoFilters } from '../models/simulado.model';
 
+
+/**
+ * Angular service responsible for Simulados-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Simulados operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

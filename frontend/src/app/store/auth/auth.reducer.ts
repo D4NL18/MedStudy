@@ -1,6 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import * as AuthActions from './auth.actions';
 
+
+/**
+ * NgRx reducer for the Auth feature slice.
+ * @description Handles state transitions in response to dispatched Auth actions.
+ */
 export interface AuthState {
   token: string | null;
   user: { email: string; nome: string } | null;

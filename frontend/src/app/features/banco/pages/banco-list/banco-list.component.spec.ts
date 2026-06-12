@@ -1,11 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { BancoListComponent } from './banco-list.component';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
-import { SentinelComponent } from '../../../../shared/components/sentinel/sentinel.component';
-import * as BancoActions from '../../../../store/banco/banco.actions';
+import { SentinelComponent } from '@shared/components/sentinel/sentinel.component';
 
 describe('BancoListComponent', () => {
   MockInstance.scope();

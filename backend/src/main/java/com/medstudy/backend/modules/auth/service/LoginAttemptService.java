@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Service that tracks login attempts and applies progressive delays to prevent brute-force attacks.
+ */
 @Service
 public class LoginAttemptService {
 
@@ -13,16 +16,31 @@ public class LoginAttemptService {
 
     private final ConcurrentHashMap<String, Integer> attemptsCache = new ConcurrentHashMap<>();
 
+    /**
+     * Clears the failed login attempts for a given key upon successful login.
+     *
+     * @param key the identifier (e.g., email) used for login
+     */
     public void loginSucceeded(String key) {
         attemptsCache.remove(key);
     }
 
+    /**
+     * Records a failed login attempt for a given key and applies a progressive delay.
+     *
+     * @param key the identifier (e.g., email) used for login
+     */
     public void loginFailed(String key) {
         int attempts = attemptsCache.getOrDefault(key, 0);
         attemptsCache.put(key, attempts + 1);
         applyProgressiveDelay(key);
     }
 
+    /**
+     * Applies a progressive delay based on the number of failed attempts.
+     *
+     * @param key the identifier for which to apply the delay
+     */
     public void applyProgressiveDelay(String key) {
         int attempts = attemptsCache.getOrDefault(key, 0);
         if (attempts > 0) {

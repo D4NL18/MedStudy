@@ -8,10 +8,10 @@
       <p class="subtitle-text">Desafie seus amigos, acompanhe rankings dinâmicos e conquiste medalhas exclusivas!</p>
     </div>
     
-    <button class="btn-primary-glow" (click)="openCreateModal()">
+    <app-button variant="btn-primary-glow" (onClick)="openCreateModal()">
       <lucide-icon name="plus" [size]="20" class="header-btn-icon"></lucide-icon>
       Novo Desafio
-    </button>
+    </app-button>
   </div>
 
   <div class="competitions-layout">
@@ -98,14 +98,14 @@
 
               <!-- Invite action buttons -->
               <div class="invite-actions" *ngIf="activeTab() === 'invites'">
-                <button class="btn-accept" (click)="acceptInvite(item.id, $event)">
+                <app-button variant="btn-accept" (onClick)="acceptInvite(item.id, $event)">
                   <lucide-icon name="check" class="btn-icon-small"></lucide-icon>
                   Aceitar
-                </button>
-                <button class="btn-decline" (click)="declineInvite(item.id, $event)">
+                </app-button>
+                <app-button variant="btn-decline" (onClick)="declineInvite(item.id, $event)">
                   <lucide-icon name="x" class="btn-icon-small"></lucide-icon>
                   Recusar
-                </button>
+                </app-button>
               </div>
 
               <div class="participants-avatars">
@@ -262,16 +262,7 @@
   </div>
 
   <!-- Create Challenge Modal -->
-  <div class="modal-backdrop" *ngIf="showCreateModal()" (click)="closeCreateModal()">
-    <div class="modal-card glass-card" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2 class="gradient-text">Forjar Novo Desafio</h2>
-        <button class="btn-close" (click)="closeCreateModal()">
-          <lucide-icon name="x"></lucide-icon>
-        </button>
-      </div>
-
-      <form [formGroup]="competitionForm" (ngSubmit)="onCreateSubmit()" class="modal-form">
+  <app-modal-layout *ngIf="showCreateModal()" title="Forjar Novo Desafio" [loading]="creating()" saveText="Come�ar Desafio!" (close)="closeCreateModal()" (save)="onCreateSubmit()"><form [formGroup]="competitionForm" class="modal-form">
         <div class="form-grid">
           <!-- Title -->
           <div class="form-group full-width">
@@ -366,14 +357,5 @@
           </div>
         </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary" (click)="closeCreateModal()">Cancelar</button>
-          <button type="submit" class="btn-primary-glow" [disabled]="competitionForm.invalid || creating()">
-            <span *ngIf="creating()" class="btn-spinner"></span>
-            {{ creating() ? 'Iniciando desafio...' : 'Começar Desafio!' }}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+        </form></app-modal-layout>
 </div>

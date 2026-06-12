@@ -1,6 +1,11 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AnalyticsState } from './analytics.reducer';
 
+
+/**
+ * NgRx selectors for the Analytics feature slice.
+ * @description Provides memoized queries to extract Analytics state from the store.
+ */
 export const selectAnalyticsState = createFeatureSelector<AnalyticsState>('analytics');
 
 export const selectAreaAnalytics = createSelector(

@@ -1,11 +1,10 @@
-import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { PerfilComponent } from './perfil.component';
 import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
-import { BadgeService } from '../../core/services/badge.service';
+import { BadgeService } from '@core/services/badge.service';
 import { of } from 'rxjs';
-import { ProfileActions } from '../../store/profile/profile.actions';
+import { ProfileActions } from '@store/profile/profile.actions';
 
 describe('PerfilComponent', () => {
   MockInstance.scope();

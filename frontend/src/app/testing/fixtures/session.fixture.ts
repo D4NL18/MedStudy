@@ -1,5 +1,10 @@
-import { QuestionSession } from '../../core/models/question-session.model';
+import { QuestionSession } from '@core/models/question-session.model';
 
+
+/**
+ * Test fixture data for Session.
+ * @description Provides reusable mock objects for use in unit and integration tests.
+ */
 export const createMockSession = (overrides?: Partial<QuestionSession>): QuestionSession => ({
   id: '1',
   tema: 'Hepatologia',

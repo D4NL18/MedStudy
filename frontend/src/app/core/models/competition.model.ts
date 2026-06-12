@@ -1,3 +1,7 @@
+/**
+ * TypeScript model/interface for Competition.
+ * @description Defines the data shape used by the application for Competition entities.
+ */
 export enum CompetitionType {
   GROUP = 'GROUP',
   DUEL_TIME = 'DUEL_TIME',

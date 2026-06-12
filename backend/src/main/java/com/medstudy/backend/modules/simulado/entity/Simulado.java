@@ -14,6 +14,7 @@ import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "simulados")
+/** Entity representing a mock exam (simulado) session created by a user. */
 public class Simulado extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +33,6 @@ public class Simulado extends BaseEntity {
     @Column(name = "ano")
     private Integer ano;
 
-    // Clínica Médica
     @Column(name = "cm_total", nullable = false)
     private Integer cmTotal = 0;
     @Column(name = "cm_acertos", nullable = false)
@@ -40,7 +40,6 @@ public class Simulado extends BaseEntity {
     @Column(name = "cm_erros", nullable = false)
     private Integer cmErros = 0;
 
-    // Cirurgia
     @Column(name = "cir_total", nullable = false)
     private Integer cirTotal = 0;
     @Column(name = "cir_acertos", nullable = false)
@@ -48,7 +47,6 @@ public class Simulado extends BaseEntity {
     @Column(name = "cir_erros", nullable = false)
     private Integer cirErros = 0;
 
-    // Pediatria
     @Column(name = "ped_total", nullable = false)
     private Integer pedTotal = 0;
     @Column(name = "ped_acertos", nullable = false)
@@ -56,7 +54,6 @@ public class Simulado extends BaseEntity {
     @Column(name = "ped_erros", nullable = false)
     private Integer pedErros = 0;
 
-    // GO
     @Column(name = "go_total", nullable = false)
     private Integer goTotal = 0;
     @Column(name = "go_acertos", nullable = false)
@@ -64,7 +61,6 @@ public class Simulado extends BaseEntity {
     @Column(name = "go_erros", nullable = false)
     private Integer goErros = 0;
 
-    // Preventiva
     @Column(name = "prev_total", nullable = false)
     private Integer prevTotal = 0;
     @Column(name = "prev_acertos", nullable = false)
@@ -78,7 +74,6 @@ public class Simulado extends BaseEntity {
     @Formula("(cm_acertos + cir_acertos + ped_acertos + go_acertos + prev_acertos)")
     private Integer scoreTotal;
 
-    // Getters and Setters
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
     public String getNome() { return nome; }

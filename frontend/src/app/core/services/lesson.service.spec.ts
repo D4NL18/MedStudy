@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { LessonService } from './lesson.service';
-import { createMockLesson } from '../../testing/fixtures/lesson.fixture';
+import { createMockLesson } from '@testing/fixtures/lesson.fixture';
 
 describe('LessonService', () => {
   let service: LessonService;

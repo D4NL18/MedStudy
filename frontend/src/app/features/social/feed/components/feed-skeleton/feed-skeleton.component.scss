@@ -1,0 +1,33 @@
+.feed-skeleton {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .post-skeleton {
+      padding: 16px;
+    }
+    .post-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .post-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .post-content {
+      margin-bottom: 16px;
+    }
+    .post-actions {
+      display: flex;
+      gap: 16px;
+      border-top: 1px solid var(--color-border);
+      padding-top: 12px;
+    }
+    .mt-1 { margin-top: 4px; }
+    .mt-2 { margin-top: 12px; }

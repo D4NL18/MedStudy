@@ -1,21 +1,24 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { selectAllSessions, selectBancoLoading, selectBancoFilters, selectBancoTotalCount } from '../../../../store/banco/banco.selectors';
-import * as BancoActions from '../../../../store/banco/banco.actions';
+import { selectAllSessions, selectBancoLoading, selectBancoFilters, selectBancoTotalCount } from '@store/banco/banco.selectors';
+import * as BancoActions from '@store/banco/banco.actions';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { QuestionSession, QuestionSessionFilters } from '../../../../core/models/question-session.model';
-import { SessionModalComponent } from '../../components/session-modal/session-modal.component';
+import { QuestionSession, QuestionSessionFilters } from '@core/models/question-session.model';
+import { SessionModalComponent } from '@features/banco/components/session-modal/session-modal.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { ExportService } from '../../../../core/services/export/export.service';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { ExportService } from '@core/services/export/export.service';
 import { ActivatedRoute } from '@angular/router';
+import { CreateButtonComponent } from '@shared/components/create-button/create-button.component';
+import { ExportButtonComponent } from '@shared/components/export-button/export-button.component';
 
 @Component({
   selector: 'app-banco-list',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatPaginatorModule],
+  imports: [ButtonComponent, CommonModule, MatDialogModule, MatPaginatorModule, CreateButtonComponent, ExportButtonComponent],
   templateUrl: './banco-list.component.html',
   styleUrl: './banco-list.component.scss'
 })

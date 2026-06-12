@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AreaAnalytics, TopicAnalytics } from '../../store/analytics/analytics.actions';
+import { AreaAnalytics, TopicAnalytics } from '@store/analytics/analytics.actions';
 
+
+/**
+ * Angular service responsible for Analytics-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Analytics operations.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +22,7 @@ export class AnalyticsService {
     return this.http.get<TopicAnalytics[]>('/api/analytics/topics');
   }
 
-  getTopErrors(period: string = 'LAST_60_DAYS'): Observable<any[]> {
+  getTopErrors(period = 'LAST_60_DAYS'): Observable<any[]> {
     return this.http.get<any[]>(`/api/analytics/errors?period=${period}`);
   }
 }

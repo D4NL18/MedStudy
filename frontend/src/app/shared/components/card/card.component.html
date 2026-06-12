@@ -1,0 +1,13 @@
+<div [class]="cardClasses" appRipple [appRippleDisabled]="!hoverable">
+  <div class="card-header">
+    <ng-content select="[card-header], card-header"></ng-content>
+  </div>
+  
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+  
+  <div class="card-footer">
+    <ng-content select="[card-footer], card-footer"></ng-content>
+  </div>
+</div>

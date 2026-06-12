@@ -1,0 +1,23 @@
+<div class="feed-skeleton">
+      <app-card *ngFor="let i of [1, 2, 3]" customClass="post-skeleton">
+        <div class="post-header">
+          <app-skeleton variant="circle" width="48px" height="48px"></app-skeleton>
+          <div class="post-meta">
+            <app-skeleton variant="line" width="120px" height="16px"></app-skeleton>
+            <app-skeleton variant="line" width="80px" height="12px" customClass="mt-1"></app-skeleton>
+          </div>
+        </div>
+        
+        <div class="post-content">
+          <app-skeleton variant="line" width="100%" height="16px"></app-skeleton>
+          <app-skeleton variant="line" width="90%" height="16px" customClass="mt-1"></app-skeleton>
+          <app-skeleton variant="block" height="150px" customClass="mt-2"></app-skeleton>
+        </div>
+        
+        <div class="post-actions">
+          <app-skeleton variant="line" width="60px" height="24px"></app-skeleton>
+          <app-skeleton variant="line" width="60px" height="24px"></app-skeleton>
+          <app-skeleton variant="line" width="60px" height="24px"></app-skeleton>
+        </div>
+      </app-card>
+    </div>

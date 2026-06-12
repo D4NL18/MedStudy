@@ -1,8 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
 
+
+/**
+ * Angular service responsible for Notification-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Notification operations.
+ */
 export interface NotificationSummary {
   pendingRevisions: number;
   reinforcementLessons: number;

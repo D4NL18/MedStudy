@@ -1,24 +1,29 @@
 import { Component, inject, OnInit, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { LucideAngularModule } from 'lucide-angular';
-import { FlashcardsStudyComponent } from '../../features/flashcards/pages/flashcards-study/flashcards-study.component';
-import { OfflineBannerComponent } from '../../shared/components/offline-banner/offline-banner';
+import { FlashcardsStudyComponent } from '@features/flashcards/pages/flashcards-study/flashcards-study.component';
+import { OfflineBannerComponent } from '@shared/components/offline-banner/offline-banner';
 
-import { selectUser } from '../../store/auth/auth.selectors';
-import * as AuthActions from '../../store/auth/auth.actions';
-import { NotificationService, NotificationSummary } from '../../core/services/notification.service';
-import { SocialService } from '../../core/services/social.service';
+import { selectUser } from '@store/auth/auth.selectors';
+import * as AuthActions from '@store/auth/auth.actions';
+import { NotificationService, NotificationSummary } from '@core/services/notification.service';
+import { SocialService } from '@core/services/social.service';
 import { PwaService } from '../services/pwa.service';
-import { OnboardingComponent } from '../../features/auth/onboarding/onboarding.component';
-import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
-import { ProfileActions } from '../../store/profile/profile.actions';
-import { selectProfile } from '../../store/profile/profile.reducer';
+import { OnboardingComponent } from '@features/auth/onboarding/onboarding.component';
+import { AvatarComponent } from '@shared/components/avatar/avatar.component';
+import { ProfileActions } from '@store/profile/profile.actions';
+import { selectProfile } from '@store/profile/profile.reducer';
 
+
+/**
+ * Angular component for the Shell feature.
+ * @description Handles the presentation logic and user interactions for the Shell view.
+ */
 @Component({
   selector: 'app-shell',
   standalone: true,

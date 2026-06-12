@@ -59,8 +59,8 @@ class FlashcardMapperTest {
         com.medstudy.backend.modules.flashcard.dto.FlashcardResponse response = mapper.toResponse(entity);
 
         assertNotNull(response);
-        assertEquals(entity.getId(), response.id());
-        assertEquals("GO", response.grandeArea());
+        assertEquals(entity.getId(), response.getId());
+        assertEquals("GO", response.getGrandeArea());
     }
 
     @Test

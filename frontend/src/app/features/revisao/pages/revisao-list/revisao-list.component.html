@@ -89,19 +89,19 @@
       <!-- Pagination Controls -->
       <div class="pagination-controls" *ngIf="{ current: currentPage$ | async, total: totalPages$ | async } as pageData">
         <ng-container *ngIf="pageData.total && pageData.total > 1">
-          <button class="page-btn" 
+          <app-button variant="page-btn" 
                   [disabled]="pageData.current === 0" 
-                  (click)="changePage((pageData.current || 0) - 1)">
+                  (onClick)="changePage((pageData.current || 0) - 1)">
             Anterior
-          </button>
+          </app-button>
           <span class="page-info">
             Página {{ (pageData.current || 0) + 1 }} de {{ pageData.total }}
           </span>
-          <button class="page-btn" 
+          <app-button variant="page-btn" 
                   [disabled]="(pageData.current || 0) >= pageData.total - 1" 
                   (click)="changePage((pageData.current || 0) + 1)">
             Próxima
-          </button>
+          </app-button>
         </ng-container>
       </div>
 

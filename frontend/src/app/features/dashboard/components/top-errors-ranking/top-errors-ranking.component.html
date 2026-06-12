@@ -1,0 +1,31 @@
+<div class="ranking-container glass">
+      <header class="ranking-header">
+        <h2>🚨 Temas com Maior Taxa de Erro</h2>
+        <div class="filter-toggle">
+          <div role="button" tabindex="0" class="filter-btn" [class.active]="period() === 'LAST_60_DAYS'" (click)="setPeriod('LAST_60_DAYS')">60d</div>
+          <div role="button" tabindex="0" class="filter-btn" [class.active]="period() === 'TOTAL'" (click)="setPeriod('TOTAL')">Total</div>
+        </div>
+      </header>
+
+      <div class="ranking-list" [class.is-loading]="loading()">
+        @for (item of errors(); track item.tema; let i = $index) {
+          <div class="ranking-item">
+            <div class="rank-number">{{ i + 1 }}</div>
+            <div class="item-info">
+              <span class="tema">{{ item.tema }}</span>
+              <span class="area">{{ item.grandeArea }}</span>
+            </div>
+            <div class="item-stats">
+              <span class="error-rate">{{ item.errorRate | number:'1.0-0' }}% erro</span>
+              <span class="total">{{ item.totalQuestions }} questões</span>
+            </div>
+            <div class="progress-bar">
+              <div class="fill" [style.width]="item.errorRate + '%'"></div>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty" *ngIf="!loading()">Nenhum erro crítico detectado no período.</div>
+          <div class="empty" *ngIf="loading()">Analisando histórico...</div>
+        }
+      </div>
+    </div>

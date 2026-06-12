@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.UUID;
 
+/** JPA Specifications for filtering {@link Simulado} entities by various criteria. */
 public class SimuladoSpecifications {
 
     public static Specification<Simulado> hasUserId(UUID userId) {

@@ -12,19 +12,23 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 ## Requirements
 
-## Current Milestone: v1.2 Socialização Aprofundada
+## Current Milestone: v1.3 [Planning]
 
-**Goal:** Introduzir recursos de socialização avançados como perfis configuráveis, conexões de amizade, competições de volume de questões em grupo (Gymrats style), duelos 1v1, feed de conquistas automatizado e controle absoluto de privacidade.
+**Goal:** [TBD]
 
-**Target features:**
-- Perfis de usuário com dados básicos (faculdade, semestre, avatar).
-- Sistema de amigos (solicitar, aceitar, bloquear, listar).
-- Grupos de competição automáticos e painéis de liderança baseados no banco de dados.
-- Feed reativo de conquistas com reações silenciosas (aplausos e aplausos motivacionais).
-- Controle robusto e granular de privacidade.
+### Validated (v1.2 Socialização Aprofundada)
+- ✓ Perfis de usuário com dados básicos (faculdade, semestre, avatar).
+- ✓ Sistema de amigos (solicitar, aceitar, bloquear, listar).
+- ✓ Grupos de competição automáticos e painéis de liderança baseados no banco de dados.
+- ✓ Feed reativo de conquistas com reações silenciosas (aplausos e aplausos motivacionais).
+- ✓ Controle robusto e granular de privacidade.
+- ✓ Tela de registro nativa
+- ✓ Redução de Custos, Paginação e Rate Limiting
 
 ### Active (v1.1 Planning)
- 
+<details>
+<summary>View v1.1 Active Items</summary>
+
 - ✓ Autenticação segura (login + recuperação de senha + JWT com refresh tokens) — v1.0
 - ✓ Monorepo Angular + Spring Boot + PostgreSQL local — v1.0
 - ✓ Backend em camadas: Controller → Service → Repository com DTOs e MapStruct — v1.0
@@ -42,7 +46,12 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 - ✓ Segurança: HttpOnly Cookies, CSRF Double Submit, Mascara de Logs — v1.0 (Phase 14)
 - ✓ Documentação Final: README Visual, Walkthrough, Security Policy — v1.0 (Phase 15)
 
+</details>
+
 ### Validated (v1.1)
+<details>
+<summary>View v1.1 Validated Items</summary>
+
 - ✓ Exportação de relatórios de desempenho em PDF/CSV
 - ✓ Sistema de notificações in-app para revisões críticas
 - ✓ Gamificação básica (badges por streak e volume de questões)
@@ -51,6 +60,8 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 - ✓ Sincronização de regras de Spaced Repetition (% de acerto)
 - ✓ Alertas de "Reforço" e "Teoria Ineficiente" no Plano de Aulas
 - ✓ Cálculo de Tendência de 30 dias e Drill-down por Subárea
+
+</details>
 
 ### Active (v2.0 Planning)
 - [ ] Implementação de Testes E2E com Cypress (Frontend)

@@ -1,11 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockInstance } from 'ng-mocks';
 import { SessionModalComponent } from './session-modal.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ModalLayoutComponent } from '../../../../shared/components/modal-layout/modal-layout.component';
-import * as BancoActions from '../../../../store/banco/banco.actions';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 
 describe('SessionModalComponent', () => {
   MockInstance.scope();

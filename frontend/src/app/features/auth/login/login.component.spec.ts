@@ -1,9 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { LoginComponent } from './login.component';
 import { Store } from '@ngrx/store';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import * as AuthActions from '../../../store/auth/auth.actions';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('LoginComponent', () => {
   MockInstance.scope();

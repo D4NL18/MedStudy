@@ -121,7 +121,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
   @include respond-to('tablet') { grid-template-columns: 1fr; }
 }
 
@@ -327,3 +327,6 @@ td {
     grid-template-columns: 1fr;
   }
 }
+.dashboard-updating { opacity: 0.6; pointer-events: none; transition: opacity 0.3s ease; }
+
+.dashboard-grid-wrapper { display: flex; flex-direction: column; gap: 24px; }

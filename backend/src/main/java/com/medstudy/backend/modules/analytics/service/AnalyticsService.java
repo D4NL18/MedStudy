@@ -14,16 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service for processing and retrieving analytics data.
+ */
 @Service
 @Transactional(readOnly = true)
 public class AnalyticsService {
 
     private final StudySessionRepository repository;
 
+    /**
+     * Constructs a new AnalyticsService with the given repository.
+     *
+     * @param repository The study session repository.
+     */
     public AnalyticsService(StudySessionRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Retrieves analytics data aggregated by area for a specified period.
+     *
+     * @param period The period to filter analytics data.
+     * @return A list of area analytics responses.
+     */
     public List<AreaAnalyticsResponse> getAreaAnalytics(String period) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID userId = user.getId();
@@ -56,8 +70,8 @@ public class AnalyticsService {
             double rate30d = calculateNormalizedRate(area, last30d, 1);
             double rate7d = calculateNormalizedRate(area, last7d, 1);
 
-            double trendShort = rate30d > 0 ? (rate7d - rate30d) : 0;
-            double trendLong = rateGlobal > 0 ? (rate30d - rateGlobal) : 0;
+            double trendShort = rate30d > 0 ? rate7d - rate30d : 0;
+            double trendLong = rateGlobal > 0 ? rate30d - rateGlobal : 0;
 
             responses.add(new AreaAnalyticsResponse(
                 area,
@@ -102,6 +116,12 @@ public class AnalyticsService {
         return q > 0 ? (double) c / q * 100 : 0;
     }
 
+    /**
+     * Retrieves analytics data aggregated by topic for a specified period.
+     *
+     * @param period The period to filter analytics data.
+     * @return A list of topic analytics responses.
+     */
     public List<TopicAnalyticsResponse> getTopicAnalytics(String period) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID userId = user.getId();
@@ -122,8 +142,8 @@ public class AnalyticsService {
             double rate30d = calculateRate(tema, last30d, 2);
             double rate7d = calculateRate(tema, last7d, 2);
 
-            double trendShort = rate30d > 0 ? (rate7d - rate30d) : 0;
-            double trendLong = rateGlobal > 0 ? (rate30d - rateGlobal) : 0;
+            double trendShort = rate30d > 0 ? rate7d - rate30d : 0;
+            double trendLong = rateGlobal > 0 ? rate30d - rateGlobal : 0;
 
             responses.add(new TopicAnalyticsResponse(
                 tema,
@@ -139,6 +159,12 @@ public class AnalyticsService {
         return responses;
     }
 
+    /**
+     * Retrieves the top error themes for a specified period.
+     *
+     * @param period The period to filter analytics data.
+     * @return A list of top error themes responses.
+     */
     public List<TopicErrorResponse> getTopErrorThemes(String period) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID userId = user.getId();

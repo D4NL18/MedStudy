@@ -5,16 +5,8 @@
       <p>Seu sistema de estudos inteligente está pronto para hoje.</p>
     </div>
     <div class="header-actions">
-      <button class="btn-export csv" (click)="exportCsv()" [disabled]="isExportingCsv()" title="Exportar para Excel (CSV)">
-        <lucide-icon name="file-spreadsheet" *ngIf="!isExportingCsv()"></lucide-icon>
-        <div class="spinner" *ngIf="isExportingCsv()" style="width: 14px; height: 14px; border-width: 2px;"></div>
-        {{ isExportingCsv() ? 'Baixando...' : 'CSV' }}
-      </button>
-      <button class="btn-export pdf" (click)="exportPdf()" [disabled]="isExportingPdf()" title="Gerar Relatório Profissional (PDF)">
-        <lucide-icon name="file-text" *ngIf="!isExportingPdf()"></lucide-icon>
-        <div class="spinner" *ngIf="isExportingPdf()" style="width: 14px; height: 14px; border-width: 2px;"></div>
-        {{ isExportingPdf() ? 'Baixando...' : 'Relatório PDF' }}
-      </button>
+      <app-export-button type="csv" (onClick)="exportCsv()" [loading]="isExportingCsv()"></app-export-button>
+      <app-export-button type="pdf" (onClick)="exportPdf()" [loading]="isExportingPdf()"></app-export-button>
     </div>
     <div class="progress-indicator glass">
       <div class="label">Progresso Teórico</div>
@@ -23,12 +15,11 @@
     </div>
   </header>
 
-    @if (loading()) {
-      <div class="skeleton-grid">
-        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5]"></div>
-      </div>
+    @if (loading() && !kpis()) {
+      <app-dashboard-skeleton></app-dashboard-skeleton>
     } @else if (kpis()) {
-      <div class="kpi-grid">
+      <div class="dashboard-grid-wrapper" [class.dashboard-updating]="loading()">
+        <div class="kpi-grid">
         <div class="kpi-card glass highlight">
           <div class="kpi-label">
             Taxa Global
@@ -128,7 +119,7 @@
           </div>
           
           <div class="badges-mini-list" *ngIf="kpis()?.recentBadges?.length! > 0; else emptyBadges">
-            <div *ngFor="let b of kpis()?.recentBadges?.slice(0, 3)" class="badge-mini-item" [title]="b.description">
+            <div *ngFor="let b of kpis()?.recentBadges?.slice(0, 3)" class="badge-mini-item glass" [title]="b.description">
               <div class="badge-mini-icon">
                 <lucide-icon name="award"></lucide-icon>
               </div>
@@ -163,8 +154,9 @@
             </div>
           </ng-template>
 
-          <button class="btn-ver-todos" routerLink="/perfil">Ver todas as medalhas</button>
+          <a class="btn-ver-todos" routerLink="/perfil">Ver todas as medalhas</a>
         </section>
+      </div>
       </div>
     }
 </div>

@@ -21,7 +21,7 @@
             <td colspan="5"><div class="skeleton-row"></div></td>
           </tr>
         } @else {
-          <tr *ngFor="let topic of topics()">
+          <tr *ngFor="let topic of paginatedTopics()">
             <td class="theme-name" data-label="Tema">{{ topic.tema }}</td>
             <td data-label="Área"><span class="badge">{{ topic.grandeArea }}</span></td>
             <td data-label="Questões">{{ topic.totalQuestions }}</td>
@@ -38,5 +38,13 @@
         }
       </tbody>
     </table>
+
+    <mat-paginator
+      [length]="(topics() || []).length"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      aria-label="Select page">
+    </mat-paginator>
   </div>
 </div>

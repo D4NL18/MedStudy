@@ -1,43 +1,22 @@
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { Store } from '@ngrx/store';
-import { selectAreaAnalytics } from '../../../../store/dashboard/dashboard.selectors';
+import { selectAreaAnalytics } from '@store/dashboard/dashboard.selectors';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component for the Area Chart feature.
+ * @description Handles the presentation logic and user interactions for the Area Chart view.
+ */
 @Component({
   selector: 'app-area-chart',
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
-  template: `
-    <div class="chart-container" #containerRef>
-      @if (chartData().length > 0) {
-        <ngx-charts-bar-horizontal
-          [view]="[containerRef.offsetWidth, 250]"
-          [scheme]="colorScheme()"
-          [results]="chartData()"
-          [gradient]="true"
-          [xAxis]="true"
-          [yAxis]="true"
-          [legend]="false"
-          [showXAxisLabel]="false"
-          [showYAxisLabel]="false"
-        >
-        </ngx-charts-bar-horizontal>
-      } @else {
-        <div class="empty-chart">Sem dados suficientes para gerar o gráfico</div>
-      }
-    </div>
-  `,
-  styles: [`
-    .chart-container { width: 100%; height: 250px; display: flex; align-items: center; justify-content: center; }
-    .empty-chart { opacity: 0.5; font-size: 14px; }
-    :host ::ng-deep .ngx-charts {
-      text { fill: var(--color-text); opacity: 0.7; font-size: 11px; }
-      .gridline-path { stroke: rgba(255, 255, 255, 0.05); }
-    }
-  `]
+  templateUrl: './area-chart.component.html',
+  styleUrls: ['./area-chart.component.scss']
 })
 export class AreaChartComponent {
   private store = inject(Store);

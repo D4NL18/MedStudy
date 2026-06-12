@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockInstance } from 'ng-mocks';
 import { RevisaoListComponent } from './revisao-list.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
-import { RevisionActions } from '../../../../store/revision/revision.actions';
-import { selectSessions, selectSummary, selectLoading } from '../../../../store/revision/revision.reducer';
-import { createMockRevisionSummary, createMockRevisionSession } from '../../../../testing/fixtures/revision.fixture';
+import { RevisionActions } from '@store/revision/revision.actions';
+import { createMockRevisionSession } from '@testing/fixtures/revision.fixture';
 
 describe('RevisaoListComponent', () => {
   MockInstance.scope();

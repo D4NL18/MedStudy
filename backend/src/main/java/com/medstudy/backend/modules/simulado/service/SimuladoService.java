@@ -18,6 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Service layer for managing mock exam sessions (Simulados).
+ * <p>
+ * Provides CRUD operations for exam sessions with filtering, ownership verification,
+ * and gamification badge checks after each session is saved.
+ * </p>
+ */
 @Service
 @Transactional
 public class SimuladoService {
@@ -89,31 +96,31 @@ public class SimuladoService {
     public SimuladoResponse update(UUID id, SimuladoRequest request) {
         Simulado entity = getSimuladoAndVerifyOwnership(id);
 
-        entity.setNome(request.nome());
-        entity.setDataRealizacao(request.dataRealizacao());
-        entity.setInstituicao(request.instituicao());
-        entity.setAno(request.ano());
+        entity.setNome(request.getNome());
+        entity.setDataRealizacao(request.getDataRealizacao());
+        entity.setInstituicao(request.getInstituicao());
+        entity.setAno(request.getAno());
         
         // Update areas
-        entity.setCmTotal(request.cmTotal() != null ? request.cmTotal() : 0);
-        entity.setCmAcertos(request.cmAcertos() != null ? request.cmAcertos() : 0);
-        entity.setCmErros(request.cmErros() != null ? request.cmErros() : 0);
+        entity.setCmTotal(request.getCmTotal() != null ? request.getCmTotal() : 0);
+        entity.setCmAcertos(request.getCmAcertos() != null ? request.getCmAcertos() : 0);
+        entity.setCmErros(request.getCmErros() != null ? request.getCmErros() : 0);
         
-        entity.setCirTotal(request.cirTotal() != null ? request.cirTotal() : 0);
-        entity.setCirAcertos(request.cirAcertos() != null ? request.cirAcertos() : 0);
-        entity.setCirErros(request.cirErros() != null ? request.cirErros() : 0);
+        entity.setCirTotal(request.getCirTotal() != null ? request.getCirTotal() : 0);
+        entity.setCirAcertos(request.getCirAcertos() != null ? request.getCirAcertos() : 0);
+        entity.setCirErros(request.getCirErros() != null ? request.getCirErros() : 0);
         
-        entity.setPedTotal(request.pedTotal() != null ? request.pedTotal() : 0);
-        entity.setPedAcertos(request.pedAcertos() != null ? request.pedAcertos() : 0);
-        entity.setPedErros(request.pedErros() != null ? request.pedErros() : 0);
+        entity.setPedTotal(request.getPedTotal() != null ? request.getPedTotal() : 0);
+        entity.setPedAcertos(request.getPedAcertos() != null ? request.getPedAcertos() : 0);
+        entity.setPedErros(request.getPedErros() != null ? request.getPedErros() : 0);
         
-        entity.setGoTotal(request.goTotal() != null ? request.goTotal() : 0);
-        entity.setGoAcertos(request.goAcertos() != null ? request.goAcertos() : 0);
-        entity.setGoErros(request.goErros() != null ? request.goErros() : 0);
+        entity.setGoTotal(request.getGoTotal() != null ? request.getGoTotal() : 0);
+        entity.setGoAcertos(request.getGoAcertos() != null ? request.getGoAcertos() : 0);
+        entity.setGoErros(request.getGoErros() != null ? request.getGoErros() : 0);
         
-        entity.setPrevTotal(request.prevTotal() != null ? request.prevTotal() : 0);
-        entity.setPrevAcertos(request.prevAcertos() != null ? request.prevAcertos() : 0);
-        entity.setPrevErros(request.prevErros() != null ? request.prevErros() : 0);
+        entity.setPrevTotal(request.getPrevTotal() != null ? request.getPrevTotal() : 0);
+        entity.setPrevAcertos(request.getPrevAcertos() != null ? request.getPrevAcertos() : 0);
+        entity.setPrevErros(request.getPrevErros() != null ? request.getPrevErros() : 0);
 
         calculateAndValidateAreas(entity);
 
@@ -178,10 +185,8 @@ public class SimuladoService {
         if (t > 0 && a > 0 && e == 0) e = Math.max(0, t - a);
         else if (t > 0 && e > 0 && a == 0) a = Math.max(0, t - e);
         else if (a > 0 && e > 0 && t == 0) t = a + e;
-        else if (t > 0 && a > 0 && e > 0) {
-             if (a + e != t) {
-                 throw new IllegalArgumentException("Soma de acertos e erros não confere com o total");
-             }
+        else if (t > 0 && a > 0 && e > 0 && a + e != t) {
+            throw new IllegalArgumentException("Soma de acertos e erros não confere com o total");
         }
         
         if (a + e > t && t > 0) {

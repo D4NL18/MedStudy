@@ -15,7 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.UUID;
+
 
 @Component
 @Order(2)
@@ -73,7 +73,7 @@ public class TestDataSeeder implements CommandLineRunner {
             } else if (i <= 60) {
                 daysOffset = 0; // Today
             } else {
-                daysOffset = (i % 10 + 1); // 1 to 10 days in the future
+                daysOffset = i % 10 + 1; // 1 to 10 days in the future
             }
             createSession(user, "Clínica Médica", "Tema Teste " + i, 10, 8, daysOffset);
         }

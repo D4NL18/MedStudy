@@ -5,6 +5,8 @@ import com.medstudy.backend.core.export.service.CsvExportService;
 import com.medstudy.backend.core.export.service.PdfExportService;
 import com.medstudy.backend.modules.sessao.dto.StudySessionResponse;
 import com.medstudy.backend.modules.sessao.service.StudySessionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Controller responsible for handling data export requests (PDF, CSV).
+ */
 @RestController
 @RequestMapping("/api/export")
 @RequiredArgsConstructor
-@Tag(name = "Exportação", description = "Endpoints para exportação de dados em PDF e CSV")
+@Tag(name = "Export", description = "Endpoints for exporting data to PDF and CSV")
 public class ExportController {
 
     private final PdfExportService pdfExportService;
@@ -31,17 +36,24 @@ public class ExportController {
     private final StudySessionService studySessionService;
     private final com.medstudy.backend.modules.dashboard.service.DashboardService dashboardService;
 
+    /**
+     * Exports dashboard data and charts to a PDF file.
+     *
+     * @param request The request containing the title and charts base64 strings
+     * @return The generated PDF file as a byte array
+     */
+    @Operation(summary = "Export to PDF", description = "Generates a PDF report containing performance metrics and charts.")
+    @ApiResponse(responseCode = "200", description = "PDF successfully generated")
     @PostMapping("/pdf")
     public ResponseEntity<byte[]> exportPdf(@RequestBody PdfExportRequest request) {
         Map<String, Object> data = new HashMap<>();
-        data.put("title", request.title());
-        data.put("charts", request.charts());
+        data.put("title", request.getTitle());
+        data.put("charts", request.getCharts());
         
-        // Add complete dashboard data instead of just session metrics
         com.medstudy.backend.modules.dashboard.dto.DashboardResponse dashboardData = dashboardService.getDashboardData();
         data.put("kpis", dashboardData);
-        data.put("areas", dashboardData.areaAnalytics());
-        data.put("topErrors", dashboardData.topErrors());
+        data.put("areas", dashboardData.getAreaAnalytics());
+        data.put("topErrors", dashboardData.getTopErrors());
 
         byte[] pdf = pdfExportService.generatePdf("performance-report", data);
 
@@ -51,6 +63,20 @@ public class ExportController {
                 .body(pdf);
     }
 
+    /**
+     * Exports study sessions to a CSV file.
+     *
+     * @param grandeArea Optional filter by Grande Área
+     * @param tema Optional filter by Tema
+     * @param instituicao Optional filter by Instituição
+     * @param revisaoConcluida Optional filter by revision status
+     * @param minRate Optional filter by minimum performance rate
+     * @param maxRate Optional filter by maximum performance rate
+     * @param response The HTTP response used to stream the CSV file
+     * @throws IOException If an input or output exception occurs
+     */
+    @Operation(summary = "Export to CSV", description = "Generates a CSV file containing the user's study sessions with optional filters.")
+    @ApiResponse(responseCode = "200", description = "CSV successfully generated")
     @GetMapping("/csv")
     public void exportCsv(
             @RequestParam(required = false) String grandeArea,
@@ -64,8 +90,6 @@ public class ExportController {
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=sessoes-estudo.csv");
 
-        // Use a large page size or a dedicated "findAll" without paging if volume is huge
-        // For v1.1, 1000 items is a safe assumption for a single user's history
         List<StudySessionResponse> sessions = studySessionService.findAll(
                 grandeArea, tema, instituicao, revisaoConcluida, minRate, maxRate, Pageable.ofSize(2000)
         ).getContent();
@@ -73,17 +97,18 @@ public class ExportController {
         String[] headers = {"Data", "Grande Área", "Tema", "Feitas", "Corretas", "%", "Instituição", "Obs"};
         List<String[]> data = sessions.stream()
                 .map(s -> new String[]{
-                        s.dataSessao().toString(),
-                        s.grandeArea(),
-                        s.tema(),
-                        String.valueOf(s.qtsFeitas()),
-                        String.valueOf(s.qtsCorretas()),
-                        String.format("%.2f", s.qtsFeitas() > 0 ? (double) s.qtsCorretas() / s.qtsFeitas() * 100 : 0),
-                        s.instituicao(),
-                        s.observacoes()
+                        s.getDataSessao().toString(),
+                        s.getGrandeArea(),
+                        s.getTema(),
+                        String.valueOf(s.getQtsFeitas()),
+                        String.valueOf(s.getQtsCorretas()),
+                        String.format("%.2f", s.getQtsFeitas() > 0 ? (double) s.getQtsCorretas() / s.getQtsFeitas() * 100 : 0),
+                        s.getInstituicao(),
+                        s.getObservacoes()
                 })
                 .collect(Collectors.toList());
 
         csvExportService.writeCsv(response.getWriter(), headers, data);
     }
 }
+

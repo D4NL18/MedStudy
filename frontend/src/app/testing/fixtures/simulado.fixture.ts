@@ -1,5 +1,10 @@
-import { Simulado } from '../../core/models/simulado.model';
+import { Simulado } from '@core/models/simulado.model';
 
+
+/**
+ * Test fixture data for Simulado.
+ * @description Provides reusable mock objects for use in unit and integration tests.
+ */
 export const createMockSimulado = (overrides?: Partial<Simulado>): Simulado => ({
   id: '1',
   nome: 'Simulado USP 2024',

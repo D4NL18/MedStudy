@@ -1,6 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import * as AnalyticsActions from './analytics.actions';
 
+
+/**
+ * NgRx reducer for the Analytics feature slice.
+ * @description Handles state transitions in response to dispatched Analytics actions.
+ */
 export interface AnalyticsState {
   areas: AnalyticsActions.AreaAnalytics[];
   topics: AnalyticsActions.TopicAnalytics[];

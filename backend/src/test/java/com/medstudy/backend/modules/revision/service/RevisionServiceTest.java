@@ -83,9 +83,9 @@ class RevisionServiceTest {
 
         RevisionSummaryResponse summary = revisionService.getSummary();
 
-        assertEquals(6L, summary.atrasadas()); // 1 + 5
-        assertEquals(8L, summary.hoje());      // 2 + 6
-        assertEquals(10L, summary.futuras());  // 3 + 7
-        assertEquals(12L, summary.concluidas()); // 4 + 8
+        assertEquals(6L, summary.getAtrasadas()); // 1 + 5
+        assertEquals(8L, summary.getHoje());      // 2 + 6
+        assertEquals(10L, summary.getFuturas());  // 3 + 7
+        assertEquals(12L, summary.getConcluidas()); // 4 + 8
     }
 }

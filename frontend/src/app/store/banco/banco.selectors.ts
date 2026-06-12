@@ -1,6 +1,11 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { BancoState, adapter } from './banco.reducer';
 
+
+/**
+ * NgRx selectors for the Banco feature slice.
+ * @description Provides memoized queries to extract Banco state from the store.
+ */
 export const selectBancoState = createFeatureSelector<BancoState>('banco');
 
 const { selectAll } = adapter.getSelectors();

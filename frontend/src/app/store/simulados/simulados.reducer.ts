@@ -1,8 +1,13 @@
 import { createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { Simulado, SimuladoFilters } from '../../core/models/simulado.model';
+import { Simulado, SimuladoFilters } from '@core/models/simulado.model';
 import * as SimuladosActions from './simulados.actions';
 
+
+/**
+ * NgRx reducer for the Simulados feature slice.
+ * @description Handles state transitions in response to dispatched Simulados actions.
+ */
 export interface SimuladosState extends EntityState<Simulado> {
   loading: boolean;
   error: string | null;

@@ -1,0 +1,18 @@
+<div class="chart-container" #containerRef>
+      @if (chartData().length > 0) {
+        <ngx-charts-bar-horizontal
+          [view]="[containerRef.offsetWidth, 250]"
+          [scheme]="colorScheme()"
+          [results]="chartData()"
+          [gradient]="true"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="false"
+          [showXAxisLabel]="false"
+          [showYAxisLabel]="false"
+        >
+        </ngx-charts-bar-horizontal>
+      } @else {
+        <div class="empty-chart">Sem dados suficientes para gerar o gráfico</div>
+      }
+    </div>

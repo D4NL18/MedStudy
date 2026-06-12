@@ -1,7 +1,12 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { RevisionSummary, StudySession } from '../../core/models/revision.model';
+import { RevisionSummary, StudySession } from '@core/models/revision.model';
 import { RevisionActions } from './revision.actions';
 
+
+/**
+ * NgRx reducer for the Revision feature slice.
+ * @description Handles state transitions in response to dispatched Revision actions.
+ */
 export interface RevisionState {
   summary: RevisionSummary | null;
   sessions: StudySession[];

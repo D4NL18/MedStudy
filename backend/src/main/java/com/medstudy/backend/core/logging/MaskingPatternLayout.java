@@ -38,7 +38,6 @@ public class MaskingPatternLayout extends PatternLayout {
             if (matcher.group().contains("=")) {
                 // Key-value pair like password=123
                 int equalsIdx = matcher.group().indexOf("=");
-                String key = matcher.group().substring(0, equalsIdx + 1);
                 maskRange(sb, matcher.start() + equalsIdx + 1, matcher.end());
             } else if (matcher.group().contains(":")) {
                 // JSON style like "password": "123"

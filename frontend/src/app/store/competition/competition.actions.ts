@@ -1,6 +1,11 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { Competition, CompetitionRequest, LeaderboardEntry } from '../../core/models/competition.model';
+import { Competition, CompetitionRequest, LeaderboardEntry } from '@core/models/competition.model';
 
+
+/**
+ * NgRx actions for the Competition feature slice.
+ * @description Defines the action creators used to dispatch state changes for Competition.
+ */
 export const CompetitionActions = createActionGroup({
   source: 'Competition',
   events: {

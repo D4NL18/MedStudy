@@ -1,7 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthResponse } from '../../store/auth/auth.actions';
+import { AuthResponse } from '@store/auth/auth.actions';
+
+/**
+ * Angular service responsible for Auth-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Auth operations.
+ */
 export interface RegisterRequest {
   name: string;
   email: string;

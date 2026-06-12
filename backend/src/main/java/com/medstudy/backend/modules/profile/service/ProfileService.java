@@ -21,6 +21,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing user profiles.
+ */
 @Service
 @Transactional
 public class ProfileService {
@@ -32,6 +35,16 @@ public class ProfileService {
     private final UserBadgeRepository userBadgeRepository;
     private final FriendshipRepository friendshipRepository;
 
+    /**
+     * Constructs a new ProfileService.
+     *
+     * @param profileRepository the profile repository
+     * @param profileMapper the profile mapper
+     * @param userRepository the user repository
+     * @param studySessionRepository the study session repository
+     * @param userBadgeRepository the user badge repository
+     * @param friendshipRepository the friendship repository
+     */
     public ProfileService(ProfileRepository profileRepository,
                           ProfileMapper profileMapper,
                           UserRepository userRepository,
@@ -83,7 +96,6 @@ public class ProfileService {
         ProfileDTO dto = profileMapper.toDTO(profile);
         UUID ownerId = profile.getUser().getId();
 
-        // 1. Fetch complete stats
         int actualStreak = calculateStreak(ownerId);
         Long totalQ = studySessionRepository.sumTotalQuestionsByUserId(ownerId);
         long actualTotalQuestions = totalQ != null ? totalQ : 0L;
@@ -91,7 +103,6 @@ public class ProfileService {
                 .map(ub -> ub.getBadgeType().name())
                 .collect(Collectors.toList());
 
-        // 2. Self view
         if (viewerId != null && viewerId.equals(ownerId)) {
             dto.setStreak(actualStreak);
             dto.setTotalQuestions(actualTotalQuestions);
@@ -102,7 +113,6 @@ public class ProfileService {
             return dto;
         }
 
-        // 3. Third-party view: resolve friendship status
         String friendshipStatus = "NONE";
         boolean isRequester = false;
 
@@ -120,9 +130,7 @@ public class ProfileService {
 
         boolean isFriend = "ACCEPTED".equals(friendshipStatus);
 
-        // 4. Privacy Engine masking rules
         if (Boolean.FALSE.equals(profile.getIsPublic()) && !isFriend) {
-            // Private profile viewed by non-friend: fully mask/hide data
             dto.setIsPrivate(true);
             dto.setFaculdade(null);
             dto.setSemestre(null);
@@ -131,12 +139,9 @@ public class ProfileService {
             dto.setTotalQuestions(0L);
             dto.setBadges(new ArrayList<>());
         } else {
-            // Public profile OR viewed by friend: mask granular fields if toggles are off
             dto.setIsPrivate(false);
 
-            if (Boolean.TRUE.equals(profile.getShareFaculdade())) {
-                // leave as mapped (faculdade, semestre, isFormado are populated)
-            } else {
+            if (!Boolean.TRUE.equals(profile.getShareFaculdade())) {
                 dto.setFaculdade(null);
                 dto.setSemestre(null);
                 dto.setIsFormado(null);
@@ -164,12 +169,24 @@ public class ProfileService {
         return dto;
     }
 
+    /**
+     * Gets a profile by user ID.
+     *
+     * @param userId the user ID
+     * @return an Optional containing the profile data, or empty if not found
+     */
     @Transactional(readOnly = true)
     public Optional<ProfileDTO> getProfileByUserId(UUID userId) {
         return profileRepository.findByUserId(userId)
                 .map(profile -> enrichAndMaskProfile(profile, userId));
     }
 
+    /**
+     * Gets a profile by handle.
+     *
+     * @param handle the profile handle
+     * @return an Optional containing the profile data, or empty if not found
+     */
     @Transactional(readOnly = true)
     public Optional<ProfileDTO> getProfileByHandle(String handle) {
         User viewer = getCurrentUser();
@@ -178,6 +195,13 @@ public class ProfileService {
                 .map(profile -> enrichAndMaskProfile(profile, viewerId));
     }
 
+    /**
+     * Checks if a profile handle is available for the given user.
+     *
+     * @param handle the handle to check
+     * @param currentUserId the current user ID
+     * @return true if the handle is available, false otherwise
+     */
     @Transactional(readOnly = true)
     public boolean isHandleAvailable(String handle, UUID currentUserId) {
         if (currentUserId == null) {
@@ -186,8 +210,14 @@ public class ProfileService {
         return !profileRepository.existsByHandleAndUserIdNot(handle, currentUserId);
     }
 
+    /**
+     * Creates or updates a profile for the specified user.
+     *
+     * @param dto the profile data
+     * @param user the authenticated user
+     * @return the saved profile data
+     */
     public ProfileDTO createOrUpdateProfile(ProfileDTO dto, User user) {
-        // Validate handle uniqueness
         if (!isHandleAvailable(dto.getHandle(), user.getId())) {
             throw new IllegalArgumentException("O handle '" + dto.getHandle() + "' já está em uso.");
         }
@@ -215,7 +245,6 @@ public class ProfileService {
         profile.setFaculdade(dto.getFaculdade());
         profile.setAvatarPresetId(dto.getAvatarPresetId());
 
-        // Update privacy settings
         if (dto.getIsPublic() != null) {
             profile.setIsPublic(dto.getIsPublic());
         }

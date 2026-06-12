@@ -1,19 +1,37 @@
-<div class="modal-wrapper glass">
-  <header class="modal-header">
-    <h2>{{ title }}</h2>
-    <button class="btn-close" (click)="close.emit()" [disabled]="loading">
-      <span class="icon">✕</span>
-    </button>
-  </header>
-
-  <div class="modal-content custom-scrollbar">
-    <ng-content></ng-content>
+<ng-container *ngIf="fullScreenOverlay; else inlineWrapper">
+  <div class="modal-backdrop-overlay" (click)="close.emit()">
+    <div (click)="$event.stopPropagation()">
+      <ng-container *ngTemplateOutlet="modalContent"></ng-container>
+    </div>
   </div>
+</ng-container>
 
-  <footer class="modal-footer">
-    <button class="btn-secondary" (click)="close.emit()" [disabled]="loading">Cancelar</button>
-    <button class="btn-primary" (click)="save.emit()" [disabled]="loading">
-      {{ loading ? 'Salvando...' : 'Salvar Registro' }}
-    </button>
-  </footer>
-</div>
+<ng-template #inlineWrapper>
+  <ng-container *ngTemplateOutlet="modalContent"></ng-container>
+</ng-template>
+
+<ng-template #modalContent>
+  <div class="modal-wrapper glass">
+    <header class="modal-header" *ngIf="title">
+      <h2>{{ title }}</h2>
+      <button class="btn-close" (click)="close.emit()" [disabled]="loading">
+        <span class="icon">✕</span>
+      </button>
+    </header>
+
+    <div class="modal-content custom-scrollbar">
+      <ng-content></ng-content>
+    </div>
+
+    <footer class="modal-footer" *ngIf="useDefaultFooter; else customFooter">
+      <button class="btn-secondary" (click)="close.emit()" [disabled]="loading">Cancelar</button>
+      <button class="btn-primary" (click)="save.emit()" [disabled]="loading">
+        {{ loading ? 'Salvando...' : saveText }}
+      </button>
+    </footer>
+
+    <ng-template #customFooter>
+      <ng-content select="[modal-footer]"></ng-content>
+    </ng-template>
+  </div>
+</ng-template>

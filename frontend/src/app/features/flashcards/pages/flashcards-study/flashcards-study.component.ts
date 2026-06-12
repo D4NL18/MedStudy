@@ -1,18 +1,24 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { LucideAngularModule } from 'lucide-angular';
-import { FlashcardsActions } from '../../../../store/flashcards/flashcards.actions';
-import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '../../../../store/flashcards/flashcards.reducer';
-import { FlashcardDifficulty } from '../../../../core/models/flashcard.model';
-import { MarkdownRendererComponent } from '../../../../shared/components/markdown-renderer/markdown-renderer.component';
-import { take, tap } from 'rxjs';
+import { FlashcardsActions } from '@store/flashcards/flashcards.actions';
+import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '@store/flashcards/flashcards.reducer';
+import { FlashcardDifficulty } from '@core/models/flashcard.model';
+import { MarkdownRendererComponent } from '@shared/components/markdown-renderer/markdown-renderer.component';
+import { tap } from 'rxjs';
 
+
+/**
+ * Angular component for the Flashcards Study feature.
+ * @description Handles the presentation logic and user interactions for the Flashcards Study view.
+ */
 @Component({
   selector: 'app-flashcards-study',
   standalone: true,
-  imports: [
+  imports: [ButtonComponent, 
     CommonModule, 
     LucideAngularModule, 
     MarkdownRendererComponent
@@ -78,7 +84,7 @@ export class FlashcardsStudyComponent {
     this.isFlipped.update(v => !v);
   }
 
-  closeZoom(event?: MouseEvent) {
+  closeZoom(event?: Event) {
     if (event) event.stopPropagation();
     this.isZoomed.set(false);
     this.zoomImageUrl.set('');

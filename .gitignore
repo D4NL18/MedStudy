@@ -20,3 +20,6 @@ frontend/coverage/
 # Backend
 backend/target/
 backend/*.log
+
+# Scripts
+scripts/node_modules/

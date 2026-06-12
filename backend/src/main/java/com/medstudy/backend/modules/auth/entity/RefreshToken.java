@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "refresh_tokens")
+/** Entity representing a JWT refresh token issued to an authenticated user. */
 public class RefreshToken extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,7 +26,7 @@ public class RefreshToken extends BaseEntity {
     @Column(name = "expiry_date", nullable = false)
     private LocalDateTime expiryDate;
 
-    // Getters and Setters
+
     public User getUser() {
         return user;
     }

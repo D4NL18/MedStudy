@@ -3,6 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Profile, ProfileCheckResponse } from '../models/profile.model';
 
+
+/**
+ * Angular service responsible for Profile-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Profile operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

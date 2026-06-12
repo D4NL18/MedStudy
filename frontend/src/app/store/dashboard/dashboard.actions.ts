@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 
+
+/**
+ * NgRx actions for the Dashboard feature slice.
+ * @description Defines the action creators used to dispatch state changes for Dashboard.
+ */
 export interface AreaAnalytics {
   grandeArea: string;
   totalQuestions: number;

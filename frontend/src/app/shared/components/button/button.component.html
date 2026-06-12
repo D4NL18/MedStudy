@@ -1,0 +1,14 @@
+<button
+  appRipple
+  [type]="type"
+  [class]="buttonClasses"
+  [disabled]="disabled"
+  (click)="handleClick($event)"
+>
+  <span class="icon" *ngIf="icon">
+    <lucide-icon [name]="icon"></lucide-icon>
+  </span>
+  <span class="content">
+    <ng-content></ng-content>
+  </span>
+</button>

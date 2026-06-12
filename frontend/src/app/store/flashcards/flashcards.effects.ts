@@ -1,11 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
-import { FlashcardService } from '../../core/services/flashcard.service';
+import { catchError, map, mergeMap, of } from 'rxjs';
+import { FlashcardService } from '@core/services/flashcard.service';
 import { FlashcardsActions } from './flashcards.actions';
 import { RevisionActions } from '../revision/revision.actions';
 import { Store } from '@ngrx/store';
 
+
+/**
+ * NgRx effects for the Flashcards feature slice.
+ * @description Handles side effects such as HTTP calls in response to Flashcards actions.
+ */
 @Injectable()
 export class FlashcardsEffects {
   private actions$ = inject(Actions);

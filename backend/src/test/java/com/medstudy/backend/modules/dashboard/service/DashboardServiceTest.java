@@ -85,12 +85,12 @@ class DashboardServiceTest {
 
         DashboardResponse response = dashboardService.getDashboardData();
 
-        assertEquals(10L, response.sessions().totalSessions());
-        assertEquals(80.0, response.sessions().successRate());
-        assertEquals("MEDIUM", response.sessions().performanceLevel());
-        assertEquals(3, response.currentStreak());
-        assertEquals(69.0, response.simulados().averageScore());
-        assertEquals("Pediatria", response.simulados().bestArea());
-        assertEquals("Cirurgia", response.simulados().worstArea());
+        assertEquals(10L, response.getSessions().totalSessions());
+        assertEquals(80.0, response.getSessions().successRate());
+        assertEquals("MEDIUM", response.getSessions().performanceLevel());
+        assertEquals(3, response.getCurrentStreak());
+        assertEquals(69.0, response.getSimulados().averageScore());
+        assertEquals("Pediatria", response.getSimulados().bestArea());
+        assertEquals("Cirurgia", response.getSimulados().worstArea());
     }
 }

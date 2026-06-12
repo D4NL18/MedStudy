@@ -10,15 +10,37 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Repository interface for managing Competition entities.
+ */
 @Repository
 public interface CompetitionRepository extends JpaRepository<Competition, UUID> {
 
+    /**
+     * Finds all competitions for a specific participant.
+     *
+     * @param userId the ID of the user
+     * @return a list of competitions ordered by creation date descending
+     */
     @Query("SELECT c FROM Competition c JOIN c.participants p WHERE p.user.id = :userId ORDER BY c.createdAt DESC")
     List<Competition> findAllByParticipantUserId(@Param("userId") UUID userId);
 
+    /**
+     * Finds all competitions for a specific participant by status.
+     *
+     * @param userId the ID of the user
+     * @param status the status of the competition
+     * @return a list of competitions ordered by creation date descending
+     */
     @Query("SELECT c FROM Competition c JOIN c.participants p WHERE p.user.id = :userId AND c.status = :status ORDER BY c.createdAt DESC")
     List<Competition> findAllByParticipantUserIdAndStatus(@Param("userId") UUID userId, @Param("status") CompetitionStatus status);
 
+    /**
+     * Finds all active target duels for a specific user.
+     *
+     * @param userId the ID of the user
+     * @return a list of active target duels
+     */
     @Query("SELECT c FROM Competition c JOIN c.participants p WHERE p.user.id = :userId AND c.competitionType = 'DUEL_TARGET' AND c.status = 'ACTIVE'")
     List<Competition> findActiveTargetDuelsByUserId(@Param("userId") UUID userId);
 }

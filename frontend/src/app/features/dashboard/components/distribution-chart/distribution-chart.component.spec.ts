@@ -1,7 +1,6 @@
-import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockRender } from 'ng-mocks';
 import { DistributionChartComponent } from './distribution-chart.component';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { provideMockStore } from '@ngrx/store/testing';

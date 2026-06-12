@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
+/**
+ * Angular service responsible for Export-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Export operations.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -10,7 +15,7 @@ export class ExportService {
 
   constructor(private http: HttpClient) {}
 
-  exportPdf(title: String, charts: { [key: string]: string }): Observable<Blob> {
+  exportPdf(title: string, charts: Record<string, string>): Observable<Blob> {
     return this.http.post(`${this.apiUrl}/pdf`, { title, charts }, {
       responseType: 'blob'
     });

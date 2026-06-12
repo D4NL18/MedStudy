@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { DashboardKPIs } from '../../store/dashboard/dashboard.actions';
+import { DashboardKPIs } from '@store/dashboard/dashboard.actions';
 
+
+/**
+ * Angular service responsible for Dashboard-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Dashboard operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

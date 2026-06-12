@@ -1,19 +1,22 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { selectAllSimulados, selectSimuladosLoading, selectSimuladosFilters, selectSimuladosTotalCount } from '../../../../store/simulados/simulados.selectors';
-import * as SimuladosActions from '../../../../store/simulados/simulados.actions';
-import { Simulado, SimuladoFilters } from '../../../../core/models/simulado.model';
-import { SimuladoModalComponent } from '../../components/simulado-modal/simulado-modal.component';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { selectAllSimulados, selectSimuladosLoading, selectSimuladosFilters, selectSimuladosTotalCount } from '@store/simulados/simulados.selectors';
+import * as SimuladosActions from '@store/simulados/simulados.actions';
+import { Simulado, SimuladoFilters } from '@core/models/simulado.model';
+import { SimuladoModalComponent } from '@features/simulados/components/simulado-modal/simulado-modal.component';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CreateButtonComponent } from '@shared/components/create-button/create-button.component';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-simulados-list',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatPaginatorModule],
+  imports: [ButtonComponent, CommonModule, MatDialogModule, MatPaginatorModule, CreateButtonComponent, LucideAngularModule],
   templateUrl: './simulados-list.component.html',
   styleUrl: './simulados-list.component.scss'
 })

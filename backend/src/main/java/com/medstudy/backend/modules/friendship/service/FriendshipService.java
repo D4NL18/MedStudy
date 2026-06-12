@@ -22,6 +22,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing friendships and social interactions between users.
+ */
 @Service
 @Transactional
 public class FriendshipService {
@@ -32,6 +35,15 @@ public class FriendshipService {
     private final StudySessionRepository studySessionRepository;
     private final NotificationService notificationService;
 
+    /**
+     * Constructs a FriendshipService with the specified dependencies.
+     *
+     * @param friendshipRepository   the friendship repository
+     * @param userRepository         the user repository
+     * @param profileRepository      the profile repository
+     * @param studySessionRepository the study session repository
+     * @param notificationService    the notification service
+     */
     public FriendshipService(FriendshipRepository friendshipRepository,
                              UserRepository userRepository,
                              ProfileRepository profileRepository,
@@ -77,6 +89,12 @@ public class FriendshipService {
         return streak;
     }
 
+    /**
+     * Searches for user profiles matching the given query string.
+     *
+     * @param query the search query
+     * @return a list of matching social profiles
+     */
     @Transactional(readOnly = true)
     public List<SocialProfileResponseDTO> searchProfiles(String query) {
         if (query == null || query.trim().isEmpty()) {
@@ -100,9 +118,8 @@ public class FriendshipService {
                         relationshipStatus = friendship.getStatus().name();
                         isRequester = friendship.getRequester().getId().equals(currentUserId);
 
-                        // Privacy check: If we are blocked by the other user, do not show them in the search results
                         if (friendship.getStatus() == FriendshipStatus.BLOCKED && !isRequester) {
-                            return null; // will filter out
+                            return null;
                         }
                     }
 
@@ -147,6 +164,11 @@ public class FriendshipService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Sends a friend request to a specified user.
+     *
+     * @param receiverId the UUID of the user to send the request to
+     */
     public void sendFriendRequest(UUID receiverId) {
         User currentUser = getCurrentUser();
         UUID currentUserId = currentUser.getId();
@@ -188,6 +210,11 @@ public class FriendshipService {
         );
     }
 
+    /**
+     * Accepts a pending friend request from a specified user.
+     *
+     * @param requesterId the UUID of the user who sent the request
+     */
     public void acceptFriendRequest(UUID requesterId) {
         User currentUser = getCurrentUser();
         UUID currentUserId = currentUser.getId();
@@ -215,6 +242,11 @@ public class FriendshipService {
         );
     }
 
+    /**
+     * Declines a pending friend request from a specified user.
+     *
+     * @param requesterId the UUID of the user who sent the request
+     */
     public void declineFriendRequest(UUID requesterId) {
         User currentUser = getCurrentUser();
         UUID currentUserId = currentUser.getId();
@@ -230,6 +262,11 @@ public class FriendshipService {
         friendshipRepository.delete(friendship);
     }
 
+    /**
+     * Removes an existing friend from the current user's friend list.
+     *
+     * @param friendId the UUID of the friend to remove
+     */
     public void removeFriend(UUID friendId) {
         User currentUser = getCurrentUser();
         UUID currentUserId = currentUser.getId();
@@ -244,6 +281,11 @@ public class FriendshipService {
         friendshipRepository.delete(friendship);
     }
 
+    /**
+     * Blocks a specified user, preventing further interactions.
+     *
+     * @param targetUserId the UUID of the user to block
+     */
     public void blockUser(UUID targetUserId) {
         User currentUser = getCurrentUser();
         UUID currentUserId = currentUser.getId();
@@ -270,6 +312,11 @@ public class FriendshipService {
         friendshipRepository.save(friendship);
     }
 
+    /**
+     * Unblocks a previously blocked user.
+     *
+     * @param targetUserId the UUID of the user to unblock
+     */
     public void unblockUser(UUID targetUserId) {
         User currentUser = getCurrentUser();
         UUID currentUserId = currentUser.getId();
@@ -285,6 +332,11 @@ public class FriendshipService {
         friendshipRepository.delete(friendship);
     }
 
+    /**
+     * Retrieves the list of friends for the currently authenticated user.
+     *
+     * @return a list of the user's friends
+     */
     @Transactional(readOnly = true)
     public List<SocialProfileResponseDTO> getFriends() {
         User currentUser = getCurrentUser();
@@ -336,6 +388,11 @@ public class FriendshipService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves the list of pending friend requests for the currently authenticated user.
+     *
+     * @return a list of pending friend requests
+     */
     @Transactional(readOnly = true)
     public List<SocialProfileResponseDTO> getPendingRequests() {
         User currentUser = getCurrentUser();
@@ -392,6 +449,11 @@ public class FriendshipService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves the list of users blocked by the currently authenticated user.
+     *
+     * @return a list of blocked users
+     */
     @Transactional(readOnly = true)
     public List<SocialProfileResponseDTO> getBlockedUsers() {
         User currentUser = getCurrentUser();

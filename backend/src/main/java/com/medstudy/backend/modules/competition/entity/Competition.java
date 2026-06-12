@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "competitions")
+/** Entity representing a competition (duel or group challenge) between users. */
 public class Competition extends BaseEntity {
 
     @Column(nullable = false, length = 100)

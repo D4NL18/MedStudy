@@ -11,6 +11,7 @@ import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
+/** Mapper for converting between {@link Flashcard} entities and DTOs. */
 public abstract class FlashcardMapper {
 
     @Autowired

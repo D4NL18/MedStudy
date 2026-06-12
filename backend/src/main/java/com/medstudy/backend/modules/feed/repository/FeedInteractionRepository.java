@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
+/** Spring Data JPA repository for feed interaction entities. */
 public interface FeedInteractionRepository extends JpaRepository<FeedInteraction, Long> {
 }

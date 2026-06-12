@@ -4,10 +4,7 @@
       <h1>Plano de Aulas</h1>
       <p>Rastreador estratégico de conteúdo teórico</p>
     </div>
-    <button class="btn-primary" (click)="createLesson()">
-      <lucide-icon name="plus" [size]="18"></lucide-icon>
-      Nova Aula
-    </button>
+    <app-create-button (onClick)="createLesson()">Nova Aula</app-create-button>
   </div>
 
   <ng-container *ngIf="lessons$ | async as lessons; else loadingTpl">
@@ -112,8 +109,8 @@
               </div>
             </td>
             <td class="actions">
-              <button class="btn-icon" (click)="editLesson(lesson)" aria-label="Editar aula"><lucide-icon name="edit-2" [size]="16"></lucide-icon></button>
-              <button class="btn-icon delete" (click)="deleteLesson(lesson)" aria-label="Excluir aula"><lucide-icon name="trash-2" [size]="16"></lucide-icon></button>
+              <app-button variant="btn-icon" (onClick)="editLesson(lesson)" aria-label="Editar aula"><lucide-icon name="edit-2" [size]="16"></lucide-icon></app-button>
+              <app-button variant="btn-icon delete" (onClick)="deleteLesson(lesson)" aria-label="Excluir aula"><lucide-icon name="trash-2" [size]="16"></lucide-icon></app-button>
             </td>
           </tr>
           <tr *ngIf="lessons.length === 0">

@@ -4,9 +4,7 @@
       <h1>Simulados</h1>
       <p>Acompanhe seu desempenho em provas oficiais e simulados de instituições.</p>
     </div>
-    <button class="btn-add glass" (click)="openCreateModal()">
-      <span class="icon">+</span> Novo Simulado
-    </button>
+    <app-create-button (onClick)="openCreateModal()">Novo Simulado</app-create-button>
   </header>
 
   <div class="filters-bar glass">
@@ -47,8 +45,8 @@
             </div>
           </td>
           <td class="actions-cell">
-            <button class="btn-icon edit" (click)="openEditModal(simulado)" title="Editar">✏️</button>
-            <button class="btn-icon delete" (click)="onDelete(simulado.id)" title="Excluir">🗑️</button>
+            <app-button variant="btn-icon edit" (onClick)="openEditModal(simulado)" title="Editar">✏️</app-button>
+            <app-button variant="btn-icon delete" (onClick)="onDelete(simulado.id)" title="Excluir">🗑️</app-button>
           </td>
         </tr>
       </tbody>

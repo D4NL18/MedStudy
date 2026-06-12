@@ -1,11 +1,9 @@
-import { TestBed } from '@angular/core/testing';
-import { MockBuilder, MockRender, ngMocks, MockInstance } from 'ng-mocks';
+import { MockBuilder, MockRender, MockInstance } from 'ng-mocks';
 import { SimuladosListComponent } from './simulados-list.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
-import { SentinelComponent } from '../../../../shared/components/sentinel/sentinel.component';
-import * as SimuladosActions from '../../../../store/simulados/simulados.actions';
+import { SentinelComponent } from '@shared/components/sentinel/sentinel.component';
 
 describe('SimuladosListComponent', () => {
   MockInstance.scope();

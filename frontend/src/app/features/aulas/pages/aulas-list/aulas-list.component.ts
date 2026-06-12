@@ -1,21 +1,23 @@
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { StudyPlanActions } from '../../../../store/study-plan/study-plan.actions';
-import { selectLessons, selectLoading, selectTotalElements } from '../../../../store/study-plan/study-plan.reducer';
-import { Lesson, LessonPriority, LessonSummary } from '../../../../core/models/lesson.model';
-import { LessonService } from '../../../../core/services/lesson.service';
-import { LessonModalComponent } from '../../components/lesson-modal/lesson-modal.component';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { StudyPlanActions } from '@store/study-plan/study-plan.actions';
+import { selectLessons, selectLoading, selectTotalElements } from '@store/study-plan/study-plan.reducer';
+import { Lesson } from '@core/models/lesson.model';
+import { LessonService } from '@core/services/lesson.service';
+import { LessonModalComponent } from '@features/aulas/components/lesson-modal/lesson-modal.component';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CreateButtonComponent } from '@shared/components/create-button/create-button.component';
 
 @Component({
   selector: 'app-aulas-list',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, MatDialogModule, MatPaginatorModule],
+  imports: [ButtonComponent, CommonModule, LucideAngularModule, MatDialogModule, MatPaginatorModule, CreateButtonComponent],
   templateUrl: './aulas-list.component.html',
   styleUrl: './aulas-list.component.scss'
 })

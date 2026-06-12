@@ -1,0 +1,19 @@
+<div class="confirm-wrapper glass" [class.delete-mode]="data.isDelete">
+      <div class="header">
+        <div class="icon" [class.delete]="data.isDelete">
+          <lucide-icon [name]="data.isDelete ? 'trash-2' : 'alert-triangle'" [size]="48"></lucide-icon>
+        </div>
+        <h2>{{ data.title }}</h2>
+      </div>
+      
+      <div class="content">
+        <p>{{ data.message }}</p>
+      </div>
+      
+      <div class="footer">
+        <button class="btn-cancel" (click)="onCancel()">{{ data.cancelText || 'Cancelar' }}</button>
+        <button class="btn-confirm" [class.delete]="data.isDelete" (click)="onConfirm()">
+          {{ data.confirmText || 'Confirmar' }}
+        </button>
+      </div>
+    </div>

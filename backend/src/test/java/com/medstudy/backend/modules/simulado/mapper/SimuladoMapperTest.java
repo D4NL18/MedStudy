@@ -34,6 +34,6 @@ class SimuladoMapperTest {
         SimuladoResponse response = mapper.toResponse(entity);
 
         assertNotNull(response);
-        assertEquals(entity.getId(), response.id());
+        assertEquals(entity.getId(), response.getId());
     }
 }

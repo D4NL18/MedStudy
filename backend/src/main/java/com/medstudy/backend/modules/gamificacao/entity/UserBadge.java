@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "user_badges", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"user_id", "badge_type"})
 })
+/** Entity representing a badge that has been awarded to a specific user. */
 public class UserBadge extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

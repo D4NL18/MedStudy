@@ -84,10 +84,10 @@ class NotificationServiceTest {
         NotificationSummaryResponse summary = notificationService.getSummary();
 
         assertNotNull(summary);
-        assertEquals(5L, summary.pendingRevisions());
-        assertEquals(3L, summary.reinforcementLessons());
-        assertEquals(2L, summary.socialAlerts());
-        assertEquals(10L, summary.totalAlerts());
+        assertEquals(5L, summary.getPendingRevisions());
+        assertEquals(3L, summary.getReinforcementLessons());
+        assertEquals(2L, summary.getSocialAlerts());
+        assertEquals(10L, summary.getTotalAlerts());
     }
 
     @Test
@@ -109,9 +109,9 @@ class NotificationServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Dr. Sender", result.get(0).senderName());
-        assertEquals("pediatrics", result.get(0).senderAvatarPresetId());
-        assertEquals("FRIEND_REQUEST", result.get(0).type());
+        assertEquals("Dr. Sender", result.get(0).getSenderName());
+        assertEquals("pediatrics", result.get(0).getSenderAvatarPresetId());
+        assertEquals("FRIEND_REQUEST", result.get(0).getType());
     }
 
     @Test

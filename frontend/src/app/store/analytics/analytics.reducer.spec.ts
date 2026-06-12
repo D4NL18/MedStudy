@@ -1,6 +1,6 @@
 import { analyticsReducer, initialState } from './analytics.reducer';
 import * as AnalyticsActions from './analytics.actions';
-import { createMockAreaAnalytics } from '../../testing/fixtures/analytics.fixture';
+import { createMockAreaAnalytics } from '@testing/fixtures/analytics.fixture';
 
 describe('AnalyticsReducer', () => {
   it('should set loading on loadAreaAnalytics', () => {

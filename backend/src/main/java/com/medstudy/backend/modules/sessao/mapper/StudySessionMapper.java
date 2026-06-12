@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+/** Mapper for converting between {@link StudySession} entities and DTOs. */
 public interface StudySessionMapper {
     StudySessionResponse toResponse(StudySession entity);
 

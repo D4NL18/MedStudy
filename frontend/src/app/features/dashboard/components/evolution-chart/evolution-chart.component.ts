@@ -1,48 +1,24 @@
 import { Component, OnInit, inject, signal, effect, computed, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
-import { ThemeService } from '../../../../core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { Store } from '@ngrx/store';
-import { selectDashboardKPIs } from '../../../../store/dashboard/dashboard.selectors';
+import { selectDashboardKPIs } from '@store/dashboard/dashboard.selectors';
 import { toSignal } from '@angular/core/rxjs-interop';
 // @ts-ignore
 import * as shape from 'd3-shape';
 
+
+/**
+ * Angular component for the Evolution Chart feature.
+ * @description Handles the presentation logic and user interactions for the Evolution Chart view.
+ */
 @Component({
   selector: 'app-evolution-chart',
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
-  template: `
-    <div class="chart-container" #containerRef>
-      @if (chartData().length > 0 && chartData()[0].series.length > 0) {
-        <ngx-charts-line-chart
-          [scheme]="colorScheme()"
-          [results]="chartData()"
-          [gradient]="true"
-          [xAxis]="true"
-          [yAxis]="true"
-          [legend]="false"
-          [showXAxisLabel]="false"
-          [showYAxisLabel]="false"
-          [autoScale]="true"
-          [curve]="curve"
-          [animations]="true"
-          (window:resize)="onResize()"
-        >
-        </ngx-charts-line-chart>
-      } @else {
-        <div class="empty-state">Sem histórico de evolução disponível</div>
-      }
-    </div>
-  `,
-  styles: [`
-    .chart-container { width: 100%; height: 280px; display: block; position: relative; }
-    .empty-state { height: 100%; display: flex; align-items: center; justify-content: center; opacity: 0.5; font-size: 14px; }
-    :host ::ng-deep .ngx-charts {
-      text { fill: var(--color-text); opacity: 0.7; font-size: 11px; }
-      .gridline-path { stroke: rgba(255, 255, 255, 0.05); }
-    }
-  `]
+  templateUrl: './evolution-chart.component.html',
+  styleUrls: ['./evolution-chart.component.scss']
 })
 export class EvolutionChartComponent implements OnInit {
   private store = inject(Store);

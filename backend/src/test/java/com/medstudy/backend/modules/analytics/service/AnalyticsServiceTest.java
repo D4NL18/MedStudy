@@ -67,11 +67,11 @@ class AnalyticsServiceTest {
         List<AreaAnalyticsResponse> result = analyticsService.getAreaAnalytics("TOTAL");
 
         assertFalse(result.isEmpty());
-        assertEquals("CLINICA_MEDICA", result.get(0).grandeArea());
-        assertEquals(80.0, result.get(0).accuracy());
-        assertEquals(15.0, result.get(0).trendShort(), 0.01); // 90 - 75
-        assertEquals(-5.0, result.get(0).trendLong(), 0.01);  // 75 - 80
-        assertEquals("MEDIUM", result.get(0).performanceLevel());
+        assertEquals("CLINICA_MEDICA", result.get(0).getGrandeArea());
+        assertEquals(80.0, result.get(0).getAccuracy());
+        assertEquals(15.0, result.get(0).getTrendShort(), 0.01); // 90 - 75
+        assertEquals(-5.0, result.get(0).getTrendLong(), 0.01);  // 75 - 80
+        assertEquals("MEDIUM", result.get(0).getPerformanceLevel());
     }
 
     @Test
@@ -96,7 +96,7 @@ class AnalyticsServiceTest {
         var result = analyticsService.getTopicAnalytics("TOTAL");
 
         assertFalse(result.isEmpty());
-        assertEquals("Pneumo", result.get(0).tema());
-        assertEquals(10.0, result.get(0).trendShort(), 0.01); // 90 - 80
+        assertEquals("Pneumo", result.get(0).getTema());
+        assertEquals(10.0, result.get(0).getTrendShort(), 0.01); // 90 - 80
     }
 }

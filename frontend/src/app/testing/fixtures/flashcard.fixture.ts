@@ -1,5 +1,10 @@
-import { Flashcard, FlashcardDifficulty } from '../../core/models/flashcard.model';
+import { Flashcard, FlashcardDifficulty } from '@core/models/flashcard.model';
 
+
+/**
+ * Test fixture data for Flashcard.
+ * @description Provides reusable mock objects for use in unit and integration tests.
+ */
 export const createMockFlashcard = (overrides?: Partial<Flashcard>): Flashcard => ({
   id: '1',
   grandeArea: 'Pediatria',

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "friendships")
+/** Entity representing a friendship connection between two users. */
 public class Friendship extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

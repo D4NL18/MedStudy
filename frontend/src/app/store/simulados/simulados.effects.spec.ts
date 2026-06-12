@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { SimuladosEffects } from './simulados.effects';
-import { SimuladosService } from '../../core/services/simulados.service';
+import { SimuladosService } from '@core/services/simulados.service';
 import * as SimuladosActions from './simulados.actions';
-import { createMockSimulado } from '../../testing/fixtures/simulado.fixture';
+import { createMockSimulado } from '@testing/fixtures/simulado.fixture';
 
 describe('SimuladosEffects', () => {
   let actions$: Observable<any>;

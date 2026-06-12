@@ -68,8 +68,8 @@ class AuthServiceTest {
         AuthResponse response = authService.authenticate(request);
 
         assertNotNull(response);
-        assertEquals("jwt-token", response.accessToken());
-        assertEquals("refresh-token", response.refreshToken());
+        assertEquals("jwt-token", response.getAccessToken());
+        assertEquals("refresh-token", response.getRefreshToken());
         verify(loginAttemptService).loginSucceeded(user.getEmail());
     }
 

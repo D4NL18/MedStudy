@@ -1,29 +1,57 @@
-import { Component, inject, signal, ElementRef, ViewChild } from '@angular/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { Component, inject, ElementRef, ViewChild, OnInit, Inject, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
-import { FlashcardService } from '../../../../core/services/flashcard.service';
-import { ImagePasteDirective } from '../../../../shared/directives/image-paste.directive';
-import { ImageCompressorService } from '../../../../core/services/image-compressor.service';
+import { FlashcardService } from '@core/services/flashcard.service';
+import { ImagePasteDirective } from '@shared/directives/image-paste.directive';
+import { ImageCompressorService } from '@core/services/image-compressor.service';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
+
+/**
+ * Angular component for the Flashcard Form feature.
+ * @description Handles the presentation logic and user interactions for the Flashcard Form view.
+ */
 @Component({
   selector: 'app-flashcard-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ImagePasteDirective, LucideAngularModule],
+  imports: [ButtonComponent, CommonModule, FormsModule, ImagePasteDirective, LucideAngularModule, ModalLayoutComponent],
   templateUrl: './flashcard-form.component.html',
   styleUrl: './flashcard-form.component.scss'
 })
-export class FlashcardFormComponent {
+export class FlashcardFormComponent implements OnInit {
   private flashcardService = inject(FlashcardService);
-  private router = inject(Router);
   private imageCompressor = inject(ImageCompressorService);
+  private dialogRef = inject(MatDialogRef<FlashcardFormComponent>);
 
   @ViewChild('frenteEditor') frenteEditor!: ElementRef<HTMLDivElement>;
   @ViewChild('versoEditor') versoEditor!: ElementRef<HTMLDivElement>;
 
   grandeArea = 'Clínica Médica';
   areas = ['Clínica Médica', 'Cirurgia', 'Pediatria', 'Ginecologia e Obstetrícia', 'Preventiva'];
+  
+  isEdit = false;
+  editingId: string | null = null;
+  loading = false;
+
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
+    if (data && data.flashcard) {
+      this.isEdit = true;
+      this.editingId = data.flashcard.id;
+      this.grandeArea = data.flashcard.grandeArea;
+    }
+  }
+
+  ngOnInit() {
+    setTimeout(() => {
+      if (this.isEdit && this.data.flashcard) {
+        this.frenteEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.frente);
+        this.versoEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.verso);
+      }
+    }, 100);
+  }
 
   async onImagePasted(base64: string, field: 'frente' | 'verso') {
     const editor = field === 'frente' ? this.frenteEditor.nativeElement : this.versoEditor.nativeElement;
@@ -81,30 +109,51 @@ export class FlashcardFormComponent {
     const frenteHtml = this.frenteEditor.nativeElement.innerHTML;
     const versoHtml = this.versoEditor.nativeElement.innerHTML;
 
-    this.flashcardService.createFlashcard({
+    this.loading = true;
+    const payload = {
       frente: this.htmlToMarkdown(frenteHtml),
       verso: this.htmlToMarkdown(versoHtml),
       grandeArea: this.grandeArea
-    }).subscribe(() => {
-      this.router.navigate(['/flashcards']);
-    });
+    };
+
+    if (this.isEdit && this.editingId) {
+      this.flashcardService.updateFlashcard(this.editingId, payload).subscribe({
+        next: (res) => {
+          this.loading = false;
+          this.dialogRef.close(true);
+        },
+        error: () => this.loading = false
+      });
+    } else {
+      this.flashcardService.createFlashcard(payload).subscribe({
+        next: (res) => {
+          this.loading = false;
+          this.dialogRef.close(true);
+        },
+        error: () => this.loading = false
+      });
+    }
   }
 
   cancel() {
-    this.router.navigate(['/flashcards']);
+    this.dialogRef.close(false);
   }
 
   private htmlToMarkdown(html: string): string {
-    // Basic conversion: images to markdown, divs/brs to newlines
     let md = html
       .replace(/<img src="([^"]+)"[^>]*>/g, '\n![image]($1)\n')
       .replace(/<div>/g, '\n')
       .replace(/<\/div>/g, '')
       .replace(/<br>/g, '\n')
       .replace(/&nbsp;/g, ' ');
-    
-    // Strip other tags
     md = md.replace(/<[^>]*>/g, '');
     return md.trim();
+  }
+
+  private markdownToHtml(md: string): string {
+    if (!md) return '';
+    let html = md.replace(/\n!\[image\]\((.*?)\)\n/g, '<img src="$1" style="max-width: 100%; border-radius: 8px; margin: 8px 0;">');
+    html = html.replace(/\n/g, '<br>');
+    return html;
   }
 }

@@ -5,14 +5,8 @@
       <p>Gerencie suas sessões de estudo e acompanhe seu progresso detalhado.</p>
     </div>
     <div class="header-actions">
-      <button class="btn-export glass" (click)="exportCsv()" [disabled]="isExportingCsv()" title="Exportar filtrados para CSV">
-        <span class="icon" *ngIf="!isExportingCsv()">📊</span>
-        <div class="spinner" *ngIf="isExportingCsv()" style="width: 14px; height: 14px; border-width: 2px;"></div>
-        {{ isExportingCsv() ? 'Baixando...' : 'Exportar CSV' }}
-      </button>
-      <button class="btn-add glass" (click)="openCreateModal()">
-        <span class="icon">+</span> Nova Sessão
-      </button>
+      <app-export-button type="csv" (onClick)="exportCsv()" [loading]="isExportingCsv()"></app-export-button>
+      <app-create-button (onClick)="openCreateModal()">Nova Sessão</app-create-button>
     </div>
   </header>
 
@@ -49,8 +43,8 @@
             </div>
           </td>
           <td class="actions-cell">
-            <button class="btn-icon edit" (click)="openEditModal(session)" title="Editar">✏️</button>
-            <button class="btn-icon delete" (click)="onDelete(session.id)" title="Excluir">🗑️</button>
+            <app-button variant="btn-icon edit" (onClick)="openEditModal(session)" title="Editar">✏️</app-button>
+            <app-button variant="btn-icon delete" (onClick)="onDelete(session.id)" title="Excluir">🗑️</app-button>
           </td>
         </tr>
       </tbody>
@@ -60,7 +54,7 @@
       <div class="empty-icon">📂</div>
       <h3>Nenhuma sessão encontrada</h3>
       <p>Você ainda não registrou seus estudos. Comece agora para acompanhar seu desempenho!</p>
-      <button class="btn-cta" (click)="openCreateModal()">Registrar Primeira Sessão</button>
+      <app-button variant="btn-cta" (onClick)="openCreateModal()">Registrar Primeira Sessão</app-button>
     </div>
 
     <div class="loading-overlay" *ngIf="loading() && sessions().length === 0">

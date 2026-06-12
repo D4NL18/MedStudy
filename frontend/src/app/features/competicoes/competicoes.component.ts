@@ -1,33 +1,40 @@
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, OnInit, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
-import { CompetitionActions } from '../../store/competition/competition.actions';
+import { CompetitionActions } from '@store/competition/competition.actions';
 import { 
   selectCompetitions, 
   selectLoading, 
   selectCreating, 
   selectLeaderboards,
   selectError
-} from '../../store/competition/competition.reducer';
-import { selectProfile } from '../../store/profile/profile.reducer';
+} from '@store/competition/competition.reducer';
+import { selectProfile } from '@store/profile/profile.reducer';
 import { 
   Competition, 
   CompetitionType, 
   MetricType, 
   CompetitionStatus, 
   ParticipantStatus 
-} from '../../core/models/competition.model';
-import { SocialService, SocialProfile } from '../../core/services/social.service';
-import { ToastService } from '../../core/services/toast.service';
-import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+} from '@core/models/competition.model';
+import { SocialService, SocialProfile } from '@core/services/social.service';
+import { ToastService } from '@core/services/toast.service';
+import { AvatarComponent } from '@shared/components/avatar/avatar.component';
 
+
+/**
+ * Angular component for the Competicoes feature.
+ * @description Handles the presentation logic and user interactions for the Competicoes view.
+ */
 @Component({
   selector: 'app-competicoes',
   standalone: true,
-  imports: [
+  imports: [ButtonComponent, ModalLayoutComponent, 
     CommonModule,
     ReactiveFormsModule,
     LucideAngularModule,

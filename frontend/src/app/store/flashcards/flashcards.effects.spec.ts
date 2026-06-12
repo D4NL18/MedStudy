@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { FlashcardsEffects } from './flashcards.effects';
-import { FlashcardService } from '../../core/services/flashcard.service';
+import { FlashcardService } from '@core/services/flashcard.service';
 import { FlashcardsActions } from './flashcards.actions';
 import { RevisionActions } from '../revision/revision.actions';
 import { provideMockStore } from '@ngrx/store/testing';

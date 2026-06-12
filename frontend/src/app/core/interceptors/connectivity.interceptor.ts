@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
+
+/**
+ * HTTP interceptor for Connectivity.
+ * @description Intercepts outgoing HTTP requests and/or incoming responses to apply cross-cutting concerns.
+ */
 export const connectivityInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
 

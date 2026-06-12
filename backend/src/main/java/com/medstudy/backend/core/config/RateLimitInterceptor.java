@@ -5,6 +5,7 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,6 +19,15 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
 
+    @Value("${rate.limit.auth:5}")
+    private int authLimit;
+
+    @Value("${rate.limit.user:100}")
+    private int userLimit;
+
+    @Value("${rate.limit.anonymous:7}")
+    private int anonymousLimit;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String clientIp = request.getRemoteAddr();
@@ -26,14 +36,17 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String key;
         Bucket bucket;
         
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            // Logado: Limite de 5000 requests / minuto (aumentado para migração)
+        if (request.getRequestURI().startsWith("/api/auth")) {
+            key = "auth:" + clientIp;
+            bucket = cache.computeIfAbsent(key, k -> createNewBucket(authLimit, Duration.ofMinutes(1)));
+        } else if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Logado
             key = "user:" + authorizationHeader; 
-            bucket = cache.computeIfAbsent(key, k -> createNewBucket(5000, Duration.ofMinutes(1)));
+            bucket = cache.computeIfAbsent(key, k -> createNewBucket(userLimit, Duration.ofMinutes(1)));
         } else {
-            // Anonimo: Limite de 7 requests / minuto
+            // Anonimo
             key = "ip:" + clientIp;
-            bucket = cache.computeIfAbsent(key, k -> createNewBucket(7, Duration.ofMinutes(1)));
+            bucket = cache.computeIfAbsent(key, k -> createNewBucket(anonymousLimit, Duration.ofMinutes(1)));
         }
 
         if (bucket.tryConsume(1)) {

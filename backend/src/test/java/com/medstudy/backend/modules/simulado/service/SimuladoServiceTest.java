@@ -64,7 +64,7 @@ class SimuladoServiceTest {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             
         Simulado entity = new Simulado();
-        entity.setNome(request.nome());
+        entity.setNome(request.getNome());
         entity.setCmTotal(10);
         entity.setCmAcertos(8);
         entity.setCmErros(0);

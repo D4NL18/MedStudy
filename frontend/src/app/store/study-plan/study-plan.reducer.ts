@@ -1,7 +1,12 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { Lesson } from '../../core/models/lesson.model';
+import { Lesson } from '@core/models/lesson.model';
 import { StudyPlanActions } from './study-plan.actions';
 
+
+/**
+ * NgRx reducer for the Study Plan feature slice.
+ * @description Handles state transitions in response to dispatched Study Plan actions.
+ */
 export interface StudyPlanState {
   lessons: Lesson[];
   totalElements: number;

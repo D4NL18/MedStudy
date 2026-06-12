@@ -1,33 +1,36 @@
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { selectUser } from '../../store/auth/auth.selectors';
-import * as AuthActions from '../../store/auth/auth.actions';
-import { ThemeService, AppTheme } from '../../core/services/theme.service';
-import { PerformanceThemeService } from '../../core/services/performance-theme.service';
+import { selectUser } from '@store/auth/auth.selectors';
+import { PerformanceThemeService } from '@core/services/performance-theme.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { selectDashboardKPIs, selectDashboardLoading, selectAreaAnalytics } from '../../store/dashboard/dashboard.selectors';
-import * as DashboardActions from '../../store/dashboard/dashboard.actions';
-import { AreaAnalytics } from '../../store/dashboard/dashboard.actions';
+import { selectDashboardKPIs, selectDashboardLoading, selectAreaAnalytics } from '@store/dashboard/dashboard.selectors';
+import * as DashboardActions from '@store/dashboard/dashboard.actions';
+import { AreaAnalytics } from '@store/dashboard/dashboard.actions';
 import { EvolutionChartComponent } from './components/evolution-chart/evolution-chart.component';
 import { DistributionChartComponent } from './components/distribution-chart/distribution-chart.component';
 import { TopErrorsRankingComponent } from './components/top-errors-ranking/top-errors-ranking.component';
 import { SubareaModalComponent } from './components/subarea-modal/subarea-modal.component';
 import { LucideAngularModule } from 'lucide-angular';
-import { ExportService } from '../../core/services/export/export.service';
+import { ExportService } from '@core/services/export/export.service';
 import { RouterLink } from '@angular/router';
+import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dashboard-skeleton.component';
+import { ExportButtonComponent } from '@shared/components/export-button/export-button.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [
+  imports: [ButtonComponent, 
     CommonModule, 
     LucideAngularModule,
     EvolutionChartComponent, 
     DistributionChartComponent,
     TopErrorsRankingComponent,
     MatDialogModule,
+    DashboardSkeletonComponent,
+    ExportButtonComponent,
     RouterLink
   ],
   templateUrl: './dashboard.component.html',
@@ -72,7 +75,7 @@ export class DashboardComponent implements OnInit {
   async exportPdf() {
     this.isExportingPdf.set(true);
     try {
-      const charts: { [key: string]: string } = {};
+      const charts: Record<string, string> = {};
       const chartElements = ['evolution-chart', 'distribution-chart'];
 
       // Adiciona classe global temporária para forçar as fontes e eixos do gráfico a ficarem escuros no PDF

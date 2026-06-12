@@ -1,6 +1,11 @@
 import { createAction, props } from '@ngrx/store';
-import { Simulado, SimuladoFilters } from '../../core/models/simulado.model';
+import { Simulado, SimuladoFilters } from '@core/models/simulado.model';
 
+
+/**
+ * NgRx actions for the Simulados feature slice.
+ * @description Defines the action creators used to dispatch state changes for Simulados.
+ */
 export const loadSimulados = createAction(
   '[Simulados] Load Simulados',
   props<{ filters: SimuladoFilters; append: boolean }>()

@@ -1,5 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 
+
+/**
+ * Angular component for the Sentinel feature.
+ * @description Handles the presentation logic and user interactions for the Sentinel view.
+ */
 @Component({
   selector: 'app-sentinel',
   standalone: true,

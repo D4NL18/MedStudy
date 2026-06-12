@@ -1,14 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { MockBuilder, MockRender, ngMocks } from 'ng-mocks';
 import { DashboardComponent } from './dashboard.component';
-import { ThemeService } from '../../core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { selectDashboardKPIs, selectDashboardLoading } from '../../store/dashboard/dashboard.selectors';
+import { selectDashboardKPIs, selectDashboardLoading } from '@store/dashboard/dashboard.selectors';
 import { EvolutionChartComponent } from './components/evolution-chart/evolution-chart.component';
 import { AreaChartComponent } from './components/area-chart/area-chart.component';
 import { DistributionChartComponent } from './components/distribution-chart/distribution-chart.component';
-import { of } from 'rxjs';
-import { loadDashboard } from '../../store/dashboard/dashboard.actions';
+import { loadDashboard } from '@store/dashboard/dashboard.actions';
 
 describe('DashboardComponent', () => {
   beforeEach(() => {

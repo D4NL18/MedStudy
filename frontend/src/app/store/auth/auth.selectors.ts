@@ -1,6 +1,11 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { AuthState } from './auth.reducer';
 
+
+/**
+ * NgRx selectors for the Auth feature slice.
+ * @description Provides memoized queries to extract Auth state from the store.
+ */
 export const selectAuthState = createFeatureSelector<AuthState>('auth');
 
 export const selectToken = createSelector(

@@ -1,7 +1,7 @@
 package com.medstudy.backend.modules.dashboard.service;
 
 import com.medstudy.backend.modules.dashboard.dto.DashboardResponse;
-import com.medstudy.backend.modules.sessao.entity.StudySession;
+
 import com.medstudy.backend.modules.sessao.repository.StudySessionRepository;
 import com.medstudy.backend.modules.simulado.entity.Simulado;
 import com.medstudy.backend.modules.simulado.repository.SimuladoRepository;
@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+/**
+ * Service class responsible for aggregating and providing dashboard data.
+ */
 @Service
 @Transactional(readOnly = true)
 public class DashboardService {
@@ -23,6 +26,14 @@ public class DashboardService {
     private final com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService;
     private final com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
 
+    /**
+     * Constructs a new DashboardService with necessary dependencies.
+     *
+     * @param studySessionRepository the repository for study sessions
+     * @param simuladoRepository the repository for simulados
+     * @param analyticsService the service for analytics data
+     * @param badgeService the service for gamification badges
+     */
     public DashboardService(StudySessionRepository studySessionRepository, 
                             SimuladoRepository simuladoRepository,
                             com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService,
@@ -33,11 +44,16 @@ public class DashboardService {
         this.badgeService = badgeService;
     }
 
+    /**
+     * Aggregates and returns dashboard data for the currently authenticated user.
+     * Data includes study metrics, simulado results, streaks, analytics, evolution, and recent badges.
+     *
+     * @return a DashboardResponse containing the user's dashboard metrics
+     */
     public DashboardResponse getDashboardData() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID userId = user.getId();
 
-        // 1. Session Metrics
         long totalSessions = studySessionRepository.countByUserId(userId);
         
         Long totalQuestions = studySessionRepository.sumTotalQuestionsByUserId(userId);
@@ -56,20 +72,18 @@ public class DashboardService {
             perfLevel
         );
 
-        // 2. Simulado Metrics
         List<Simulado> simulados = simuladoRepository.findAllByUserId(userId);
         long totalSimulados = simulados.size();
         double avgScore = 0;
-        String bestArea = "N/A";
-        String worstArea = "N/A";
+
 
         if (totalSimulados > 0) {
             long simTotalQuest = 0;
             long simTotalCorrect = 0;
 
             for (Simulado s : simulados) {
-                simTotalQuest += (s.getCmTotal() + s.getCirTotal() + s.getPedTotal() + s.getGoTotal() + s.getPrevTotal());
-                simTotalCorrect += (s.getCmAcertos() + s.getCirAcertos() + s.getPedAcertos() + s.getGoAcertos() + s.getPrevAcertos());
+                simTotalQuest += s.getCmTotal() + s.getCirTotal() + s.getPedTotal() + s.getGoTotal() + s.getPrevTotal();
+                simTotalCorrect += s.getCmAcertos() + s.getCirAcertos() + s.getPedAcertos() + s.getGoAcertos() + s.getPrevAcertos();
             }
             avgScore = simTotalQuest > 0 ? (double) simTotalCorrect / simTotalQuest * 100 : 0.0;
             
@@ -83,7 +97,6 @@ public class DashboardService {
             }
         }
 
-        // 4. Analytics
         var areaAnalytics = analyticsService.getAreaAnalytics("TOTAL");
 
         String globalBestArea = "N/A";
@@ -91,12 +104,12 @@ public class DashboardService {
 
         if (areaAnalytics != null && !areaAnalytics.isEmpty()) {
             globalBestArea = areaAnalytics.stream()
-                .max(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::accuracy))
-                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::grandeArea).orElse("N/A");
+                .max(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getAccuracy))
+                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getGrandeArea).orElse("N/A");
 
             globalWorstArea = areaAnalytics.stream()
-                .min(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::accuracy))
-                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::grandeArea).orElse("N/A");
+                .min(Comparator.comparingDouble(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getAccuracy))
+                .map(com.medstudy.backend.modules.analytics.dto.AreaAnalyticsResponse::getGrandeArea).orElse("N/A");
         }
 
         DashboardResponse.SimuladoMetrics simuladoMetrics = new DashboardResponse.SimuladoMetrics(
@@ -106,16 +119,12 @@ public class DashboardService {
             globalWorstArea
         );
 
-        // 3. Streak
         int streak = calculateStreak(userId);
 
-        // 4. Analytics
         var topErrors = analyticsService.getTopErrorThemes("LAST_60_DAYS");
 
-        // 5. Evolution (Last 6 months)
         List<DashboardResponse.EvolutionPoint> evolution = calculateEvolution(userId);
 
-        // 6. Recent Badges
         List<com.medstudy.backend.modules.gamificacao.dto.UserBadgeResponse> recentBadges = badgeService.getUserBadges(userId).stream()
             .sorted(Comparator.comparing(com.medstudy.backend.modules.gamificacao.entity.UserBadge::getEarnedAt).reversed())
             .limit(3)

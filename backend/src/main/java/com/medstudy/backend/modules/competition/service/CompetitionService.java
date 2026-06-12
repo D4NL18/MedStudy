@@ -3,7 +3,13 @@ package com.medstudy.backend.modules.competition.service;
 import com.medstudy.backend.modules.competition.dto.CompetitionRequestDTO;
 import com.medstudy.backend.modules.competition.dto.CompetitionResponseDTO;
 import com.medstudy.backend.modules.competition.dto.LeaderboardEntryDTO;
-import com.medstudy.backend.modules.competition.entity.*;
+
+import com.medstudy.backend.modules.competition.entity.Competition;
+import com.medstudy.backend.modules.competition.entity.CompetitionParticipant;
+import com.medstudy.backend.modules.competition.entity.ParticipantStatus;
+import com.medstudy.backend.modules.competition.entity.MetricType;
+import com.medstudy.backend.modules.competition.entity.CompetitionStatus;
+import com.medstudy.backend.modules.competition.entity.CompetitionType;
 import com.medstudy.backend.modules.competition.mapper.CompetitionMapper;
 import com.medstudy.backend.modules.competition.repository.CompetitionParticipantRepository;
 import com.medstudy.backend.modules.competition.repository.CompetitionRepository;
@@ -28,6 +34,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing competitions.
+ */
 @Service
 @Transactional
 public class CompetitionService {
@@ -41,6 +50,18 @@ public class CompetitionService {
     private final ProfileRepository profileRepository;
     private final CompetitionMapper competitionMapper;
 
+    /**
+     * Constructs a new CompetitionService.
+     *
+     * @param competitionRepository the competition repository
+     * @param participantRepository the participant repository
+     * @param userRepository the user repository
+     * @param friendshipRepository the friendship repository
+     * @param notificationService the notification service
+     * @param studySessionRepository the study session repository
+     * @param profileRepository the profile repository
+     * @param competitionMapper the competition mapper
+     */
     public CompetitionService(CompetitionRepository competitionRepository,
                               CompetitionParticipantRepository participantRepository,
                               UserRepository userRepository,
@@ -70,32 +91,38 @@ public class CompetitionService {
         throw new RuntimeException("Usuário não autenticado");
     }
 
+    /**
+     * Creates a new competition.
+     *
+     * @param request the competition request details
+     * @return the created competition response
+     */
     public CompetitionResponseDTO createCompetition(CompetitionRequestDTO request) {
         User creator = getCurrentUser();
         
-        if (request.title() == null || request.title().isBlank()) {
+        if (request.getTitle() == null || request.getTitle().isBlank()) {
             throw new IllegalArgumentException("O título da competição não pode ser vazio");
         }
-        if (request.startDate() == null || request.endDate() == null) {
+        if (request.getStartDate() == null || request.getEndDate() == null) {
             throw new IllegalArgumentException("As datas de início e fim devem ser especificadas");
         }
-        if (request.startDate().isAfter(request.endDate())) {
+        if (request.getStartDate().isAfter(request.getEndDate())) {
             throw new IllegalArgumentException("A data de início deve ser anterior ou igual à data de fim");
         }
 
         Competition competition = new Competition();
-        competition.setTitle(request.title());
+        competition.setTitle(request.getTitle());
         competition.setCreator(creator);
-        competition.setCompetitionType(request.competitionType());
-        competition.setMetricType(request.metricType());
-        competition.setTargetValue(request.targetValue());
-        competition.setStartDate(request.startDate());
-        competition.setEndDate(request.endDate());
+        competition.setCompetitionType(request.getCompetitionType());
+        competition.setMetricType(request.getMetricType());
+        competition.setTargetValue(request.getTargetValue());
+        competition.setStartDate(request.getStartDate());
+        competition.setEndDate(request.getEndDate());
 
         LocalDate today = LocalDate.now();
-        if (request.startDate().isAfter(today)) {
+        if (request.getStartDate().isAfter(today)) {
             competition.setStatus(CompetitionStatus.PENDING);
-        } else if (request.endDate().isBefore(today)) {
+        } else if (request.getEndDate().isBefore(today)) {
             competition.setStatus(CompetitionStatus.FINISHED);
         } else {
             competition.setStatus(CompetitionStatus.ACTIVE);
@@ -103,26 +130,21 @@ public class CompetitionService {
 
         competition = competitionRepository.save(competition);
 
-        // Creator automatically accepted — save first, use the returned managed entity
         CompetitionParticipant creatorParticipant = new CompetitionParticipant(competition, creator, ParticipantStatus.ACCEPTED);
         creatorParticipant.setJoinedAt(LocalDateTime.now());
         creatorParticipant = participantRepository.save(creatorParticipant);
         competition.getParticipants().add(creatorParticipant);
 
-        // Collect notifications to send after all saves to avoid triggering auto-flush
-        // while participants are still pending in the cascade collection
         List<Runnable> pendingNotifications = new ArrayList<>();
 
-        // Invite friends
-        if (request.invitedFriendIds() != null) {
-            for (UUID friendId : request.invitedFriendIds()) {
+        if (request.getInvitedFriendIds() != null) {
+            for (UUID friendId : request.getInvitedFriendIds()) {
                 if (friendId.equals(creator.getId())) {
-                    continue; // Skip creator
+                    continue;
                 }
                 User friend = userRepository.findById(friendId)
                         .orElseThrow(() -> new IllegalArgumentException("Usuário convidado não encontrado"));
 
-                // Verify friendship
                 Friendship friendship = friendshipRepository.findFriendshipBetween(creator.getId(), friendId)
                         .orElseThrow(() -> new IllegalArgumentException("O convidado não é seu amigo"));
 
@@ -130,12 +152,10 @@ public class CompetitionService {
                     throw new IllegalArgumentException("O convidado não é seu amigo ativo");
                 }
 
-                // Save participant explicitly, use the returned managed entity
                 CompetitionParticipant participant = new CompetitionParticipant(competition, friend, ParticipantStatus.INVITED);
                 participant = participantRepository.save(participant);
                 competition.getParticipants().add(participant);
 
-                // Queue notification to send after all DB saves
                 final User finalFriend = friend;
                 final String notifType = (competition.getCompetitionType() == CompetitionType.GROUP) ? "COMPETITION_INVITE" : "DUEL_INVITE";
                 final String message = creator.getName() + " convidou você para o desafio: " + competition.getTitle();
@@ -143,12 +163,17 @@ public class CompetitionService {
             }
         }
 
-        // Send all notifications after participants are persisted
         pendingNotifications.forEach(Runnable::run);
 
         return competitionMapper.toDTO(competition);
     }
 
+    /**
+     * Accepts a competition invite.
+     *
+     * @param competitionId the ID of the competition
+     * @return the competition response
+     */
     public CompetitionResponseDTO acceptInvite(UUID competitionId) {
         User user = getCurrentUser();
         CompetitionParticipant participant = participantRepository.findByCompetitionIdAndUserId(competitionId, user.getId())
@@ -165,6 +190,12 @@ public class CompetitionService {
         return competitionMapper.toDTO(participant.getCompetition());
     }
 
+    /**
+     * Declines a competition invite.
+     *
+     * @param competitionId the ID of the competition
+     * @return the competition response
+     */
     public CompetitionResponseDTO declineInvite(UUID competitionId) {
         User user = getCurrentUser();
         CompetitionParticipant participant = participantRepository.findByCompetitionIdAndUserId(competitionId, user.getId())
@@ -180,6 +211,11 @@ public class CompetitionService {
         return competitionMapper.toDTO(participant.getCompetition());
     }
 
+    /**
+     * Retrieves all competitions for the current user.
+     *
+     * @return a list of competition responses
+     */
     public List<CompetitionResponseDTO> getUserCompetitions() {
         User user = getCurrentUser();
         checkAndUpdateStatuses();
@@ -187,6 +223,12 @@ public class CompetitionService {
         return competitionMapper.toDTOs(competitions);
     }
 
+    /**
+     * Retrieves the leaderboard for a specific competition.
+     *
+     * @param competitionId the ID of the competition
+     * @return a list of leaderboard entries
+     */
     public List<LeaderboardEntryDTO> getLeaderboard(UUID competitionId) {
         Competition competition = competitionRepository.findById(competitionId)
                 .orElseThrow(() -> new IllegalArgumentException("Competição não encontrada"));
@@ -213,19 +255,17 @@ public class CompetitionService {
             entries.add(new LeaderboardEntryDTO(user.getId(), user.getName(), handle, avatarPresetId, score, 0));
         }
 
-        // Sort by score desc
-        entries.sort(Comparator.comparing(LeaderboardEntryDTO::score).reversed());
+        entries.sort(Comparator.comparing(LeaderboardEntryDTO::getScore).reversed());
 
-        // Assign positions
         List<LeaderboardEntryDTO> positionedEntries = new ArrayList<>();
         for (int i = 0; i < entries.size(); i++) {
             LeaderboardEntryDTO entry = entries.get(i);
             positionedEntries.add(new LeaderboardEntryDTO(
-                    entry.userId(),
-                    entry.name(),
-                    entry.handle(),
-                    entry.avatarPresetId(),
-                    entry.score(),
+                    entry.getUserId(),
+                    entry.getName(),
+                    entry.getHandle(),
+                    entry.getAvatarPresetId(),
+                    entry.getScore(),
                     i + 1
             ));
         }
@@ -233,6 +273,11 @@ public class CompetitionService {
         return positionedEntries;
     }
 
+    /**
+     * Checks and updates the status of active duels for a given user.
+     *
+     * @param userId the ID of the user
+     */
     public void checkActiveDuels(UUID userId) {
         List<Competition> activeTargetDuels = competitionRepository.findActiveTargetDuelsByUserId(userId);
 
@@ -240,23 +285,20 @@ public class CompetitionService {
             List<LeaderboardEntryDTO> leaderboard = getLeaderboard(duel.getId());
             if (leaderboard.isEmpty()) continue;
 
-            // Since it is sorted desc, the first one is the leader
             LeaderboardEntryDTO topEntry = leaderboard.get(0);
             Integer target = duel.getTargetValue();
 
-            if (target != null && topEntry.score() >= target) {
-                // Duel finished!
+            if (target != null && topEntry.getScore() >= target) {
                 duel.setStatus(CompetitionStatus.FINISHED);
                 competitionRepository.save(duel);
 
-                User winner = userRepository.findById(topEntry.userId()).orElse(null);
+                User winner = userRepository.findById(topEntry.getUserId()).orElse(null);
 
-                // Notify winner and others
                 for (CompetitionParticipant p : duel.getParticipants()) {
                     if (p.getStatus() != ParticipantStatus.ACCEPTED) continue;
 
                     User participantUser = p.getUser();
-                    if (participantUser.getId().equals(topEntry.userId())) {
+                    if (participantUser.getId().equals(topEntry.getUserId())) {
                         notificationService.createNotification(
                                 participantUser,
                                 null,
@@ -276,6 +318,9 @@ public class CompetitionService {
         }
     }
 
+    /**
+     * Checks and updates the statuses of all competitions based on dates.
+     */
     public void checkAndUpdateStatuses() {
         LocalDate today = LocalDate.now();
         List<Competition> allCompetitions = competitionRepository.findAll();

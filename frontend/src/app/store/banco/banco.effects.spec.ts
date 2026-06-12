@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BancoEffects } from './banco.effects';
-import { BancoService } from '../../core/services/banco.service';
+import { BancoService } from '@core/services/banco.service';
 import * as BancoActions from './banco.actions';
 
 describe('BancoEffects', () => {

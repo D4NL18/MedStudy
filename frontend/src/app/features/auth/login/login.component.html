@@ -48,7 +48,7 @@
             [class.invalid]="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched"
           >
           <button type="button" class="btn-toggle" (click)="togglePassword()" aria-label="Alternar visibilidade da senha">
-            {{ showPassword() ? '🙈' : '👁️' }}
+            {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
           </button>
         </div>
       </div>
@@ -57,13 +57,13 @@
         <a href="#" class="forgot-link">Esqueceu a senha?</a>
       </div>
 
-      <button type="submit" class="btn-login" [disabled]="loginForm.invalid || loading()">
+      <app-button type="submit" variant="btn-login" [disabled]="loginForm.invalid || loading()">
         @if (loading()) {
           <span class="spinner"></span>
         } @else {
           Acessar Plataforma
         }
-      </button>
+      </app-button>
     </form>
 
     <div class="card-footer">

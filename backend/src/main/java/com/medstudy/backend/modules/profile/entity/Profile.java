@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "profiles")
+/** Entity representing extended profile information for a user. */
 public class Profile extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -44,8 +45,6 @@ public class Profile extends BaseEntity {
 
     @Column(name = "share_badges", nullable = false)
     private Boolean shareBadges = true;
-
-    // Getters and Setters
     public User getUser() {
         return user;
     }

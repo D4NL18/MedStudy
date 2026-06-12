@@ -1,3 +1,7 @@
+/**
+ * Test fixture data for Revision.
+ * @description Provides reusable mock objects for use in unit and integration tests.
+ */
 export const createMockRevisionSummary = (overrides?: any) => ({
   atrasadas: 5,
   hoje: 10,

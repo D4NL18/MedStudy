@@ -2,11 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { ProfileEffects } from './profile.effects';
-import { ProfileService } from '../../core/services/profile.service';
-import { ToastService } from '../../core/services/toast.service';
+import { ProfileService } from '@core/services/profile.service';
+import { ToastService } from '@core/services/toast.service';
 import { ProfileActions } from './profile.actions';
 import * as AuthActions from '../auth/auth.actions';
-import { Profile } from '../../core/models/profile.model';
+import { Profile } from '@core/models/profile.model';
 
 describe('ProfileEffects', () => {
   let actions$: Observable<any>;

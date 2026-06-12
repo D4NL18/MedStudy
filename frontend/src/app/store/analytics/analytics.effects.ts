@@ -2,9 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
-import { AnalyticsService } from '../../core/services/analytics.service';
+import { AnalyticsService } from '@core/services/analytics.service';
 import * as AnalyticsActions from './analytics.actions';
 
+
+/**
+ * NgRx effects for the Analytics feature slice.
+ * @description Handles side effects such as HTTP calls in response to Analytics actions.
+ */
 @Injectable()
 export class AnalyticsEffects {
   private actions$ = inject(Actions);

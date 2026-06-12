@@ -1,6 +1,11 @@
 import { Component, Input, OnChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { MarkdownModule } from 'ngx-markdown';
 
+
+/**
+ * Angular component for the Markdown Renderer feature.
+ * @description Handles the presentation logic and user interactions for the Markdown Renderer view.
+ */
 @Component({
   selector: 'app-markdown-renderer',
   standalone: true,
@@ -10,7 +15,7 @@ import { MarkdownModule } from 'ngx-markdown';
 })
 export class MarkdownRendererComponent implements OnChanges {
   @Input() data: any = '';
-  processedData: string = '';
+  processedData = '';
   private cdr = inject(ChangeDetectorRef);
 
   ngOnChanges() {
