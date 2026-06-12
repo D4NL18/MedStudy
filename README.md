@@ -217,7 +217,3 @@ Acesse em: `http://localhost:4200`
 - [**Política de Segurança**](./SECURITY.md): Como reportar vulnerabilidades e detalhes do hardening.
 - [**Documentação da API**](http://localhost:8080/swagger-ui/index.html#/): Swagger/OpenAPI interativo (requer backend rodando).
 
----
-
-## 📄 Licença
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
