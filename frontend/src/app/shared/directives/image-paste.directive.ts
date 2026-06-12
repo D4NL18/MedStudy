@@ -1,5 +1,10 @@
 import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 
+
+/**
+ * Angular directive for Image Paste.
+ * @description Applies custom behavior or transformation to a host element.
+ */
 @Directive({
   selector: '[appImagePaste]',
   standalone: true

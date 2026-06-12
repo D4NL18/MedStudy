@@ -22,6 +22,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 
+/**
+ * Service responsible for business logic related to study session revisions.
+ */
 @Service
 @RequiredArgsConstructor
 public class RevisionService {
@@ -50,13 +53,17 @@ public class RevisionService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
     }
 
+    /**
+     * Retrieves a summary of the current user's study session revisions.
+     *
+     * @return the revision summary response containing counts for late, today, future, and completed revisions
+     */
     @Transactional(readOnly = true)
     public RevisionSummaryResponse getSummary() {
         User user = getCurrentUser();
         UUID userId = user.getId();
         LocalDate today = LocalDate.now();
 
-        // Study Sessions
         long sessionsAtrasadas = sessionRepository.countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(userId, today);
         long sessionsHoje = sessionRepository.countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisao(userId, today);
         long sessionsFuturas = sessionRepository.countByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoGreaterThan(userId, today);
@@ -70,6 +77,14 @@ public class RevisionService {
         );
     }
 
+    /**
+     * Retrieves a paginated list of study sessions based on the revision type and search criteria.
+     *
+     * @param tipo     the type of revision (e.g., TODAY, LATE)
+     * @param search   the search query string
+     * @param pageable pagination parameters
+     * @return a paginated list of study session responses
+     */
     @Transactional(readOnly = true)
     public Page<StudySessionResponse> getSessions(String tipo, String search, Pageable pageable) {
         User user = getCurrentUser();

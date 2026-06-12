@@ -24,6 +24,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service layer for managing study sessions.
+ * <p>
+ * Handles session creation, retrieval, updates, and deletion.
+ * Also drives gamification side-effects (badges, streaks), calculates spaced-repetition
+ * revision dates, and broadcasts social-feed events to accepted friends.
+ * </p>
+ */
 @Service
 @Transactional
 public class StudySessionService {
@@ -140,12 +148,12 @@ public class StudySessionService {
         StudySession entity = mapper.toEntity(request);
         entity.setUser(currentUser);
         
-        double percentual = request.qtsFeitas() > 0 ? (double) request.qtsCorretas() / request.qtsFeitas() * 100 : 0;
+        double percentual = request.getQtsFeitas() > 0 ? (double) request.getQtsCorretas() / request.getQtsFeitas() * 100 : 0;
         entity.setUrgente(percentual < 40);
-        if (request.dataProximaRevisao() != null) {
-            entity.setDataProximaRevisao(request.dataProximaRevisao());
+        if (request.getDataProximaRevisao() != null) {
+            entity.setDataProximaRevisao(request.getDataProximaRevisao());
         } else {
-            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao(), sessionsBefore.stream().filter(s -> s.getTema() != null && s.getTema().equals(request.tema())).toList()));
+            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.getDataSessao(), sessionsBefore.stream().filter(s -> s.getTema() != null && s.getTema().equals(request.getTema())).toList()));
         }
 
         StudySession saved = repository.save(entity);
@@ -153,7 +161,7 @@ public class StudySessionService {
         // Mark previous revisions for the same tema as concluded
         List<StudySession> pendingRevisions = repository.findAll(
             Specification.where(StudySessionSpecifications.hasUserId(currentUser.getId()))
-                .and(StudySessionSpecifications.hasTema(request.tema()))
+                .and(StudySessionSpecifications.hasTema(request.getTema()))
                 .and(StudySessionSpecifications.hasRevisaoConcluida(false))
         );
         for (StudySession pending : pendingRevisions) {
@@ -204,22 +212,22 @@ public class StudySessionService {
         List<StudySession> sessionsBefore = repository.findAll(StudySessionSpecifications.hasUserId(currentUser.getId()));
         int streakBefore = calculateStreak(sessionsBefore);
 
-        entity.setGrandeArea(request.grandeArea());
-        entity.setTema(request.tema());
-        entity.setDataSessao(request.dataSessao());
-        entity.setQtsFeitas(request.qtsFeitas());
-        entity.setQtsCorretas(request.qtsCorretas());
-        entity.setInstituicao(request.instituicao());
-        entity.setObservacoes(request.observacoes());
-        entity.setRevisaoConcluida(request.revisaoConcluida());
+        entity.setGrandeArea(request.getGrandeArea());
+        entity.setTema(request.getTema());
+        entity.setDataSessao(request.getDataSessao());
+        entity.setQtsFeitas(request.getQtsFeitas());
+        entity.setQtsCorretas(request.getQtsCorretas());
+        entity.setInstituicao(request.getInstituicao());
+        entity.setObservacoes(request.getObservacoes());
+        entity.setRevisaoConcluida(request.isRevisaoConcluida());
         
         // Recalculate revision date on update
-        double percentual = request.qtsFeitas() > 0 ? (double) request.qtsCorretas() / request.qtsFeitas() * 100 : 0;
+        double percentual = request.getQtsFeitas() > 0 ? (double) request.getQtsCorretas() / request.getQtsFeitas() * 100 : 0;
         entity.setUrgente(percentual < 40);
-        if (request.dataProximaRevisao() != null) {
-            entity.setDataProximaRevisao(request.dataProximaRevisao());
+        if (request.getDataProximaRevisao() != null) {
+            entity.setDataProximaRevisao(request.getDataProximaRevisao());
         } else {
-            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.dataSessao(), sessionsBefore.stream().filter(s -> s.getTema() != null && s.getTema().equals(request.tema())).toList()));
+            entity.setDataProximaRevisao(calculateNextRevision(percentual, request.getDataSessao(), sessionsBefore.stream().filter(s -> s.getTema() != null && s.getTema().equals(request.getTema())).toList()));
         }
 
         StudySession saved = repository.save(entity);
@@ -269,7 +277,7 @@ public class StudySessionService {
     }
 
     private void validateSession(StudySessionRequest request) {
-        if (request.qtsCorretas() > request.qtsFeitas()) {
+        if (request.getQtsCorretas() > request.getQtsFeitas()) {
             throw new IllegalArgumentException("Quantidade de corretas não pode ser maior que o total de feitas");
         }
     }

@@ -1,3 +1,7 @@
+/**
+ * Avatar Presets.
+ * @description Provides avatar presets functionality.
+ */
 export interface AvatarPreset {
   id: string;
   name: string;

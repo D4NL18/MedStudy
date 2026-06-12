@@ -26,6 +26,11 @@ import { SocialService, SocialProfile } from '@core/services/social.service';
 import { ToastService } from '@core/services/toast.service';
 import { AvatarComponent } from '@shared/components/avatar/avatar.component';
 
+
+/**
+ * Angular component for the Competicoes feature.
+ * @description Handles the presentation logic and user interactions for the Competicoes view.
+ */
 @Component({
   selector: 'app-competicoes',
   standalone: true,

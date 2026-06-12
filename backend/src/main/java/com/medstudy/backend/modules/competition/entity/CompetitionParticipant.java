@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "competition_participants")
+/** Entity representing a participant in a {@link Competition}. */
 public class CompetitionParticipant {
 
     @EmbeddedId

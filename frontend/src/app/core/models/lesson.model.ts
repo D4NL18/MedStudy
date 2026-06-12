@@ -1,3 +1,7 @@
+/**
+ * TypeScript model/interface for Lesson.
+ * @description Defines the data shape used by the application for Lesson entities.
+ */
 export enum LessonPriority {
   DIAMANTE = 'DIAMANTE',
   ALTA = 'ALTA',

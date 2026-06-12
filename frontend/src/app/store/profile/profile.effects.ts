@@ -6,6 +6,11 @@ import * as AuthActions from '../auth/auth.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { ToastService } from '@core/services/toast.service';
 
+
+/**
+ * NgRx effects for the Profile feature slice.
+ * @description Handles side effects such as HTTP calls in response to Profile actions.
+ */
 @Injectable()
 export class ProfileEffects {
   private actions$ = inject(Actions);

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.UUID;
 
+/** JPA Specifications for filtering {@link StudySession} entities by various criteria. */
 public class StudySessionSpecifications {
 
     public static Specification<StudySession> hasUserId(UUID userId) {

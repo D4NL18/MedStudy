@@ -98,7 +98,7 @@ class CompetitionServiceTest {
 
         Competition competition = new Competition();
         competition.setId(UUID.randomUUID());
-        competition.setTitle(request.title());
+        competition.setTitle(request.getTitle());
 
         Friendship friendship = new Friendship();
         friendship.setRequester(currentUser);
@@ -114,11 +114,11 @@ class CompetitionServiceTest {
                 competition.getTitle(),
                 currentUser.getId(),
                 currentUser.getName(),
-                request.competitionType(),
-                request.metricType(),
+                request.getCompetitionType(),
+                request.getMetricType(),
                 null,
-                request.startDate(),
-                request.endDate(),
+                request.getStartDate(),
+                request.getEndDate(),
                 CompetitionStatus.ACTIVE,
                 List.of(),
                 null,
@@ -130,7 +130,7 @@ class CompetitionServiceTest {
         CompetitionResponseDTO result = service.createCompetition(request);
 
         assertNotNull(result);
-        assertEquals("Desafio de Questões", result.title());
+        assertEquals("Desafio de Questões", result.getTitle());
         verify(competitionRepository).save(any(Competition.class));
         verify(participantRepository, times(2)).save(any(CompetitionParticipant.class));
     }

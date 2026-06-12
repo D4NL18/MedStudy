@@ -3,6 +3,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { QuestionSession, QuestionSessionFilters } from '../models/question-session.model';
 
+
+/**
+ * Angular service responsible for Banco-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Banco operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

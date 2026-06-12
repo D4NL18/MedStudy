@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
+/**
+ * Angular service responsible for Export-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Export operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

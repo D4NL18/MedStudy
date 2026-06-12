@@ -6,6 +6,11 @@ import { catchError, map, mergeMap, of } from 'rxjs';
 
 import { ToastService } from '@core/services/toast.service';
 
+
+/**
+ * NgRx effects for the Simulados feature slice.
+ * @description Handles side effects such as HTTP calls in response to Simulados actions.
+ */
 @Injectable()
 export class SimuladosEffects {
   private actions$ = inject(Actions);

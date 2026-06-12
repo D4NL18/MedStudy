@@ -2,6 +2,11 @@ import { createReducer, on } from '@ngrx/store';
 import { AppTheme } from '@core/services/theme.service';
 import * as ThemeActions from './theme.actions';
 
+
+/**
+ * NgRx reducer for the Theme feature slice.
+ * @description Handles state transitions in response to dispatched Theme actions.
+ */
 export interface ThemeState {
   activeTheme: AppTheme;
 }

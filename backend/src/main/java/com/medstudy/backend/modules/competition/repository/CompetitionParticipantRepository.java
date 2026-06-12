@@ -8,7 +8,18 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Repository interface for managing CompetitionParticipant entities.
+ */
 @Repository
 public interface CompetitionParticipantRepository extends JpaRepository<CompetitionParticipant, CompetitionParticipantId> {
+
+    /**
+     * Finds a participant by competition ID and user ID.
+     *
+     * @param competitionId the ID of the competition
+     * @param userId the ID of the user
+     * @return an Optional containing the participant if found
+     */
     Optional<CompetitionParticipant> findByCompetitionIdAndUserId(UUID competitionId, UUID userId);
 }

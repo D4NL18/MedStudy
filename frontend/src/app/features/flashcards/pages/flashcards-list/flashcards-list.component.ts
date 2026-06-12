@@ -10,6 +10,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { FlashcardResetModalComponent } from '@features/flashcards/components/reset-modal/flashcard-reset-modal.component';
 import { FlashcardsActions } from '@store/flashcards/flashcards.actions';
 import { selectAllCards, selectSummary, selectLoading, selectTotalElements } from '@store/flashcards/flashcards.reducer';
+import { FlashcardFormComponent } from '@features/flashcards/pages/flashcard-form/flashcard-form.component';
 
 @Component({
   selector: 'app-flashcards-list',
@@ -45,10 +46,35 @@ export class FlashcardsListComponent implements OnInit {
     this.loadCards();
   }
 
+  createCard() {
+    const dialogRef = this.dialog.open(FlashcardFormComponent, {
+      width: '800px',
+      panelClass: 'glass-modal-panel',
+      backdropClass: 'blur-backdrop'
+    });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) this.loadCards();
+    });
+  }
+
+  editCard(card: any) {
+    const dialogRef = this.dialog.open(FlashcardFormComponent, {
+      width: '800px',
+      panelClass: 'glass-modal-panel',
+      backdropClass: 'blur-backdrop',
+      data: { flashcard: card }
+    });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) this.loadCards();
+    });
+  }
+
   resetProgress(grandeArea?: string) {
     const dialogRef = this.dialog.open(FlashcardResetModalComponent, {
       data: { grandeArea },
-      width: '450px'
+      width: '450px',
+      panelClass: 'glass-modal-panel',
+      backdropClass: 'blur-backdrop'
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {
@@ -64,6 +90,8 @@ export class FlashcardsListComponent implements OnInit {
 
   deleteCard(id: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      panelClass: 'glass-modal-panel',
+      backdropClass: 'blur-backdrop',
       data: {
         title: 'Excluir Flashcard',
         message: 'Tem certeza que deseja excluir este flashcard permanentemente?',

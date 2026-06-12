@@ -5,6 +5,11 @@ import { selectIsAuthenticated } from '@store/auth/auth.selectors';
 import { map, take } from 'rxjs';
 import * as AuthActions from '@store/auth/auth.actions';
 
+
+/**
+ * Route guard for Auth.
+ * @description Determines whether navigation to a route should be allowed.
+ */
 export const authGuard: CanActivateFn = () => {
   const store = inject(Store);
   const router = inject(Router);

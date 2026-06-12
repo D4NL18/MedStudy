@@ -1,0 +1,52 @@
+<app-modal-layout [title]="'Detalhamento: ' + data.area.grandeArea" [useDefaultFooter]="false" (close)="dialogRef.close()">
+      <div class="stats-overview">
+        <div class="stat-card">
+          <span class="label">Taxa Global</span>
+          <span class="value" [style.color]="perfTheme.getColor(data.area.accuracy)">
+            {{ data.area.accuracy | number:'1.1-1' }}%
+          </span>
+        </div>
+        <div class="stat-card">
+          <span class="label">Tendência (30d)</span>
+          <span class="value trend" [class]="data.area.trendLong >= 0 ? 'up' : 'down'">
+            <lucide-icon [name]="data.area.trendLong >= 0 ? 'trending-up' : 'trending-down'"></lucide-icon>
+            {{ data.area.trendLong | number:'1.1-1' }}%
+          </span>
+        </div>
+      </div>
+
+      <div class="topics-list">
+        <h3>Subáreas (Temas)</h3>
+        @if (loading) {
+          <div class="loading-spinner">Carregando subáreas...</div>
+        } @else {
+          <table>
+            <thead>
+              <tr>
+                <th>Tema</th>
+                <th>Questões</th>
+                <th>Acerto</th>
+                <th>Tendência (7d)</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (topic of topics; track topic.tema) {
+                <tr>
+                  <td>{{ topic.tema }}</td>
+                  <td>{{ topic.totalQuestions }}</td>
+                  <td [style.color]="perfTheme.getColor(topic.accuracy)">
+                    {{ topic.accuracy | number:'1.1-1' }}%
+                  </td>
+                  <td>
+                    <div class="trend-wrapper" [class]="topic.trendShort >= 0 ? 'up' : 'down'">
+                      <lucide-icon [name]="topic.trendShort >= 0 ? 'trending-up' : 'trending-down'"></lucide-icon>
+                      <span>{{ topic.trendShort | number:'1.1-1' }}%</span>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    </app-modal-layout>

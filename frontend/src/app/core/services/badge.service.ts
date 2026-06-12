@@ -2,6 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
+/**
+ * Angular service responsible for Badge-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Badge operations.
+ */
 export interface UserBadge {
   type: string;
   displayName: string;

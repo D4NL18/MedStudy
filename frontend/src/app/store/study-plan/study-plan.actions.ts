@@ -1,6 +1,11 @@
 import { createActionGroup, props } from '@ngrx/store';
 import { Lesson } from '@core/models/lesson.model';
 
+
+/**
+ * NgRx actions for the Study Plan feature slice.
+ * @description Defines the action creators used to dispatch state changes for Study Plan.
+ */
 export const StudyPlanActions = createActionGroup({
   source: 'Study Plan',
   events: {

@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Embeddable
+/** Composite primary key for the {@link CompetitionParticipant} entity. */
 public class CompetitionParticipantId implements Serializable {
 
     @Column(name = "competition_id")

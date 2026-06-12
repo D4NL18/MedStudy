@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service responsible for scheduling badge evaluation tasks.
+ */
 @Service
 public class BadgeSchedulerService {
 
@@ -22,6 +25,13 @@ public class BadgeSchedulerService {
     private final BadgeService badgeService;
     private final ApplicationEventPublisher eventPublisher;
 
+    /**
+     * Constructs a new BadgeSchedulerService.
+     *
+     * @param userRepository the user repository
+     * @param badgeService   the badge service
+     * @param eventPublisher the application event publisher
+     */
     public BadgeSchedulerService(UserRepository userRepository, 
                                  BadgeService badgeService,
                                  ApplicationEventPublisher eventPublisher) {
@@ -30,7 +40,10 @@ public class BadgeSchedulerService {
         this.eventPublisher = eventPublisher;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Every day at midnight
+    /**
+     * Periodically evaluates all users to award missing or retroactive badges.
+     */
+    @Scheduled(cron = "0 0 0 * * ?")
     public void evaluateRetroactiveBadges() {
         log.info("Iniciando rotina diária de verificação de conquistas retroativas...");
         
@@ -44,10 +57,9 @@ public class BadgeSchedulerService {
                 countUsers++;
                 countBadges += newlyEarned.size();
                 
-                // Publish feed events for newly discovered badges
                 for (BadgeType badge : newlyEarned) {
                     eventPublisher.publishEvent(new com.medstudy.backend.modules.feed.events.FeedEventListener.BadgeEarnedEvent(
-                        user.getId().getMostSignificantBits() & Long.MAX_VALUE, // Mock long format for feed
+                        user.getId().getMostSignificantBits() & Long.MAX_VALUE,
                         badge.name(),
                         badge.getDisplayName(),
                         badge.getDescription()

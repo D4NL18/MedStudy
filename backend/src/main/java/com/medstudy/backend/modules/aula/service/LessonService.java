@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Service for managing Lesson business logic.
+ */
 @Service
 @Transactional
 public class LessonService {
@@ -24,17 +27,28 @@ public class LessonService {
     private final LessonRepository repository;
     private final LessonMapper mapper;
 
+    /**
+     * Constructor for LessonService.
+     *
+     * @param repository the lesson repository
+     * @param mapper the lesson mapper
+     */
     public LessonService(LessonRepository repository, LessonMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
+    /**
+     * Creates a new lesson.
+     *
+     * @param request the request containing lesson details
+     * @return the created lesson response
+     */
     public LessonResponse create(LessonRequest request) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Lesson entity = mapper.toEntity(request);
         entity.setUser(currentUser);
         
-        // Ensure defaults for mandatory fields
         if (entity.getAulaAssistida() == null) entity.setAulaAssistida(false);
         if (entity.getReforco() == null) entity.setReforco(false);
         if (entity.getRevisao() == null) entity.setRevisao(false);
@@ -43,6 +57,16 @@ public class LessonService {
         return mapper.toResponse(saved);
     }
 
+    /**
+     * Retrieves a paginated list of lessons matching provided filters.
+     *
+     * @param grandeArea optional filter by major area
+     * @param prioridade optional filter by priority
+     * @param aulaAssistida optional filter by watched status
+     * @param tema optional filter by theme
+     * @param pageable pagination parameters
+     * @return a paginated list of lesson responses
+     */
     public Page<LessonResponse> findAll(String grandeArea, LessonPriority prioridade, Boolean aulaAssistida, String tema, Pageable pageable) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
@@ -55,11 +79,22 @@ public class LessonService {
         return repository.findAll(spec, pageable).map(mapper::toResponse);
     }
 
+    /**
+     * Retrieves a lesson by its ID.
+     *
+     * @param id the UUID of the lesson
+     * @return the lesson response
+     */
     public LessonResponse getById(UUID id) {
         Lesson entity = getLessonAndVerifyOwnership(id);
         return mapper.toResponse(entity);
     }
 
+    /**
+     * Retrieves a summary of lessons for the current user.
+     *
+     * @return the lesson summary response
+     */
     public com.medstudy.backend.modules.aula.dto.LessonSummaryResponse getSummary() {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID userId = currentUser.getId();
@@ -72,29 +107,47 @@ public class LessonService {
         return new com.medstudy.backend.modules.aula.dto.LessonSummaryResponse(total, assistidas, pendentes, diamantePendentes);
     }
 
+    /**
+     * Updates an existing lesson.
+     *
+     * @param id the UUID of the lesson
+     * @param request the request containing updated details
+     * @return the updated lesson response
+     */
     public LessonResponse update(UUID id, LessonRequest request) {
         Lesson entity = getLessonAndVerifyOwnership(id);
 
-        entity.setGrandeArea(request.grandeArea());
-        entity.setSubArea(request.subArea());
-        entity.setTema(request.tema());
-        entity.setPrioridade(request.prioridade());
+        entity.setGrandeArea(request.getGrandeArea());
+        entity.setSubArea(request.getSubArea());
+        entity.setTema(request.getTema());
+        entity.setPrioridade(request.getPrioridade());
         
-        if (request.aulaAssistida() != null) entity.setAulaAssistida(request.aulaAssistida());
-        if (request.dataAula() != null) entity.setDataAula(request.dataAula());
-        if (request.percentAcerto() != null) entity.setPercentAcerto(request.percentAcerto());
-        if (request.reforco() != null) entity.setReforco(request.reforco());
-        if (request.revisao() != null) entity.setRevisao(request.revisao());
+        if (request.getAulaAssistida() != null) entity.setAulaAssistida(request.getAulaAssistida());
+        if (request.getDataAula() != null) entity.setDataAula(request.getDataAula());
+        if (request.getPercentAcerto() != null) entity.setPercentAcerto(request.getPercentAcerto());
+        if (request.getReforco() != null) entity.setReforco(request.getReforco());
+        if (request.getRevisao() != null) entity.setRevisao(request.getRevisao());
 
         Lesson saved = repository.save(entity);
         return mapper.toResponse(saved);
     }
 
+    /**
+     * Deletes a lesson by its ID.
+     *
+     * @param id the UUID of the lesson
+     */
     public void delete(UUID id) {
         Lesson entity = getLessonAndVerifyOwnership(id);
         repository.delete(entity);
     }
 
+    /**
+     * Toggles the watched status of a lesson.
+     *
+     * @param id the UUID of the lesson
+     * @return the updated lesson response
+     */
     public LessonResponse toggleAssistida(UUID id) {
         Lesson entity = getLessonAndVerifyOwnership(id);
         boolean newState = !entity.getAulaAssistida();
@@ -108,13 +161,20 @@ public class LessonService {
         return mapper.toResponse(saved);
     }
 
+    /**
+     * Helper method to retrieve a lesson and verify the current user owns it.
+     *
+     * @param id the UUID of the lesson
+     * @return the lesson entity
+     * @throws RuntimeException if not found or unauthorized
+     */
     private Lesson getLessonAndVerifyOwnership(UUID id) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Lesson entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Aula não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
 
         if (!entity.getUser().getId().equals(currentUser.getId())) {
-            throw new RuntimeException("Acesso negado");
+            throw new RuntimeException("Access denied");
         }
         return entity;
     }

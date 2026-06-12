@@ -1,21 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+
+/**
+ * Angular component for the Skeleton feature.
+ * @description Handles the presentation logic and user interactions for the Skeleton view.
+ */
 @Component({
   selector: 'app-skeleton',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div
-      class="skeleton-base"
-      [ngClass]="[variant, customClass]"
-      [ngStyle]="{
-        'width': width,
-        'height': height,
-        'border-radius': borderRadius
-      }"
-    ></div>
-  `,
+  templateUrl: './skeleton.component.html',
   styleUrl: './skeleton.component.scss'
 })
 export class SkeletonComponent {

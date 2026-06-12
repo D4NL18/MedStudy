@@ -1,0 +1,18 @@
+<div class="chart-container">
+      @if (chartData().length > 0) {
+        <ngx-charts-pie-chart
+          [scheme]="colorScheme()"
+          [results]="chartData()"
+          [gradient]="false"
+          [legend]="false"
+          [labels]="true"
+          [doughnut]="true"
+          [arcWidth]="0.25"
+          [animations]="true"
+          (window:resize)="onResize()"
+        >
+        </ngx-charts-pie-chart>
+      } @else {
+        <div class="empty-chart">Sem dados de questões para distribuir</div>
+      }
+    </div>

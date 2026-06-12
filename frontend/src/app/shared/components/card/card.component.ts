@@ -2,6 +2,11 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RippleDirective } from '../../directives/ripple/ripple.directive';
 
+
+/**
+ * Angular component for the Card feature.
+ * @description Handles the presentation logic and user interactions for the Card view.
+ */
 @Component({
   selector: 'app-card',
   standalone: true,

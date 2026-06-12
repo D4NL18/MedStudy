@@ -3,6 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Flashcard, FlashcardStudyRating } from '../models/flashcard.model';
 
+
+/**
+ * Angular service responsible for Flashcard-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Flashcard operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

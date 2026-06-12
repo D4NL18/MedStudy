@@ -233,6 +233,10 @@
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 160px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 
   .card-glow-border {
     position: absolute;

@@ -5,6 +5,11 @@ import { LessonService } from '@core/services/lesson.service';
 import { ToastService } from '@core/services/toast.service';
 import { StudyPlanActions } from './study-plan.actions';
 
+
+/**
+ * NgRx effects for the Study Plan feature slice.
+ * @description Handles side effects such as HTTP calls in response to Study Plan actions.
+ */
 @Injectable()
 export class StudyPlanEffects {
   private actions$ = inject(Actions);

@@ -1,4 +1,4 @@
-<app-modal-layout title="Novo Flashcard" [loading]="false" (close)="cancel()" (save)="save()">
+<app-modal-layout [title]="isEdit ? 'Editar Flashcard' : 'Novo Flashcard'" [loading]="loading" (close)="cancel()" (save)="save()">
   <div class="field-group">
     <label>Grande Área</label>
     <select [(ngModel)]="grandeArea">

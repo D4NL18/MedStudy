@@ -32,6 +32,10 @@
 ### Phase 34: DocumentaÃ§Ã£o em CÃ³digo (Clean Comments & Javadoc/TSDoc)
 - Status: Pending
 
+### Phase 35: Refatoração Frontend - Separação de Arquivos (HTML, SCSS, TS)
+- Status: Active
+
+
 <details>
 <summary>âœ… v1.0 MVP (Phases 1-15) â€” SHIPPED 2026-05-11</summary>
 

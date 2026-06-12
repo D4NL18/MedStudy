@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 
+
+/**
+ * Angular service responsible for Image Compressor-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Image Compressor operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

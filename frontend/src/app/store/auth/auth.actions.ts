@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 
+
+/**
+ * NgRx actions for the Auth feature slice.
+ * @description Defines the action creators used to dispatch state changes for Auth.
+ */
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;

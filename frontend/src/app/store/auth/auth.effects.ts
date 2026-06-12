@@ -5,6 +5,11 @@ import * as AuthActions from './auth.actions';
 import { catchError, map, mergeMap, tap, of } from 'rxjs';
 import { Router } from '@angular/router';
 
+
+/**
+ * NgRx effects for the Auth feature slice.
+ * @description Handles side effects such as HTTP calls in response to Auth actions.
+ */
 @Injectable()
 export class AuthEffects {
   private actions$ = inject(Actions);

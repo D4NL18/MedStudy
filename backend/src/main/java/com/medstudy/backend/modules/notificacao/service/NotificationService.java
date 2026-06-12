@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing notifications.
+ */
 @Service
 @Transactional(readOnly = true)
 public class NotificationService {
@@ -27,6 +30,14 @@ public class NotificationService {
     private final SocialNotificationRepository socialNotificationRepository;
     private final ProfileRepository profileRepository;
 
+    /**
+     * Constructs a new NotificationService.
+     *
+     * @param studySessionRepository the study session repository
+     * @param lessonRepository the lesson repository
+     * @param socialNotificationRepository the social notification repository
+     * @param profileRepository the profile repository
+     */
     public NotificationService(StudySessionRepository studySessionRepository, 
                                LessonRepository lessonRepository, 
                                SocialNotificationRepository socialNotificationRepository,
@@ -37,6 +48,11 @@ public class NotificationService {
         this.profileRepository = profileRepository;
     }
 
+    /**
+     * Retrieves a summary of notifications for the authenticated user.
+     *
+     * @return the notification summary response
+     */
     public NotificationSummaryResponse getSummary() {
         if (SecurityContextHolder.getContext().getAuthentication() == null || 
             !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof User)) {
@@ -58,6 +74,11 @@ public class NotificationService {
         );
     }
 
+    /**
+     * Retrieves a list of social notifications for the authenticated user.
+     *
+     * @return a list of social notification response DTOs
+     */
     public List<SocialNotificationResponseDTO> getSocialNotifications() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return socialNotificationRepository.findByUserIdOrderByCreatedAtDesc(user.getId())
@@ -89,6 +110,14 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Creates a new social notification.
+     *
+     * @param user the user receiving the notification
+     * @param sender the user sending the notification
+     * @param type the type of the notification
+     * @param message the notification message
+     */
     @Transactional
     public void createNotification(User user, User sender, String type, String message) {
         SocialNotification notification = new SocialNotification();
@@ -100,6 +129,11 @@ public class NotificationService {
         socialNotificationRepository.save(notification);
     }
 
+    /**
+     * Marks a specific notification as read.
+     *
+     * @param notificationId the ID of the notification to mark as read
+     */
     @Transactional
     public void markAsRead(UUID notificationId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -112,6 +146,9 @@ public class NotificationService {
         socialNotificationRepository.save(n);
     }
 
+    /**
+     * Marks all unread notifications as read for the authenticated user.
+     */
     @Transactional
     public void markAllAsRead() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

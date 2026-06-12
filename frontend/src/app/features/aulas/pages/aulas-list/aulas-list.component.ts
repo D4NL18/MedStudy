@@ -12,11 +12,12 @@ import { LessonService } from '@core/services/lesson.service';
 import { LessonModalComponent } from '@features/aulas/components/lesson-modal/lesson-modal.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CreateButtonComponent } from '@shared/components/create-button/create-button.component';
 
 @Component({
   selector: 'app-aulas-list',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, LucideAngularModule, MatDialogModule, MatPaginatorModule],
+  imports: [ButtonComponent, CommonModule, LucideAngularModule, MatDialogModule, MatPaginatorModule, CreateButtonComponent],
   templateUrl: './aulas-list.component.html',
   styleUrl: './aulas-list.component.scss'
 })

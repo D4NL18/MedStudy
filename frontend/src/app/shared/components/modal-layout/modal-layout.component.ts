@@ -1,6 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+
+/**
+ * Angular component for the Modal Layout feature.
+ * @description Handles the presentation logic and user interactions for the Modal Layout view.
+ */
 @Component({
   selector: 'app-modal-layout',
   standalone: true,

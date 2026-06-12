@@ -6,6 +6,11 @@ import { ToastService } from '@core/services/toast.service';
 import { CompetitionActions } from './competition.actions';
 import * as AuthActions from '../auth/auth.actions';
 
+
+/**
+ * NgRx effects for the Competition feature slice.
+ * @description Handles side effects such as HTTP calls in response to Competition actions.
+ */
 @Injectable()
 export class CompetitionEffects {
   private actions$ = inject(Actions);

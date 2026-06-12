@@ -1,0 +1,37 @@
+<app-modal-layout title="Confirmar Reset de Progresso" [useDefaultFooter]="false" (close)="close()">
+      <div class="modal-body">
+        <div class="warning-icon-wrapper">
+          <div class="warning-icon">
+            <lucide-icon [name]="AlertTriangleIcon" class="icon-lg text-amber-500"></lucide-icon>
+          </div>
+        </div>
+        <p class="description">
+          Você está prestes a resetar o progresso de estudo de 
+          <strong>{{ data.grandeArea || 'Todas as Áreas' }}</strong>.
+        </p>
+        
+        <div class="danger-box">
+          <p>Esta ação é <strong>irreversível</strong>. Todos os flashcards desta área voltarão ao estado de "Novo" e o histórico de repetição espaçada será reiniciado.</p>
+        </div>
+
+        <div class="confirmation-form">
+          <label for="confirm-string">Para confirmar, digite <strong>RESETAR</strong> abaixo:</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput 
+                   id="confirm-string"
+                   [(ngModel)]="confirmationString" 
+                   placeholder="Digite RESETAR"
+                   autocomplete="off">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div modal-footer class="custom-footer">
+        <app-button variant="secondary" (onClick)="close()">Cancelar</app-button>
+        <app-button variant="destructive" 
+                [disabled]="confirmationString() !== 'RESETAR'"
+                (onClick)="confirm()">
+          Resetar Agora
+        </app-button>
+      </div>
+    </app-modal-layout>

@@ -3,6 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Competition, CompetitionRequest, LeaderboardEntry } from '../models/competition.model';
 
+
+/**
+ * Angular service responsible for Competition-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Competition operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

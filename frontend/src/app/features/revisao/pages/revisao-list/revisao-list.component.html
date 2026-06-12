@@ -76,11 +76,11 @@
             <td data-label="Revisão Programada">{{ session.dataProximaRevisao | date:'dd/MM/yyyy' }}</td>
             <td data-label="% Último Acerto">{{ getAccuracy(session) }}%</td>
             <td class="action-cell" data-label="Ação">
-              <app-button variant="action-btn" (onClick)="startRevision(session)" 
+              <button class="action-btn" (click)="startRevision(session)" 
                       [disabled]="session.revisaoConcluida"
                       title="Concluir revisão">
                 <lucide-icon [name]="session.revisaoConcluida ? 'check-circle' : 'circle'" [size]="20"></lucide-icon>
-              </app-button>
+              </button>
             </td>
           </tr>
         </tbody>

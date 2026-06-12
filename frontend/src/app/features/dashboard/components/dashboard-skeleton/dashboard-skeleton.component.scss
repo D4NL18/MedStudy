@@ -1,0 +1,30 @@
+.dashboard-skeleton {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 24px;
+    }
+    .dashboard-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .dashboard-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .mt-2 {
+      margin-top: 8px;
+    }

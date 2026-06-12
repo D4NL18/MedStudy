@@ -1,3 +1,7 @@
+/**
+ * TypeScript model/interface for Question Session.
+ * @description Defines the data shape used by the application for Question Session entities.
+ */
 export interface QuestionSession {
   id: string;
   dataSessao: string;

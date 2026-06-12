@@ -7,6 +7,11 @@ import { Store } from '@ngrx/store';
 import * as AuthActions from '@store/auth/auth.actions';
 import { selectAuthError, selectAuthLoading } from '@store/auth/auth.selectors';
 
+
+/**
+ * Angular component for the Login feature.
+ * @description Handles the presentation logic and user interactions for the Login view.
+ */
 @Component({
   selector: 'app-login',
   standalone: true,

@@ -103,9 +103,9 @@ class FriendshipServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Outro Estudante", result.get(0).name());
-        assertEquals("NONE", result.get(0).relationshipStatus());
-        assertEquals(1, result.get(0).streak());
+        assertEquals("Outro Estudante", result.get(0).getName());
+        assertEquals("NONE", result.get(0).getRelationshipStatus());
+        assertEquals(1, result.get(0).getStreak());
     }
 
     @Test
@@ -255,8 +255,8 @@ class FriendshipServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Outro Estudante", result.get(0).name());
-        assertEquals("ACCEPTED", result.get(0).relationshipStatus());
+        assertEquals("Outro Estudante", result.get(0).getName());
+        assertEquals("ACCEPTED", result.get(0).getRelationshipStatus());
     }
 
     @Test
@@ -274,8 +274,8 @@ class FriendshipServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Outro Estudante", result.get(0).name());
-        assertEquals("PENDING", result.get(0).relationshipStatus());
+        assertEquals("Outro Estudante", result.get(0).getName());
+        assertEquals("PENDING", result.get(0).getRelationshipStatus());
     }
 
     @Test
@@ -293,8 +293,8 @@ class FriendshipServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Outro Estudante", result.get(0).name());
-        assertEquals("BLOCKED", result.get(0).relationshipStatus());
+        assertEquals("Outro Estudante", result.get(0).getName());
+        assertEquals("BLOCKED", result.get(0).getRelationshipStatus());
     }
 
     @Test
@@ -314,10 +314,10 @@ class FriendshipServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         SocialProfileResponseDTO res = result.get(0);
-        assertEquals("Outro Estudante", res.name());
-        assertNull(res.faculdade()); // Masked because profile is private & not friends
-        assertNull(res.semestre());
-        assertEquals(0, res.streak()); // Zeroed streak
+        assertEquals("Outro Estudante", res.getName());
+        assertNull(res.getFaculdade()); // Masked because profile is private & not friends
+        assertNull(res.getSemestre());
+        assertEquals(0, res.getStreak()); // Zeroed streak
     }
 
     @Test
@@ -339,9 +339,9 @@ class FriendshipServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         SocialProfileResponseDTO res = result.get(0);
-        assertEquals("Outro Estudante", res.name());
-        assertNull(res.faculdade()); // Masked because shareFaculdade is false
-        assertNull(res.semestre());
-        assertNull(res.streak()); // Masked (null) because shareStreak is false
+        assertEquals("Outro Estudante", res.getName());
+        assertNull(res.getFaculdade()); // Masked because shareFaculdade is false
+        assertNull(res.getSemestre());
+        assertNull(res.getStreak()); // Masked (null) because shareStreak is false
     }
 }

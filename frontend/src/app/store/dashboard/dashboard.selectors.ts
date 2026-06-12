@@ -1,6 +1,11 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { DashboardState } from './dashboard.reducer';
 
+
+/**
+ * NgRx selectors for the Dashboard feature slice.
+ * @description Provides memoized queries to extract Dashboard state from the store.
+ */
 export const selectDashboardState = createFeatureSelector<DashboardState>('dashboard');
 
 export const selectDashboardKPIs = createSelector(

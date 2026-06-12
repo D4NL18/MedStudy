@@ -6,38 +6,17 @@ import { Store } from '@ngrx/store';
 import { selectAreaAnalytics } from '@store/dashboard/dashboard.selectors';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+
+/**
+ * Angular component for the Distribution Chart feature.
+ * @description Handles the presentation logic and user interactions for the Distribution Chart view.
+ */
 @Component({
   selector: 'app-distribution-chart',
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
-  template: `
-    <div class="chart-container">
-      @if (chartData().length > 0) {
-        <ngx-charts-pie-chart
-          [scheme]="colorScheme()"
-          [results]="chartData()"
-          [gradient]="false"
-          [legend]="false"
-          [labels]="true"
-          [doughnut]="true"
-          [arcWidth]="0.25"
-          [animations]="true"
-          (window:resize)="onResize()"
-        >
-        </ngx-charts-pie-chart>
-      } @else {
-        <div class="empty-chart">Sem dados de questões para distribuir</div>
-      }
-    </div>
-  `,
-  styles: [`
-    .chart-container { width: 100%; height: 250px; display: block; position: relative; }
-    .empty-chart { height: 100%; display: flex; align-items: center; justify-content: center; opacity: 0.5; font-size: 14px; }
-    :host ::ng-deep .ngx-charts {
-      text { fill: var(--color-text); opacity: 0.7; font-size: 11px; }
-      .pie-label { fill: var(--color-text) !important; }
-    }
-  `]
+  templateUrl: './distribution-chart.component.html',
+  styleUrls: ['./distribution-chart.component.scss']
 })
 export class DistributionChartComponent {
   private store = inject(Store);

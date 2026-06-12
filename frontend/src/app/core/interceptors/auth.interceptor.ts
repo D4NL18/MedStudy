@@ -5,6 +5,11 @@ import { selectToken } from '@store/auth/auth.selectors';
 import { catchError, throwError } from 'rxjs';
 import * as AuthActions from '@store/auth/auth.actions';
 
+
+/**
+ * HTTP interceptor for Auth.
+ * @description Intercepts outgoing HTTP requests and/or incoming responses to apply cross-cutting concerns.
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(Store);
   let token: string | null = null;

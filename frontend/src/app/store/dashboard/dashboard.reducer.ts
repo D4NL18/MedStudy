@@ -1,6 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import * as DashboardActions from './dashboard.actions';
 
+
+/**
+ * NgRx reducer for the Dashboard feature slice.
+ * @description Handles state transitions in response to dispatched Dashboard actions.
+ */
 export interface DashboardState {
   kpis: DashboardActions.DashboardKPIs | null;
   loading: boolean;

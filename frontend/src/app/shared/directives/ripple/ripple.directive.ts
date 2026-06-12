@@ -1,5 +1,10 @@
 import { Directive, ElementRef, HostListener, Renderer2, Input } from '@angular/core';
 
+
+/**
+ * Angular directive for Ripple.
+ * @description Applies custom behavior or transformation to a host element.
+ */
 @Directive({
   selector: '[appRipple]',
   standalone: true

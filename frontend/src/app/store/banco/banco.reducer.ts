@@ -3,6 +3,11 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { QuestionSession, QuestionSessionFilters } from '@core/models/question-session.model';
 import * as BancoActions from './banco.actions';
 
+
+/**
+ * NgRx reducer for the Banco feature slice.
+ * @description Handles state transitions in response to dispatched Banco actions.
+ */
 export interface BancoState extends EntityState<QuestionSession> {
   loading: boolean;
   error: string | null;

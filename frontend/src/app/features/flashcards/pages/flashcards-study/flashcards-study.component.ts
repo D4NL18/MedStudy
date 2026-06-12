@@ -10,6 +10,11 @@ import { FlashcardDifficulty } from '@core/models/flashcard.model';
 import { MarkdownRendererComponent } from '@shared/components/markdown-renderer/markdown-renderer.component';
 import { tap } from 'rxjs';
 
+
+/**
+ * Angular component for the Flashcards Study feature.
+ * @description Handles the presentation logic and user interactions for the Flashcards Study view.
+ */
 @Component({
   selector: 'app-flashcards-study',
   standalone: true,

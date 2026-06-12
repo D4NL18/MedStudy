@@ -9,6 +9,11 @@ import { selectBancoFilters } from './banco.selectors';
 
 import { ToastService } from '@core/services/toast.service';
 
+
+/**
+ * NgRx effects for the Banco feature slice.
+ * @description Handles side effects such as HTTP calls in response to Banco actions.
+ */
 @Injectable()
 export class BancoEffects {
   private actions$ = inject(Actions);

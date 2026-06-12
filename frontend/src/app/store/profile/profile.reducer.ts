@@ -2,6 +2,11 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import { Profile, ProfileCheckResponse } from '@core/models/profile.model';
 import { ProfileActions } from './profile.actions';
 
+
+/**
+ * NgRx reducer for the Profile feature slice.
+ * @description Handles state transitions in response to dispatched Profile actions.
+ */
 export interface ProfileState {
   profile: Profile | null;
   loading: boolean;

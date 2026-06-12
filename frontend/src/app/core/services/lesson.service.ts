@@ -3,6 +3,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Lesson, LessonSummary } from '../models/lesson.model';
 
+
+/**
+ * Angular service responsible for Lesson-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Lesson operations.
+ */
 @Injectable({
   providedIn: 'root'
 })

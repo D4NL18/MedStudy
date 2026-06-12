@@ -6,6 +6,11 @@ import { FlashcardsActions } from './flashcards.actions';
 import { RevisionActions } from '../revision/revision.actions';
 import { Store } from '@ngrx/store';
 
+
+/**
+ * NgRx effects for the Flashcards feature slice.
+ * @description Handles side effects such as HTTP calls in response to Flashcards actions.
+ */
 @Injectable()
 export class FlashcardsEffects {
   private actions$ = inject(Actions);

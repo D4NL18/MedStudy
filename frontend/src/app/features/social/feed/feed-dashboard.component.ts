@@ -6,56 +6,17 @@ import { CommonModule } from '@angular/common';
 import { FeedItemComponent } from './feed-item.component';
 import { FeedSkeletonComponent } from './components/feed-skeleton/feed-skeleton.component';
 
+
+/**
+ * Angular component for the Feed Dashboard feature.
+ * @description Handles the presentation logic and user interactions for the Feed Dashboard view.
+ */
 @Component({
   selector: 'app-feed-dashboard',
   standalone: true,
   imports: [CommonModule, FeedItemComponent, FeedSkeletonComponent],
-  template: `
-    <div class="feed-dashboard-container fade-in">
-      <ng-container *ngIf="events$ | async as events; else loading">
-        <div class="feed-list">
-          <app-feed-item 
-            *ngFor="let event of events" 
-            [event]="event" 
-            [currentUserId]="currentUserId">
-          </app-feed-item>
-          
-          <div *ngIf="events.length === 0" class="empty-state">
-            No recent activities.
-          </div>
-        </div>
-      </ng-container>
-      <ng-template #loading>
-        <app-feed-skeleton></app-feed-skeleton>
-      </ng-template>
-    </div>
-  `,
-  styles: [`
-    .feed-dashboard-container { 
-      max-width: 680px; 
-      margin: 0 auto; 
-      padding: 0 16px; 
-    }
-    .feed-header-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #E2E8F0;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .empty-state { 
-      text-align: center; 
-      color: #94A3B8; 
-      margin-top: 48px; 
-      padding: 40px;
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-    }
-  `]
+  templateUrl: './feed-dashboard.component.html',
+  styleUrls: ['./feed-dashboard.component.scss']
 })
 export class FeedDashboardComponent implements OnInit, OnDestroy {
   

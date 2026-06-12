@@ -1,0 +1,18 @@
+<div class="feed-dashboard-container fade-in">
+      <ng-container *ngIf="events$ | async as events; else loading">
+        <div class="feed-list">
+          <app-feed-item 
+            *ngFor="let event of events" 
+            [event]="event" 
+            [currentUserId]="currentUserId">
+          </app-feed-item>
+          
+          <div *ngIf="events.length === 0" class="empty-state">
+            No recent activities.
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #loading>
+        <app-feed-skeleton></app-feed-skeleton>
+      </ng-template>
+    </div>

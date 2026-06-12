@@ -15,6 +15,11 @@ import { of } from 'rxjs';
 import { FeedDashboardComponent } from './feed/feed-dashboard.component';
 import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 
+
+/**
+ * Angular component for the Social feature.
+ * @description Handles the presentation logic and user interactions for the Social view.
+ */
 @Component({
   selector: 'app-social',
   standalone: true,

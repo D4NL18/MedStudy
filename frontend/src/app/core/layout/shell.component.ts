@@ -19,6 +19,11 @@ import { AvatarComponent } from '@shared/components/avatar/avatar.component';
 import { ProfileActions } from '@store/profile/profile.actions';
 import { selectProfile } from '@store/profile/profile.reducer';
 
+
+/**
+ * Angular component for the Shell feature.
+ * @description Handles the presentation logic and user interactions for the Shell view.
+ */
 @Component({
   selector: 'app-shell',
   standalone: true,

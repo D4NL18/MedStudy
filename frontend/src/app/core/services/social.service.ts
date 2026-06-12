@@ -2,6 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
+/**
+ * Angular service responsible for Social-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Social operations.
+ */
 export interface SocialProfile {
   userId: string;
   name: string;

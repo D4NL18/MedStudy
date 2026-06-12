@@ -4,10 +4,7 @@
       <h1>Plano de Aulas</h1>
       <p>Rastreador estratégico de conteúdo teórico</p>
     </div>
-    <app-button variant="btn-primary" (onClick)="createLesson()">
-      <lucide-icon name="plus" [size]="18"></lucide-icon>
-      Nova Aula
-    </app-button>
+    <app-create-button (onClick)="createLesson()">Nova Aula</app-create-button>
   </div>
 
   <ng-container *ngIf="lessons$ | async as lessons; else loadingTpl">

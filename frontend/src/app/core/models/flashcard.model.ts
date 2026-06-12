@@ -1,3 +1,7 @@
+/**
+ * TypeScript model/interface for Flashcard.
+ * @description Defines the data shape used by the application for Flashcard entities.
+ */
 export enum FlashcardDifficulty {
   EASY = 'EASY',
   MEDIUM = 'MEDIUM',

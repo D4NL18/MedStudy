@@ -4,6 +4,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+
+/**
+ * HTTP interceptor for Error.
+ * @description Intercepts outgoing HTTP requests and/or incoming responses to apply cross-cutting concerns.
+ */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const snackBar = inject(MatSnackBar);
 

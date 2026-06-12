@@ -1,0 +1,58 @@
+<app-modal-layout 
+      [title]="lessonToEdit ? 'Editar Aula' : 'Nova Aula'" 
+      (close)="onClose()"
+      (save)="onSave()">
+      
+      <form [formGroup]="lessonForm" class="lesson-form">
+        <div class="form-group">
+          <label>Grande Área</label>
+          <select formControlName="grandeArea">
+            <option value="Clínica Médica">Clínica Médica</option>
+            <option value="Cirurgia">Cirurgia</option>
+            <option value="Pediatria">Pediatria</option>
+            <option value="Ginecologia/Obstetrícia">Ginecologia/Obstetrícia</option>
+            <option value="Preventiva">Preventiva</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Subárea (Opcional)</label>
+          <input type="text" formControlName="subArea" placeholder="Ex: Cardiologia">
+        </div>
+
+        <div class="form-group">
+          <label>Tema da Aula</label>
+          <input type="text" formControlName="tema" placeholder="Ex: Insuficiência Cardíaca"
+                 [class.invalid]="lessonForm.get('tema')?.invalid && lessonForm.get('tema')?.touched">
+          <span class="error-msg" *ngIf="lessonForm.get('tema')?.invalid && lessonForm.get('tema')?.touched">
+            O tema da aula é obrigatório
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Prioridade</label>
+          <select formControlName="prioridade">
+            <option [value]="'DIAMANTE'">Diamante</option>
+            <option [value]="'ALTA'">Alta</option>
+            <option [value]="'MEDIA'">Média</option>
+            <option [value]="'BAIXA'">Baixa</option>
+          </select>
+        </div>
+        
+        <div class="form-group row-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="aulaAssistida">
+            <span>Aula Assistida</span>
+          </label>
+        </div>
+
+        <div class="form-group" *ngIf="lessonForm.get('aulaAssistida')?.value">
+          <label>Data de Conclusão</label>
+          <input type="date" formControlName="dataAula"
+                 [class.invalid]="lessonForm.get('aulaAssistida')?.value && !lessonForm.get('dataAula')?.value && lessonForm.get('dataAula')?.touched">
+          <span class="error-msg" *ngIf="lessonForm.get('aulaAssistida')?.value && !lessonForm.get('dataAula')?.value && lessonForm.get('dataAula')?.touched">
+            Informe a data em que assistiu a aula
+          </span>
+        </div>
+      </form>
+    </app-modal-layout>

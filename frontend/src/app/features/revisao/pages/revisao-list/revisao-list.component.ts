@@ -10,6 +10,11 @@ import { RevisionActions } from '@store/revision/revision.actions';
 import { selectSessions, selectSummary, selectLoading, selectCurrentPage, selectTotalPages, selectPageSize, selectTotalElements } from '@store/revision/revision.reducer';
 import { RevisionService } from '@core/services/revision.service';
 
+
+/**
+ * Angular component for the Revisao List feature.
+ * @description Handles the presentation logic and user interactions for the Revisao List view.
+ */
 type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
 
 @Component({

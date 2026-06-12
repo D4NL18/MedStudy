@@ -1,5 +1,10 @@
 import { Lesson, LessonPriority } from '@core/models/lesson.model';
 
+
+/**
+ * Test fixture data for Lesson.
+ * @description Provides reusable mock objects for use in unit and integration tests.
+ */
 export const createMockLesson = (overrides?: Partial<Lesson>): Lesson => ({
   id: '1',
   grandeArea: 'Clínica Médica',

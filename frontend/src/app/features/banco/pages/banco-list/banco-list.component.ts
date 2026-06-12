@@ -12,11 +12,13 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { ExportService } from '@core/services/export/export.service';
 import { ActivatedRoute } from '@angular/router';
+import { CreateButtonComponent } from '@shared/components/create-button/create-button.component';
+import { ExportButtonComponent } from '@shared/components/export-button/export-button.component';
 
 @Component({
   selector: 'app-banco-list',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, MatDialogModule, MatPaginatorModule],
+  imports: [ButtonComponent, CommonModule, MatDialogModule, MatPaginatorModule, CreateButtonComponent, ExportButtonComponent],
   templateUrl: './banco-list.component.html',
   styleUrl: './banco-list.component.scss'
 })

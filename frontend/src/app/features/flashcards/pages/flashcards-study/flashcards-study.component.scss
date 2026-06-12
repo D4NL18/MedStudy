@@ -213,71 +213,73 @@
   flex-shrink: 0;
 }
 
-.result-btn {
-  flex: 1;
-  max-width: 250px;
-  height: 120px;
-  border-radius: 24px;
-  border: none;
-  color: white;
-  font-weight: 800;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  cursor: pointer;
-  transition: all 0.3s;
+::ng-deep {
+  .result-btn {
+    flex: 1;
+    max-width: 250px;
+    height: 120px;
+    border-radius: 24px;
+    border: none;
+    color: white;
+    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
 
-  span { font-size: 1.2rem; }
+    span { font-size: 1.2rem; }
 
-  &:hover { transform: scale(1.05); }
+    &:hover { transform: scale(1.05); }
 
-  &.wrong { 
-    background: #DC2626; 
-    box-shadow: 0 15px 30px rgba(220, 38, 38, 0.3);
-  }
-  &.correct { 
-    background: #059669; 
-    box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
-  }
-}
-
-.diff-btn {
-  flex: 1;
-  max-width: 200px;
-  height: 100px;
-  border-radius: 24px;
-  border: none;
-  color: white;
-  font-weight: 800;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  lucide-icon { opacity: 0.8; }
-  span { font-size: 1.1rem; }
-
-  &:hover { 
-    transform: translateY(-10px) scale(1.05);
-    filter: brightness(1.1);
+    &.wrong { 
+      background: #DC2626; 
+      box-shadow: 0 15px 30px rgba(220, 38, 38, 0.3);
+    }
+    &.correct { 
+      background: #059669; 
+      box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
+    }
   }
 
-  &.easy { 
-    background: linear-gradient(135deg, #10B981, #059669);
-    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
-  }
-  &.medium { 
-    background: linear-gradient(135deg, #F59E0B, #D97706);
-    box-shadow: 0 15px 30px rgba(245, 158, 11, 0.3);
-  }
-  &.hard { 
-    background: linear-gradient(135deg, #EF4444, #DC2626);
-    box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3);
+  .diff-btn {
+    flex: 1;
+    max-width: 200px;
+    height: 100px;
+    border-radius: 24px;
+    border: none;
+    color: white;
+    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    lucide-icon { opacity: 0.8; }
+    span { font-size: 1.1rem; }
+
+    &:hover { 
+      transform: translateY(-10px) scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    &.easy { 
+      background: linear-gradient(135deg, #10B981, #059669);
+      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+    }
+    &.medium { 
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      box-shadow: 0 15px 30px rgba(245, 158, 11, 0.3);
+    }
+    &.hard { 
+      background: linear-gradient(135deg, #EF4444, #DC2626);
+      box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3);
+    }
   }
 }
 

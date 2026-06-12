@@ -1,3 +1,7 @@
+/**
+ * TypeScript model/interface for Profile.
+ * @description Defines the data shape used by the application for Profile entities.
+ */
 export interface Profile {
   id?: string;
   userId?: string;

@@ -83,10 +83,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/flashcards/pages/flashcards-list/flashcards-list.component').then(m => m.FlashcardsListComponent)
       },
       {
-        path: 'flashcards/novo',
-        loadComponent: () => import('./features/flashcards/pages/flashcard-form/flashcard-form.component').then(m => m.FlashcardFormComponent)
-      },
-      {
         path: 'perfil',
         loadComponent: () => import('./features/perfil/perfil.component').then(m => m.PerfilComponent)
       },

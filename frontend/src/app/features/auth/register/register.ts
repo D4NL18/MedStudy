@@ -5,6 +5,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
+
+/**
+ * Register.
+ * @description Provides register functionality.
+ */
 @Component({
   selector: 'app-register',
   standalone: true,

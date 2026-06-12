@@ -20,6 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Service handling authentication operations such as login, registration, and token management.
+ */
 @Service
 public class AuthService {
 
@@ -49,73 +52,97 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Authenticates a user and generates JWT tokens.
+     *
+     * @param request the login request containing credentials
+     * @return an {@link AuthResponse} containing the access and refresh tokens
+     */
     @Transactional
     public AuthResponse authenticate(LoginRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
 
             User user = (User) authentication.getPrincipal();
             String jwtToken = jwtService.generateToken(user);
 
-            // Rotate Refresh Token: Create new one
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
-            loginAttemptService.loginSucceeded(request.email());
+            loginAttemptService.loginSucceeded(request.getEmail());
 
             return new AuthResponse(jwtToken, refreshToken.getToken());
         } catch (Exception e) {
-            loginAttemptService.loginFailed(request.email());
+            loginAttemptService.loginFailed(request.getEmail());
             throw e;
         }
     }
 
+    /**
+     * Registers a new user and generates initial JWT tokens.
+     *
+     * @param request the registration request containing user details
+     * @return an {@link AuthResponse} containing the access and refresh tokens
+     */
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este e-mail já está em uso. Tente fazer login ou recupere sua senha.");
         }
 
         User user = new User();
-        user.setName(request.name());
-        user.setEmail(request.email());
-        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("ROLE_USER");
         userRepository.save(user);
 
-        // Auto-login after registration
         String jwtToken = jwtService.generateToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
         return new AuthResponse(jwtToken, refreshToken.getToken());
     }
 
+    /**
+     * Refreshes an access token using a valid refresh token.
+     *
+     * @param request the token refresh request
+     * @return a new {@link AuthResponse} containing the rotated tokens
+     */
     @Transactional
     public AuthResponse refreshToken(TokenRefreshRequest request) {
-        return refreshTokenService.findByToken(request.refreshToken())
+        return refreshTokenService.findByToken(request.getRefreshToken())
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     String token = jwtService.generateToken(user);
-                    // Rotate: Delete old, create new
-                    refreshTokenService.deleteByToken(request.refreshToken());
+                    refreshTokenService.deleteByToken(request.getRefreshToken());
                     RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user.getId());
                     return new AuthResponse(token, newRefreshToken.getToken());
                 })
                 .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
     }
 
+    /**
+     * Logs out a user by deleting their refresh token.
+     *
+     * @param refreshToken the refresh token string to delete
+     */
     @Transactional
     public void logout(String refreshToken) {
         refreshTokenService.deleteByToken(refreshToken);
     }
 
+    /**
+     * Initiates the password recovery process by sending an email with a reset link.
+     *
+     * @param email the user's email address
+     */
     public void forgotPassword(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        // Generate a 15-min token for reset
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "reset");
         String resetToken = jwtService.generateToken(claims, user);
@@ -128,6 +155,12 @@ public class AuthService {
         );
     }
 
+    /**
+     * Resets the user's password using a valid reset token.
+     *
+     * @param token the password reset token
+     * @param newPassword the new password
+     */
     @Transactional
     public void resetPassword(String token, String newPassword) {
         String email = jwtService.extractUsername(token);

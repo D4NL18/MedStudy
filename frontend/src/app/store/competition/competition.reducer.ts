@@ -2,6 +2,11 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import { Competition, LeaderboardEntry } from '@core/models/competition.model';
 import { CompetitionActions } from './competition.actions';
 
+
+/**
+ * NgRx reducer for the Competition feature slice.
+ * @description Handles state transitions in response to dispatched Competition actions.
+ */
 export interface CompetitionState {
   competitions: Competition[];
   leaderboards: Record<string, LeaderboardEntry[]>;

@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+/** Mapper for converting between {@link Profile} entities and DTOs. */
 public interface ProfileMapper {
 
     @Mapping(source = "user.id", target = "userId")

@@ -1,6 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import { QuestionSession, QuestionSessionFilters } from '@core/models/question-session.model';
 
+
+/**
+ * NgRx actions for the Banco feature slice.
+ * @description Defines the action creators used to dispatch state changes for Banco.
+ */
 export const loadSessions = createAction(
   '[Banco] Load Sessions',
   props<{ filters: QuestionSessionFilters; append: boolean }>()

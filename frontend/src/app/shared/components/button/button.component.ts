@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { RippleDirective } from '../../directives/ripple/ripple.directive';
 
+
+/**
+ * Angular component for the Button feature.
+ * @description Handles the presentation logic and user interactions for the Button view.
+ */
 export type ButtonVariant = 'primary' | 'secondary' | 'cta' | 'icon' | 'destructive' | 'outline' | 'ghost' | string;
 
 @Component({

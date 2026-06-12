@@ -1,3 +1,7 @@
+/**
+ * TypeScript model/interface for Simulado.
+ * @description Defines the data shape used by the application for Simulado entities.
+ */
 export interface AreaPerformance {
   area: string;
   totais: number;

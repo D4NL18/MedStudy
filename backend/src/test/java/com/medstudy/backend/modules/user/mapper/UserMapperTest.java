@@ -24,7 +24,7 @@ class UserMapperTest {
         UserResponse response = mapper.toResponse(user);
         
         assertNotNull(response);
-        assertEquals("Test", response.name());
-        assertEquals("test@test.com", response.email());
+        assertEquals("Test", response.getName());
+        assertEquals("test@test.com", response.getEmail());
     }
 }

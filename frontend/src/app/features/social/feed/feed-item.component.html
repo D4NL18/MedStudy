@@ -1,0 +1,41 @@
+<div class="feed-item-card glass">
+      <div class="card-glow"></div>
+      
+      <div class="feed-header">
+        <div class="user-info">
+          <div class="avatar-wrap">
+            <div class="avatar-placeholder">U</div>
+          </div>
+          <div class="user-meta">
+            <strong>Usuário ID: {{ event.userId }}</strong>
+            <span class="time-ago">Há pouco</span>
+          </div>
+        </div>
+        <span class="feed-type" *ngIf="event.type !== 'BADGE_EARNED'">{{ event.type }}</span>
+      </div>
+      
+      <div class="feed-body" *ngIf="parsedMetadata">
+        <div class="badge-display" *ngIf="event.type === 'BADGE_EARNED'">
+          <div class="badge-icon-wrap">
+            <div class="badge-icon">🏆</div>
+          </div>
+          <div class="badge-info">
+            <h4>{{ parsedMetadata.badgeName }}</h4>
+            <p>{{ parsedMetadata.description }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="feed-body text-content" *ngIf="!parsedMetadata">
+        <p>{{ getFeedMessage() }}</p>
+      </div>
+      
+      <div class="feed-actions">
+        <app-button variant="ghost" customClass="btn-interact clap" [class.active]="interacted" [disabled]="interacted" (onClick)="onInteract('CLAP')">
+          <span class="icon">👏</span> Parabéns!
+        </app-button>
+        <app-button variant="ghost" customClass="btn-interact cheer" [class.active]="interacted" [disabled]="interacted" (onClick)="onInteract('CHEER')">
+          <span class="icon">🎉</span> Uau!
+        </app-button>
+      </div>
+    </div>

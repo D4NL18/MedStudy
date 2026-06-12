@@ -17,6 +17,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { ExportService } from '@core/services/export/export.service';
 import { RouterLink } from '@angular/router';
 import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dashboard-skeleton.component';
+import { ExportButtonComponent } from '@shared/components/export-button/export-button.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,7 @@ import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dash
     TopErrorsRankingComponent,
     MatDialogModule,
     DashboardSkeletonComponent,
+    ExportButtonComponent,
     RouterLink
   ],
   templateUrl: './dashboard.component.html',

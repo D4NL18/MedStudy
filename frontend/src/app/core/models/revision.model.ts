@@ -1,3 +1,7 @@
+/**
+ * TypeScript model/interface for Revision.
+ * @description Defines the data shape used by the application for Revision entities.
+ */
 export interface RevisionSummary {
   atrasadas: number;
   hoje: number;

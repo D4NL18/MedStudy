@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+/** Mapper for converting between {@link Competition} entities and DTOs. */
 public abstract class CompetitionMapper {
 
     @Autowired

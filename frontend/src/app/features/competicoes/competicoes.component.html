@@ -18,21 +18,21 @@
     <!-- Sidebar List -->
     <div class="competitions-sidebar glass-card">
       <div class="tabs-navigation">
-        <app-button [class.active]="activeTab() === 'active'" (onClick)="changeTab('active')">
+        <button [class.active]="activeTab() === 'active'" (click)="changeTab('active')">
           <lucide-icon name="users" class="tab-icon"></lucide-icon>
           Grupos
           <span class="tab-badge" *ngIf="activeGroups().length > 0">{{ activeGroups().length }}</span>
-        </app-button>
-        <app-button [class.active]="activeTab() === 'duels'" (onClick)="changeTab('duels')">
+        </button>
+        <button [class.active]="activeTab() === 'duels'" (click)="changeTab('duels')">
           <lucide-icon name="flame" class="tab-icon"></lucide-icon>
           Duelos 1v1
           <span class="tab-badge" *ngIf="activeDuels().length > 0">{{ activeDuels().length }}</span>
-        </app-button>
-        <app-button [class.active]="activeTab() === 'invites'" (onClick)="changeTab('invites')">
+        </button>
+        <button [class.active]="activeTab() === 'invites'" (click)="changeTab('invites')">
           <lucide-icon name="bell" class="tab-icon"></lucide-icon>
           Convites
           <span class="tab-badge warning" *ngIf="pendingInvites().length > 0">{{ pendingInvites().length }}</span>
-        </app-button>
+        </button>
       </div>
 
       <div class="cards-list">
@@ -262,7 +262,7 @@
   </div>
 
   <!-- Create Challenge Modal -->
-  <app-modal-layout *ngIf="showCreateModal()" title="Forjar Novo Desafio" [loading]="creating()" saveText="Começar Desafio!" (close)="closeCreateModal()" (save)="onCreateSubmit()"><form [formGroup]="competitionForm" class="modal-form">
+  <app-modal-layout *ngIf="showCreateModal()" title="Forjar Novo Desafio" [loading]="creating()" saveText="Comeï¿½ar Desafio!" (close)="closeCreateModal()" (save)="onCreateSubmit()"><form [formGroup]="competitionForm" class="modal-form">
         <div class="form-grid">
           <!-- Title -->
           <div class="form-group full-width">

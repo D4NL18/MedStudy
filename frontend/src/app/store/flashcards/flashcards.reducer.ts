@@ -2,6 +2,11 @@ import { createFeature, createReducer, on } from '@ngrx/store';
 import { Flashcard } from '@core/models/flashcard.model';
 import { FlashcardsActions } from './flashcards.actions';
 
+
+/**
+ * NgRx reducer for the Flashcards feature slice.
+ * @description Handles state transitions in response to dispatched Flashcards actions.
+ */
 export interface FlashcardsState {
   queue: Flashcard[];
   allCards: Flashcard[];

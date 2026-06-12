@@ -9,7 +9,7 @@
         <lucide-icon name="rotate-cw" [size]="18"></lucide-icon>
         Resetar Progresso
       </app-button>
-      <app-button variant="btn-primary" routerLink="/flashcards/novo">
+      <app-button variant="btn-primary" (onClick)="createCard()">
         <lucide-icon name="plus" [size]="18"></lucide-icon>
         Novo Card
       </app-button>
@@ -76,7 +76,9 @@
              <span *ngIf="!card.dificuldadeUltima">—</span>
           </td>
           <td class="actions-cell">
-            <app-button variant="icon-btn" aria-label="Editar flashcard"><lucide-icon name="edit" [size]="16"></lucide-icon></app-button>
+            <app-button variant="icon-btn" (onClick)="editCard(card)" aria-label="Editar flashcard">
+              <lucide-icon name="edit" [size]="16"></lucide-icon>
+            </app-button>
             <app-button variant="icon-btn delete" (onClick)="deleteCard(card.id)" aria-label="Excluir flashcard">
               <lucide-icon name="trash-2" [size]="16"></lucide-icon>
             </app-button>

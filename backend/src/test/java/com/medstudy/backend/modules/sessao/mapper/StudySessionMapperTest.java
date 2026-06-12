@@ -40,7 +40,7 @@ class StudySessionMapperTest {
         StudySessionResponse response = mapper.toResponse(entity);
 
         assertNotNull(response);
-        assertEquals(entity.getId(), response.id());
-        assertEquals("Clinica", response.grandeArea());
+        assertEquals(entity.getId(), response.getId());
+        assertEquals("Clinica", response.getGrandeArea());
     }
 }

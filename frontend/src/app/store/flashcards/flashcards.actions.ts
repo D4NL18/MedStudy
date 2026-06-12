@@ -1,6 +1,11 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Flashcard, FlashcardStudyRating } from '@core/models/flashcard.model';
 
+
+/**
+ * NgRx actions for the Flashcards feature slice.
+ * @description Defines the action creators used to dispatch state changes for Flashcards.
+ */
 export const FlashcardsActions = createActionGroup({
   source: 'Flashcards',
   events: {

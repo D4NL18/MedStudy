@@ -21,6 +21,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+/** Entity representing a flashcard belonging to a user for revision purposes. */
 public class Flashcard {
 
     @Id

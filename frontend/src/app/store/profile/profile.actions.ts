@@ -1,6 +1,11 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Profile, ProfileCheckResponse } from '@core/models/profile.model';
 
+
+/**
+ * NgRx actions for the Profile feature slice.
+ * @description Defines the action creators used to dispatch state changes for Profile.
+ */
 export const ProfileActions = createActionGroup({
   source: 'Profile',
   events: {

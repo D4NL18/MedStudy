@@ -30,6 +30,11 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginatorIntl } from './core/config/custom-paginator-intl';
 
+
+/**
+ * App.Config.
+ * @description Provides app.config functionality.
+ */
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },

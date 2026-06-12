@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+
+/**
+ * Angular service responsible for Feed-related HTTP communication and business logic.
+ * @description Provides methods to interact with the backend API for Feed operations.
+ */
 export interface FeedEvent {
   id: number;
   userId: number;
