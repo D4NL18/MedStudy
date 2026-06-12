@@ -90,6 +90,89 @@ Seu ambiente, suas regras.
 
 ---
 
+## 🏗️ Arquitetura e Domínios de Negócio
+
+A arquitetura do projeto adota uma abordagem modular orientada ao domínio (Domain-Driven). Cada módulo do backend é espelhado por componentes autônomos no frontend:
+
+### 🔐 Gestão de Identidade e Acesso (`auth`, `user`, `profile`)
+- **Autenticação Segura**: JWT via cookies `HttpOnly` para mitigar ataques XSS.
+- **Prevenção de Abusos**: Bloqueio temporário após tentativas de login falhas (`LoginAttemptService`).
+- **Sessões Prolongadas**: Rotação de *Refresh Tokens* para manter a sessão sem comprometer a segurança.
+
+### 🧪 Avaliações e Simulações (`simulado`)
+- **Geração Dinâmica**: Simulados por filtros de instituição, grande área e subtema.
+- **Autocorreção em Tempo Real**: Submissões retroalimentam as estatísticas globais do aluno.
+
+### 🧠 Active Recall e Repetição Espaçada (`flashcard`, `revision`)
+- **Agendamento Algorítmico**: `SpacedRepetitionService` calcula a próxima revisão com base no feedback (Fácil/Médio/Difícil), encurtando intervalos em erros e expandindo em acertos.
+- **Fila de Revisão Diária**: Apenas cartões com maturação expirada são apresentados.
+
+### 📊 Telemetria e Hábitos de Estudo (`sessao`, `aula`)
+- **Rastreamento de Sessões**: Valida e contabiliza o tempo de estudo ativo, alimentando o cálculo de constância (streak).
+- **Controle de Progresso**: Checkpoints de visualização impedem perda de contexto.
+
+### 📈 Inteligência de Dados (`analytics`, `dashboard`)
+- **Agregação Analítica**: `AnalyticsService` processa dados assíncronos de sessões, simulados e revisões para plotar gráficos de evolução mensal e calcular Streaks.
+
+### 🏆 Engajamento, Gamificação e Social (`feed`, `friendship`, `competition`)
+- **Distribuição de Conquistas**: `BadgeSchedulerService` audita marcos periodicamente (ex: "7 dias seguidos", "100 acertos em Cirurgia").
+- **Feed em Tempo Real**: SSE (Server-Sent Events) para atualizações imediatas de conquistas de amigos.
+- **Competições Ranqueadas**: Pontuações atualizadas em lote por critérios específicos por especialidade.
+
+### 🌐 Endpoints da API
+
+| Grupo | Prefixo |
+|---|---|
+| Segurança & Identidade | `/api/auth`, `/api/profiles` |
+| Métricas & Dashboard | `/api/dashboard`, `/api/analytics` |
+| Conteúdo Didático | `/api/lessons`, `/api/study-sessions` |
+| Prática Acadêmica | `/api/simulados`, `/api/flashcards`, `/api/revisoes` |
+| Social & Feed | `/api/feed`, `/api/friendships`, `/api/notifications` |
+| Gamificação | `/api/competitions`, `/api/badges` |
+| Utilitários | `/api/export` (CSV/PDF) |
+
+---
+
+## 📐 Padrões de Engenharia
+
+### Tipagem Forte e Contratos Rigorosos
+- Proibido o uso de `any` no TypeScript e omissão de tipos genéricos no Java.
+- Comunicação entre camadas mediada por **Interfaces** (Frontend) e **DTOs/Records** (Backend) — entidades de banco nunca são expostas diretamente.
+
+### Princípio da Responsabilidade Única (SRP)
+- Componentes e Serviços com uma única razão para mudar.
+- Injeção de dependências via construtor em Spring Boot e Angular.
+
+### Resiliência e Tratamento de Erros
+- *Fail-Fast*: validação nas fronteiras do sistema (`@Valid` no backend, Reactive Forms no frontend).
+- `GlobalExceptionHandler` (`@ControllerAdvice`) garante que todos os erros sigam um contrato previsível.
+
+---
+
+## 🔄 Workflow de Desenvolvimento
+
+### Backend (Spring Boot)
+1. **Entidade** → `@Entity` em `modules/seu_modulo/entity/`
+2. **Repositório** → `JpaRepository` em `.../repository/`
+3. **DTOs** → `Records` em `.../dto/` — nunca trafegue a entidade de volta ao cliente
+4. **Service** → `@Service` com toda lógica de negócio — **proibido** regras em Controllers
+5. **Controller** → `@RestController` com semântica HTTP correta
+6. **Testes** → Mockito + `./mvnw test` (zero regressão)
+
+### Frontend (Angular 18)
+1. **Interfaces** → Espelham os DTOs do backend em `/shared/models/`
+2. **Services** → `@Injectable` em `/core/services/` com `Observable<T>` tipado
+3. **Páginas** → `/features/seu_modulo/pages/`
+4. **Componentes** → `/features/seu_modulo/components/` ou `/shared/components/`
+5. **Design System** → Herde variáveis globais CSS — valores hardcoded serão rejeitados
+
+### Checklist antes do PR
+- [ ] Testes Jasmine/Karma passando (`npm test`)
+- [ ] Smoke test manual em `http://localhost:4200`
+- [ ] Zero regressão em fluxos preexistentes
+
+---
+
 ## 🛠️ Stack Tecnológico
 
 - **Frontend**: [Angular 18](https://angular.dev/) (Standalone Components, NgRx, RxJS, Signals)
