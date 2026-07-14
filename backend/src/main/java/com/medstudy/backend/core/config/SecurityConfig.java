@@ -1,6 +1,7 @@
 package com.medstudy.backend.core.config;
 
 import com.medstudy.backend.core.security.JwtAuthenticationFilter;
+import com.medstudy.backend.core.security.SubscriptionStatusFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,13 +32,16 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SubscriptionStatusFilter subscriptionStatusFilter;
     private final UserDetailsService userDetailsService;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
+            SubscriptionStatusFilter subscriptionStatusFilter,
             UserDetailsService userDetailsService
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.subscriptionStatusFilter = subscriptionStatusFilter;
         this.userDetailsService = userDetailsService;
     }
 
@@ -54,6 +58,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
+                                "/api/subscriptions/**",
+                                "/api/webhooks/**",
                                 "/api/feed/test-trigger",
                                 "/api/docs/**",
                                 "/v3/api-docs/**",
@@ -67,6 +73,7 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(subscriptionStatusFilter, JwtAuthenticationFilter.class)
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.deny())
                         .contentSecurityPolicy(csp -> csp

@@ -42,6 +42,8 @@ class AuthServiceTest {
     private EmailService emailService;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private com.medstudy.backend.modules.subscription.repository.SubscriptionRepository subscriptionRepository;
 
     @InjectMocks
     private AuthService authService;
@@ -106,5 +108,31 @@ class AuthServiceTest {
 
         assertEquals("encoded-password", user.getPassword());
         verify(userRepository).save(user);
+    }
+
+    @Test
+    void register_ShouldCreateUserAndSubscriptionWithTrial() {
+        com.medstudy.backend.modules.auth.dto.RegisterRequest request = new com.medstudy.backend.modules.auth.dto.RegisterRequest("New User", "new@example.com", "password123");
+        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User u = invocation.getArgument(0);
+            return u;
+        });
+        when(jwtService.generateToken(any(User.class))).thenReturn("jwt-token");
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setToken("refresh-token");
+        when(refreshTokenService.createRefreshToken(any())).thenReturn(refreshToken);
+
+        AuthResponse response = authService.register(request);
+
+        assertNotNull(response);
+        assertEquals("jwt-token", response.getAccessToken());
+        assertEquals("refresh-token", response.getRefreshToken());
+
+        verify(subscriptionRepository).save(argThat(sub -> 
+            sub.getStatus() == com.medstudy.backend.modules.subscription.domain.SubscriptionStatus.TRIAL &&
+            sub.getTrialEndDate() != null
+        ));
     }
 }
