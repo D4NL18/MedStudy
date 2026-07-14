@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Planos de Usuário e Monetização (PIX)
 status: executing
-last_updated: "2026-07-14T19:51:15Z"
-last_activity: 2026-07-14 -- Phase 40 completed and verified
+last_updated: "2026-07-14T20:03:00Z"
+last_activity: 2026-07-14 -- Phase 41 completed and verified
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 1
   completed_plans: 1
-  percent: 25
+  percent: 50
 ---
 
 # STATE.md — MedStudy Project Memory
@@ -22,17 +22,17 @@ See: .planning/PROJECT.md (updated 2026-05-11)
 **Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:**
 
-Phase 41 — Integração API PIX Banco do Brasil & Webhooks (Spring Boot)
+Phase 42 — Painel Administrativo de Assinaturas (Single Admin)
 
 ---
 
 ## Current Status
 
-**Phase:** 40 of 43 (Modelo de Assinaturas & Motor de Trial Freemium no Backend)
+**Phase:** 41 of 43 (Integração API PIX Banco do Brasil & Webhooks)
 **Milestone:** v1.5 — Planos de Usuário e Monetização (PIX)
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Ready for Phase 41
+**Status:** Ready for Phase 42
 
 ---
 
@@ -44,6 +44,7 @@ Phase 41 — Integração API PIX Banco do Brasil & Webhooks (Spring Boot)
 - [x] Milestone v1.3 Shipped (Phases 29-35)
 - [x] Milestone v1.4 Shipped (Phases 36-39)
 - [x] Phase 40: Modelo de Assinaturas & Motor de Trial Freemium no Backend (Completed & Validated)
+- [x] Phase 41: Integração API PIX Banco do Brasil & Webhooks (Spring Boot) (Completed & Validated)
 
 ---
 
@@ -52,11 +53,12 @@ Phase 41 — Integração API PIX Banco do Brasil & Webhooks (Spring Boot)
 - None
 
 ---
-*STATE.md updated: 2026-07-14 after Phase 40 transition*
+
+*STATE.md updated: 2026-07-14 after Phase 41 transition*
 
 ## Current Position
 
-Phase: 41 (Integração API PIX Banco do Brasil & Webhooks) — PLANNED
+Phase: 42 (Painel Administrativo de Assinaturas) — PLANNED
 Plan: 0 of 1
 Status: Ready for Phase 41
 Last activity: 2026-07-14 -- Phase 40 completed and verified

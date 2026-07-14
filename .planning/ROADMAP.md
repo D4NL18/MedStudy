@@ -75,7 +75,7 @@
 - Requirements: PAYWALL-01, PAYWALL-02
 
 ### Phase 41: Integração API PIX Banco do Brasil & Webhooks (Spring Boot)
-- Status: Planned
+- Status: Complete (1/1 plans)
 - Description: Cliente OAuth2 + mTLS para API BB PIX, endpoints REST de geração de PIX Dinâmico, webhook receiver seguro e mecanismo de fallback ("Já Paguei") com suporte a profile dev `mock-pix`.
 - Requirements: PIX-01, PIX-02, PIX-03, PIX-04
 
@@ -99,7 +99,7 @@
 | 29-35 | v1.3      | 100%           | Shipped | 2026-07-13|
 | 36-39 | v1.4      | 100%           | Shipped | 2026-07-14|
 | 40    | v1.5      | 1/1            | Complete| 2026-07-14|
-| 41    | v1.5      | 0/1            | Planned | -          |
+| 41    | v1.5      | 1/1            | Complete| 2026-07-14|
 | 42    | v1.5      | 0/1            | Planned | -          |
 | 43    | v1.5      | 0/1            | Planned | -          |
 
