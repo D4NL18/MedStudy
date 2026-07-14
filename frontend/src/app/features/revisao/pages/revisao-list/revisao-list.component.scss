@@ -112,6 +112,22 @@
   &.futuras .list-header { background: linear-gradient(90deg, #10B981, #059669); }
   &.concluidas .list-header { background: linear-gradient(90deg, #455A64, #263238); }
 
+  ::ng-deep .reorganizar-btn .btn {
+    background: transparent !important;
+    color: white !important;
+    border: 1.5px solid white !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15) !important;
+      transform: none !important;
+      border-color: white !important;
+      box-shadow: none !important;
+    }
+  }
+
   .search-box {
     display: flex;
     align-items: center;

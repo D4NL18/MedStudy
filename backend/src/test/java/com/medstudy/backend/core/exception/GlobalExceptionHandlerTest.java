@@ -22,7 +22,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = GlobalExceptionHandlerTest.TestController.class)
+@WebMvcTest(controllers = GlobalExceptionHandlerTest.TestController.class, excludeFilters = {
+        @org.springframework.context.annotation.ComponentScan.Filter(
+                type = org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE,
+                classes = com.medstudy.backend.core.security.JwtAuthenticationFilter.class)
+})
 @Import(GlobalExceptionHandler.class)
 @AutoConfigureMockMvc(addFilters = false) // Bypass Spring Security filters to hit the handler directly
 class GlobalExceptionHandlerTest {

@@ -9,9 +9,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.mail.javamail.JavaMailSender;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 public class SecurityConfigTest {
+
+    @MockitoBean
+    private JavaMailSender javaMailSender;
 
     @Autowired
     private MockMvc mockMvc;

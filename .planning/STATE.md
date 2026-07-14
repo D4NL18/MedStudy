@@ -1,42 +1,38 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Code Quality, Performance & UX Polish
-status: executing
-last_updated: "2026-06-11T16:15:50.964Z"
-last_activity: 2026-06-11 -- Phase 33.1 planning complete
+milestone: v1.4
+milestone_name: Reorganiza��o Inteligente de Revis�es
+status: Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
+last_updated: "2026-07-14T01:53:08.515Z"
+last_activity: 2026-07-14
 progress:
-  total_phases: 35
-  completed_phases: 17
-  total_plans: 38
-  completed_plans: 29
-  percent: 76
+  total_phases: 4
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 3
+  percent: 100
 ---
 
-# STATE.md — MedStudy Project Memory
+# STATE.md � MedStudy Project Memory
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-11)
+See: .planning/PROJECT.md (updated 2026-05-11)
 
-**Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
+**Core value:** O estudante registra desempenho em quest�es, acompanha revis�es e v� sua evolu��o � com dados seguros, r�pidos e confi�veis.
 **Current focus:**
 
-Phase 30 — arquitetura-frontend-reuso-de-componentes-angular
-
-    - Garantir conformidade de privacidade total e filtros automáticos no backend.
-    - Implementar painel de configurações granulares no frontend.
-    - Testes rigorosos de controle de acesso aos endpoints de perfil.
+Phase 38 — interface-do-usu-rio-e-gerenciamento-de-estado-angular
 
 ---
 
 ## Current Status
 
-**Phase:** 25 of 26
-**Milestone:** v1.2 — Socialização Aprofundada
+**Phase:** 39 of 39 (feedback visual e ux polish)
+**Milestone:** v1.4 � Reorganiza��o Inteligente de Revis�es
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Ready to execute
+**Status:** Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
 
 ---
 
@@ -44,23 +40,23 @@ Phase 30 — arquitetura-frontend-reuso-de-componentes-angular
 
 - [x] Milestone v1.0 Shipped (Phases 1-15)
 - [x] Milestone v1.1 Shipped (Phases 16-21)
-- [x] PROJECT.md, REQUIREMENTS.md and ROADMAP.md created/updated for v1.2
-- [x] Phase 22: Perfis de Usuário & Cadastro de Informações (Shipped & Validated)
-- [x] Phase 23: Sistema de Conexões (Amigos) & Busca (Shipped & Validated)
-- [x] Phase 24: Configurações Granulares de Privacidade (Shipped & Validated)
+- [x] Milestone v1.2 Shipped (Phases 22-28)
+- [x] Milestone v1.3 Shipped (Phases 29-35)
+- [x] Phase 36: Algoritmo de Redistribui��o no Backend (Shipped & Validated)
+- [x] Phase 37: Endpoints da API e Configura��es de Usu�rio (Shipped & Validated)
 
 ---
 
 ## Open Questions / Decisions Pending
 
-- [ ] Grupos: Revisão do plano de migração das tabelas e do pódio 3D da UI pelo usuário.
-- [ ] Feed: O feed de atividades deve armazenar eventos de forma persistente ou gerar em tempo real nas consultas?
+- None
 
 ---
-*STATE.md updated: 2026-05-20 after Phase 25 planning preparation*
+*STATE.md updated: 2026-07-13 after Phase 37 transition*
 
 ## Current Position
 
-Phase: 33.1 — PENDING
-Status: Ready to execute
-Last activity: 2026-06-11 -- Phase 33.1 planning complete
+Phase: 39 (feedback-visual-e-ux-polish) — EXECUTION_COMPLETED
+Plan: .planning/phases/39-feedback-visual-e-ux-polish/39-PLAN.md
+Status: Phase complete
+Last activity: 2026-07-14

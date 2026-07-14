@@ -12,9 +12,9 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 ## Requirements
 
-## Current Milestone: v1.3 [Planning]
+## Current Milestone: v1.4 [Active]
 
-**Goal:** [TBD]
+**Goal:** Implementar reorganização inteligente de revisões.
 
 ### Validated (v1.2 Socialização Aprofundada)
 - ✓ Perfis de usuário com dados básicos (faculdade, semestre, avatar).
@@ -63,6 +63,16 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 </details>
 
+### Active (v1.4 Reorganização Inteligente de Revisões)
+- [ ] Novo botão para reorganizar revisões atrasadas de forma inteligente.
+- [ ] Algoritmo que redistribui carga de revisões pendentes para evitar acúmulos excessivos num mesmo dia.
+
+### Planned (v1.5 Planos de Usuário e Monetização - PIX)
+- [ ] Implementação de paywall/bloqueio total do app para contas não pagantes.
+- [ ] Integração de pagamento anual via QR Code PIX Dinâmico.
+- [ ] Sem exposição ou processamento direto de dados bancários (via gateway de pagamentos PIX).
+- [ ] Painel admin ou interface de gerência para conceder o plano gratuitamente a usuários específicos.
+
 ### Active (v2.0 Planning)
 - [ ] Implementação de Testes E2E com Cypress (Frontend)
 - [ ] Autenticação Social (Google, Apple)
@@ -80,10 +90,18 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 ## Context
 
-**Shipped v1.1:**
+**Shipped v1.3:**
+- Limpeza e refatoração do backend.
+- Padronização completa e documentação de DTOs.
+- Hardening avançado de segurança focado no OWASP Top 10.
+- Expansão da cobertura de testes.
+- Refatoração do frontend e melhorias no UX (animações e fluidez).
+
+**Shipped v1.1 e v1.2:**
 - O projeto foi estendido com exportação de dados via bibliotecas híbridas HTML-to-PDF (FlyingSaucer + Thymeleaf).
 - O Frontend Angular foi configurado como um PWA, suportando instalação e exibindo banners de erro offline graças ao `ApiUrlInterceptor`.
 - Implementados sistemas engajadores como Gamificação e Notificações (badges e dropdowns reativos baseados em Signals/NgRx).
+- Lançamento do módulo de socialização aprofundada com sistema de amigos, perfis e privacidade granular.
 - Cobertura de testes mantida em backend e frontend ao longo da expansão, e scores de Performance/Acessibilidade elevados a 100 no Lighthouse.
 
 **Legado analisado (`estudos-lari`):**
@@ -151,4 +169,4 @@ Este documento evolui a cada transição de fase e milestone.
 
 ---
 ---
-*Last updated: 2026-05-18 after v1.1 milestone completion.*
+*Last updated: 2026-07-13 after v1.3 milestone completion.*

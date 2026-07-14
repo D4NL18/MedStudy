@@ -124,11 +124,20 @@ public class JwtService {
     }
 
     private SecretKey getSignInKey() {
+        byte[] keyBytes;
         try {
-            byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-            return Keys.hmacShaKeyFor(keyBytes);
+            keyBytes = Decoders.BASE64.decode(secretKey);
+            if (keyBytes.length < 32) {
+                throw new IllegalArgumentException("Decoded key is less than 256 bits");
+            }
         } catch (Exception e) {
-            return Keys.hmacShaKeyFor(secretKey.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            keyBytes = secretKey.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            if (keyBytes.length < 32) {
+                byte[] padded = new byte[32];
+                System.arraycopy(keyBytes, 0, padded, 0, keyBytes.length);
+                keyBytes = padded;
+            }
         }
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

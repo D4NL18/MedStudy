@@ -37,4 +37,32 @@ export class RevisionEffects {
       )
     )
   );
+
+  previewRedistribution$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RevisionActions.previewRedistribution),
+      mergeMap(({ request }) =>
+        this.revisionService.previewRedistribution(request).pipe(
+          map(response => RevisionActions.previewRedistributionSuccess({ response })),
+          catchError(error => of(RevisionActions.previewRedistributionFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  applyRedistribution$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RevisionActions.applyRedistribution),
+      mergeMap(({ draftId }) =>
+        this.revisionService.applyRedistribution(draftId).pipe(
+          mergeMap(() => [
+            RevisionActions.applyRedistributionSuccess(),
+            RevisionActions.loadSummary(),
+            RevisionActions.loadSessions({ filter: 'atrasadas' })
+          ]),
+          catchError(error => of(RevisionActions.applyRedistributionFailure({ error: error.message })))
+        )
+      )
+    )
+  );
 }

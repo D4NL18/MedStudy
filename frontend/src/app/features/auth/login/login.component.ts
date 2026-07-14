@@ -47,4 +47,29 @@ export class LoginComponent {
   togglePassword() {
     this.showPassword.update(v => !v);
   }
+
+  get friendlyError(): string | null {
+    const currentError = this.error();
+    if (!currentError) return null;
+    
+    const lowerError = currentError.toLowerCase();
+
+    if (lowerError.includes('jwt') || lowerError.includes('96 bits') || lowerError.includes('hmac-sha')) {
+      return 'Erro interno do servidor: Configuração de segurança inválida. Por favor, contate o suporte.';
+    }
+    
+    if (lowerError.includes('bad credentials') || lowerError.includes('invalid credentials') || lowerError.includes('401') || lowerError.includes('403')) {
+      return 'E-mail ou senha incorretos.';
+    }
+
+    if (lowerError.includes('connection refused') || lowerError.includes('unknown error') || lowerError.includes('0 unknown')) {
+      return 'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.';
+    }
+
+    if (currentError.length > 100 || currentError.includes('Exception') || currentError.includes('java.')) {
+      return 'Ocorreu um erro inesperado ao fazer login. Tente novamente mais tarde.';
+    }
+
+    return currentError;
+  }
 }

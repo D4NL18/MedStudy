@@ -29,3 +29,21 @@ export interface PaginatedResponse<T> {
   size: number;
   number: number;
 }
+
+export interface RedistributionPreviewRequest {
+  targetEndDate: string;
+}
+
+export interface DailyLoadDto {
+  date: string;
+  originalCount: number;
+  newCount: number;
+}
+
+export interface RedistributionDraftResponse {
+  draftId: string;
+  totalFlashcardsRedistributed: number;
+  daysSpread: number;
+  warningLimitExceeded: boolean;
+  dailyLoads: DailyLoadDto[];
+}
