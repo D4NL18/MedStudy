@@ -2,69 +2,77 @@
 
 ## Milestones
 
-- ✅ **v1.0 MVP** — Phases 1-15 (shipped 2026-05-11) [v1.0-ROADMAP.md](.planning/milestones/v1.0-ROADMAP.md)
-- ✅ **v1.1 Legacy Convergence** — Phases 16-21 (shipped 2026-05-18) [v1.1-ROADMAP.md](.planning/milestones/v1.1-ROADMAP.md)
-- ✅ **v1.2 Socialização Aprofundada** — Phases 22-28 (shipped 2026-06-10) [v1.2-ROADMAP.md](.planning/milestones/v1.2-ROADMAP.md)
-- 🏃 **v1.3 Code Quality, Performance & UX Polish** — Phases 29-34 (Active)
+- ? **v1.0 MVP** � Phases 1-15 (shipped 2026-05-11) [v1.0-ROADMAP.md](.planning/milestones/v1.0-ROADMAP.md)
+- ? **v1.1 Legacy Convergence** � Phases 16-21 (shipped 2026-05-18) [v1.1-ROADMAP.md](.planning/milestones/v1.1-ROADMAP.md)
+- ? **v1.2 Socializa��o Aprofundada** � Phases 22-28 (shipped 2026-06-10) [v1.2-ROADMAP.md](.planning/milestones/v1.2-ROADMAP.md)
+- ? **v1.3 Code Quality, Performance & UX Polish** � Phases 29-35 (shipped 2026-07-13)
+- ?? **v1.4 Reorganiza��o Inteligente de Revis�es** � Phases 36-39 (Active)
+- ? **v1.5 Planos de Usu�rio e Monetiza��o (PIX)** � Phases TBD (Pending)
 
 ## Phases
 
-### 🏃 v1.3 Code Quality, Performance & UX Polish (Phases 29-34)
+<details>
+<summary>? v1.3 Code Quality, Performance & UX Polish (Phases 29-35) � SHIPPED 2026-07-13</summary>
 
-### Phase 29: Limpeza & Refatoração do Backend (Java/Spring Boot)
-- Status: Completed
+- [x] Phase 29: Limpeza & Refatora��o do Backend (Java/Spring Boot)
+- [x] Phase 30: Arquitetura Frontend & Reuso de Componentes (Angular)
+- [x] Phase 31: Hardening e Seguran�a Avan�ada (OWASP Deep Dive)
+- [x] Phase 32: Expans�o de Cobertura de Testes
+- [x] Phase 33: UX Polish, Anima��es e Fluidez (Aesthetics)
+- [x] Phase 33.1: Padroniza��o e Documenta��o de DTOs
+- [x] Phase 34: Documenta��o em C�digo (Clean Comments & Javadoc/TSDoc)
+- [x] Phase 35: Refatora��o Frontend - Separa��o de Arquivos (HTML, SCSS, TS)
 
-### Phase 30: Arquitetura Frontend & Reuso de Componentes (Angular)
+</details>
+
+### ? v1.4 Reorganiza��o Inteligente de Revis�es (Phases 36-39)
+
+### Phase 36: Algoritmo de Redistribui��o no Backend (Java/Spring Boot)
+- Status: Complete
+- Description: L�gica de neg�cio e testes unit�rios para o c�lculo de redistribui��o de flashcards/revis�es atrasadas para dias futuros, respeitando limites de carga di�ria.
+
+### Phase 37: Endpoints da API e Configura��es de Usu�rio
 - Status: Pending
+- Description: Cria��o das rotas REST para pr�-visualizar a reorganiza��o e efetiv�-la, al�m de salvar prefer�ncias (ex: m�ximo de revis�es por dia).
 
-### Phase 31: Hardening e Segurança Avançada (OWASP Deep Dive)
-- Status: Completed
-
-### Phase 32: Expansão de Cobertura de Testes
+### Phase 38: Interface do Usu�rio e Gerenciamento de Estado (Angular)
 - Status: Pending
+- Description: Cria��o do bot�o "Reorganizar Atrasos", modal de confirma��o e integra��o com NgRx (Actions/Effects/Reducers).
 
-### Phase 33: UX Polish, Animações e Fluidez (Aesthetics)
+### Phase 39: Feedback Visual e UX Polish
 - Status: Pending
-
-### Phase 33.1: Padronização e Documentação de DTOs (INSERTED)
-- Status: Pending
-
-### Phase 34: Documentação em Código (Clean Comments & Javadoc/TSDoc)
-- Status: Pending
-
-### Phase 35: Refatora��o Frontend - Separa��o de Arquivos (HTML, SCSS, TS)
-- Status: Active
+- Description: Gr�ficos de "Antes e Depois" da carga de estudos, anima��es de sucesso e refinamento da experi�ncia do usu�rio ao usar a funcionalidade.
 
 
 <details>
-<summary>✅ v1.0 MVP (Phases 1-15) — SHIPPED 2026-05-11</summary>
+<summary>? v1.0 MVP (Phases 1-15) � SHIPPED 2026-05-11</summary>
 
 - [x] Phase 1-15: Monorepo Setup to Docs & E2E
 
 </details>
 
 <details>
-<summary>✅ v1.1 Legacy Convergence (Phases 16-21) — SHIPPED 2026-05-18</summary>
+<summary>? v1.1 Legacy Convergence (Phases 16-21) � SHIPPED 2026-05-18</summary>
 
-- [x] Phase 16: Refinamento de Analytics & Tendências (1/1 plans)
-- [x] Phase 17: Sincronização de Regras & Normalização (1/1 plans)
-- [x] Phase 18: Alertas de Performance & Exportação (2/2 plans)
-- [x] Phase 19: Gamificação & Notificações (1/1 plans)
+- [x] Phase 16: Refinamento de Analytics & Tend�ncias (1/1 plans)
+- [x] Phase 17: Sincroniza��o de Regras & Normaliza��o (1/1 plans)
+- [x] Phase 18: Alertas de Performance & Exporta��o (2/2 plans)
+- [x] Phase 19: Gamifica��o & Notifica��es (1/1 plans)
 - [x] Phase 20: Ajustes de Responsividade (2/2 plans)
-- [x] Phase 21: PWA & Otimização Final (1/1 plans)
+- [x] Phase 21: PWA & Otimiza��o Final (1/1 plans)
 
 </details>
 
 <details>
-<summary>✅ v1.2 Socialização Aprofundada (Phases 22-28) — SHIPPED 2026-06-10</summary>
+<summary>? v1.2 Socializa��o Aprofundada (Phases 22-28) � SHIPPED 2026-06-10</summary>
 
-- [x] Phase 22: Perfis de Usuário & Cadastro de Informações
-- [x] Phase 23: Sistema de Conexões (Amigos) & Busca
-- [x] Phase 24: Configurações Granulares de Privacidade
-- [x] Phase 25: Grupos de Competição Automatizados (Gymrats style)
-- [x] Phase 26: Tela de Registro de Usuário
-- [x] Phase 27: Redução de Custos, Paginação & Rate Limiting
-- [x] Phase 28: Feed de Atividades & Interações Silenciosas
+- [x] Phase 22: Perfis de Usu�rio & Cadastro de Informa��es
+- [x] Phase 23: Sistema de Conex�es (Amigos) & Busca
+- [x] Phase 24: Configura��es Granulares de Privacidade
+- [x] Phase 25: Grupos de Competi��o Automatizados (Gymrats style)
+- [x] Phase 26: Tela de Registro de Usu�rio
+- [x] Phase 27: Redu��o de Custos, Pagina��o & Rate Limiting
+- [x] Phase 28: Feed de Atividades & Intera��es Silenciosas
 
 </details>
 
@@ -81,8 +89,7 @@
 | 26    | v1.2      | 1/1            | Shipped | 2026-06-10|
 | 27    | v1.2      | 1/1            | Shipped | 2026-05-28|
 | 28    | v1.2      | 1/1            | Shipped | 2026-06-10|
-| 30    | v1.3      | 1/1            | Completed | 2026-06-10|
-| 31    | v1.3      | 1/1            | Completed | 2026-06-11|
+| 29-35 | v1.3      | 100%           | Shipped | 2026-07-13|
 
 ---
-*Roadmap updated for v1.3 on 2026-06-11*
+*Roadmap updated for v1.4 on 2026-07-13*
