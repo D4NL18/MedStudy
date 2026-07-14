@@ -57,8 +57,10 @@ public class FlashcardRedistributionService {
             throw new IllegalArgumentException("Target end date must be in the future.");
         }
 
-        List<Flashcard> overdueCards = flashcardRepository.findByUserIdAndProximaRevisaoBefore(user.getId(), today);
-        if (overdueCards.isEmpty()) {
+        // Redistribute ALL cards scheduled up to the target date (including overdue ones)
+        List<Flashcard> cardsToRedistribute = flashcardRepository.findByUserIdAndProximaRevisaoBefore(user.getId(), targetEndDate.plusDays(1));
+        
+        if (cardsToRedistribute.isEmpty()) {
             return RedistributionPreviewResponse.builder()
                     .totalFlashcardsRedistributed(0)
                     .daysSpread(0)
@@ -69,7 +71,7 @@ public class FlashcardRedistributionService {
 
         Map<String, Lesson> lessonCache = new HashMap<>();
 
-        overdueCards.sort(Comparator.comparing((Flashcard f) -> getPriorityOrder(f, lessonCache, user))
+        cardsToRedistribute.sort(Comparator.comparing((Flashcard f) -> getPriorityOrder(f, lessonCache, user))
                 .thenComparing(f -> getPercentAcerto(f, lessonCache, user))
                 .thenComparing(Flashcard::getProximaRevisao, Comparator.nullsLast(Comparator.naturalOrder())));
 
@@ -78,7 +80,7 @@ public class FlashcardRedistributionService {
             daysToSpread = 1;
         }
 
-        int totalCards = overdueCards.size();
+        int totalCards = cardsToRedistribute.size();
         int maxReviewsPerDay = userSettingsService.getCurrentUserMaxReviewsPerDay();
         
         int basePerDay = (int) (totalCards / daysToSpread);
@@ -96,7 +98,7 @@ public class FlashcardRedistributionService {
             
             for (int i = 0; i < cardsForThisDay; i++) {
                 if (currentCardIndex < totalCards) {
-                    Flashcard flashcard = overdueCards.get(currentCardIndex++);
+                    Flashcard flashcard = cardsToRedistribute.get(currentCardIndex++);
                     draftMap.put(flashcard.getId(), newDate);
                 }
             }
@@ -105,11 +107,14 @@ public class FlashcardRedistributionService {
         Map<LocalDate, Integer> originalCounts = new HashMap<>();
         Map<LocalDate, Integer> draftCounts = new HashMap<>();
 
-        List<Flashcard> futureCards = flashcardRepository.findByUserIdAndProximaRevisaoBetween(user.getId(), today, targetEndDate);
-        for (Flashcard f : futureCards) {
-            originalCounts.merge(f.getProximaRevisao(), 1, Integer::sum);
+        for (Flashcard f : cardsToRedistribute) {
+            LocalDate revDate = f.getProximaRevisao();
+            if (revDate.isBefore(today)) {
+                originalCounts.merge(today, 1, Integer::sum);
+            } else {
+                originalCounts.merge(revDate, 1, Integer::sum);
+            }
         }
-        originalCounts.merge(today, totalCards, Integer::sum);
 
         for (LocalDate date : draftMap.values()) {
             draftCounts.merge(date, 1, Integer::sum);
@@ -119,7 +124,7 @@ public class FlashcardRedistributionService {
         for (int dayOffset = 0; dayOffset < daysToSpread; dayOffset++) {
             LocalDate currentDate = today.plusDays(dayOffset);
             int original = originalCounts.getOrDefault(currentDate, 0);
-            int newC = (currentDate.equals(today) ? (original - totalCards) : original) + draftCounts.getOrDefault(currentDate, 0);
+            int newC = draftCounts.getOrDefault(currentDate, 0);
             dailyLoads.add(new DailyLoadDto(currentDate, original, newC));
         }
 
