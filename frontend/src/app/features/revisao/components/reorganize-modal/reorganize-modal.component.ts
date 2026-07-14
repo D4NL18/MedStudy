@@ -84,6 +84,12 @@ export class ReorganizeModalComponent implements OnInit, OnDestroy {
     return dateStr;
   }
 
+  getChartWidth(dailyLoads: any[] | undefined): number {
+    const numDays = dailyLoads ? dailyLoads.length : 0;
+    // Base width (modal width) is ~700px. If we have more than 14 days, give each day 50px space so it scrolls.
+    return Math.max(700, numDays * 50);
+  }
+
   preview(): void {
     if (!this.maxDate) return;
     this.store.dispatch(RevisionActions.previewRedistribution({

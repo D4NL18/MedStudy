@@ -302,10 +302,31 @@
 }
 
 /* Chart */
+.chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+  
+  /* Styling scrollbar for webkit */
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
 .chart-container {
   height: 350px;
-  width: 100%;
-  margin-top: 1rem;
+  /* width will be dynamic inline */
   
   ::ng-deep {
     /* Make all texts in the chart white */
