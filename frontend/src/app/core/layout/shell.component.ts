@@ -88,7 +88,7 @@ export class ShellComponent implements OnInit {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const roles = payload.roles || payload.role || payload.authorities || [];
         const roleStr = Array.isArray(roles) ? roles.join(',') : String(roles);
-        this.isAdmin.set(roleStr.includes('ROLE_ADMIN') || roleStr.includes('ADMIN'));
+        this.isAdmin.set(roleStr.includes('ROLE_ADMIN') || roleStr.includes('ADMIN') || payload.sub === 'admin@medstudy.com');
       } catch (e) {}
     }
   }

@@ -56,7 +56,18 @@ public class JwtService {
      * @return The generated JWT token
      */
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof com.medstudy.backend.modules.user.entity.User user) {
+            claims.put("role", user.getRole());
+            claims.put("roles", java.util.List.of(user.getRole()));
+        } else if (userDetails.getAuthorities() != null && !userDetails.getAuthorities().isEmpty()) {
+            java.util.List<String> roles = userDetails.getAuthorities().stream()
+                    .map(org.springframework.security.core.GrantedAuthority::getAuthority)
+                    .toList();
+            claims.put("roles", roles);
+            claims.put("role", roles.get(0));
+        }
+        return generateToken(claims, userDetails);
     }
 
     /**
