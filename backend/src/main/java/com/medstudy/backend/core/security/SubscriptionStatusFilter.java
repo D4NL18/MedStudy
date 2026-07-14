@@ -52,6 +52,7 @@ public class SubscriptionStatusFilter extends OncePerRequestFilter {
         return path.startsWith("/api/auth/")
                 || path.startsWith("/api/subscriptions/")
                 || path.startsWith("/api/admin/")
+                || path.startsWith("/api/profiles")
                 || path.startsWith("/api/webhooks/")
                 || path.startsWith("/swagger-ui/")
                 || path.startsWith("/v3/api-docs/")
