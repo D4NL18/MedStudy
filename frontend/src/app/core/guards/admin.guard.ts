@@ -10,7 +10,8 @@ export const adminGuard: CanActivateFn = () => {
 
   return store.select(selectToken).pipe(
     take(1),
-    map(token => {
+    map(storeToken => {
+      const token = storeToken || localStorage.getItem('auth_token') || localStorage.getItem('token');
       if (!token) {
         router.navigate(['/login']);
         return false;
