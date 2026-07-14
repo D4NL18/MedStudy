@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RevisionSummary, StudySession, PaginatedResponse } from '../models/revision.model';
+import { RevisionSummary, StudySession, PaginatedResponse, RedistributionPreviewRequest, RedistributionDraftResponse } from '../models/revision.model';
 
 
 /**
@@ -35,5 +35,13 @@ export class RevisionService {
 
   concluirRevisao(id: string): Observable<void> {
     return this.http.patch<void>(`/api/study-sessions/${id}/concluir`, {});
+  }
+
+  previewRedistribution(request: RedistributionPreviewRequest): Observable<RedistributionDraftResponse> {
+    return this.http.post<RedistributionDraftResponse>('/api/redistribute/preview', request);
+  }
+
+  applyRedistribution(draftId: string): Observable<void> {
+    return this.http.post<void>(`/api/redistribute/apply/${draftId}`, {});
   }
 }

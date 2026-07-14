@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { RevisionSummary, StudySession, PaginatedResponse } from '@core/models/revision.model';
+import { RevisionSummary, StudySession, PaginatedResponse, RedistributionPreviewRequest, RedistributionDraftResponse } from '@core/models/revision.model';
 
 
 /**
@@ -15,5 +15,16 @@ export const RevisionActions = createActionGroup({
     'Load Sessions': props<{ filter: string, page?: number, size?: number, search?: string }>(),
     'Load Sessions Success': props<{ response: PaginatedResponse<StudySession> }>(),
     'Load Sessions Failure': props<{ error: string }>(),
+    
+    // Redistribution
+    'Preview Redistribution': props<{ request: RedistributionPreviewRequest }>(),
+    'Preview Redistribution Success': props<{ response: RedistributionDraftResponse }>(),
+    'Preview Redistribution Failure': props<{ error: string }>(),
+    
+    'Apply Redistribution': props<{ draftId: string }>(),
+    'Apply Redistribution Success': emptyProps(),
+    'Apply Redistribution Failure': props<{ error: string }>(),
+    
+    'Clear Redistribution Draft': emptyProps()
   }
 });

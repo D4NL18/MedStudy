@@ -29,3 +29,15 @@ export interface PaginatedResponse<T> {
   size: number;
   number: number;
 }
+
+export interface RedistributionPreviewRequest {
+  maxDate?: string;
+}
+
+export interface RedistributionDraftResponse {
+  draftId: string;
+  dailyDistribution: { [date: string]: number };
+  maxDate: string;
+  limitExceeded: boolean;
+  limitWarning: string | null;
+}

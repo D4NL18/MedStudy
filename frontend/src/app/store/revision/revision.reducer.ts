@@ -1,5 +1,5 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
-import { RevisionSummary, StudySession } from '@core/models/revision.model';
+import { RevisionSummary, StudySession, RedistributionDraftResponse } from '@core/models/revision.model';
 import { RevisionActions } from './revision.actions';
 
 
@@ -17,6 +17,8 @@ export interface RevisionState {
   searchQuery: string;
   loading: boolean;
   error: string | null;
+  redistributionDraft: RedistributionDraftResponse | null;
+  isRedistributing: boolean;
 }
 
 export const initialState: RevisionState = {
@@ -29,6 +31,8 @@ export const initialState: RevisionState = {
   searchQuery: '',
   loading: false,
   error: null,
+  redistributionDraft: null,
+  isRedistributing: false,
 };
 
 export const revisionFeature = createFeature({
@@ -54,6 +58,13 @@ export const revisionFeature = createFeature({
       loading: false 
     })),
     on(RevisionActions.loadSessionsFailure, (state, { error }) => ({ ...state, error, loading: false })),
+    on(RevisionActions.previewRedistribution, (state) => ({ ...state, isRedistributing: true, error: null })),
+    on(RevisionActions.previewRedistributionSuccess, (state, { response }) => ({ ...state, isRedistributing: false, redistributionDraft: response })),
+    on(RevisionActions.previewRedistributionFailure, (state, { error }) => ({ ...state, isRedistributing: false, error })),
+    on(RevisionActions.applyRedistribution, (state) => ({ ...state, isRedistributing: true, error: null })),
+    on(RevisionActions.applyRedistributionSuccess, (state) => ({ ...state, isRedistributing: false, redistributionDraft: null })),
+    on(RevisionActions.applyRedistributionFailure, (state, { error }) => ({ ...state, isRedistributing: false, error })),
+    on(RevisionActions.clearRedistributionDraft, (state) => ({ ...state, redistributionDraft: null }))
   ),
 });
 
@@ -70,4 +81,6 @@ export const {
   selectSearchQuery,
   selectLoading,
   selectError,
+  selectRedistributionDraft,
+  selectIsRedistributing,
 } = revisionFeature;

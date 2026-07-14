@@ -1,0 +1,63 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Reorganizar Atrasos</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+
+    <div class="modal-body" *ngIf="draft$ | async as draft">
+      
+      <p class="description">
+        Escolha a data limite para redistribuir as sessões atrasadas. Se deixado em branco, distribuiremos com base no seu limite diário configurado.
+      </p>
+
+      <div class="form-group">
+        <label for="maxDate">Data limite (Opcional):</label>
+        <input 
+          type="date" 
+          id="maxDate" 
+          [value]="maxDate" 
+          (change)="onMaxDateChange($event)" 
+          [disabled]="(isRedistributing$ | async) ?? false"
+        />
+      </div>
+
+      <div class="warning-box" *ngIf="draft.limitExceeded">
+        <span class="warning-icon">⚠️</span>
+        <p>{{ draft.limitWarning || 'Esta distribuição excederá o limite diário recomendado de estudos.' }}</p>
+      </div>
+
+      <div class="distribution-preview">
+        <h3>Prévia da Distribuição:</h3>
+        <div class="loading-overlay" *ngIf="isRedistributing$ | async">
+          <span>Carregando...</span>
+        </div>
+        
+        <ul *ngIf="!(isRedistributing$ | async)">
+          <li *ngFor="let item of draft.dailyDistribution | keyvalue">
+            <strong>{{ item.key | date:'dd/MM/yyyy' }}:</strong> {{ item.value }} sessões
+          </li>
+          <li *ngIf="(draft.dailyDistribution | keyvalue).length === 0">
+            Nenhuma sessão atrasada para distribuir.
+          </li>
+        </ul>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()" [disabled]="((isRedistributing$ | async) ?? false)">
+          Cancelar
+        </button>
+        <button class="btn btn-primary" (click)="apply(draft.draftId)" [disabled]="((isRedistributing$ | async) ?? false) || (draft.dailyDistribution | keyvalue).length === 0">
+          <span *ngIf="isRedistributing$ | async">Aplicando...</span>
+          <span *ngIf="!(isRedistributing$ | async)">Confirmar</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="modal-body loading-state" *ngIf="!(draft$ | async)">
+      <div class="spinner"></div>
+      <p>Gerando prévia...</p>
+    </div>
+
+  </div>
+</div>

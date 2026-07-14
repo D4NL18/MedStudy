@@ -1,4 +1,5 @@
 import { ButtonComponent } from '@shared/components/button/button.component';
+import { ReorganizeModalComponent } from '../../components/reorganize-modal/reorganize-modal.component';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -23,7 +24,8 @@ type RevisionTab = 'ATRASADAS' | 'HOJE' | 'FUTURAS' | 'CONCLUIDAS';
   imports: [ButtonComponent, 
     CommonModule, 
     ReactiveFormsModule,
-    LucideAngularModule
+    LucideAngularModule,
+    ReorganizeModalComponent
   ],
   templateUrl: './revisao-list.component.html',
   styleUrl: './revisao-list.component.scss'
@@ -40,6 +42,8 @@ export class RevisaoListComponent implements OnInit {
   totalPages$ = this.store.select(selectTotalPages);
   pageSize$ = this.store.select(selectPageSize);
   totalElements$ = this.store.select(selectTotalElements);
+
+  isReorganizeModalOpen = false;
 
   searchControl = new FormControl('');
 
@@ -136,5 +140,13 @@ export class RevisaoListComponent implements OnInit {
       case 'FUTURAS': return 'Revisões Futuras';
       case 'CONCLUIDAS': return 'Realizadas';
     }
+  }
+
+  openReorganizeModal() {
+    this.isReorganizeModalOpen = true;
+  }
+
+  closeReorganizeModal() {
+    this.isReorganizeModalOpen = false;
   }
 }

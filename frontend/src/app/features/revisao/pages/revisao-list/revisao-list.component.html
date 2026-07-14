@@ -49,6 +49,14 @@
         <span>{{ getTabLabel(activeTab) }}</span>
       </div>
       <div class="header-right" style="display: flex; gap: 1rem; align-items: center;">
+        <app-button 
+          *ngIf="((summary$ | async)?.atrasadas || 0) > 0"
+          variant="secondary"
+          (onClick)="openReorganizeModal()"
+        >
+          <lucide-icon name="calendar-range" [size]="18" style="margin-right: 0.5rem;"></lucide-icon>
+          Reorganizar Atrasos
+        </app-button>
         <div class="search-box">
           <input type="text" [formControl]="searchControl" placeholder="Buscar por tema ou área..." class="search-input">
         </div>
@@ -117,3 +125,8 @@
     </div>
   </div>
 </div>
+
+<app-reorganize-modal 
+  *ngIf="isReorganizeModalOpen" 
+  (close)="closeReorganizeModal()">
+</app-reorganize-modal>
