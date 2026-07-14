@@ -14,8 +14,8 @@
 .modal-content {
   background: var(--color-surface);
   border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
+  width: 95%;
+  max-width: 750px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
@@ -303,9 +303,46 @@
 
 /* Chart */
 .chart-container {
-  height: 250px;
+  height: 350px;
   width: 100%;
   margin-top: 1rem;
+  
+  ::ng-deep {
+    /* Make all texts in the chart white */
+    text {
+      fill: #ffffff !important;
+      font-size: 14px !important;
+    }
+    
+    /* X and Y axis ticks (numbers/dates) */
+    .tick text {
+      fill: #ffffff !important;
+      font-size: 12px !important;
+    }
+    
+    /* Axis labels (e.g. "Dias", "Sessões") */
+    .axis-label text {
+      fill: #ffffff !important;
+      font-size: 15px !important;
+      font-weight: bold;
+    }
+
+    /* HTML Legend Text */
+    .legend-labels .legend-label-text {
+      color: #ffffff !important;
+      font-size: 14px !important;
+    }
+    
+    .legend-title {
+      color: #ffffff !important;
+      font-size: 15px !important;
+    }
+    
+    /* Tooltips */
+    .ngx-charts-tooltip {
+      color: #ffffff;
+    }
+  }
 }
 
 /* Success Overlay */
