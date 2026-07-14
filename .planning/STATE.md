@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Reorganiza��o Inteligente de Revis�es
-status: planning
-last_updated: "2026-07-14T01:33:34.901Z"
+status: Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
+last_updated: "2026-07-14T01:53:08.515Z"
 last_activity: 2026-07-14
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 2
-  completed_plans: 2
+  completed_plans: 3
   percent: 100
 ---
 
@@ -32,7 +32,7 @@ Phase 38 — interface-do-usu-rio-e-gerenciamento-de-estado-angular
 **Milestone:** v1.4 � Reorganiza��o Inteligente de Revis�es
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Ready to plan
+**Status:** Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
 
 ---
 
