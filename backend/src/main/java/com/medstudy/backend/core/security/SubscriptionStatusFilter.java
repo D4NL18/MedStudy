@@ -70,7 +70,7 @@ public class SubscriptionStatusFilter extends OncePerRequestFilter {
 
         if (subscriptionRepository != null && authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof User user) {
             // Admins are exempt from paywall
-            if ("ROLE_ADMIN".equals(user.getRole())) {
+            if ("ROLE_ADMIN".equals(user.getRole()) || "ADMIN".equals(user.getRole())) {
                 filterChain.doFilter(request, response);
                 return;
             }
