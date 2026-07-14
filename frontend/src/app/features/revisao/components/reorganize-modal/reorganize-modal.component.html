@@ -57,23 +57,21 @@
             </div>
           </div>
           
-          <div *ngIf="!(isRedistributing$ | async)" class="chart-wrapper">
-            <div class="chart-container" [style.width.px]="getChartWidth(draft.dailyLoads)">
-              <ngx-charts-bar-vertical-2d
-                [results]="(chartData$ | async) || []"
-                [scheme]="colorScheme"
-                [xAxis]="true"
-                [yAxis]="true"
-                [legend]="true"
-                [showXAxisLabel]="true"
-                [showYAxisLabel]="true"
-                xAxisLabel="Dias"
-                yAxisLabel="Sessões"
-                [barPadding]="4"
-                [groupPadding]="12"
-                [animations]="true">
-              </ngx-charts-bar-vertical-2d>
-            </div>
+          <div *ngIf="!(isRedistributing$ | async)" class="chart-container">
+            <ngx-charts-bar-vertical-2d
+              [results]="(chartData$ | async) || []"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              xAxisLabel="Dias"
+              yAxisLabel="Sessões"
+              [barPadding]="4"
+              [groupPadding]="12"
+              [animations]="true">
+            </ngx-charts-bar-vertical-2d>
           </div>
           <ul class="summary-list" *ngIf="!(isRedistributing$ | async) && draft.totalFlashcardsRedistributed > 0">
             <li><strong>Total a redistribuir:</strong> {{ draft.totalFlashcardsRedistributed }} sessões/cards.</li>
