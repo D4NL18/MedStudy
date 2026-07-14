@@ -70,7 +70,7 @@
 ### 🚧 v1.5 Planos de Usuário e Monetização (PIX) (Phases 40-43)
 
 ### Phase 40: Modelo de Assinaturas & Motor de Trial Freemium no Backend
-- Status: Planned
+- Status: Complete (1/1 plans)
 - Description: Entidades JPA (`Subscription`, `PixTransaction`), concessão automática de 30 dias de trial no cadastro, scheduler para expiração e interceptor de segurança para bloqueio de contas expiradas.
 - Requirements: PAYWALL-01, PAYWALL-02
 
@@ -98,7 +98,7 @@
 | 22-28 | v1.2      | 100%           | Shipped | 2026-06-10|
 | 29-35 | v1.3      | 100%           | Shipped | 2026-07-13|
 | 36-39 | v1.4      | 100%           | Shipped | 2026-07-14|
-| 40    | v1.5      | 0/1            | Planned | -          |
+| 40    | v1.5      | 1/1            | Complete| 2026-07-14|
 | 41    | v1.5      | 0/1            | Planned | -          |
 | 42    | v1.5      | 0/1            | Planned | -          |
 | 43    | v1.5      | 0/1            | Planned | -          |
