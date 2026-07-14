@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, inject, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -8,7 +8,7 @@ import { selectRedistributionDraft, selectIsRedistributing } from '@store/revisi
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { RedistributionDraftResponse } from '@core/models/revision.model';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxChartsModule, LegendPosition } from '@swimlane/ngx-charts';
 import { LucideAngularModule, CheckCircle } from 'lucide-angular';
 
 @Component({
@@ -19,8 +19,11 @@ import { LucideAngularModule, CheckCircle } from 'lucide-angular';
   styleUrls: ['./reorganize-modal.component.scss']
 })
 export class ReorganizeModalComponent implements OnInit, OnDestroy {
+  @Input() totalAtrasos = 0;
   @Output() close = new EventEmitter<void>();
   
+  public legendPosition = LegendPosition.Below;
+
   private store = inject(Store);
   private actions$ = inject(Actions);
   private dateSubject = new Subject<string>();
