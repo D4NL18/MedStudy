@@ -19,11 +19,6 @@ import { AvatarComponent } from '@shared/components/avatar/avatar.component';
 import { ProfileActions } from '@store/profile/profile.actions';
 import { selectProfile } from '@store/profile/profile.reducer';
 
-
-/**
- * Angular component for the Shell feature.
- * @description Handles the presentation logic and user interactions for the Shell view.
- */
 @Component({
   selector: 'app-shell',
   standalone: true,
@@ -37,7 +32,6 @@ import { selectProfile } from '@store/profile/profile.reducer';
     LucideAngularModule,
     OnboardingComponent,
     AvatarComponent,
-
     OverlayModule,
     PortalModule
   ],
@@ -61,6 +55,7 @@ export class ShellComponent implements OnInit {
   isMobile = signal(false);
   hasOpenedDropdown = signal(false);
   previousTotalAlerts = signal(0);
+  isAdmin = signal(false);
 
   constructor() {
     effect(() => {
@@ -78,11 +73,24 @@ export class ShellComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.checkAdminRole();
     this.store.dispatch(ProfileActions.loadProfile());
     this.loadNotifications();
     this.breakpointObserver.observe(['(max-width: 768px)']).subscribe(result => {
       this.isMobile.set(result.matches);
     });
+  }
+
+  checkAdminRole() {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const roles = payload.roles || payload.role || payload.authorities || [];
+        const roleStr = Array.isArray(roles) ? roles.join(',') : String(roles);
+        this.isAdmin.set(roleStr.includes('ROLE_ADMIN') || roleStr.includes('ADMIN'));
+      } catch (e) {}
+    }
   }
 
   loadNotifications() {

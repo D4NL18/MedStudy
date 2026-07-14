@@ -80,7 +80,7 @@
 - Requirements: PIX-01, PIX-02, PIX-03, PIX-04
 
 ### Phase 42: Painel Administrativo de Assinaturas (Single Admin)
-- Status: Planned
+- Status: Complete (1/1 plans)
 - Description: Controle de acessos por Role `ADMIN`, endpoints e tela no Angular para gerenciar usuários, conceder/estender acesso manual (VIP/Lifetime) e visualizar relatórios de pagamentos.
 - Requirements: ADMIN-01, ADMIN-02, ADMIN-03
 
@@ -100,7 +100,7 @@
 | 36-39 | v1.4      | 100%           | Shipped | 2026-07-14|
 | 40    | v1.5      | 1/1            | Complete| 2026-07-14|
 | 41    | v1.5      | 1/1            | Complete| 2026-07-14|
-| 42    | v1.5      | 0/1            | Planned | -          |
+| 42    | v1.5      | 1/1            | Complete| 2026-07-14|
 | 43    | v1.5      | 0/1            | Planned | -          |
 
 ---

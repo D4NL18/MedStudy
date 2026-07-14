@@ -16,6 +16,8 @@ import { SimuladosEffects } from './store/simulados/simulados.effects';
 import { reducer as competitionReducer } from './store/competition/competition.reducer';
 import { CompetitionEffects } from './store/competition/competition.effects';
 
+import { adminGuard } from './core/guards/admin.guard';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { 
@@ -97,6 +99,11 @@ export const routes: Routes = [
           provideState('competition', competitionReducer),
           provideEffects(CompetitionEffects)
         ]
+      },
+      {
+        path: 'admin/subscriptions',
+        loadComponent: () => import('./features/admin/admin-subscriptions/admin-subscriptions.component').then(m => m.AdminSubscriptionsComponent),
+        canActivate: [adminGuard]
       }
     ]
   },

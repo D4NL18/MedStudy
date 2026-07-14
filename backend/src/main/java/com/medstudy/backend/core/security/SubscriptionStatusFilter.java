@@ -51,6 +51,7 @@ public class SubscriptionStatusFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/api/auth/")
                 || path.startsWith("/api/subscriptions/")
+                || path.startsWith("/api/admin/")
                 || path.startsWith("/api/webhooks/")
                 || path.startsWith("/swagger-ui/")
                 || path.startsWith("/v3/api-docs/")
@@ -67,6 +68,12 @@ public class SubscriptionStatusFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (subscriptionRepository != null && authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof User user) {
+            // Admins are exempt from paywall
+            if ("ROLE_ADMIN".equals(user.getRole())) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             Instant now = Instant.now();
             boolean active = isSubscriptionActiveWithCache(user, now);
 

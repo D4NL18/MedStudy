@@ -22,6 +22,9 @@
       <a routerLink="/competicoes" routerLinkActive="active">Competições</a>
       <a routerLink="/analytics/area" routerLinkActive="active">Análise Área</a>
       <a routerLink="/analytics/tema" routerLinkActive="active">Análise Tema</a>
+      <a routerLink="/admin/subscriptions" routerLinkActive="active" *ngIf="isAdmin()" class="admin-nav-link">
+        <lucide-icon name="shield-check" [size]="16"></lucide-icon> Painel Admin
+      </a>
     </div>
 
     <div class="user-actions">
@@ -132,6 +135,9 @@
           </a>
           <a routerLink="/analytics/tema" routerLinkActive="active" (click)="toggleDrawer()">
             <lucide-icon name="bar-chart"></lucide-icon> Análise Tema
+          </a>
+          <a routerLink="/admin/subscriptions" routerLinkActive="active" *ngIf="isAdmin()" (click)="toggleDrawer()" class="admin-mobile-link">
+            <lucide-icon name="shield-check"></lucide-icon> Painel Admin
           </a>
         </div>
       </div>
