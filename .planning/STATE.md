@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Reorganiza��o Inteligente de Revis�es
-status: Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
-last_updated: "2026-07-14T01:53:08.515Z"
-last_activity: 2026-07-14
+status: completed
+last_updated: "2026-07-14T01:56:05.029Z"
+last_activity: 2026-07-14 — Milestone v1.4 completed and archived
 progress:
   total_phases: 4
   completed_phases: 2
@@ -32,7 +32,7 @@ Phase 38 — interface-do-usu-rio-e-gerenciamento-de-estado-angular
 **Milestone:** v1.4 � Reorganiza��o Inteligente de Revis�es
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
+**Status:** v1.4 milestone complete
 
 ---
 
@@ -56,7 +56,11 @@ Phase 38 — interface-do-usu-rio-e-gerenciamento-de-estado-angular
 
 ## Current Position
 
-Phase: 39 (feedback-visual-e-ux-polish) — EXECUTION_COMPLETED
-Plan: .planning/phases/39-feedback-visual-e-ux-polish/39-PLAN.md
-Status: Phase complete
-Last activity: 2026-07-14
+Phase: Milestone v1.4 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-14 — Milestone v1.4 completed and archived
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
