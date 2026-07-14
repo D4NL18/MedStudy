@@ -12,9 +12,9 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 ## Requirements
 
-## Current Milestone: v1.4 [Active]
+## Current Milestone: v1.5 Planos de Usuário e Monetização (PIX)
 
-**Goal:** Implementar reorganização inteligente de revisões.
+**Goal:** Implementar paywall com trial de 30 dias e pagamento anual via PIX (API direta do Banco do Brasil), com painel admin para gerenciamento manual de acessos.
 
 ### Validated (v1.2 Socialização Aprofundada)
 - ✓ Perfis de usuário com dados básicos (faculdade, semestre, avatar).
@@ -63,15 +63,20 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 </details>
 
-### Active (v1.4 Reorganização Inteligente de Revisões)
-- [ ] Novo botão para reorganizar revisões atrasadas de forma inteligente.
-- [ ] Algoritmo que redistribui carga de revisões pendentes para evitar acúmulos excessivos num mesmo dia.
+### Validated (v1.4 Reorganização Inteligente de Revisões)
+- ✓ Botão para reorganizar revisões atrasadas de forma inteligente.
+- ✓ Algoritmo que redistribui carga de revisões pendentes uniformemente.
+- ✓ Modal interativo com gráfico comparativo (Antes vs Depois).
+- ✓ Integração NgRx completa para fluxo de redistribuição.
 
-### Planned (v1.5 Planos de Usuário e Monetização - PIX)
-- [ ] Implementação de paywall/bloqueio total do app para contas não pagantes.
-- [ ] Integração de pagamento anual via QR Code PIX Dinâmico.
-- [ ] Sem exposição ou processamento direto de dados bancários (via gateway de pagamentos PIX).
-- [ ] Painel admin ou interface de gerência para conceder o plano gratuitamente a usuários específicos.
+### Active (v1.5 Planos de Usuário e Monetização - PIX)
+- [ ] Bloqueio freemium: trial de 30 dias grátis, depois paywall total.
+- [ ] Pagamento anual via QR Code PIX Dinâmico (API Banco do Brasil).
+- [ ] Sem exposição ou processamento direto de dados bancários.
+- [ ] Painel admin (single admin) para conceder acesso gratuito.
+- [ ] Tela de planos mostrando benefícios ao usuário.
+- [ ] Histórico de pagamentos visível para o usuário.
+- [ ] Notificação de expiração do plano (30 dias antes).
 
 ### Active (v2.0 Planning)
 - [ ] Implementação de Testes E2E com Cypress (Frontend)
@@ -89,6 +94,12 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 - Deploy em produção/cloud — foco em execução local robusta na v1
 
 ## Context
+
+**Shipped v1.4:**
+- Algoritmo de redistribuição de flashcards atrasados com carga balanceada.
+- Endpoints REST para preview e aplicação de redistribuição.
+- Modal interativo com gráfico comparativo NgxCharts.
+- UX polish completo (skeleton loaders, overlay de sucesso).
 
 **Shipped v1.3:**
 - Limpeza e refatoração do backend.
@@ -168,5 +179,4 @@ Este documento evolui a cada transição de fase e milestone.
 4. Atualizar Context com estado atual
 
 ---
----
-*Last updated: 2026-07-13 after v1.3 milestone completion.*
+*Last updated: 2026-07-14 after v1.4 milestone completion.*
