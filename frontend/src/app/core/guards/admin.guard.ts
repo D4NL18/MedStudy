@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectToken } from '@store/auth/auth.selectors';
+import { selectToken, parseJwtPayload } from '@store/auth/auth.selectors';
 import { map, take } from 'rxjs';
 
 export const adminGuard: CanActivateFn = () => {
@@ -15,8 +15,9 @@ export const adminGuard: CanActivateFn = () => {
         router.navigate(['/login']);
         return false;
       }
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+
+      const payload = parseJwtPayload(token);
+      if (payload) {
         const roles = payload.roles || payload.role || payload.authorities || [];
         const roleStr = Array.isArray(roles) ? roles.join(',') : String(roles);
         const isAdmin = roleStr.includes('ROLE_ADMIN') || roleStr.includes('ADMIN') || payload.sub === 'admin@medstudy.com';
@@ -24,8 +25,6 @@ export const adminGuard: CanActivateFn = () => {
         if (isAdmin) {
           return true;
         }
-      } catch (e) {
-        // Ignora erro de parse
       }
 
       router.navigate(['/']);

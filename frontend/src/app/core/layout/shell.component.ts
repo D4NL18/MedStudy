@@ -9,7 +9,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { FlashcardsStudyComponent } from '@features/flashcards/pages/flashcards-study/flashcards-study.component';
 import { OfflineBannerComponent } from '@shared/components/offline-banner/offline-banner';
 
-import { selectUser } from '@store/auth/auth.selectors';
+import { selectUser, parseJwtPayload } from '@store/auth/auth.selectors';
 import * as AuthActions from '@store/auth/auth.actions';
 import { NotificationService, NotificationSummary } from '@core/services/notification.service';
 import { SocialService } from '@core/services/social.service';
@@ -84,12 +84,12 @@ export class ShellComponent implements OnInit {
   checkAdminRole() {
     const token = localStorage.getItem('auth_token');
     if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+      const payload = parseJwtPayload(token);
+      if (payload) {
         const roles = payload.roles || payload.role || payload.authorities || [];
         const roleStr = Array.isArray(roles) ? roles.join(',') : String(roles);
         this.isAdmin.set(roleStr.includes('ROLE_ADMIN') || roleStr.includes('ADMIN') || payload.sub === 'admin@medstudy.com');
-      } catch (e) {}
+      }
     }
   }
 
