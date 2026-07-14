@@ -303,9 +303,10 @@
 
 /* Chart */
 .chart-container {
-  height: 350px;
+  height: 420px;
   width: 100%;
   margin-top: 1rem;
+  margin-bottom: 1.5rem;
   
   ::ng-deep {
     /* Make all texts in the chart white */
