@@ -33,7 +33,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PAYWALL-01..03 | Pending | Pending |
-| PIX-01..04    | Pending | Pending |
-| ADMIN-01..03  | Pending | Pending |
-| NOTIF-01..02  | Pending | Pending |
+| PAYWALL-01..02 | Phase 40 | Pending |
+| PIX-01..04    | Phase 41 | Pending |
+| ADMIN-01..03  | Phase 42 | Pending |
+| PAYWALL-03    | Phase 43 | Pending |
+| NOTIF-01..02  | Phase 43 | Pending |
