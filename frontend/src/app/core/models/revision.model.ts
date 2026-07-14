@@ -31,13 +31,19 @@ export interface PaginatedResponse<T> {
 }
 
 export interface RedistributionPreviewRequest {
-  maxDate?: string;
+  targetEndDate: string;
+}
+
+export interface DailyLoadDto {
+  date: string;
+  originalCount: number;
+  newCount: number;
 }
 
 export interface RedistributionDraftResponse {
   draftId: string;
-  dailyDistribution: { [date: string]: number };
-  maxDate: string;
-  limitExceeded: boolean;
-  limitWarning: string | null;
+  totalFlashcardsRedistributed: number;
+  daysSpread: number;
+  warningLimitExceeded: boolean;
+  dailyLoads: DailyLoadDto[];
 }

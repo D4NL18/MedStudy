@@ -9,9 +9,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.mail.javamail.JavaMailSender;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class RateLimitIntegrationTest {
+
+    @MockitoBean
+    private JavaMailSender javaMailSender;
 
     @Autowired
     private MockMvc mockMvc;

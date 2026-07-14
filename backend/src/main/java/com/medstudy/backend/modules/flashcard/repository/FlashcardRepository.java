@@ -44,6 +44,26 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, UUID>, Jpa
     long countByUserIdAndProximaRevisaoBefore(UUID userId, LocalDate date);
 
     /**
+     * Finds flashcards scheduled before a certain date for a user.
+     *
+     * @param userId the user ID
+     * @param date the date to compare against
+     * @return the list of overdue flashcards
+     */
+    List<Flashcard> findByUserIdAndProximaRevisaoBefore(UUID userId, LocalDate date);
+
+    /**
+     * Finds flashcards scheduled between two dates for a user.
+     *
+     * @param userId the user ID
+     * @param startDate the start date (inclusive)
+     * @param endDate the end date (inclusive)
+     * @return the list of flashcards
+     */
+    List<Flashcard> findByUserIdAndProximaRevisaoBetween(UUID userId, LocalDate startDate, LocalDate endDate);
+
+
+    /**
      * Counts the number of flashcards scheduled exactly on a certain date for a user.
      *
      * @param userId the user ID

@@ -1,0 +1,2 @@
+ALTER TABLE flashcards
+ADD COLUMN tema VARCHAR(255);

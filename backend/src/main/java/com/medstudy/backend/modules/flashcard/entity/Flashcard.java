@@ -35,6 +35,9 @@ public class Flashcard {
     @Column(name = "grande_area", nullable = false)
     private String grandeArea;
 
+    @Column(name = "tema")
+    private String tema;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "frente", nullable = false)
     private JsonNode frente;

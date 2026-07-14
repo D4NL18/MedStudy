@@ -17,10 +17,10 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Error Message -->
-      @if (error()) {
+      @if (friendlyError) {
         <div class="error-badge">
           <i class="icon-error"></i>
-          <span>{{ error() }}</span>
+          <span>{{ friendlyError }}</span>
         </div>
       }
 

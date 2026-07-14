@@ -5,59 +5,99 @@
       <button class="close-btn" (click)="closeModal()">×</button>
     </div>
 
-    <div class="modal-body" *ngIf="draft$ | async as draft">
+    <div class="modal-body">
       
       <p class="description">
-        Escolha a data limite para redistribuir as sessões atrasadas. Se deixado em branco, distribuiremos com base no seu limite diário configurado.
+        Escolha a data limite para redistribuir as sessões atrasadas. A data é obrigatória para realizar o cálculo.
       </p>
 
       <div class="form-group">
-        <label for="maxDate">Data limite (Opcional):</label>
-        <input 
-          type="date" 
-          id="maxDate" 
-          [value]="maxDate" 
-          (change)="onMaxDateChange($event)" 
-          [disabled]="(isRedistributing$ | async) ?? false"
-        />
-      </div>
-
-      <div class="warning-box" *ngIf="draft.limitExceeded">
-        <span class="warning-icon">⚠️</span>
-        <p>{{ draft.limitWarning || 'Esta distribuição excederá o limite diário recomendado de estudos.' }}</p>
-      </div>
-
-      <div class="distribution-preview">
-        <h3>Prévia da Distribuição:</h3>
-        <div class="loading-overlay" *ngIf="isRedistributing$ | async">
-          <span>Carregando...</span>
+        <label for="maxDate">Data limite:</label>
+        <div class="custom-date-input">
+          <input 
+            type="date" 
+            id="maxDate" 
+            [(ngModel)]="maxDate" 
+            (ngModelChange)="onMaxDateChange($event)" 
+          />
         </div>
-        
-        <ul *ngIf="!(isRedistributing$ | async)">
-          <li *ngFor="let item of draft.dailyDistribution | keyvalue">
-            <strong>{{ item.key | date:'dd/MM/yyyy' }}:</strong> {{ item.value }} sessões
-          </li>
-          <li *ngIf="(draft.dailyDistribution | keyvalue).length === 0">
-            Nenhuma sessão atrasada para distribuir.
-          </li>
-        </ul>
       </div>
+
+      <!-- Estado inicial (sem data) -->
+      <div class="empty-state" *ngIf="!maxDate">
+        <p>Selecione uma data para visualizar a prévia.</p>
+      </div>
+
+      <!-- Carregando prévia -->
+      <div class="loading-state" *ngIf="maxDate && !(draft$ | async)">
+        <div class="skeleton-chart">
+          <div class="skeleton-bar" style="height: 60%"></div>
+          <div class="skeleton-bar" style="height: 100%"></div>
+          <div class="skeleton-bar" style="height: 40%"></div>
+          <div class="skeleton-bar" style="height: 80%"></div>
+          <div class="skeleton-bar" style="height: 30%"></div>
+        </div>
+        <p class="skeleton-text"></p>
+      </div>
+
+      <!-- Prévia carregada -->
+      <ng-container *ngIf="draft$ | async as draft">
+        <div class="warning-box" *ngIf="draft.warningLimitExceeded">
+          <span class="warning-icon">⚠️</span>
+          <p>Esta distribuição excederá o limite diário recomendado de estudos.</p>
+        </div>
+
+        <div class="distribution-preview">
+          <h3>Prévia da Distribuição:</h3>
+          <div class="loading-overlay" *ngIf="isRedistributing$ | async">
+            <div class="skeleton-chart-overlay">
+              <div class="skeleton-bar" style="height: 50%"></div>
+              <div class="skeleton-bar" style="height: 70%"></div>
+              <div class="skeleton-bar" style="height: 30%"></div>
+            </div>
+          </div>
+          
+          <div *ngIf="!(isRedistributing$ | async)" class="chart-container">
+            <ngx-charts-bar-vertical-2d
+              [results]="(chartData$ | async) || []"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              xAxisLabel="Dias"
+              yAxisLabel="Sessões"
+              [barPadding]="4"
+              [groupPadding]="12"
+              [animations]="true">
+            </ngx-charts-bar-vertical-2d>
+          </div>
+          <ul class="summary-list" *ngIf="!(isRedistributing$ | async) && draft.totalFlashcardsRedistributed > 0">
+            <li><strong>Total a redistribuir:</strong> {{ draft.totalFlashcardsRedistributed }} sessões/cards.</li>
+            <li><strong>Dias de distribuição:</strong> {{ draft.daysSpread }} dias.</li>
+            <li><strong>Média diária adic.:</strong> {{ (draft.totalFlashcardsRedistributed / draft.daysSpread) | number:'1.0-1' }} cards/dia.</li>
+          </ul>
+          <p *ngIf="!(isRedistributing$ | async) && draft.totalFlashcardsRedistributed === 0">
+            Nenhuma sessão atrasada para distribuir.
+          </p>
+        </div>
+      </ng-container>
 
       <div class="modal-footer">
         <button class="btn btn-secondary" (click)="closeModal()" [disabled]="((isRedistributing$ | async) ?? false)">
           Cancelar
         </button>
-        <button class="btn btn-primary" (click)="apply(draft.draftId)" [disabled]="((isRedistributing$ | async) ?? false) || (draft.dailyDistribution | keyvalue).length === 0">
+        <button class="btn btn-primary" (click)="applyDraft()" [disabled]="!maxDate || !(draft$ | async) || ((isRedistributing$ | async) ?? false) || (draft$ | async)?.totalFlashcardsRedistributed === 0">
           <span *ngIf="isRedistributing$ | async">Aplicando...</span>
           <span *ngIf="!(isRedistributing$ | async)">Confirmar</span>
         </button>
       </div>
     </div>
-    
-    <div class="modal-body loading-state" *ngIf="!(draft$ | async)">
-      <div class="spinner"></div>
-      <p>Gerando prévia...</p>
-    </div>
 
+  </div>
+  <div class="success-overlay" *ngIf="showSuccess">
+    <lucide-icon name="check-circle" class="success-icon"></lucide-icon>
+    <h2>Sucesso!</h2>
   </div>
 </div>
