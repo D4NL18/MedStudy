@@ -63,9 +63,7 @@
               [scheme]="colorScheme"
               [xAxis]="true"
               [yAxis]="true"
-              [legend]="true"
-              legendTitle="Legenda"
-              [legendPosition]="legendPosition"
+              [legend]="false"
               [showXAxisLabel]="true"
               [showYAxisLabel]="true"
               xAxisLabel="Dias"
@@ -74,6 +72,15 @@
               [groupPadding]="12"
               [animations]="true">
             </ngx-charts-bar-vertical-2d>
+          </div>
+          <div *ngIf="!(isRedistributing$ | async)" class="custom-legend">
+            <span class="legend-title">Legenda:</span>
+            <span class="legend-item">
+              <span class="legend-swatch" style="background: #E44D25;"></span> Antes
+            </span>
+            <span class="legend-item">
+              <span class="legend-swatch" style="background: #4CAF50;"></span> Depois
+            </span>
           </div>
           <ul class="summary-list" *ngIf="!(isRedistributing$ | async) && draft.totalFlashcardsRedistributed > 0">
             <li><strong>Total a redistribuir:</strong> {{ draft.totalFlashcardsRedistributed }} sessões/cards.</li>

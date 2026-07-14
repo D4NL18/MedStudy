@@ -346,6 +346,34 @@
   }
 }
 
+/* Custom Legend */
+.custom-legend {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.75rem 0;
+  color: #ffffff;
+  font-size: 14px;
+
+  .legend-title {
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+}
+
 /* Success Overlay */
 .success-overlay {
   position: absolute;
