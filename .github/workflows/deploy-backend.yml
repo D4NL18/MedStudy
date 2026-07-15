@@ -74,6 +74,8 @@ jobs:
             DB_PASSWORD=${{ secrets.SUPABASE_DB_PASSWORD }}
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             SPRING_PROFILES_ACTIVE=prod
+            MERCADOPAGO_ACCESS_TOKEN=${{ secrets.MERCADOPAGO_ACCESS_TOKEN }}
+            MERCADOPAGO_PUBLIC_KEY=${{ secrets.MERCADOPAGO_PUBLIC_KEY }}
 
       - name: Show Deployment URL
         run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
