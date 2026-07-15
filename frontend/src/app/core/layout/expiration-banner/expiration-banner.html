@@ -1,0 +1,23 @@
+<ng-container *ngIf="subscription$ | async as sub">
+  <div class="expiration-banner" *ngIf="!dismissed && (isExpiringSoon(sub) || isExpired(sub))"
+       [class.is-expired]="isExpired(sub)">
+    <div class="banner-content">
+      <i class="fas fa-exclamation-circle icon"></i>
+      <span class="message" *ngIf="isExpired(sub)">
+        Sua assinatura expirou. Você perdeu o acesso aos conteúdos exclusivos.
+      </span>
+      <span class="message" *ngIf="!isExpired(sub)">
+        Sua assinatura {{ sub.status === 'TRIAL' ? 'teste' : '' }} expira em {{ getDaysRemaining(sub.status === 'TRIAL' ? sub.trialEndDate : sub.currentPeriodEnd) }} dias.
+      </span>
+    </div>
+    
+    <div class="banner-actions">
+      <button class="btn btn-sm btn-primary banner-btn" (click)="irParaPlanos()">
+        {{ isExpired(sub) ? 'Assinar Agora' : 'Renovar / Assinar' }}
+      </button>
+      <button class="btn-close-banner" (click)="dismiss()" *ngIf="!isExpired(sub)">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</ng-container>

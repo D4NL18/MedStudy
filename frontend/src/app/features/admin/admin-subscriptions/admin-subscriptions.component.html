@@ -88,17 +88,7 @@
           (keyup.enter)="onUserSearch()"
         />
         <button class="btn-search" (click)="onUserSearch()">Buscar</button>
-      </div>
-
-      <div class="select-box">
-        <label>Status:</label>
-        <select [(ngModel)]="userStatusFilter" (change)="onUserFilterChange()">
-          <option value="">Todos os Status</option>
-          <option value="TRIAL">Trial</option>
-          <option value="ACTIVE">Ativo</option>
-          <option value="EXPIRED">Expirado</option>
-          <option value="LIFETIME">Lifetime / VIP</option>
-        </select>
+        <button class="btn-clear" (click)="clearFilters()">Limpar Filtros</button>
       </div>
     </div>
 
@@ -106,16 +96,66 @@
       <table class="data-table">
         <thead>
           <tr>
-            <th>Usuário</th>
-            <th>E-mail</th>
-            <th>Status</th>
-            <th>Vencimento</th>
-            <th>Origem</th>
+            <th (click)="sortBy('user.name')">
+              <div class="header-content pointer">
+                <span>Usuário</span>
+                <lucide-icon [name]="userSortCol() === 'user.name' ? (userSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
+            <th (click)="sortBy('user.email')">
+              <div class="header-content pointer">
+                <span>E-mail</span>
+                <lucide-icon [name]="userSortCol() === 'user.email' ? (userSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
+            <th class="filter-header">
+              <div class="header-content">
+                <div class="sortable-header pointer" (click)="sortBy('status')">
+                  <span>Status</span>
+                  <lucide-icon [name]="userSortCol() === 'status' ? (userSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+                </div>
+                <div class="filter-dropdown">
+                  <button class="btn-filter" (click)="statusFilterOpen = !statusFilterOpen; originFilterOpen = false" [class.active]="userSelectedStatuses().length > 0">
+                    <lucide-icon name="filter" [size]="14"></lucide-icon>
+                  </button>
+                  <div class="filter-menu glass" *ngIf="statusFilterOpen">
+                    <label class="checkbox-label"><input type="checkbox" [checked]="userSelectedStatuses().includes('TRIAL')" (change)="toggleUserStatusFilter('TRIAL')"> Trial</label>
+                    <label class="checkbox-label"><input type="checkbox" [checked]="userSelectedStatuses().includes('ACTIVE')" (change)="toggleUserStatusFilter('ACTIVE')"> Ativo</label>
+                    <label class="checkbox-label"><input type="checkbox" [checked]="userSelectedStatuses().includes('EXPIRED')" (change)="toggleUserStatusFilter('EXPIRED')"> Expirado</label>
+                    <label class="checkbox-label"><input type="checkbox" [checked]="userSelectedStatuses().includes('LIFETIME')" (change)="toggleUserStatusFilter('LIFETIME')"> Lifetime</label>
+                  </div>
+                </div>
+              </div>
+            </th>
+            <th (click)="sortBy('currentPeriodEnd')">
+              <div class="header-content pointer">
+                <span>Vencimento</span>
+                <lucide-icon [name]="userSortCol() === 'currentPeriodEnd' ? (userSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
+            <th class="filter-header">
+              <div class="header-content">
+                <div class="sortable-header pointer" (click)="sortBy('isAdminOverride')">
+                  <span>Origem</span>
+                  <lucide-icon [name]="userSortCol() === 'isAdminOverride' ? (userSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+                </div>
+                <div class="filter-dropdown">
+                  <button class="btn-filter" (click)="originFilterOpen = !originFilterOpen; statusFilterOpen = false" [class.active]="userSelectedOrigins().length > 0">
+                    <lucide-icon name="filter" [size]="14"></lucide-icon>
+                  </button>
+                  <div class="filter-menu glass" *ngIf="originFilterOpen">
+                    <label class="checkbox-label"><input type="checkbox" [checked]="userSelectedOrigins().includes(true)" (change)="toggleUserOriginFilter(true)"> Admin Manual</label>
+                    <label class="checkbox-label"><input type="checkbox" [checked]="userSelectedOrigins().includes(false)" (change)="toggleUserOriginFilter(false)"> Sistema</label>
+                  </div>
+                </div>
+              </div>
+            </th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let u of users()">
+          @for (u of users(); track u.userId) {
+          <tr>
             <td class="font-medium">{{ u.userName }}</td>
             <td class="text-muted">{{ u.userEmail }}</td>
             <td>
@@ -130,10 +170,10 @@
               <span *ngIf="u.status === 'EXPIRED'" class="text-danger">Expirado</span>
             </td>
             <td>
-              <span class="override-tag" *ngIf="u.adminOverride">
+              <span class="override-tag" *ngIf="u.isAdminOverride">
                 <lucide-icon name="user-check" [size]="14"></lucide-icon> Admin Manual
               </span>
-              <span class="text-muted" *ngIf="!u.adminOverride">Sistema</span>
+              <span class="text-muted" *ngIf="!u.isAdminOverride">Sistema</span>
             </td>
             <td>
               <button class="btn-action" (click)="openOverrideModal(u)">
@@ -141,9 +181,11 @@
               </button>
             </td>
           </tr>
-          <tr *ngIf="users().length === 0">
-            <td colspan="6" class="text-center empty-td">Nenhum assinante encontrado com os filtros aplicados.</td>
+          } @empty {
+          <tr>
+            <td colspan="6" class="text-center empty-td">Nenhum assinante encontrado com os filtros aplicados. (Debug: {{ users().length }} elementos carregados)</td>
           </tr>
+          }
         </tbody>
       </table>
 
@@ -159,14 +201,16 @@
   <!-- TAB 2: TRANSACTIONS PIX -->
   <section class="tab-content" *ngIf="activeTab() === 'transactions'">
     <div class="filters-bar glass">
-      <div class="select-box">
-        <label>Status PIX:</label>
-        <select [(ngModel)]="txStatusFilter" (change)="onTxFilterChange()">
-          <option value="">Todas as Transações</option>
-          <option value="PAID">Pagas (PAID)</option>
-          <option value="CREATED">Geradas (CREATED)</option>
-          <option value="EXPIRED">Expiradas (EXPIRED)</option>
-        </select>
+      <div class="search-box">
+        <lucide-icon name="search" [size]="18"></lucide-icon>
+        <input
+          type="text"
+          placeholder="Buscar por e-mail, nome ou TXID..."
+          [(ngModel)]="txSearch"
+          (keyup.enter)="onTxFilterChange()"
+        />
+        <button class="btn-search" (click)="onTxFilterChange()">Buscar</button>
+        <button class="btn-clear" (click)="clearTxFilters()">Limpar Filtros</button>
       </div>
     </div>
 
@@ -174,17 +218,61 @@
       <table class="data-table">
         <thead>
           <tr>
-            <th>TXID</th>
-            <th>Comprador</th>
-            <th>Valor</th>
-            <th>Data Criação</th>
-            <th>Data Pagamento</th>
+            <th (click)="sortTxBy('txid')">
+              <div class="header-content pointer">
+                <span>TXID</span>
+                <lucide-icon [name]="txSortCol() === 'txid' ? (txSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
+            <th (click)="sortTxBy('user.email')">
+              <div class="header-content pointer">
+                <span>Comprador</span>
+                <lucide-icon [name]="txSortCol() === 'user.email' ? (txSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
+            <th (click)="sortTxBy('amount')">
+              <div class="header-content pointer">
+                <span>Valor</span>
+                <lucide-icon [name]="txSortCol() === 'amount' ? (txSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
+            <th (click)="sortTxBy('createdAt')">
+              <div class="header-content pointer">
+                <span>Data Criação</span>
+                <lucide-icon [name]="txSortCol() === 'createdAt' ? (txSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
+            <th (click)="sortTxBy('paidAt')">
+              <div class="header-content pointer">
+                <span>Data Pagamento</span>
+                <lucide-icon [name]="txSortCol() === 'paidAt' ? (txSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+              </div>
+            </th>
             <th>EndToEnd ID</th>
-            <th>Status</th>
+            <th class="filter-header">
+              <div class="header-content">
+                <div class="sortable-header pointer" (click)="sortTxBy('status')">
+                  <span>Status</span>
+                  <lucide-icon [name]="txSortCol() === 'status' ? (txSortDir() === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" [size]="14"></lucide-icon>
+                </div>
+                <div class="filter-dropdown">
+                  <button class="btn-filter" (click)="txStatusFilterOpen = !txStatusFilterOpen" [class.active]="txSelectedStatuses().length > 0">
+                    <lucide-icon name="filter" [size]="14"></lucide-icon>
+                  </button>
+                  <div class="filter-menu glass" *ngIf="txStatusFilterOpen">
+                    <label class="checkbox-label"><input type="checkbox" [checked]="txSelectedStatuses().includes('CREATED')" (change)="toggleTxStatusFilter('CREATED')"> Geradas (CREATED)</label>
+                    <label class="checkbox-label"><input type="checkbox" [checked]="txSelectedStatuses().includes('PAID')" (change)="toggleTxStatusFilter('PAID')"> Pagas (PAID)</label>
+                    <label class="checkbox-label"><input type="checkbox" [checked]="txSelectedStatuses().includes('EXPIRED')" (change)="toggleTxStatusFilter('EXPIRED')"> Expiradas (EXPIRED)</label>
+                    <label class="checkbox-label"><input type="checkbox" [checked]="txSelectedStatuses().includes('CANCELLED')" (change)="toggleTxStatusFilter('CANCELLED')"> Canceladas (CANCELLED)</label>
+                  </div>
+                </div>
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let tx of transactions()">
+          @for (tx of transactions(); track tx.id) {
+          <tr>
             <td class="font-mono text-xs">{{ tx.txid }}</td>
             <td>{{ tx.userEmail }}</td>
             <td class="font-semibold">R$ {{ tx.amount | number:'1.2-2' }}</td>
@@ -197,9 +285,11 @@
               </span>
             </td>
           </tr>
-          <tr *ngIf="transactions().length === 0">
+          } @empty {
+          <tr>
             <td colspan="7" class="text-center empty-td">Nenhuma transação PIX registrada.</td>
           </tr>
+          }
         </tbody>
       </table>
 
@@ -230,8 +320,10 @@
       </div>
 
       <div class="modal-body">
-        <p class="user-email-desc">E-mail: <strong>{{ selectedUserForOverride()?.userEmail }}</strong></p>
-        <p class="status-current">Status Atual: <span class="badge" [ngClass]="getStatusBadgeClass(selectedUserForOverride()?.status || '')">{{ selectedUserForOverride()?.status }}</span></p>
+        <div class="user-info">
+          <p class="user-email-desc">E-mail: <strong>{{ selectedUserForOverride()?.userEmail }}</strong></p>
+          <p class="status-current">Status Atual: <span class="badge" [ngClass]="getStatusBadgeClass(selectedUserForOverride()?.status || '')">{{ selectedUserForOverride()?.status }}</span></p>
+        </div>
 
         <div class="form-group">
           <label>Selecione a ação de concessão:</label>
@@ -248,23 +340,23 @@
               <input type="radio" name="overrideOpt" [(ngModel)]="selectedOverrideOption" value="ADD_30_DAYS" />
               <span>+30 Dias (1 Mês)</span>
             </label>
-            <label class="radio-item highlight-vip">
+            <label class="radio-item">
               <input type="radio" name="overrideOpt" [(ngModel)]="selectedOverrideOption" value="GRANT_LIFETIME" />
               <span>Conceder LIFETIME (Acesso Permanente Vitalício / VIP)</span>
             </label>
-            <label class="radio-item danger">
+            <label class="radio-item">
               <input type="radio" name="overrideOpt" [(ngModel)]="selectedOverrideOption" value="FORCE_EXPIRE" />
-              <span>Forçar Expiração (Bloquear Paywall)</span>
+              <span>Forçar Expiração</span>
             </label>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="overrideNotes">Motivo / Observações (Obrigatório):</label>
+        <div class="form-group" *ngIf="selectedOverrideOption === 'FORCE_EXPIRE'">
+          <label for="overrideNotes">Motivo da Expiração (Obrigatório):</label>
           <textarea
             id="overrideNotes"
             rows="3"
-            placeholder="Ex: Liberado como bonificação de teste beta / VIP para professor parceiro..."
+            placeholder="Ex: Assinatura cancelada por violação dos termos ou fraude..."
             [(ngModel)]="overrideNotes"
           ></textarea>
         </div>
@@ -272,7 +364,7 @@
 
       <div class="modal-footer">
         <button class="btn-cancel" (click)="closeOverrideModal()">Cancelar</button>
-        <button class="btn-confirm" [disabled]="submittingOverride() || !overrideNotes.trim()" (click)="submitOverride()">
+        <button class="btn-confirm" [disabled]="submittingOverride() || (selectedOverrideOption === 'FORCE_EXPIRE' && !overrideNotes.trim())" (click)="submitOverride()">
           {{ submittingOverride() ? 'Salvando...' : 'Confirmar Alteração' }}
         </button>
       </div>

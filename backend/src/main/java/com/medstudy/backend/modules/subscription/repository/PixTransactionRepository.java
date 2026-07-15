@@ -14,11 +14,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
 /**
  * Spring Data JPA Repository for PIX Transactions.
  */
 @Repository
-public interface PixTransactionRepository extends JpaRepository<PixTransaction, UUID> {
+public interface PixTransactionRepository extends JpaRepository<PixTransaction, UUID>, JpaSpecificationExecutor<PixTransaction> {
 
     Optional<PixTransaction> findByTxid(String txid);
 

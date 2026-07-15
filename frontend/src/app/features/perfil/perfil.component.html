@@ -8,6 +8,7 @@
             <p class="email">{{ user()?.email }}</p>
           </div>
         </div>
+
       </header>
 
       <div class="perfil-grid">
@@ -16,7 +17,7 @@
           <div class="section-header">
             <div class="header-main">
               <h3>👤 Dados do Perfil</h3>
-              <app-button variant="ghost" customClass="edit-toggle-btn glass" *ngIf="!isEditing() && profile()" (onClick)="startEditing()">
+              <app-button variant="ghost" customClass="edit-toggle-btn" *ngIf="!isEditing() && profile()" (onClick)="startEditing()">
                 <lucide-icon name="edit-2" [size]="16"></lucide-icon>
                 <span>Editar</span>
               </app-button>
@@ -171,9 +172,80 @@
         </div>
         
         <div style="display: flex; justify-content: center; margin-top: 20px;">
-          <app-button variant="secondary" customClass="glass" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; color: #e2e8f0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer;" (onClick)="showAllBadgesModal.set(true)">
+          <app-button variant="outline" (onClick)="showAllBadgesModal.set(true)">
             Ver todas as conquistas
           </app-button>
+        </div>
+      </section>
+
+      <!-- Assinatura e Pagamentos -->
+      <section class="perfil-section glass mt-6">
+        <div class="section-header">
+          <h3>💳 Assinatura e Pagamentos</h3>
+          <p>Gerencie seu plano e visualize o histórico de transações</p>
+        </div>
+
+        <ng-container *ngIf="subscriptionLoaded()">
+          <div class="subscription-details" *ngIf="subscription() as sub; else noSubscription">
+            <div class="status-card" [ngClass]="sub.status.toLowerCase()">
+              <div class="status-header">
+                <h4>Plano Atual</h4>
+                <span class="badge">{{ sub.status }}</span>
+              </div>
+              <div class="status-body">
+                <p *ngIf="sub.currentPeriodStart"><strong>Início:</strong> {{ sub.currentPeriodStart | date:'dd/MM/yyyy' }}</p>
+                <p *ngIf="sub.currentPeriodEnd"><strong>Vencimento:</strong> {{ sub.currentPeriodEnd | date:'dd/MM/yyyy' }}</p>
+                <p *ngIf="sub.trialEndDate"><strong>Trial até:</strong> {{ sub.trialEndDate | date:'dd/MM/yyyy' }}</p>
+              </div>
+              <div class="status-actions">
+                <app-button variant="primary" *ngIf="sub.status !== 'ACTIVE' && sub.status !== 'LIFETIME'" [routerLink]="['/planos']">Assinar Premium</app-button>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noSubscription>
+            <div class="subscription-details">
+              <div class="status-card trial">
+                <div class="status-header">
+                  <h4>Plano Atual</h4>
+                  <span class="badge">GRATUITO</span>
+                </div>
+                <div class="status-body">
+                  <p>Você está no plano gratuito. Assine o Premium para acesso ilimitado!</p>
+                </div>
+                <div class="status-actions">
+                  <app-button variant="primary" [routerLink]="['/planos']">Ver Planos</app-button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+
+        <div class="transactions-list" *ngIf="subscriptionLoaded()">
+          <h4>Histórico de Transações</h4>
+          <table *ngIf="transactions().length > 0; else noTransactions">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tx of transactions()">
+                <td>{{ tx.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>R$ {{ (tx.amount / 100).toFixed(2) }}</td>
+                <td>
+                  <span class="tx-badge" [ngClass]="tx.status === 'PAID' ? 'paid' : 'pending'">
+                    {{ tx.status === 'PAID' ? 'Pago' : 'Pendente' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noTransactions>
+            <p class="no-data">Nenhuma transação encontrada.</p>
+          </ng-template>
         </div>
       </section>
 

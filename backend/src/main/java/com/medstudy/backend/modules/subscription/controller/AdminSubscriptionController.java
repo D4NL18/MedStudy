@@ -35,10 +35,11 @@ public class AdminSubscriptionController {
     @GetMapping("/users")
     public ResponseEntity<Page<AdminUserSubscriptionDto>> listUserSubscriptions(
         @RequestParam(required = false) String search,
-        @RequestParam(required = false) SubscriptionStatus status,
+        @RequestParam(required = false) java.util.List<SubscriptionStatus> statuses,
+        @RequestParam(required = false) java.util.List<Boolean> isOrigins,
         @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(adminSubscriptionService.listUserSubscriptions(search, status, pageable));
+        return ResponseEntity.ok(adminSubscriptionService.listUserSubscriptions(search, statuses, isOrigins, pageable));
     }
 
     @PostMapping("/users/{userId}/override")
@@ -51,9 +52,10 @@ public class AdminSubscriptionController {
 
     @GetMapping("/transactions")
     public ResponseEntity<Page<AdminPixTransactionDto>> listPixTransactions(
-        @RequestParam(required = false) PixStatus status,
+        @RequestParam(required = false) String search,
+        @RequestParam(required = false) java.util.List<PixStatus> statuses,
         @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(adminSubscriptionService.listPixTransactions(status, pageable));
+        return ResponseEntity.ok(adminSubscriptionService.listPixTransactions(search, statuses, pageable));
     }
 }

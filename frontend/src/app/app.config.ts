@@ -23,7 +23,7 @@ import { flashcardsFeature } from './store/flashcards/flashcards.reducer';
 import { FlashcardsEffects } from './store/flashcards/flashcards.effects';
 import { profileFeature } from './store/profile/profile.reducer';
 import { ProfileEffects } from './store/profile/profile.effects';
-import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw, Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, BarChart2, LogOut, User, WifiOff, Download, Heart, Brain, Shield, Pill, Dna, Activity, Eye, Skull, Baby, Stethoscope, Bone, Syringe, FlaskConical, Microscope, Users, UserPlus, UserMinus, UserCheck, UserX, Ban, Crown, Trophy, Sparkles, Flame } from 'lucide-angular';
+import { LucideAngularModule, Diamond, ChevronRight, CheckCircle, Calendar, Clock, Play, AlertCircle, X, RotateCw, Check, AlertTriangle, Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw, Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, BarChart2, LogOut, User, WifiOff, Download, Heart, Brain, Shield, Pill, Dna, Activity, Eye, Skull, Baby, Stethoscope, Bone, Syringe, FlaskConical, Microscope, Users, UserPlus, UserMinus, UserCheck, UserX, Ban, Crown, Trophy, Sparkles, Flame, ShieldCheck, DollarSign, Receipt, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-angular';
 import { importProvidersFrom } from '@angular/core';
 
 import { errorInterceptor } from './core/interceptors/error.interceptor';
@@ -53,7 +53,7 @@ export const appConfig: ApplicationConfig = {
       Plus, Search, Filter, Edit, Edit2, Trash2, Circle, TrendingUp, TrendingDown, Maximize2, Info, FileSpreadsheet, FileText, RefreshCcw, RefreshCw,
       Zap, Target, Award, Bell, BookOpen, Lock, Menu, LayoutDashboard, Database, ClipboardList, PlayCircle, Layers, PieChart, BarChart, LogOut, User, BarChart2, WifiOff, Download,
       Heart, Brain, Shield, Pill, Dna, Activity, Eye, Skull, Baby, Stethoscope, Bone, Syringe, FlaskConical, Microscope,
-      Users, UserPlus, UserMinus, UserCheck, UserX, Ban, Crown, Trophy, Sparkles, Flame
+      Users, UserPlus, UserMinus, UserCheck, UserX, Ban, Crown, Trophy, Sparkles, Flame, ShieldCheck, DollarSign, Receipt, ChevronsUpDown, ChevronUp, ChevronDown
     })),
     provideStore({ 
       theme: themeReducer,

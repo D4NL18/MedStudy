@@ -1,0 +1,10 @@
+<div class="paywall-overlay" *ngIf="showPaywall$ | async">
+  <div class="paywall-card">
+    <div class="paywall-icon">
+      <i class="fas fa-lock"></i>
+    </div>
+    <h2>Assinatura Expirada ou Ausente</h2>
+    <p>Para continuar acessando o conteúdo, você precisa de uma assinatura ativa.</p>
+    <button class="btn btn-primary" (click)="irParaPlanos()">Ver Planos</button>
+  </div>
+</div>

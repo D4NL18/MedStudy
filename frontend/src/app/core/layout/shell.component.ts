@@ -18,6 +18,7 @@ import { OnboardingComponent } from '@features/auth/onboarding/onboarding.compon
 import { AvatarComponent } from '@shared/components/avatar/avatar.component';
 import { ProfileActions } from '@store/profile/profile.actions';
 import { selectProfile } from '@store/profile/profile.reducer';
+import { ExpirationBanner } from './expiration-banner/expiration-banner';
 
 @Component({
   selector: 'app-shell',
@@ -29,6 +30,7 @@ import { selectProfile } from '@store/profile/profile.reducer';
     RouterLinkActive, 
     FlashcardsStudyComponent, 
     OfflineBannerComponent,
+    ExpirationBanner,
     LucideAngularModule,
     OnboardingComponent,
     AvatarComponent,

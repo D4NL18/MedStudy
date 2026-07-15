@@ -15,9 +15,14 @@ import java.time.Instant;
 public class PixWebhookController {
 
     private final PixPaymentService pixPaymentService;
+    private final com.medstudy.backend.modules.subscription.client.PixClient pixClient;
 
-    public PixWebhookController(PixPaymentService pixPaymentService) {
+    public PixWebhookController(
+        PixPaymentService pixPaymentService, 
+        com.medstudy.backend.modules.subscription.client.PixClient pixClient
+    ) {
         this.pixPaymentService = pixPaymentService;
+        this.pixClient = pixClient;
     }
 
     @PostMapping("/bb")
@@ -31,6 +36,27 @@ public class PixWebhookController {
                         Instant.now()
                     );
                 }
+            }
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/mercadopago")
+    public ResponseEntity<Void> receiveMpWebhook(@RequestBody com.medstudy.backend.modules.subscription.dto.MpWebhookPayloadDto payload) {
+        if (payload != null && payload.data() != null && payload.data().id() != null) {
+            String txid = payload.data().id();
+            try {
+                com.medstudy.backend.modules.subscription.dto.PixStatusResponseDto statusResponse = pixClient.getChargeStatus(txid);
+                if (statusResponse.status() == com.medstudy.backend.modules.subscription.domain.PixStatus.PAID) {
+                    pixPaymentService.processPaymentSuccess(
+                        txid,
+                        null,
+                        statusResponse.paidAt() != null ? statusResponse.paidAt() : Instant.now()
+                    );
+                }
+            } catch (Exception e) {
+                // Log and ignore to prevent MP from retrying indefinitely if the issue is on our side or the ID is invalid
+                System.err.println("Error processing MP Webhook: " + e.getMessage());
             }
         }
         return ResponseEntity.ok().build();

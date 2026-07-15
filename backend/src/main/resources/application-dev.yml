@@ -34,3 +34,10 @@ server:
 jwt:
   secret: ${JWT_SECRET:YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY=}
   expiration: 14400000
+
+mercadopago:
+  access-token: TEST-8771148891997152-071517-cc92577b80a7237b93018e782a10f419-1681167345
+  public-key: TEST-68d4e0f6-e480-4a31-8bdb-6f4dea00903c
+
+app:
+  premium-price: 1.00

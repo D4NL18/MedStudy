@@ -1,8 +1,10 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { showPaywall } from '../../store/auth/auth.actions';
 
 
 /**
@@ -11,6 +13,7 @@ import { catchError } from 'rxjs/operators';
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const snackBar = inject(MatSnackBar);
+  const store = inject(Store);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -19,6 +22,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           duration: 5000,
           panelClass: ['error-snackbar']
         });
+      } else if (error.status === 402) {
+        store.dispatch(showPaywall());
       }
       return throwError(() => error);
     })

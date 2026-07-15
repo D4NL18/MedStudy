@@ -1,0 +1,46 @@
+.paywall-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paywall-card {
+  background-color: var(--surface-color);
+  padding: var(--spacing-xl, 32px);
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+  .paywall-icon {
+    font-size: 3rem;
+    color: var(--warning-color);
+    margin-bottom: var(--spacing-md, 16px);
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm, 8px);
+    color: var(--text-color);
+  }
+
+  p {
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-lg, 24px);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}

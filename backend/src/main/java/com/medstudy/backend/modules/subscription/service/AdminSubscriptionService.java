@@ -11,7 +11,13 @@ import com.medstudy.backend.modules.subscription.entity.PixTransaction;
 import com.medstudy.backend.modules.subscription.entity.Subscription;
 import com.medstudy.backend.modules.subscription.repository.PixTransactionRepository;
 import com.medstudy.backend.modules.subscription.repository.SubscriptionRepository;
+import com.medstudy.backend.modules.subscription.repository.SubscriptionSpecification;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,9 +63,24 @@ public class AdminSubscriptionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserSubscriptionDto> listUserSubscriptions(String search, SubscriptionStatus status, Pageable pageable) {
-        String cleanSearch = (search != null && !search.isBlank()) ? search.trim() : null;
-        Page<Subscription> subscriptions = subscriptionRepository.findWithFilters(cleanSearch, status, pageable);
+    public Page<AdminUserSubscriptionDto> listUserSubscriptions(
+            String search, 
+            java.util.List<SubscriptionStatus> statuses, 
+            java.util.List<Boolean> isOrigins, 
+            Pageable pageable) {
+
+        Specification<Subscription> spec = SubscriptionSpecification.withFilters(search, statuses, isOrigins);
+
+        Pageable finalPageable = pageable;
+        if (pageable.getSort().isUnsorted()) {
+            finalPageable = PageRequest.of(
+                pageable.getPageNumber(), 
+                pageable.getPageSize(), 
+                Sort.by(Sort.Direction.ASC, "user.name")
+            );
+        }
+
+        Page<Subscription> subscriptions = subscriptionRepository.findAll(spec, finalPageable);
 
         return subscriptions.map(s -> new AdminUserSubscriptionDto(
             s.getUser().getId(),
@@ -135,8 +156,17 @@ public class AdminSubscriptionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminPixTransactionDto> listPixTransactions(PixStatus status, Pageable pageable) {
-        Page<PixTransaction> transactions = pixTransactionRepository.findWithFilters(status, pageable);
+    public Page<AdminPixTransactionDto> listPixTransactions(String search, java.util.List<PixStatus> statuses, Pageable pageable) {
+        Specification<PixTransaction> spec = com.medstudy.backend.modules.subscription.repository.PixTransactionSpecification.withFilters(search, statuses);
+        Pageable finalPageable = pageable;
+        if (pageable.getSort().isUnsorted()) {
+            finalPageable = PageRequest.of(
+                pageable.getPageNumber(), 
+                pageable.getPageSize(), 
+                Sort.by(Sort.Direction.DESC, "createdAt")
+            );
+        }
+        Page<PixTransaction> transactions = pixTransactionRepository.findAll(spec, finalPageable);
 
         return transactions.map(p -> new AdminPixTransactionDto(
             p.getId(),

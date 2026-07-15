@@ -8,6 +8,7 @@ public record PixResponseDto(
     String txid,
     String pixCopiaECola,
     String qrCodeLocation,
+    String qrCodeBase64,
     BigDecimal amount,
     Instant expirationDate,
     PixStatus status

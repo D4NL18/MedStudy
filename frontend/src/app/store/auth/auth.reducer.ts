@@ -11,13 +11,15 @@ export interface AuthState {
   user: { email: string; nome: string } | null;
   error: string | null;
   loading: boolean;
+  showPaywall: boolean;
 }
 
 export const initialState: AuthState = {
   token: localStorage.getItem('auth_token'),
   user: null,
   error: null,
-  loading: false
+  loading: false,
+  showPaywall: false
 };
 
 export const authReducer = createReducer(
@@ -43,6 +45,15 @@ export const authReducer = createReducer(
     token: null,
     user: null,
     error: null,
-    loading: false
+    loading: false,
+    showPaywall: false
+  })),
+  on(AuthActions.showPaywall, (state) => ({
+    ...state,
+    showPaywall: true
+  })),
+  on(AuthActions.hidePaywall, (state) => ({
+    ...state,
+    showPaywall: false
   }))
 );

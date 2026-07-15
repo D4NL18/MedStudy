@@ -1,0 +1,62 @@
+<div class="planos-container">
+  <div class="header">
+    <h1>Escolha seu Plano</h1>
+    <p>Tenha acesso ilimitado a todas as ferramentas e conteúdos do MedStudy.</p>
+  </div>
+
+  <div class="plans-grid single-plan">
+    <!-- Premium Plan -->
+    <div class="plan-card premium">
+      <div class="badge">Teste de 30 Dias</div>
+      <div class="plan-header">
+        <h2>Premium</h2>
+        <div class="price">R$ {{ (price | number:'1.2-2')?.replace('.', ',') }}<span>{{ billingCycle }}</span></div>
+      </div>
+      <ul class="features">
+        <li><i class="fas fa-check"></i> Acesso ilimitado a todas as questões</li>
+        <li><i class="fas fa-check"></i> Simulados ilimitados</li>
+        <li><i class="fas fa-check"></i> Flashcards avançados com repetição espaçada</li>
+        <li><i class="fas fa-check"></i> Todas as aulas exclusivas</li>
+        <li><i class="fas fa-check"></i> Suporte prioritário</li>
+      </ul>
+      <app-button variant="primary" (onClick)="gerarPix()" [disabled]="loadingPix" customClass="full-width">
+        <i class="fas fa-spinner fa-spin" *ngIf="loadingPix"></i>
+        {{ loadingPix ? 'Gerando...' : 'Assinar Agora' }}
+      </app-button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal PIX -->
+<div class="pix-modal-overlay" *ngIf="showPixModal">
+  <div class="pix-modal-card">
+    <button class="btn-close" (click)="fecharModal()"><i class="fas fa-times"></i></button>
+    
+    <div *ngIf="pixSuccess">
+      <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+      <h2>Pagamento Confirmado!</h2>
+      <p>Sua assinatura Premium foi ativada com sucesso. Aproveite o MedStudy!</p>
+      <app-button variant="primary" (onClick)="fecharModal()">Ir para Dashboard</app-button>
+    </div>
+
+    <div *ngIf="!pixSuccess">
+      <h2>Pague com PIX</h2>
+      <p>Escaneie o QR Code ou copie o código abaixo para pagar.</p>
+      
+      <div class="qr-container">
+        <img *ngIf="pixData?.qrCodeBase64" [src]="'data:image/png;base64,' + pixData?.qrCodeBase64" alt="QR Code PIX">
+      </div>
+      
+      <div class="copia-cola">
+        <input type="text" [value]="pixData?.pixCopiaECola" readonly #pixInput>
+        <app-button variant="secondary" (onClick)="copiarPix(pixInput.value)">
+          {{ copiado ? 'Copiado!' : 'Copiar' }}
+        </app-button>
+      </div>
+
+      <div class="loading-status">
+        <i class="fas fa-spinner fa-spin"></i> Aguardando pagamento...
+      </div>
+    </div>
+  </div>
+</div>

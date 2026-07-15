@@ -26,6 +26,7 @@ public class BbPixClientImpl implements PixClient {
             txid,
             copiaECola,
             "https://pix.bb.com.br/qr/v2/cobv/" + txid,
+            null,
             amount,
             expirationDate,
             PixStatus.CREATED

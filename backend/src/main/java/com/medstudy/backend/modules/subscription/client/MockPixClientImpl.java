@@ -24,7 +24,8 @@ public class MockPixClientImpl implements PixClient {
         return new PixResponseDto(
             txid,
             copiaECola,
-            "https://mock.medstudy.com.br/qr/v2/cobv/" + txid,
+            "https://mockpix.com/qr/" + txid,
+            null,
             amount,
             expirationDate,
             PixStatus.CREATED

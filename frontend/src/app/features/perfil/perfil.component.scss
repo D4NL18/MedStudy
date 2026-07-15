@@ -611,3 +611,80 @@
     }
   }
 }
+
+.subscription-details {
+  margin-top: 16px;
+
+  .status-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      h4 { margin: 0; color: #fff; }
+      
+      .badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        background: #475569;
+        color: #fff;
+      }
+    }
+
+    &.active .badge { background: #10b981; }
+    &.trial .badge { background: #f59e0b; }
+    &.expired .badge { background: #ef4444; }
+
+    .status-body p {
+      margin: 4px 0;
+      color: #94a3b8;
+    }
+
+    .status-actions {
+      margin-top: 16px;
+    }
+  }
+}
+
+.transactions-list {
+  margin-top: 24px;
+
+  h4 { margin-bottom: 12px; color: #e2e8f0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+    }
+
+    th { color: #94a3b8; font-weight: 500; }
+  }
+
+  .tx-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+
+    &.paid { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    &.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+  }
+
+  .no-data {
+    color: #64748b;
+    font-style: italic;
+  }
+}

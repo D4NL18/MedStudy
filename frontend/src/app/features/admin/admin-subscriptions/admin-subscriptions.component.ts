@@ -31,13 +31,25 @@ export class AdminSubscriptionsComponent implements OnInit {
 
   // Filtering & Pagination Users
   userSearch = '';
-  userStatusFilter = '';
+  userSelectedStatuses = signal<string[]>([]);
+  userSelectedOrigins = signal<boolean[]>([]);
+  userSortCol = signal<string>('user.name');
+  userSortDir = signal<'asc' | 'desc'>('asc');
+  
+  statusFilterOpen = false;
+  originFilterOpen = false;
+
   userPage = signal(0);
   userTotalPages = signal(0);
   userTotalElements = signal(0);
 
   // Filtering & Pagination Transactions
-  txStatusFilter = '';
+  txSearch = '';
+  txSelectedStatuses = signal<string[]>([]);
+  txSortCol = signal<string>('createdAt');
+  txSortDir = signal<'asc' | 'desc'>('desc');
+  txStatusFilterOpen = false;
+
   txPage = signal(0);
   txTotalPages = signal(0);
   txTotalElements = signal(0);
@@ -67,11 +79,19 @@ export class AdminSubscriptionsComponent implements OnInit {
 
   loadUsers() {
     this.loadingUsers.set(true);
-    this.adminService.getUsers(this.userSearch, this.userStatusFilter, this.userPage()).subscribe({
+    this.adminService.getUsers(
+      this.userSearch, 
+      this.userSelectedStatuses(),
+      this.userSelectedOrigins(),
+      this.userSortCol(),
+      this.userSortDir(),
+      this.userPage()
+    ).subscribe({
       next: (res) => {
-        this.users.set(res.content);
-        this.userTotalPages.set(res.totalPages);
-        this.userTotalElements.set(res.totalElements);
+        console.log('API Response getUsers:', res);
+        this.users.set(res.content || []);
+        this.userTotalPages.set(res.totalPages || 0);
+        this.userTotalElements.set(res.totalElements || 0);
         this.loadingUsers.set(false);
       },
       error: () => this.loadingUsers.set(false)
@@ -80,11 +100,18 @@ export class AdminSubscriptionsComponent implements OnInit {
 
   loadTransactions() {
     this.loadingTransactions.set(true);
-    this.adminService.getTransactions(this.txStatusFilter, this.txPage()).subscribe({
+    this.adminService.getTransactions(
+      this.txPage(),
+      20,
+      this.txSortCol(),
+      this.txSortDir(),
+      this.txSearch,
+      this.txSelectedStatuses()
+    ).subscribe({
       next: (res) => {
-        this.transactions.set(res.content);
-        this.txTotalPages.set(res.totalPages);
-        this.txTotalElements.set(res.totalElements);
+        this.transactions.set(res.content || []);
+        this.txTotalPages.set(res.totalPages || 0);
+        this.txTotalElements.set(res.totalElements || 0);
         this.loadingTransactions.set(false);
       },
       error: () => this.loadingTransactions.set(false)
@@ -99,6 +126,78 @@ export class AdminSubscriptionsComponent implements OnInit {
   onUserFilterChange() {
     this.userPage.set(0);
     this.loadUsers();
+  }
+
+  clearFilters() {
+    this.userSearch = '';
+    this.userSelectedStatuses.set([]);
+    this.userSelectedOrigins.set([]);
+    this.userSortCol.set('user.name');
+    this.userSortDir.set('asc');
+    this.userPage.set(0);
+    this.statusFilterOpen = false;
+    this.originFilterOpen = false;
+    this.loadUsers();
+  }
+
+  toggleUserStatusFilter(status: string) {
+    const current = this.userSelectedStatuses();
+    if (current.includes(status)) {
+      this.userSelectedStatuses.set(current.filter(s => s !== status));
+    } else {
+      this.userSelectedStatuses.set([...current, status]);
+    }
+    this.onUserFilterChange();
+  }
+
+  toggleUserOriginFilter(isAdminOverride: boolean) {
+    const current = this.userSelectedOrigins();
+    if (current.includes(isAdminOverride)) {
+      this.userSelectedOrigins.set(current.filter(o => o !== isAdminOverride));
+    } else {
+      this.userSelectedOrigins.set([...current, isAdminOverride]);
+    }
+    this.onUserFilterChange();
+  }
+
+  sortBy(col: string) {
+    if (this.userSortCol() === col) {
+      this.userSortDir.set(this.userSortDir() === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.userSortCol.set(col);
+      this.userSortDir.set('asc');
+    }
+    this.onUserFilterChange();
+  }
+
+  clearTxFilters() {
+    this.txSearch = '';
+    this.txSelectedStatuses.set([]);
+    this.txSortCol.set('createdAt');
+    this.txSortDir.set('desc');
+    this.txPage.set(0);
+    this.txStatusFilterOpen = false;
+    this.loadTransactions();
+  }
+
+  toggleTxStatusFilter(status: string) {
+    const current = this.txSelectedStatuses();
+    if (current.includes(status)) {
+      this.txSelectedStatuses.set(current.filter(s => s !== status));
+    } else {
+      this.txSelectedStatuses.set([...current, status]);
+    }
+    this.onTxFilterChange();
+  }
+
+  sortTxBy(col: string) {
+    if (this.txSortCol() === col) {
+      this.txSortDir.set(this.txSortDir() === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.txSortCol.set(col);
+      this.txSortDir.set('asc');
+    }
+    this.onTxFilterChange();
   }
 
   onTxFilterChange() {
@@ -133,13 +232,19 @@ export class AdminSubscriptionsComponent implements OnInit {
 
   submitOverride() {
     const user = this.selectedUserForOverride();
-    if (!user || !this.overrideNotes.trim()) {
-      alert('Por favor, preencha o motivo/observação para realizar a alteração.');
+    if (!user) return;
+
+    if (this.selectedOverrideOption === 'FORCE_EXPIRE' && !this.overrideNotes.trim()) {
+      alert('Por favor, preencha o motivo para forçar a expiração.');
       return;
     }
 
+    const finalNotes = this.selectedOverrideOption === 'FORCE_EXPIRE'
+      ? this.overrideNotes.trim()
+      : 'Alteração concedida manualmente pelo painel administrativo.';
+
     this.submittingOverride.set(true);
-    this.adminService.overrideSubscription(user.userId, this.selectedOverrideOption, this.overrideNotes.trim()).subscribe({
+    this.adminService.overrideSubscription(user.userId, this.selectedOverrideOption, finalNotes).subscribe({
       next: () => {
         this.submittingOverride.set(false);
         this.closeOverrideModal();

@@ -33,6 +33,9 @@ public class PixPaymentService {
     private final PixClient pixClient;
     private final CacheManager cacheManager;
 
+    @org.springframework.beans.factory.annotation.Value("${app.premium-price:49.90}")
+    private BigDecimal annualPrice;
+
     public PixPaymentService(
         PixTransactionRepository pixTransactionRepository,
         SubscriptionRepository subscriptionRepository,
@@ -47,12 +50,12 @@ public class PixPaymentService {
 
     @Transactional
     public PixResponseDto generatePixCharge(User user) {
-        PixResponseDto pixResponse = pixClient.createImmediateCharge(user, ANNUAL_PRICE, DEFAULT_EXPIRATION_SECONDS);
+        PixResponseDto pixResponse = pixClient.createImmediateCharge(user, annualPrice, DEFAULT_EXPIRATION_SECONDS);
 
         PixTransaction transaction = new PixTransaction();
         transaction.setTxid(pixResponse.txid());
         transaction.setUser(user);
-        transaction.setAmount(ANNUAL_PRICE);
+        transaction.setAmount(annualPrice);
         transaction.setPixCopiaECola(pixResponse.pixCopiaECola());
         transaction.setStatus(PixStatus.CREATED);
         transaction.setExpirationDate(pixResponse.expirationDate());

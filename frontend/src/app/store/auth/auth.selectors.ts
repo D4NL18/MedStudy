@@ -60,3 +60,9 @@ export const selectAuthLoading = createSelector(
   selectAuthState,
   (state) => state.loading
 );
+
+export const selectShowPaywall = createSelector(
+  selectAuthState,
+  (state) => state.showPaywall
+);
+

@@ -104,6 +104,10 @@ export const routes: Routes = [
         path: 'admin/subscriptions',
         loadComponent: () => import('./features/admin/admin-subscriptions/admin-subscriptions.component').then(m => m.AdminSubscriptionsComponent),
         canActivate: [adminGuard]
+      },
+      {
+        path: 'planos',
+        loadComponent: () => import('./modules/planos/planos').then(m => m.Planos)
       }
     ]
   },

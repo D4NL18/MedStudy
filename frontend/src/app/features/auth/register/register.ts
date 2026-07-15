@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 
 /**
  * Register.
@@ -13,7 +13,7 @@ import { AuthService } from '@core/services/auth.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule, ModalLayoutComponent],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -26,6 +26,7 @@ export class RegisterComponent {
   errorMessage: string | null = null;
   isLoading = false;
   showPassword = signal(false);
+  showTrialModal = signal(false);
 
   constructor() {
     this.registerForm = this.fb.group({
@@ -54,8 +55,8 @@ export class RegisterComponent {
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         this.isLoading = false;
-        // Optionally dispatch NgRx action for auto-login here if needed
-        this.router.navigate(['/dashboard']);
+        // Ao invés de ir para o dashboard, exibe o modal de Trial 30 dias
+        this.showTrialModal.set(true);
       },
       error: (err) => {
         this.isLoading = false;
@@ -70,5 +71,10 @@ export class RegisterComponent {
 
   togglePassword() {
     this.showPassword.update(v => !v);
+  }
+
+  goToPlans() {
+    this.showTrialModal.set(false);
+    this.router.navigate(['/planos']);
   }
 }

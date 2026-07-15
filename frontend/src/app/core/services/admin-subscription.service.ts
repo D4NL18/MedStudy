@@ -17,7 +17,7 @@ export interface AdminUserSubscription {
   status: 'TRIAL' | 'ACTIVE' | 'EXPIRED' | 'LIFETIME';
   trialEndDate: string | null;
   currentPeriodEnd: string | null;
-  adminOverride: boolean;
+  isAdminOverride: boolean;
   notes: string | null;
 }
 
@@ -53,13 +53,29 @@ export class AdminSubscriptionService {
     return this.http.get<AdminSubscriptionStats>(`${this.apiUrl}/stats`);
   }
 
-  getUsers(search?: string, status?: string, page = 0, size = 20): Observable<PageResponse<AdminUserSubscription>> {
+  getUsers(
+    search?: string, 
+    statuses?: string[], 
+    isOrigins?: boolean[], 
+    sortCol?: string, 
+    sortDir?: 'asc' | 'desc',
+    page = 0, 
+    size = 20
+  ): Observable<PageResponse<AdminUserSubscription>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
     if (search) params = params.set('search', search);
-    if (status) params = params.set('status', status);
+    if (statuses && statuses.length > 0) {
+      params = params.set('statuses', statuses.join(','));
+    }
+    if (isOrigins && isOrigins.length > 0) {
+      params = params.set('isOrigins', isOrigins.join(','));
+    }
+    if (sortCol && sortDir) {
+      params = params.set('sort', `${sortCol},${sortDir}`);
+    }
 
     return this.http.get<PageResponse<AdminUserSubscription>>(`${this.apiUrl}/users`, { params });
   }
@@ -68,12 +84,29 @@ export class AdminSubscriptionService {
     return this.http.post<AdminUserSubscription>(`${this.apiUrl}/users/${userId}/override`, { option, notes });
   }
 
-  getTransactions(status?: string, page = 0, size = 20): Observable<PageResponse<AdminPixTransaction>> {
+  getTransactions(
+    page: number = 0,
+    size: number = 20,
+    sortCol?: string,
+    sortDir?: string,
+    search?: string,
+    statuses?: string[]
+  ): Observable<PageResponse<AdminPixTransaction>> {
     let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+      .set('page', page)
+      .set('size', size);
 
-    if (status) params = params.set('status', status);
+    if (sortCol && sortDir) {
+      params = params.set('sort', `${sortCol},${sortDir}`);
+    }
+
+    if (search && search.trim() !== '') {
+      params = params.set('search', search.trim());
+    }
+
+    if (statuses && statuses.length > 0) {
+      params = params.set('statuses', statuses.join(','));
+    }
 
     return this.http.get<PageResponse<AdminPixTransaction>>(`${this.apiUrl}/transactions`, { params });
   }
