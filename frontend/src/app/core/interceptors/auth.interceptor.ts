@@ -38,7 +38,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 || error.status === 403) {
+      // Only logout on 401 (Unauthorized = invalid/expired token).
+      // Do NOT logout on 403 (Forbidden = authenticated but lacks permission).
+      if (error.status === 401) {
         store.dispatch(AuthActions.logout());
       }
       return throwError(() => error);

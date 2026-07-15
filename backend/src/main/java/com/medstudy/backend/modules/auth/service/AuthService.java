@@ -17,6 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.medstudy.backend.modules.subscription.domain.SubscriptionStatus;
+import com.medstudy.backend.modules.subscription.entity.Subscription;
+import com.medstudy.backend.modules.subscription.repository.SubscriptionRepository;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +39,7 @@ public class AuthService {
     private final LoginAttemptService loginAttemptService;
     private final EmailService emailService;
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+    private final SubscriptionRepository subscriptionRepository;
 
     public AuthService(
             AuthenticationManager authenticationManager,
@@ -41,7 +48,8 @@ public class AuthService {
             UserRepository userRepository,
             LoginAttemptService loginAttemptService,
             EmailService emailService,
-            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder
+            org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
+            SubscriptionRepository subscriptionRepository
     ) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
@@ -50,6 +58,7 @@ public class AuthService {
         this.loginAttemptService = loginAttemptService;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
+        this.subscriptionRepository = subscriptionRepository;
     }
 
     /**
@@ -97,6 +106,14 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("ROLE_USER");
         userRepository.save(user);
+
+        Subscription subscription = new Subscription();
+        subscription.setUser(user);
+        subscription.setStatus(SubscriptionStatus.TRIAL);
+        Instant now = Instant.now();
+        subscription.setTrialStartDate(now);
+        subscription.setTrialEndDate(now.plus(30, ChronoUnit.DAYS));
+        subscriptionRepository.save(subscription);
 
         String jwtToken = jwtService.generateToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());

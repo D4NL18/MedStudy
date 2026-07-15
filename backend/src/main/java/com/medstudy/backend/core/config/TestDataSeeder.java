@@ -26,6 +26,7 @@ public class TestDataSeeder implements CommandLineRunner {
     private final com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository;
     private final FlashcardRepository flashcardRepository;
     private final SimuladoRepository simuladoRepository;
+    private final com.medstudy.backend.modules.subscription.repository.PixTransactionRepository pixTransactionRepository;
     private final ObjectMapper objectMapper;
 
     public TestDataSeeder(StudySessionRepository sessionRepository, 
@@ -33,12 +34,14 @@ public class TestDataSeeder implements CommandLineRunner {
                           com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository,
                           FlashcardRepository flashcardRepository,
                           SimuladoRepository simuladoRepository,
+                          com.medstudy.backend.modules.subscription.repository.PixTransactionRepository pixTransactionRepository,
                           ObjectMapper objectMapper) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.lessonRepository = lessonRepository;
         this.flashcardRepository = flashcardRepository;
         this.simuladoRepository = simuladoRepository;
+        this.pixTransactionRepository = pixTransactionRepository;
         this.objectMapper = objectMapper;
     }
 
@@ -62,6 +65,8 @@ public class TestDataSeeder implements CommandLineRunner {
         if (simuladoRepository.countByUserId(user.getId()) < 25) {
             seedSimulados(user);
         }
+        
+        seedPixTransactions(user);
     }
 
     private void seedSessions(User user) {
@@ -163,5 +168,46 @@ public class TestDataSeeder implements CommandLineRunner {
             simuladoRepository.save(simulado);
         }
         System.out.println(">>> TestDataSeeder: 25 simulados criados para " + user.getEmail());
+    }
+
+    private void seedPixTransactions(User user) {
+        if (pixTransactionRepository.findByUserIdOrderByCreatedAtDesc(user.getId()).isEmpty()) {
+            // PAID transaction
+            com.medstudy.backend.modules.subscription.entity.PixTransaction paid = new com.medstudy.backend.modules.subscription.entity.PixTransaction();
+            paid.setUser(user);
+            paid.setTxid("txid_paid_" + user.getId().toString().substring(0, 8));
+            paid.setAmount(new java.math.BigDecimal("199.90"));
+            paid.setStatus(com.medstudy.backend.modules.subscription.domain.PixStatus.PAID);
+            paid.setE2eId("E2E" + java.util.UUID.randomUUID().toString().replace("-", ""));
+            paid.setCreatedAt(java.time.LocalDateTime.now().minusDays(5));
+            paid.setPaidAt(java.time.Instant.now().minus(5, java.time.temporal.ChronoUnit.DAYS).plus(2, java.time.temporal.ChronoUnit.MINUTES));
+            paid.setExpirationDate(java.time.Instant.now().minus(4, java.time.temporal.ChronoUnit.DAYS));
+            paid.setPixCopiaECola("00020101021226...mockpaid");
+            pixTransactionRepository.save(paid);
+
+            // CREATED transaction
+            com.medstudy.backend.modules.subscription.entity.PixTransaction created = new com.medstudy.backend.modules.subscription.entity.PixTransaction();
+            created.setUser(user);
+            created.setTxid("txid_created_" + user.getId().toString().substring(0, 8));
+            created.setAmount(new java.math.BigDecimal("199.90"));
+            created.setStatus(com.medstudy.backend.modules.subscription.domain.PixStatus.CREATED);
+            created.setCreatedAt(java.time.LocalDateTime.now());
+            created.setExpirationDate(java.time.Instant.now().plus(1, java.time.temporal.ChronoUnit.DAYS));
+            created.setPixCopiaECola("00020101021226...mockcreated");
+            pixTransactionRepository.save(created);
+
+            // EXPIRED transaction
+            com.medstudy.backend.modules.subscription.entity.PixTransaction expired = new com.medstudy.backend.modules.subscription.entity.PixTransaction();
+            expired.setUser(user);
+            expired.setTxid("txid_expired_" + user.getId().toString().substring(0, 8));
+            expired.setAmount(new java.math.BigDecimal("199.90"));
+            expired.setStatus(com.medstudy.backend.modules.subscription.domain.PixStatus.EXPIRED);
+            expired.setCreatedAt(java.time.LocalDateTime.now().minusDays(10));
+            expired.setExpirationDate(java.time.Instant.now().minus(9, java.time.temporal.ChronoUnit.DAYS));
+            expired.setPixCopiaECola("00020101021226...mockexpired");
+            pixTransactionRepository.save(expired);
+
+            System.out.println(">>> TestDataSeeder: 3 transações PIX criadas para " + user.getEmail());
+        }
     }
 }

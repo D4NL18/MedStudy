@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { RippleDirective } from '../../directives/ripple/ripple.directive';
@@ -19,6 +19,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'cta' | 'icon' | 'destruct
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonComponent {
+  @HostBinding('class.full-width') get isFullWidth() { return this.customClass?.includes('full-width'); }
   @Input() variant: ButtonVariant = 'primary';
   @Input() disabled = false;
   @Input() type: 'button' | 'submit' | 'reset' = 'button';

@@ -1,38 +1,38 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Reorganiza��o Inteligente de Revis�es
-status: Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
-last_updated: "2026-07-14T01:53:08.515Z"
-last_activity: 2026-07-14
+milestone: v1.5
+milestone_name: Planos de Usuário e Monetização (PIX)
+status: Ready for Phase 43
+last_updated: "2026-07-15T16:21:59.287Z"
+last_activity: 2026-07-14 -- Phase 42 completed and verified
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 2
-  completed_plans: 3
-  percent: 100
+  total_plans: 3
+  completed_plans: 2
+  percent: 67
 ---
 
-# STATE.md � MedStudy Project Memory
+# STATE.md — MedStudy Project Memory
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-05-11)
 
-**Core value:** O estudante registra desempenho em quest�es, acompanha revis�es e v� sua evolu��o � com dados seguros, r�pidos e confi�veis.
+**Core value:** O estudante registra desempenho em questões, acompanha revisões e vê sua evolução — com dados seguros, rápidos e confiáveis.
 **Current focus:**
 
-Phase 38 — interface-do-usu-rio-e-gerenciamento-de-estado-angular
+Phase 43 — Interface do Usuário (Angular NgRx), Tela de Planos & UX Polish
 
 ---
 
 ## Current Status
 
-**Phase:** 39 of 39 (feedback visual e ux polish)
-**Milestone:** v1.4 � Reorganiza��o Inteligente de Revis�es
+**Phase:** 42 of 43 (Painel Administrativo de Assinaturas)
+**Milestone:** v1.5 — Planos de Usuário e Monetização (PIX)
 **Mode:** Interactive (confirm at each step)
 **Granularity:** Fine
-**Status:** Milestone v1.4 shipped — branch feat/milestone-1.4 pushed, awaiting PR
+**Status:** Ready for Phase 43
 
 ---
 
@@ -42,8 +42,10 @@ Phase 38 — interface-do-usu-rio-e-gerenciamento-de-estado-angular
 - [x] Milestone v1.1 Shipped (Phases 16-21)
 - [x] Milestone v1.2 Shipped (Phases 22-28)
 - [x] Milestone v1.3 Shipped (Phases 29-35)
-- [x] Phase 36: Algoritmo de Redistribui��o no Backend (Shipped & Validated)
-- [x] Phase 37: Endpoints da API e Configura��es de Usu�rio (Shipped & Validated)
+- [x] Milestone v1.4 Shipped (Phases 36-39)
+- [x] Phase 40: Modelo de Assinaturas & Motor de Trial Freemium no Backend (Completed & Validated)
+- [x] Phase 41: Integração API PIX Banco do Brasil & Webhooks (Spring Boot) (Completed & Validated)
+- [x] Phase 42: Painel Administrativo de Assinaturas (Single Admin) (Completed & Validated)
 
 ---
 
@@ -52,11 +54,16 @@ Phase 38 — interface-do-usu-rio-e-gerenciamento-de-estado-angular
 - None
 
 ---
-*STATE.md updated: 2026-07-13 after Phase 37 transition*
+
+*STATE.md updated: 2026-07-14 after Phase 42 transition*
 
 ## Current Position
 
-Phase: 39 (feedback-visual-e-ux-polish) — EXECUTION_COMPLETED
-Plan: .planning/phases/39-feedback-visual-e-ux-polish/39-PLAN.md
-Status: Phase complete
-Last activity: 2026-07-14
+Phase: 43 (Interface do Usuário, Tela de Planos & UX Polish) — PLANNED
+Plan: 0 of 1
+Status: Ready for Phase 43
+Last activity: 2026-07-14 -- Phase 42 completed and verified
+
+## Operator Next Steps
+
+- Start Phase 43: Interface do Usuário (Angular NgRx), Tela de Planos & UX Polish

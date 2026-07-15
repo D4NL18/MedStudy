@@ -15,8 +15,13 @@ import { selectUser } from '@store/auth/auth.selectors';
 import { selectDashboardKPIs } from '@store/dashboard/dashboard.selectors';
 import * as DashboardActions from '@store/dashboard/dashboard.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { SubscriptionService, UserSubscription, PixTransaction } from '@core/services/subscription.service';
 
+
+
+import { RouterModule } from '@angular/router';
 
 /**
  * Angular component for the Perfil feature.
@@ -25,7 +30,7 @@ import { combineLatest } from 'rxjs';
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, AvatarComponent, ButtonComponent, ModalLayoutComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, AvatarComponent, ButtonComponent, ModalLayoutComponent, RouterModule],
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.scss']
 })
@@ -34,6 +39,7 @@ export class PerfilComponent implements OnInit {
   private badgeService = inject(BadgeService);
   private store = inject(Store);
   private fb = inject(FormBuilder);
+  private subscriptionService = inject(SubscriptionService);
   
   user = this.store.selectSignal(selectUser);
   profile = this.store.selectSignal(selectProfile);
@@ -44,6 +50,10 @@ export class PerfilComponent implements OnInit {
   showAllBadgesModal = signal(false);
   isEditing = signal(false);
   editForm!: FormGroup;
+
+  subscription = signal<UserSubscription | null>(null);
+  transactions = signal<PixTransaction[]>([]);
+  subscriptionLoaded = signal(false);
 
   badgesWithProgress = computed(() => {
     const kpisData = this.kpis();
@@ -84,6 +94,16 @@ export class PerfilComponent implements OnInit {
   allPossibleBadges = signal<any[]>([]);
 
   ngOnInit() {
+    // Fetch subscription data
+    this.subscriptionService.getMySubscription().subscribe({
+      next: (sub) => { this.subscription.set(sub); this.subscriptionLoaded.set(true); },
+      error: () => { this.subscription.set(null); this.subscriptionLoaded.set(true); }
+    });
+    this.subscriptionService.getMyTransactions().subscribe({
+      next: (txs) => this.transactions.set(txs),
+      error: () => this.transactions.set([])
+    });
+
     combineLatest([
       this.badgeService.getAllBadges(),
       this.badgeService.getUserBadges()

@@ -30,6 +30,17 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String role;
 
+    @jakarta.persistence.OneToOne(mappedBy = "user", cascade = jakarta.persistence.CascadeType.ALL, fetch = jakarta.persistence.FetchType.LAZY)
+    private com.medstudy.backend.modules.subscription.entity.Subscription subscription;
+
+    public com.medstudy.backend.modules.subscription.entity.Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(com.medstudy.backend.modules.subscription.entity.Subscription subscription) {
+        this.subscription = subscription;
+    }
+
     /**
      * Gets the user's email.
      *

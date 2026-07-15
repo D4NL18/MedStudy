@@ -26,6 +26,10 @@ public class DataInitializer implements CommandLineRunner {
         userRepository.findByEmail("admin@medstudy.com").ifPresentOrElse(
             user -> {
                 user.setPassword(passwordEncoder.encode("admin123"));
+                // Ensure role has correct ROLE_ prefix for Spring Security
+                if (!"ROLE_ADMIN".equals(user.getRole())) {
+                    user.setRole("ROLE_ADMIN");
+                }
                 userRepository.save(user);
                 System.out.println(">>> DataInitializer: Usuário admin já existia. Senha resetada para 'admin123'.");
             },
@@ -34,7 +38,7 @@ public class DataInitializer implements CommandLineRunner {
                 admin.setName("Admin Test");
                 admin.setEmail("admin@medstudy.com");
                 admin.setPassword(passwordEncoder.encode("admin123"));
-                admin.setRole("ADMIN");
+                admin.setRole("ROLE_ADMIN");
                 userRepository.save(admin);
                 System.out.println(">>> DataInitializer: Usuário admin criado: admin@medstudy.com / admin123");
             }
@@ -43,6 +47,9 @@ public class DataInitializer implements CommandLineRunner {
         userRepository.findByEmail("user@test.com").ifPresentOrElse(
             user -> {
                 user.setPassword(passwordEncoder.encode("user123"));
+                if (!"ROLE_USER".equals(user.getRole())) {
+                    user.setRole("ROLE_USER");
+                }
                 userRepository.save(user);
                 System.out.println(">>> DataInitializer: Usuário de teste já existia. Senha resetada para 'user123'.");
             },
@@ -51,7 +58,7 @@ public class DataInitializer implements CommandLineRunner {
                 user.setName("User Test");
                 user.setEmail("user@test.com");
                 user.setPassword(passwordEncoder.encode("user123"));
-                user.setRole("USER");
+                user.setRole("ROLE_USER");
                 userRepository.save(user);
                 System.out.println(">>> DataInitializer: Usuário de teste criado: user@test.com / user123");
             }
@@ -60,6 +67,9 @@ public class DataInitializer implements CommandLineRunner {
         userRepository.findByEmail("admin@test.com").ifPresentOrElse(
             user -> {
                 user.setPassword(passwordEncoder.encode("admin123"));
+                if (!"ROLE_ADMIN".equals(user.getRole())) {
+                    user.setRole("ROLE_ADMIN");
+                }
                 userRepository.save(user);
                 System.out.println(">>> DataInitializer: Usuário admin@test.com já existia. Senha resetada para 'admin123'.");
             },
@@ -68,7 +78,7 @@ public class DataInitializer implements CommandLineRunner {
                 admin.setName("Admin Test User");
                 admin.setEmail("admin@test.com");
                 admin.setPassword(passwordEncoder.encode("admin123"));
-                admin.setRole("ADMIN");
+                admin.setRole("ROLE_ADMIN");
                 userRepository.save(admin);
                 System.out.println(">>> DataInitializer: Usuário admin@test.com criado: admin@test.com / admin123");
             }

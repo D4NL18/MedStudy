@@ -1,30 +1,31 @@
-# Requirements: MedStudy v1.3
+# Requirements: MedStudy v1.5
 
-**Milestone:** v1.3
-**Goal:** Polimento de Código, Performance e UX. Eliminar dívidas técnicas, otimizar resposta do sistema, cobrir edge cases com testes, refatorar frontend para máxima fluidez e documentar toda a lógica complexa.
+**Milestone:** v1.5
+**Goal:** Implementar paywall com trial de 30 dias grátis, assinatura anual via PIX (API Banco do Brasil), painel admin para concessão manual de acessos e notificações de expiração.
 
 ---
 
-## v1.3 Requirements
+## v1.5 Requirements
 
-### Backend Code Quality & Optimization (BKND)
-- [ ] **BKND-01**: Eliminação completa de Dead Code (variáveis, imports, métodos e classes nunca instanciados).
-- [ ] **BKND-02**: Otimização de consultas ao banco, evitando N+1 (garantir `FetchType.LAZY`) e tuning no mapeamento (MapStruct).
+### Freemium Paywall & Assinatura (PAYWALL)
+- [ ] **PAYWALL-01**: Concessão automática de 30 dias de trial gratuito ao cadastrar novo usuário.
+- [ ] **PAYWALL-02**: Bloqueio total por Paywall (Angular Guard + Spring Security Interceptor) ao expirar o período de trial sem assinatura ativa.
+- [ ] **PAYWALL-03**: Tela de Planos (/planos) apresentando benefícios da assinatura anual, valor e botão de checkout PIX.
 
-### Frontend Architecture & UX (UIUX)
-- [ ] **UIUX-01**: Refatoração do frontend isolando componentes reutilizáveis e deletando componentes órfãos.
-- [ ] **UIUX-02**: Adoção estrita de `ChangeDetectionStrategy.OnPush` e Skeleton Loaders em telas de carregamento para aumentar a fluidez e FPS percebido.
+### Integração PIX Banco do Brasil (PIX)
+- [ ] **PIX-01**: Geração de cobrança PIX Dinâmica via API do Banco do Brasil com exibição de QR Code e chave "Copia e Cola" (com botão de 1-click copy).
+- [ ] **PIX-02**: Endpoint público para recebimento de Webhook do Banco do Brasil, validando autenticidade e ativando automaticamente a assinatura por 1 ano.
+- [ ] **PIX-03**: Mecanismo de fallback com botão "Já Paguei" que realiza polling/consulta direta à API do BB caso o webhook atrase.
+- [ ] **PIX-04**: Suporte a ambiente de desenvolvimento (Spring profile `mock-pix`) permitindo simulação completa do pagamento PIX sem requerer credenciais reais do BB.
 
-### Security & Hardening (SEC)
-- [ ] **SEC-01**: Varredura avançada e correção de vulnerabilidades (XSS, CSRF fine-tuning, rate limiting) utilizando ferramentas de análise estática.
+### Painel Administrativo (ADMIN)
+- [ ] **ADMIN-01**: Restrição de rotas e funcionalidades administrativas exclusivamente para o usuário Administrador (Role `ADMIN`).
+- [ ] **ADMIN-02**: Interface administrativa para busca de usuários e concessão/extensão manual de acesso gratuito ou status VIP/Lifetime.
+- [ ] **ADMIN-03**: Visualização no painel admin da lista de assinaturas ativas, expiradas e histórico de transações PIX.
 
-### Test Coverage (TEST)
-- [ ] **TEST-01**: Testes unitários para Edge Cases no Backend (status 400, 403, 404, 429).
-- [ ] **TEST-02**: Testes de UI e Services complexos (ex: repetição espaçada) no Frontend.
-
-### Documentation & Maintainability (DOC)
-- [ ] **DOC-01**: Remover comentários de código desnecessários, gerados por prototipação legada.
-- [ ] **DOC-02**: Escrever documentação clara (Javadoc / TSDoc) e comentários explicativos para futuras manutenções, destrinchando regras de negócio complexas.
+### Notificações & Histórico (NOTIF)
+- [ ] **NOTIF-01**: Exibição de alertas e banners in-app informando os dias restantes da assinatura/trial (com aviso destacado quando restar ≤ 30 dias).
+- [ ] **NOTIF-02**: Histórico de pagamentos/faturas PIX acessível na área da conta do usuário.
 
 ---
 
@@ -32,9 +33,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BKND-01..02 | Phase 29 | Pending |
-| UIUX-01     | Phase 30 | Pending |
-| SEC-01      | Phase 31 | Pending |
-| TEST-01..02 | Phase 32 | Pending |
-| UIUX-02     | Phase 33 | Pending |
-| DOC-01..02  | Phase 34 | Pending |
+| PAYWALL-01..02 | Phase 40 | Pending |
+| PIX-01..04    | Phase 41 | Pending |
+| ADMIN-01..03  | Phase 42 | Pending |
+| PAYWALL-03    | Phase 43 | Pending |
+| NOTIF-01..02  | Phase 43 | Pending |

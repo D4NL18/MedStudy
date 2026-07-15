@@ -28,3 +28,6 @@ export const loginFailure = createAction(
 export const logout = createAction('[Auth] Logout');
 
 export const refreshToken = createAction('[Auth] Refresh Token');
+
+export const showPaywall = createAction('[Auth] Show Paywall');
+export const hidePaywall = createAction('[Auth] Hide Paywall');

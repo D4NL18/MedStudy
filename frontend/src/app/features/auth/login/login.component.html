@@ -57,7 +57,7 @@
         <a href="#" class="forgot-link">Esqueceu a senha?</a>
       </div>
 
-      <app-button type="submit" variant="btn-login" [disabled]="loginForm.invalid || loading()">
+      <app-button type="submit" variant="primary" customClass="full-width" [disabled]="loginForm.invalid || loading()">
         @if (loading()) {
           <span class="spinner"></span>
         } @else {

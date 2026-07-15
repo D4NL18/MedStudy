@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { PaywallModal } from './core/layout/paywall-modal/paywall-modal';
 
 
 /**
@@ -9,7 +10,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, PaywallModal],
   templateUrl: './app.component.html'
 })
 export class AppComponent {

@@ -78,7 +78,7 @@
         </div>
       </div>
 
-      <app-button type="submit" variant="btn-login" [disabled]="registerForm.invalid || isLoading">
+      <app-button type="submit" variant="primary" customClass="full-width" [disabled]="registerForm.invalid || isLoading">
         @if (isLoading) {
           <span class="spinner"></span>
         } @else {
@@ -97,3 +97,19 @@
     </div>
   </div>
 </div>
+
+<app-modal-layout *ngIf="showTrialModal()"
+                  [fullScreenOverlay]="true" 
+                  [useDefaultFooter]="false" 
+                  title="Bem-vindo ao MedStudy!" 
+                  (close)="goToPlans()">
+  <div style="text-align: center; padding: 20px;">
+    <h3 style="margin-bottom: 16px; color: var(--color-text);">Você ativou seu Trial de 30 dias</h3>
+    <p style="color: var(--color-text-muted); margin-bottom: 24px;">
+      Aproveite todas as funcionalidades premium gratuitamente durante este período. Após os 30 dias, você precisará assinar um plano para continuar.
+    </p>
+    <app-button variant="primary" customClass="full-width" (onClick)="goToPlans()">
+      Ver Planos
+    </app-button>
+  </div>
+</app-modal-layout>
