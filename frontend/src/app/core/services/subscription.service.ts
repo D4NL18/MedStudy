@@ -33,7 +33,6 @@ export interface PixResponse {
 export interface PixStatusResponse {
   txid: string;
   status: 'CREATED' | 'PAID' | 'EXPIRED' | 'CANCELLED';
-  isPaid: boolean;
 }
 
 @Injectable({

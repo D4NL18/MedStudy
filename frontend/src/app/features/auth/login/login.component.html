@@ -48,7 +48,7 @@
             [class.invalid]="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched"
           >
           <button type="button" class="btn-toggle" (click)="togglePassword()" aria-label="Alternar visibilidade da senha">
-            {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+            <lucide-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="20"></lucide-icon>
           </button>
         </div>
       </div>
