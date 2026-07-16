@@ -54,4 +54,4 @@ mercadopago:
   public-key: ${MERCADOPAGO_PUBLIC_KEY}
 
 app:
-  premium-price: 1.00
+  premium-price: 49.90
