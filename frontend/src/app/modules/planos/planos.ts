@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SubscriptionService, PixResponse } from '../../core/services/subscription.service';
 import { Subscription, interval, Subject } from 'rxjs';
@@ -17,6 +17,7 @@ import { ButtonComponent } from '@shared/components/button/button.component';
 export class Planos implements OnDestroy {
   private subscriptionService = inject(SubscriptionService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
   
   loadingPix = false;
   showPixModal = false;
@@ -37,11 +38,13 @@ export class Planos implements OnDestroy {
         this.pixData = res;
         this.showPixModal = true;
         this.loadingPix = false;
+        this.cdr.detectChanges();
         this.startPolling(res.txid);
       },
       error: (err) => {
         console.error('Erro ao gerar PIX:', err);
         this.loadingPix = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -49,7 +52,11 @@ export class Planos implements OnDestroy {
   copiarPix(codigo: string) {
     navigator.clipboard.writeText(codigo).then(() => {
       this.copiado = true;
-      setTimeout(() => this.copiado = false, 2000);
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.copiado = false;
+        this.cdr.detectChanges();
+      }, 2000);
     });
   }
 
@@ -60,6 +67,7 @@ export class Planos implements OnDestroy {
     if (this.pixSuccess) {
       this.router.navigate(['/dashboard']);
     }
+    this.cdr.detectChanges();
   }
 
   private startPolling(txid: string) {
@@ -74,6 +82,7 @@ export class Planos implements OnDestroy {
         next: (status) => {
           this.pixSuccess = true;
           this.stopPolling();
+          this.cdr.detectChanges();
         },
         error: (err) => console.error('Erro ao consultar status do PIX:', err)
       });
