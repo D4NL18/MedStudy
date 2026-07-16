@@ -2,9 +2,10 @@ import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import { Store } from '@ngrx/store';
+import * as AuthActions from '@store/auth/auth.actions';
 
 /**
  * Register.
@@ -13,20 +14,19 @@ import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layo
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule, ModalLayoutComponent],
+  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
+  private store = inject(Store);
 
   registerForm: FormGroup;
   errorMessage: string | null = null;
   isLoading = false;
   showPassword = signal(false);
-  showTrialModal = signal(false);
 
   constructor() {
     this.registerForm = this.fb.group({
@@ -53,10 +53,10 @@ export class RegisterComponent {
     this.errorMessage = null;
 
     this.authService.register(this.registerForm.value).subscribe({
-      next: () => {
+      next: (response: any) => {
         this.isLoading = false;
-        // Ao invés de ir para o dashboard, exibe o modal de Trial 30 dias
-        this.showTrialModal.set(true);
+        localStorage.setItem('showWelcomeTrial', 'true');
+        this.store.dispatch(AuthActions.loginSuccess({ response }));
       },
       error: (err) => {
         this.isLoading = false;
@@ -71,10 +71,5 @@ export class RegisterComponent {
 
   togglePassword() {
     this.showPassword.update(v => !v);
-  }
-
-  goToPlans() {
-    this.showTrialModal.set(false);
-    this.router.navigate(['/planos']);
   }
 }
