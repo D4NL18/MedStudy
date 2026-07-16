@@ -68,7 +68,7 @@ export class Planos implements OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap(() => this.subscriptionService.getPixStatus(txid)),
-        filter(status => status.isPaid)
+        filter(status => status.status === 'PAID')
       )
       .subscribe({
         next: (status) => {

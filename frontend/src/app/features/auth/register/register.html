@@ -68,7 +68,7 @@
             [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
           >
           <button type="button" class="btn-toggle" (click)="togglePassword()" aria-label="Alternar visibilidade da senha">
-            {{ showPassword() ? '🙈' : '👁️' }}
+            <lucide-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="20"></lucide-icon>
           </button>
         </div>
         <div class="error-badge" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" style="margin-top: 4px; padding: 6px; background: transparent; border: none;">

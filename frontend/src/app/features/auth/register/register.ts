@@ -11,10 +11,12 @@ import * as AuthActions from '@store/auth/auth.actions';
  * Register.
  * @description Provides register functionality.
  */
+import { LucideAngularModule } from 'lucide-angular';
+
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule, LucideAngularModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })

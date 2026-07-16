@@ -8,6 +8,8 @@ import * as AuthActions from '@store/auth/auth.actions';
 import { selectAuthError, selectAuthLoading } from '@store/auth/auth.selectors';
 
 
+import { LucideAngularModule } from 'lucide-angular';
+
 /**
  * Angular component for the Login feature.
  * @description Handles the presentation logic and user interactions for the Login view.
@@ -15,7 +17,7 @@ import { selectAuthError, selectAuthLoading } from '@store/auth/auth.selectors';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ButtonComponent, CommonModule, ReactiveFormsModule, RouterModule, LucideAngularModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
