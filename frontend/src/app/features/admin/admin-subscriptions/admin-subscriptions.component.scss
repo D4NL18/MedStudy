@@ -241,6 +241,11 @@
   th, td {
     padding: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    &.font-mono {
+      word-break: break-all;
+      min-width: 150px;
+    }
   }
 
   th {

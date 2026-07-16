@@ -19,6 +19,7 @@ import java.time.LocalDate;
 
 @Component
 @Order(2)
+@org.springframework.context.annotation.Profile("!prod")
 public class TestDataSeeder implements CommandLineRunner {
 
     private final StudySessionRepository sessionRepository;

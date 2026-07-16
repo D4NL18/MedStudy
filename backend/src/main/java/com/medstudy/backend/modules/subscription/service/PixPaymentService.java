@@ -151,7 +151,15 @@ public class PixPaymentService {
         }
 
         // Consulta direta à API do gateway (fallback "Já Paguei")
-        PixStatusResponseDto remoteStatus = pixClient.getChargeStatus(txid);
+        PixStatusResponseDto remoteStatus;
+        try {
+            remoteStatus = pixClient.getChargeStatus(txid);
+        } catch (Exception e) {
+            transaction.setUpdatedAt(nowLdt);
+            pixTransactionRepository.save(transaction);
+            return new PixStatusResponseDto(txid, transaction.getStatus(), null, "Aguardando confirmação de pagamento (rate limit)");
+        }
+        
         if (remoteStatus.status() == PixStatus.PAID) {
             processPaymentSuccess(txid, "FALLBACK_" + UUID.randomUUID().toString().substring(0, 8), now);
             return new PixStatusResponseDto(txid, PixStatus.PAID, now, "Pagamento confirmado via consulta direta");

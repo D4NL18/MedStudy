@@ -64,7 +64,7 @@ export class Planos implements OnDestroy {
 
   private startPolling(txid: string) {
     this.stopPolling();
-    this.pollSubscription = interval(5000)
+    this.pollSubscription = interval(6000)
       .pipe(
         takeUntil(this.destroy$),
         switchMap(() => this.subscriptionService.getPixStatus(txid)),

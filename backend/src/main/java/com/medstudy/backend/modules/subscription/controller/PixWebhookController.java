@@ -55,8 +55,8 @@ public class PixWebhookController {
                     );
                 }
             } catch (Exception e) {
-                // Log and ignore to prevent MP from retrying indefinitely if the issue is on our side or the ID is invalid
                 System.err.println("Error processing MP Webhook: " + e.getMessage());
+                return ResponseEntity.status(500).build(); // Let MP retry
             }
         }
         return ResponseEntity.ok().build();
