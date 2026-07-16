@@ -12,9 +12,15 @@ O estudante deve conseguir registrar seu desempenho em questões, acompanhar rev
 
 ## Requirements
 
-## Current Milestone: v1.5 Planos de Usuário e Monetização (PIX)
+## Current Milestone: v1.6 (TBD)
 
-**Goal:** Implementar paywall com trial de 30 dias e pagamento anual via PIX (API direta do Banco do Brasil), com painel admin para gerenciamento manual de acessos.
+**Goal:** (TBD - Próximo passo a definir)
+
+### Validated (v1.5 Planos de Usuário e Monetização - PIX)
+- ✓ Paywall automático com trial de 30 dias grátis
+- ✓ Integração PIX nativa com API do Banco do Brasil (Webhook & Polling)
+- ✓ Painel Administrativo de concessão manual de acessos (Single Admin)
+- ✓ Interface de Checkout de assinaturas (Angular NgRx) com notificações de expiração
 
 ### Validated (v1.2 Socialização Aprofundada)
 - ✓ Perfis de usuário com dados básicos (faculdade, semestre, avatar).
