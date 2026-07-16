@@ -187,7 +187,7 @@
 
         <ng-container *ngIf="subscriptionLoaded()">
           <div class="subscription-details" *ngIf="subscription() as sub; else noSubscription">
-            <div class="status-card" [ngClass]="sub.status.toLowerCase()">
+            <div class="status-card" [ngClass]="sub.status ? sub.status.toLowerCase() : 'trial'">
               <div class="status-header">
                 <h4>Plano Atual</h4>
                 <span class="badge">{{ sub.status }}</span>

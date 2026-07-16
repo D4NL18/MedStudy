@@ -78,13 +78,15 @@
         </div>
       </div>
 
-      <app-button type="submit" variant="primary" customClass="full-width" [disabled]="registerForm.invalid || isLoading">
-        @if (isLoading) {
-          <span class="spinner"></span>
-        } @else {
-          Registrar
-        }
-      </app-button>
+      <div style="text-align: center; margin-top: 24px;">
+        <app-button type="submit" variant="primary" [disabled]="registerForm.invalid || isLoading">
+          @if (isLoading) {
+            <span class="spinner"></span>
+          } @else {
+            Registrar
+          }
+        </app-button>
+      </div>
       
       <p style="font-size: 0.75rem; color: var(--color-text); text-align: center; opacity: 0.8;">
         Ao se cadastrar, você concorda com nossos <a routerLink="/termos" style="color: var(--color-accent);">Termos</a> e <a routerLink="/privacidade" style="color: var(--color-accent);">Privacidade</a>.
