@@ -67,9 +67,9 @@
             placeholder="Mínimo 8 caracteres"
             [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
           >
-          <app-button type="button" variant="btn-toggle" (onClick)="togglePassword()" aria-label="Alternar visibilidade da senha">
+          <button type="button" class="btn-toggle" (click)="togglePassword()" aria-label="Alternar visibilidade da senha">
             {{ showPassword() ? '🙈' : '👁️' }}
-          </app-button>
+          </button>
         </div>
         <div class="error-badge" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" style="margin-top: 4px; padding: 6px; background: transparent; border: none;">
           <small *ngIf="registerForm.get('password')?.errors?.['required']">A senha é obrigatória.</small>
@@ -99,19 +99,3 @@
     </div>
   </div>
 </div>
-
-<app-modal-layout *ngIf="showTrialModal()"
-                  [fullScreenOverlay]="true" 
-                  [useDefaultFooter]="false" 
-                  title="Bem-vindo ao MedStudy!" 
-                  (close)="goToPlans()">
-  <div style="text-align: center; padding: 20px;">
-    <h3 style="margin-bottom: 16px; color: var(--color-text);">Você ativou seu Trial de 30 dias</h3>
-    <p style="color: var(--color-text-muted); margin-bottom: 24px;">
-      Aproveite todas as funcionalidades premium gratuitamente durante este período. Após os 30 dias, você precisará assinar um plano para continuar.
-    </p>
-    <app-button variant="primary" customClass="full-width" (onClick)="goToPlans()">
-      Ver Planos
-    </app-button>
-  </div>
-</app-modal-layout>

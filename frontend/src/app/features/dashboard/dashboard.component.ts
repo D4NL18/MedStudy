@@ -18,6 +18,8 @@ import { ExportService } from '@core/services/export/export.service';
 import { RouterLink } from '@angular/router';
 import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dashboard-skeleton.component';
 import { ExportButtonComponent } from '@shared/components/export-button/export-button.component';
+import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,7 +33,8 @@ import { ExportButtonComponent } from '@shared/components/export-button/export-b
     MatDialogModule,
     DashboardSkeletonComponent,
     ExportButtonComponent,
-    RouterLink
+    RouterLink,
+    ModalLayoutComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -41,6 +44,7 @@ export class DashboardComponent implements OnInit {
   public perfTheme = inject(PerformanceThemeService);
   private dialog = inject(MatDialog);
   private exportService = inject(ExportService);
+  private router = inject(Router);
   
   user = this.store.selectSignal(selectUser);
   kpis = toSignal(this.store.select(selectDashboardKPIs));
@@ -49,6 +53,7 @@ export class DashboardComponent implements OnInit {
   
   isExportingCsv = signal(false);
   isExportingPdf = signal(false);
+  showWelcomeTrial = signal(false);
   
   topLessons = [
     { tema: 'Puericultura', grandeArea: 'Pediatria', prioridade: 'Alta' },
@@ -58,6 +63,15 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(DashboardActions.loadDashboard());
+    if (localStorage.getItem('showWelcomeTrial') === 'true') {
+      this.showWelcomeTrial.set(true);
+      localStorage.removeItem('showWelcomeTrial');
+    }
+  }
+
+  goToPlans() {
+    this.showWelcomeTrial.set(false);
+    this.router.navigate(['/planos']);
   }
 
   openSubareaDetails(area: AreaAnalytics) {
