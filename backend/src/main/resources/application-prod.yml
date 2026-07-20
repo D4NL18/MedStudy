@@ -40,10 +40,10 @@ spring:
             enable: true
 
 gcp:
-  project-id: ${GCP_PROJECT_ID}
-  bucket-name: ${GCP_BUCKET_NAME}
+  project-id: ${GCP_PROJECT_ID:medstudy-497617}
+  bucket-name: ${GCP_BUCKET_NAME:mock-bucket}
   credentials:
-    path: ${GCP_CREDENTIALS_PATH}
+    path: ${GCP_CREDENTIALS_PATH:}
 
 server:
   port: ${PORT:8080}
