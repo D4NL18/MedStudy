@@ -1,12 +1,12 @@
-package com.medstudy.backend.modules.flashcard.service;
+package com.medstudy.backend.modules.revision.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.medstudy.backend.modules.flashcard.dto.RedistributionPreviewRequest;
-import com.medstudy.backend.modules.flashcard.dto.RedistributionPreviewResponse;
+import com.medstudy.backend.modules.revision.dto.RedistributionPreviewRequest;
+import com.medstudy.backend.modules.revision.dto.RedistributionPreviewResponse;
 import com.medstudy.backend.modules.flashcard.entity.Flashcard;
-import com.medstudy.backend.modules.flashcard.entity.RedistributionDraft;
+import com.medstudy.backend.modules.revision.entity.RedistributionDraft;
 import com.medstudy.backend.modules.flashcard.repository.FlashcardRepository;
-import com.medstudy.backend.modules.flashcard.repository.RedistributionDraftRepository;
+import com.medstudy.backend.modules.revision.repository.RedistributionDraftRepository;
 import com.medstudy.backend.modules.user.entity.User;
 import com.medstudy.backend.modules.user.service.UserSettingsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class FlashcardRedistributionServiceTest {
+class RevisionRedistributionServiceTest {
 
     @Mock
     private FlashcardRepository flashcardRepository;
@@ -46,7 +46,7 @@ class FlashcardRedistributionServiceTest {
     private ObjectMapper objectMapper;
 
     @InjectMocks
-    private FlashcardRedistributionService service;
+    private RevisionRedistributionService service;
 
     private User testUser;
     private UUID userId;
@@ -71,7 +71,7 @@ class FlashcardRedistributionServiceTest {
         RedistributionPreviewResponse response = service.generatePreview(targetEndDate);
 
         assertNotNull(response);
-        assertEquals(0, response.getTotalFlashcardsRedistributed());
+        assertEquals(0, response.getTotalRevisionsRedistributed());
     }
 
     @Test

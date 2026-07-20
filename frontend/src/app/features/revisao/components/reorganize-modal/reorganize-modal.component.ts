@@ -8,6 +8,7 @@ import { selectRedistributionDraft, selectIsRedistributing } from '@store/revisi
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { RedistributionDraftResponse } from '@core/models/revision.model';
+import { ToastService } from '@core/services/toast.service';
 import { NgxChartsModule, LegendPosition } from '@swimlane/ngx-charts';
 import { LucideAngularModule, CheckCircle } from 'lucide-angular';
 
@@ -26,6 +27,7 @@ export class ReorganizeModalComponent implements OnInit, OnDestroy {
 
   private store = inject(Store);
   private actions$ = inject(Actions);
+  private toastService = inject(ToastService);
   private dateSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
   
@@ -33,11 +35,11 @@ export class ReorganizeModalComponent implements OnInit, OnDestroy {
   isRedistributing$: Observable<boolean> = this.store.select(selectIsRedistributing);
   
   maxDate: string = '';
-  showSuccess = false;
+  minDate: string = new Date().toISOString().split('T')[0];
   CheckCircle = CheckCircle;
 
   colorScheme: any = {
-    domain: ['#f87171', '#4ade80'] // Tailwind red-400 for Before, green-400 for After
+    domain: ['#4ade80'] // Tailwind green-400 for After
   };
 
   chartData$: Observable<any[]> = this.draft$.pipe(
@@ -45,10 +47,7 @@ export class ReorganizeModalComponent implements OnInit, OnDestroy {
       if (!draft || !draft.dailyLoads) return [];
       return draft.dailyLoads.map(load => ({
         name: this.formatDate(load.date),
-        series: [
-          { name: 'Antes', value: load.originalCount },
-          { name: 'Depois', value: load.newCount }
-        ]
+        value: load.newCount
       }));
     })
   );
@@ -68,8 +67,8 @@ export class ReorganizeModalComponent implements OnInit, OnDestroy {
       ofType(RevisionActions.applyRedistributionSuccess),
       takeUntil(this.destroy$)
     ).subscribe(() => {
-      this.showSuccess = true;
-      setTimeout(() => this.closeModal(), 2000);
+      this.toastService.success('Revisões reorganizadas!');
+      this.closeModal();
     });
   }
 

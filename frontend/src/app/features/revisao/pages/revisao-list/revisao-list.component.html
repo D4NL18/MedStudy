@@ -1,8 +1,10 @@
 <div class="revisao-container">
-  <div class="header">
-    <h1>Revisão Intervalada</h1>
-    <p>Sistema de repetição espaçada baseado em desempenho</p>
-  </div>
+  <header class="page-header">
+    <div class="title-area">
+      <h1>Revisão Intervalada</h1>
+      <p>Sistema de repetição espaçada baseado em desempenho</p>
+    </div>
+  </header>
 
   <div class="stats-row">
     <div class="stat-card glass atrasadas" [class.active]="activeTab === 'ATRASADAS'" (click)="setActiveTab('ATRASADAS')" title="Clique para ver as revisões atrasadas">

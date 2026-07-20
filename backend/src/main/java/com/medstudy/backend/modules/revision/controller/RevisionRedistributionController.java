@@ -1,8 +1,8 @@
-package com.medstudy.backend.modules.flashcard.controller;
+package com.medstudy.backend.modules.revision.controller;
 
-import com.medstudy.backend.modules.flashcard.dto.RedistributionPreviewRequest;
-import com.medstudy.backend.modules.flashcard.dto.RedistributionPreviewResponse;
-import com.medstudy.backend.modules.flashcard.service.FlashcardRedistributionService;
+import com.medstudy.backend.modules.revision.dto.RedistributionPreviewRequest;
+import com.medstudy.backend.modules.revision.dto.RedistributionPreviewResponse;
+import com.medstudy.backend.modules.revision.service.RevisionRedistributionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,10 +19,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/redistribute")
 @RequiredArgsConstructor
-@Tag(name = "Flashcard Redistribution", description = "Endpoints for managing spaced repetition redistribution")
-public class FlashcardRedistributionController {
+@Tag(name = "Revision Redistribution", description = "Endpoints for managing spaced repetition redistribution")
+public class RevisionRedistributionController {
 
-    private final FlashcardRedistributionService service;
+    private final RevisionRedistributionService service;
 
     /**
      * Generates a preview for redistributing overdue flashcards up to a target date.

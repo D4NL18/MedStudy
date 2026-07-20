@@ -1,11 +1,11 @@
-package com.medstudy.backend.modules.flashcard.controller;
+package com.medstudy.backend.modules.revision.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.medstudy.backend.core.security.JwtAuthenticationFilter;
-import com.medstudy.backend.modules.flashcard.dto.RedistributionPreviewRequest;
-import com.medstudy.backend.modules.flashcard.dto.RedistributionPreviewResponse;
-import com.medstudy.backend.modules.flashcard.service.FlashcardRedistributionService;
+import com.medstudy.backend.modules.revision.dto.RedistributionPreviewRequest;
+import com.medstudy.backend.modules.revision.dto.RedistributionPreviewResponse;
+import com.medstudy.backend.modules.revision.service.RevisionRedistributionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = FlashcardRedistributionController.class, excludeFilters = {
+@WebMvcTest(controllers = RevisionRedistributionController.class, excludeFilters = {
         @org.springframework.context.annotation.ComponentScan.Filter(
                 type = org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE,
                 classes = JwtAuthenticationFilter.class)
 })
-class FlashcardRedistributionControllerTest {
+class RevisionRedistributionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +38,7 @@ class FlashcardRedistributionControllerTest {
             .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
     @MockitoBean
-    private FlashcardRedistributionService service;
+    private RevisionRedistributionService service;
 
 
 
@@ -51,7 +51,7 @@ class FlashcardRedistributionControllerTest {
         RedistributionPreviewResponse response = RedistributionPreviewResponse.builder()
                 .draftId(draftId)
                 .warningLimitExceeded(false)
-                .totalFlashcardsRedistributed(20)
+                .totalRevisionsRedistributed(20)
                 .daysSpread(10)
                 .build();
 

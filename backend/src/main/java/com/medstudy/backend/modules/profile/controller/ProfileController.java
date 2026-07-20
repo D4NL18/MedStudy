@@ -92,4 +92,38 @@ public class ProfileController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    /**
+     * Uploads a profile picture for the currently authenticated user.
+     *
+     * @param file the image file to upload
+     * @return the updated profile data
+     */
+    @Operation(summary = "Upload profile picture", description = "Uploads a new profile picture for the user.")
+    @ApiResponse(responseCode = "200", description = "Picture uploaded successfully")
+    @PostMapping(value = "/picture", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProfileDTO> uploadProfilePicture(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ProfileDTO updated = profileService.uploadProfilePicture(user.getId(), file);
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Serves locally uploaded images (For dev environment only).
+     */
+    @Operation(summary = "Serve profile picture", description = "Serves locally uploaded profile pictures.")
+    @GetMapping(value = "/uploads/{filename:.+}", produces = org.springframework.http.MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<org.springframework.core.io.Resource> serveFile(@PathVariable String filename) {
+        try {
+            java.nio.file.Path file = java.nio.file.Paths.get("uploads/profiles/").resolve(filename);
+            org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok().body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (java.net.MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

@@ -123,18 +123,35 @@
         <div class="step-content" *ngIf="step === 3">
           <div class="header-section">
             <h2>Escolha seu Avatar 🩺</h2>
-            <p>Escolha o ícone que melhor te representa. Você poderá alterá-lo depois.</p>
+            <p>Faça upload de uma foto ou escolha o ícone que melhor te representa.</p>
           </div>
+
+          <div class="avatar-upload-container">
+            <div class="upload-preview" (click)="fileInput.click()">
+              <img *ngIf="selectedFilePreview" [src]="selectedFilePreview" class="preview-img" />
+              <app-avatar *ngIf="!selectedFilePreview && selectedAvatarId" [presetId]="selectedAvatarId" size="lg"></app-avatar>
+              <div class="upload-overlay">
+                <lucide-icon name="camera"></lucide-icon>
+              </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/jpg" style="display: none;" />
+            <div class="upload-actions">
+              <span class="upload-text" (click)="fileInput.click()">Fazer upload de foto</span>
+              <span class="remove-text" *ngIf="selectedFile" (click)="clearSelectedFile()">Remover foto</span>
+            </div>
+          </div>
+
+          <div class="divider-text">ou escolha um ícone</div>
 
           <!-- Specialty grid -->
           <div class="specialties-grid scrollable avatar-grid">
             <div class="avatar-option-card" 
                  *ngFor="let item of getAllPresets()"
-                 [class.active]="selectedAvatarId === item.id"
-                 (click)="selectedAvatarId = item.id"
+                 [class.active]="!selectedFile && selectedAvatarId === item.id"
+                 (click)="selectAvatar(item.id)"
                  [title]="item.name">
               <app-avatar [presetId]="item.id" size="md"></app-avatar>
-              <div class="check-indicator" *ngIf="selectedAvatarId === item.id">
+              <div class="check-indicator" *ngIf="!selectedFile && selectedAvatarId === item.id">
                 <lucide-icon name="check"></lucide-icon>
               </div>
             </div>

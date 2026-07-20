@@ -168,6 +168,17 @@ export class PerfilComponent implements OnInit {
     return AVATAR_PRESETS;
   }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        alert('A foto deve ter no máximo 10MB.');
+        return;
+      }
+      this.store.dispatch(ProfileActions.uploadProfilePicture({ file }));
+    }
+  }
+
   selectSchool(school: string) {
     this.editForm.get('faculdade')?.setValue(school);
     this.showSchools = false;

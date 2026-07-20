@@ -1,11 +1,13 @@
 <div class="aulas-container">
-  <div class="header">
-    <div class="title-section">
+  <header class="page-header">
+    <div class="title-area">
       <h1>Plano de Aulas</h1>
       <p>Rastreador estratégico de conteúdo teórico</p>
     </div>
-    <app-create-button (onClick)="createLesson()">Nova Aula</app-create-button>
-  </div>
+    <div class="header-actions">
+      <app-create-button (onClick)="createLesson()">Nova Aula</app-create-button>
+    </div>
+  </header>
 
   <ng-container *ngIf="lessons$ | async as lessons; else loadingTpl">
     <div class="stats-row" *ngIf="summary$ | async as summary">

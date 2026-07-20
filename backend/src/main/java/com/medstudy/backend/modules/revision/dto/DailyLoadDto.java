@@ -1,4 +1,4 @@
-package com.medstudy.backend.modules.flashcard.dto;
+package com.medstudy.backend.modules.revision.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.medstudy.backend.modules.flashcard.dto;
+package com.medstudy.backend.modules.revision.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

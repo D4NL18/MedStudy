@@ -80,10 +80,10 @@
       </div>
 
       <div class="user-info" routerLink="/perfil">
-        <div class="user-avatar" *ngIf="!profile()?.avatarPresetId">
+        <div class="user-avatar" *ngIf="!profile()?.avatarPresetId && !profile()?.profilePictureUrl">
           <span class="initials">{{ getInitials() }}</span>
         </div>
-        <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
+        <app-avatar [presetId]="profile()?.avatarPresetId" [pictureUrl]="profile()?.profilePictureUrl" size="sm" *ngIf="profile()?.avatarPresetId || profile()?.profilePictureUrl"></app-avatar>
         <span class="user-name">{{ getFirstName() }}</span>
       </div>
       <button class="btn-logout" (click)="logout()">Sair</button>
@@ -144,10 +144,10 @@
 
       <div class="drawer-footer">
         <div class="user-profile-mobile" routerLink="/perfil" (click)="toggleDrawer()">
-          <div class="user-avatar" *ngIf="!profile()?.avatarPresetId">
+          <div class="user-avatar" *ngIf="!profile()?.avatarPresetId && !profile()?.profilePictureUrl">
             <span class="initials">{{ getInitials() }}</span>
           </div>
-          <app-avatar [presetId]="profile()?.avatarPresetId" size="sm" *ngIf="profile()?.avatarPresetId"></app-avatar>
+          <app-avatar [presetId]="profile()?.avatarPresetId" [pictureUrl]="profile()?.profilePictureUrl" size="sm" *ngIf="profile()?.avatarPresetId || profile()?.profilePictureUrl"></app-avatar>
           <div class="user-details">
             <span class="name">{{ getFirstName() }}</span>
             <span class="view-profile">Ver perfil</span>

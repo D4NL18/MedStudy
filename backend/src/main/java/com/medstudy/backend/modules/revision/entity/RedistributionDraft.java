@@ -1,4 +1,4 @@
-package com.medstudy.backend.modules.flashcard.entity;
+package com.medstudy.backend.modules.revision.entity;
 
 import com.medstudy.backend.core.entity.BaseEntity;
 import jakarta.persistence.Column;
