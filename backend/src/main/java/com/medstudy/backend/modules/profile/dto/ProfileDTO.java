@@ -106,6 +106,12 @@ public class ProfileDTO {
     private Boolean shareBadges;
 
     /**
+     * The profile picture URL.
+     */
+    @Schema(description = "URL of the user's uploaded profile picture.", example = "https://storage.googleapis.com/bucket/pic.jpg")
+    private String profilePictureUrl;
+
+    /**
      * The user's streak count.
      */
     @Schema(description = "Number of consecutive days this user has been actively studying on the platform.", example = "21")

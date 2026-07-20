@@ -1,7 +1,7 @@
 <div class="perfil-container fade-in">
       <header class="perfil-header glass">
         <div class="user-info">
-          <app-avatar [presetId]="profile()?.avatarPresetId" size="xl"></app-avatar>
+          <app-avatar [presetId]="profile()?.avatarPresetId" [pictureUrl]="profile()?.profilePictureUrl" size="xl"></app-avatar>
           <div class="info-text">
             <h1>{{ profile()?.nomeCompleto || user()?.nome }}</h1>
             <p class="handle" *ngIf="profile()?.handle">&#64;{{ profile()?.handle }}</p>
@@ -16,7 +16,10 @@
         <section class="perfil-section glass">
           <div class="section-header">
             <div class="header-main">
-              <h3>👤 Dados do Perfil</h3>
+              <h3 style="display: flex; align-items: center; gap: 8px;">
+                <app-avatar [presetId]="profile()?.avatarPresetId" [pictureUrl]="profile()?.profilePictureUrl" size="sm"></app-avatar>
+                Dados do Perfil
+              </h3>
               <app-button variant="ghost" customClass="edit-toggle-btn" *ngIf="!isEditing() && profile()" (onClick)="startEditing()">
                 <lucide-icon name="edit-2" [size]="16"></lucide-icon>
                 <span>Editar</span>
@@ -93,6 +96,14 @@
             <div class="form-group">
               <label>Escolha seu Avatar</label>
               
+              <div class="upload-avatar-btn" style="margin-bottom: 15px;">
+                <app-button type="button" variant="outline" (onClick)="fileInput.click()">
+                  <lucide-icon name="upload" [size]="16" style="margin-right: 8px;"></lucide-icon>
+                  Fazer upload de foto (Máx 10MB)
+                </app-button>
+                <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none" accept="image/jpeg, image/png">
+              </div>
+
               <div class="specialties-grid scrollable avatar-grid">
                 <div class="avatar-option-card" 
                      *ngFor="let item of getAllPresets()"

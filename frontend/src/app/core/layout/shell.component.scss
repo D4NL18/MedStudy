@@ -55,7 +55,7 @@
       transition: all 0.3s ease;
       position: relative;
       &.active, &:hover { 
-        opacity: 1; color: white; 
+        opacity: 1; color: var(--color-text); 
         &::after { width: 100%; }
       }
       &::after {

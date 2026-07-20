@@ -17,6 +17,7 @@ import { AVATAR_PRESETS, AvatarPreset } from '@core/constants/avatar-presets';
 })
 export class AvatarComponent implements OnInit, OnChanges {
   @Input() presetId: string | null | undefined = 'clinica_geral';
+  @Input() pictureUrl: string | null | undefined = null;
   @Input() size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
 
   preset: AvatarPreset | null = null;

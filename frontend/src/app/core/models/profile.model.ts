@@ -11,6 +11,7 @@ export interface Profile {
   semestre?: number | null;
   faculdade: string;
   avatarPresetId: string;
+  profilePictureUrl?: string;
 
   // Privacy Settings
   isPublic?: boolean;

@@ -64,6 +64,25 @@ export class ProfileEffects {
     )
   );
 
+  uploadProfilePicture$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProfileActions.uploadProfilePicture),
+      mergeMap(({ file }) =>
+        this.profileService.uploadProfilePicture(file).pipe(
+          map((profile) => {
+            this.toastService.success('Foto de perfil atualizada!');
+            return ProfileActions.uploadProfilePictureSuccess({ profile });
+          }),
+          catchError((error) => {
+            const errorMsg = error.error?.message || 'Erro ao atualizar foto de perfil';
+            this.toastService.error(errorMsg);
+            return of(ProfileActions.uploadProfilePictureFailure({ error: errorMsg }));
+          })
+        )
+      )
+    )
+  );
+
   loadProfileOnLoginSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.loginSuccess),

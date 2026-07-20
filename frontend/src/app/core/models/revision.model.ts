@@ -42,7 +42,7 @@ export interface DailyLoadDto {
 
 export interface RedistributionDraftResponse {
   draftId: string;
-  totalFlashcardsRedistributed: number;
+  totalRevisionsRedistributed: number;
   daysSpread: number;
   warningLimitExceeded: boolean;
   dailyLoads: DailyLoadDto[];

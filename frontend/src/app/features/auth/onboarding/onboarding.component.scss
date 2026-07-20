@@ -88,12 +88,21 @@
 }
 
 // Forms & Inputs
+.step-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 16px;
+}
+
 .onboarding-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
   overflow-y: auto;
-  max-height: 55vh;
+  flex: 1;
+  min-height: 0;
 }
 
 .form-group {
@@ -304,7 +313,8 @@
 // Specialties Grid / Avatar Grid
 .specialties-grid {
   overflow-y: auto;
-  max-height: 45vh;
+  flex: 1;
+  min-height: 0;
   padding: 10px 4px 10px 10px;
   margin-top: 10px;
 
@@ -412,3 +422,5 @@
     }
   }
 }
+
+.avatar-upload-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 2rem; } .upload-preview { position: relative; width: 96px; height: 96px; border-radius: 50%; cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--surface-hover); border: 2px dashed var(--border-color); } .preview-img { width: 100%; height: 100%; object-fit: cover; } .upload-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; lucide-icon { color: white; width: 32px; height: 32px; } } .upload-preview:hover .upload-overlay { opacity: 1; } .upload-actions { display: flex; gap: 1rem; font-size: 0.875rem; } .upload-text { color: var(--color-accent); cursor: pointer; font-weight: 500; } .upload-text:hover { text-decoration: underline; } .remove-text { color: #f87171; cursor: pointer; font-weight: 500; } .remove-text:hover { text-decoration: underline; } .divider-text { text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.875rem; position: relative; } .divider-text::before, .divider-text::after { content: ''; position: absolute; top: 50%; width: 30%; height: 1px; background: var(--border-color); } .divider-text::before { left: 0; } .divider-text::after { right: 0; }

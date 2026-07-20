@@ -8,7 +8,8 @@ import { ButtonComponent } from '@shared/components/button/button.component';
 import { AVATAR_PRESETS, AvatarPreset } from '@core/constants/avatar-presets';
 import { ProfileActions } from '@store/profile/profile.actions';
 import { selectProfile, selectLoading, selectHandleAvailability, selectHandleChecking } from '@store/profile/profile.reducer';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, take } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
 
 
 /**
@@ -25,11 +26,15 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 export class OnboardingComponent implements OnInit {
   private store = inject(Store);
   private fb = inject(FormBuilder);
+  private actions$ = inject(Actions);
 
   step = 1;
   showSchools = false;
   selectedCategory = 'Clínica Médica';
   selectedAvatarId = 'clinica_geral';
+
+  selectedFile: File | null = null;
+  selectedFilePreview: string | null = null;
 
   // Forms
   basicForm!: FormGroup;
@@ -142,6 +147,34 @@ export class OnboardingComponent implements OnInit {
     }
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        alert('A imagem deve ter no máximo 10MB.');
+        return;
+      }
+      this.selectedFile = file;
+      this.selectedAvatarId = '';
+      
+      const reader = new FileReader();
+      reader.onload = e => this.selectedFilePreview = reader.result as string;
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  clearSelectedFile() {
+    this.selectedFile = null;
+    this.selectedFilePreview = null;
+    this.selectedAvatarId = 'clinica_geral';
+  }
+
+  selectAvatar(id: string) {
+    this.selectedFile = null;
+    this.selectedFilePreview = null;
+    this.selectedAvatarId = id;
+  }
+
   getAllPresets(): AvatarPreset[] {
     return AVATAR_PRESETS;
   }
@@ -178,9 +211,19 @@ export class OnboardingComponent implements OnInit {
         semestre: this.basicForm.value.isFormado ? null : Number(this.basicForm.value.semestre),
         faculdade: this.basicForm.value.faculdade,
         handle: this.handleForm.value.handle,
-        avatarPresetId: this.selectedAvatarId
+        avatarPresetId: this.selectedAvatarId || 'clinica_geral'
       };
+      
       this.store.dispatch(ProfileActions.saveProfile({ profile: profileData }));
+
+      if (this.selectedFile) {
+        this.actions$.pipe(
+          ofType(ProfileActions.saveProfileSuccess),
+          take(1)
+        ).subscribe(() => {
+          this.store.dispatch(ProfileActions.uploadProfilePicture({ file: this.selectedFile! }));
+        });
+      }
     }
   }
 

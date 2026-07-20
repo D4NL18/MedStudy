@@ -349,3 +349,42 @@ input {
     opacity: 0;
   }
 }
+
+/* Global Page Header Styles */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+
+  .title-area {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--color-text);
+      margin: 0;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    p {
+      color: var(--color-text-muted);
+      margin: 0;
+      font-size: 1.05rem;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+}

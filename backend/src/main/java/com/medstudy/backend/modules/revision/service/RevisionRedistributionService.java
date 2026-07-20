@@ -1,4 +1,4 @@
-package com.medstudy.backend.modules.flashcard.service;
+package com.medstudy.backend.modules.revision.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medstudy.backend.modules.aula.entity.Lesson;
 import com.medstudy.backend.modules.aula.entity.LessonPriority;
 import com.medstudy.backend.modules.aula.repository.LessonRepository;
-import com.medstudy.backend.modules.flashcard.dto.DailyLoadDto;
-import com.medstudy.backend.modules.flashcard.dto.RedistributionPreviewResponse;
+import com.medstudy.backend.modules.revision.dto.DailyLoadDto;
+import com.medstudy.backend.modules.revision.dto.RedistributionPreviewResponse;
 import com.medstudy.backend.modules.flashcard.entity.Flashcard;
-import com.medstudy.backend.modules.flashcard.entity.RedistributionDraft;
+import com.medstudy.backend.modules.revision.entity.RedistributionDraft;
 import com.medstudy.backend.modules.flashcard.repository.FlashcardRepository;
-import com.medstudy.backend.modules.flashcard.repository.RedistributionDraftRepository;
+import com.medstudy.backend.modules.revision.repository.RedistributionDraftRepository;
 import com.medstudy.backend.modules.sessao.repository.StudySessionRepository;
 import com.medstudy.backend.modules.sessao.entity.StudySession;
 import com.medstudy.backend.modules.user.entity.User;
@@ -26,7 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
-public class FlashcardRedistributionService {
+public class RevisionRedistributionService {
 
     private final FlashcardRepository flashcardRepository;
     private final LessonRepository lessonRepository;
@@ -35,7 +35,7 @@ public class FlashcardRedistributionService {
     private final ObjectMapper objectMapper;
     private final StudySessionRepository studySessionRepository;
 
-    public FlashcardRedistributionService(FlashcardRepository flashcardRepository,
+    public RevisionRedistributionService(FlashcardRepository flashcardRepository,
                                           LessonRepository lessonRepository,
                                           RedistributionDraftRepository draftRepository,
                                           UserSettingsService userSettingsService,
@@ -57,12 +57,12 @@ public class FlashcardRedistributionService {
             throw new IllegalArgumentException("Target end date must be in the future.");
         }
 
-        // Redistribute ALL cards scheduled up to the target date (including overdue ones)
-        List<Flashcard> cardsToRedistribute = flashcardRepository.findByUserIdAndProximaRevisaoBefore(user.getId(), targetEndDate.plusDays(1));
+        // Redistribute ALL study sessions scheduled up to the target date (including overdue ones)
+        List<StudySession> sessionsToRedistribute = studySessionRepository.findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(user.getId(), targetEndDate.plusDays(1));
         
-        if (cardsToRedistribute.isEmpty()) {
+        if (sessionsToRedistribute.isEmpty()) {
             return RedistributionPreviewResponse.builder()
-                    .totalFlashcardsRedistributed(0)
+                    .totalRevisionsRedistributed(0)
                     .daysSpread(0)
                     .warningLimitExceeded(false)
                     .dailyLoads(Collections.emptyList())
@@ -71,35 +71,35 @@ public class FlashcardRedistributionService {
 
         Map<String, Lesson> lessonCache = new HashMap<>();
 
-        cardsToRedistribute.sort(Comparator.comparing((Flashcard f) -> getPriorityOrder(f, lessonCache, user))
-                .thenComparing(f -> getPercentAcerto(f, lessonCache, user))
-                .thenComparing(Flashcard::getProximaRevisao, Comparator.nullsLast(Comparator.naturalOrder())));
+        sessionsToRedistribute.sort(Comparator.comparing((StudySession s) -> getPriorityOrder(s, lessonCache, user))
+                .thenComparing(s -> getPercentAcerto(s, lessonCache, user))
+                .thenComparing(StudySession::getDataProximaRevisao, Comparator.nullsLast(Comparator.naturalOrder())));
 
         long daysToSpread = ChronoUnit.DAYS.between(today, targetEndDate);
         if (daysToSpread == 0) {
             daysToSpread = 1;
         }
 
-        int totalCards = cardsToRedistribute.size();
+        int totalSessions = sessionsToRedistribute.size();
         int maxReviewsPerDay = userSettingsService.getCurrentUserMaxReviewsPerDay();
         
-        int basePerDay = (int) (totalCards / daysToSpread);
-        int remainder = (int) (totalCards % daysToSpread);
+        int basePerDay = (int) (totalSessions / daysToSpread);
+        int remainder = (int) (totalSessions % daysToSpread);
         
         boolean warningLimitExceeded = (basePerDay > maxReviewsPerDay || (basePerDay == maxReviewsPerDay && remainder > 0));
 
         Map<UUID, LocalDate> draftMap = new HashMap<>();
-        int currentCardIndex = 0;
+        int currentSessionIndex = 0;
         
         // Se a data limite ganha, ignoramos o maxReviewsPerDay para a distribuição em si
         for (int dayOffset = 0; dayOffset < daysToSpread; dayOffset++) {
-            int cardsForThisDay = basePerDay + (dayOffset < remainder ? 1 : 0);
+            int sessionsForThisDay = basePerDay + (dayOffset < remainder ? 1 : 0);
             LocalDate newDate = today.plusDays(dayOffset);
             
-            for (int i = 0; i < cardsForThisDay; i++) {
-                if (currentCardIndex < totalCards) {
-                    Flashcard flashcard = cardsToRedistribute.get(currentCardIndex++);
-                    draftMap.put(flashcard.getId(), newDate);
+            for (int i = 0; i < sessionsForThisDay; i++) {
+                if (currentSessionIndex < totalSessions) {
+                    StudySession session = sessionsToRedistribute.get(currentSessionIndex++);
+                    draftMap.put(session.getId(), newDate);
                 }
             }
         }
@@ -107,12 +107,14 @@ public class FlashcardRedistributionService {
         Map<LocalDate, Integer> originalCounts = new HashMap<>();
         Map<LocalDate, Integer> draftCounts = new HashMap<>();
 
-        for (Flashcard f : cardsToRedistribute) {
-            LocalDate revDate = f.getProximaRevisao();
-            if (revDate.isBefore(today)) {
+        for (StudySession s : sessionsToRedistribute) {
+            LocalDate revDate = s.getDataProximaRevisao();
+            if (revDate != null && revDate.isBefore(today)) {
                 originalCounts.merge(today, 1, Integer::sum);
-            } else {
+            } else if (revDate != null) {
                 originalCounts.merge(revDate, 1, Integer::sum);
+            } else {
+                originalCounts.merge(today, 1, Integer::sum);
             }
         }
 
@@ -138,7 +140,7 @@ public class FlashcardRedistributionService {
             return RedistributionPreviewResponse.builder()
                     .draftId(draft.getId())
                     .warningLimitExceeded(warningLimitExceeded)
-                    .totalFlashcardsRedistributed(totalCards)
+                    .totalRevisionsRedistributed(totalSessions)
                     .daysSpread((int) daysToSpread)
                     .dailyLoads(dailyLoads)
                     .build();
@@ -163,52 +165,34 @@ public class FlashcardRedistributionService {
             Map<UUID, LocalDate> draftMap = new HashMap<>();
             draftMapString.forEach((k, v) -> draftMap.put(k, LocalDate.parse(v)));
 
-            List<Flashcard> cardsToUpdate = flashcardRepository.findAllById(draftMap.keySet());
-            Map<String, LocalDate> earliestDateByTema = new HashMap<>();
+            List<StudySession> sessionsToUpdate = studySessionRepository.findAllById(draftMap.keySet());
 
-            for (Flashcard card : cardsToUpdate) {
-                if (card.getUser().getId().equals(user.getId())) {
-                    LocalDate newDate = draftMap.get(card.getId());
+            for (StudySession session : sessionsToUpdate) {
+                if (session.getUser().getId().equals(user.getId())) {
+                    LocalDate newDate = draftMap.get(session.getId());
                     if (newDate != null) {
-                        card.setProximaRevisao(newDate);
-                        
-                        if (card.getTema() != null) {
-                            earliestDateByTema.compute(card.getTema(), (k, v) -> (v == null || newDate.isBefore(v)) ? newDate : v);
-                        }
+                        session.setDataProximaRevisao(newDate);
                     }
                 }
             }
-            flashcardRepository.saveAll(cardsToUpdate);
+            studySessionRepository.saveAll(sessionsToUpdate);
             draftRepository.delete(draft);
-            
-            // Also update the delayed StudySessions for the rearranged temas
-            if (!earliestDateByTema.isEmpty()) {
-                List<StudySession> overdueSessions = studySessionRepository.findByUserIdAndRevisaoConcluidaFalseAndDataProximaRevisaoLessThan(user.getId(), LocalDate.now());
-                List<StudySession> sessionsToUpdate = new ArrayList<>();
-                for (StudySession session : overdueSessions) {
-                    if (session.getTema() != null && earliestDateByTema.containsKey(session.getTema())) {
-                        session.setDataProximaRevisao(earliestDateByTema.get(session.getTema()));
-                        sessionsToUpdate.add(session);
-                    }
-                }
-                studySessionRepository.saveAll(sessionsToUpdate);
-            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error applying draft", e);
         }
     }
 
-    private Lesson getLessonForFlashcard(Flashcard flashcard, Map<String, Lesson> cache, User user) {
-        if (flashcard.getTema() == null) {
+    private Lesson getLessonForStudySession(StudySession session, Map<String, Lesson> cache, User user) {
+        if (session.getTema() == null) {
             return null;
         }
-        return cache.computeIfAbsent(flashcard.getTema(), tema -> 
+        return cache.computeIfAbsent(session.getTema(), tema -> 
                 lessonRepository.findByUserAndTema(user, tema).orElse(null)
         );
     }
 
-    private int getPriorityOrder(Flashcard flashcard, Map<String, Lesson> cache, User user) {
-        Lesson lesson = getLessonForFlashcard(flashcard, cache, user);
+    private int getPriorityOrder(StudySession session, Map<String, Lesson> cache, User user) {
+        Lesson lesson = getLessonForStudySession(session, cache, user);
         if (lesson == null || lesson.getPrioridade() == null) {
             return 3;
         }
@@ -220,8 +204,8 @@ public class FlashcardRedistributionService {
         };
     }
 
-    private int getPercentAcerto(Flashcard flashcard, Map<String, Lesson> cache, User user) {
-        Lesson lesson = getLessonForFlashcard(flashcard, cache, user);
+    private int getPercentAcerto(StudySession session, Map<String, Lesson> cache, User user) {
+        Lesson lesson = getLessonForStudySession(session, cache, user);
         if (lesson == null || lesson.getPercentAcerto() == null) {
             return 100;
         }

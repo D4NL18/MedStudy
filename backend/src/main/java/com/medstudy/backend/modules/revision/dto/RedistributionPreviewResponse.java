@@ -1,4 +1,4 @@
-package com.medstudy.backend.modules.flashcard.dto;
+package com.medstudy.backend.modules.revision.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.UUID;
 public class RedistributionPreviewResponse {
     private UUID draftId;
     private boolean warningLimitExceeded;
-    private int totalFlashcardsRedistributed;
+    private int totalRevisionsRedistributed;
     private int daysSpread;
     private java.util.List<DailyLoadDto> dailyLoads;
 }

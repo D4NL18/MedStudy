@@ -32,4 +32,10 @@ export class ProfileService {
   getPublicProfile(handle: string): Observable<Profile> {
     return this.http.get<Profile>(`${this.API_URL}/public/${handle}`);
   }
+
+  uploadProfilePicture(file: File): Observable<Profile> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<Profile>(`${this.API_URL}/picture`, formData);
+  }
 }

@@ -45,6 +45,10 @@ public class Profile extends BaseEntity {
 
     @Column(name = "share_badges", nullable = false)
     private Boolean shareBadges = true;
+
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
+
     public User getUser() {
         return user;
     }
@@ -139,5 +143,13 @@ public class Profile extends BaseEntity {
 
     public void setShareBadges(Boolean shareBadges) {
         this.shareBadges = shareBadges;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }

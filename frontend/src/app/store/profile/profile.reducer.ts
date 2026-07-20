@@ -74,6 +74,22 @@ export const profileFeature = createFeature({
       handleChecking: false,
       error
     })),
+    on(ProfileActions.uploadProfilePicture, (state) => ({
+      ...state,
+      loading: true,
+      error: null
+    })),
+    on(ProfileActions.uploadProfilePictureSuccess, (state, { profile }) => ({
+      ...state,
+      profile,
+      loading: false,
+      error: null
+    })),
+    on(ProfileActions.uploadProfilePictureFailure, (state, { error }) => ({
+      ...state,
+      loading: false,
+      error
+    })),
     on(ProfileActions.clearProfileState, () => initialState)
   ),
 });

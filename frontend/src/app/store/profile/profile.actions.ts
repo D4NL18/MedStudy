@@ -21,6 +21,10 @@ export const ProfileActions = createActionGroup({
     'Check Handle Success': props<{ response: ProfileCheckResponse }>(),
     'Check Handle Failure': props<{ error: string }>(),
 
+    'Upload Profile Picture': props<{ file: File }>(),
+    'Upload Profile Picture Success': props<{ profile: Profile }>(),
+    'Upload Profile Picture Failure': props<{ error: string }>(),
+
     'Clear Profile State': emptyProps(),
   }
 });

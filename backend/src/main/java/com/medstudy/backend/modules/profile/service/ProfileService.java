@@ -34,6 +34,7 @@ public class ProfileService {
     private final StudySessionRepository studySessionRepository;
     private final UserBadgeRepository userBadgeRepository;
     private final FriendshipRepository friendshipRepository;
+    private final com.medstudy.backend.core.storage.StorageService storageService;
 
     /**
      * Constructs a new ProfileService.
@@ -50,13 +51,15 @@ public class ProfileService {
                           UserRepository userRepository,
                           StudySessionRepository studySessionRepository,
                           UserBadgeRepository userBadgeRepository,
-                          FriendshipRepository friendshipRepository) {
+                          FriendshipRepository friendshipRepository,
+                          com.medstudy.backend.core.storage.StorageService storageService) {
         this.profileRepository = profileRepository;
         this.profileMapper = profileMapper;
         this.userRepository = userRepository;
         this.studySessionRepository = studySessionRepository;
         this.userBadgeRepository = userBadgeRepository;
         this.friendshipRepository = friendshipRepository;
+        this.storageService = storageService;
     }
 
     private User getCurrentUser() {
@@ -263,5 +266,25 @@ public class ProfileService {
 
         Profile saved = profileRepository.save(profile);
         return enrichAndMaskProfile(saved, user.getId());
+    }
+
+    /**
+     * Uploads and updates the profile picture.
+     */
+    public ProfileDTO uploadProfilePicture(UUID userId, org.springframework.web.multipart.MultipartFile file) {
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Profile not found"));
+
+        try {
+            java.io.InputStream processedImage = com.medstudy.backend.core.utils.ImageUtils.validateAndProcessImage(file);
+            String fileName = userId.toString() + "-" + java.util.UUID.randomUUID().toString() + ".jpg";
+            String publicUrl = storageService.uploadImage(fileName, processedImage);
+            
+            profile.setProfilePictureUrl(publicUrl);
+            Profile saved = profileRepository.save(profile);
+            return enrichAndMaskProfile(saved, userId);
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Error processing profile picture", e);
+        }
     }
 }

@@ -1,6 +1,6 @@
-package com.medstudy.backend.modules.flashcard.repository;
+package com.medstudy.backend.modules.revision.repository;
 
-import com.medstudy.backend.modules.flashcard.entity.RedistributionDraft;
+import com.medstudy.backend.modules.revision.entity.RedistributionDraft;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
