@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { PaywallModal } from './core/layout/paywall-modal/paywall-modal';
 
 
@@ -13,6 +14,14 @@ import { PaywallModal } from './core/layout/paywall-modal/paywall-modal';
   imports: [RouterOutlet, PaywallModal],
   templateUrl: './app.component.html'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'MedStudy';
+  private http = inject(HttpClient);
+
+  ngOnInit() {
+    this.http.get('/api/health/ping', { responseType: 'text' }).subscribe({
+      next: () => console.log('Backend wake-up ping successful'),
+      error: (err) => console.log('Backend wake-up ping failed:', err)
+    });
+  }
 }
