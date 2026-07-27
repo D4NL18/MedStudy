@@ -14,7 +14,7 @@ public class KeepAliveService {
     
     // Configurar a URL pública da sua API na variável de ambiente KEEP_ALIVE_URL
     // Exemplo: KEEP_ALIVE_URL=https://sua-api.com/api/health/ping
-    @Value("${app.keep-alive.url:}")
+    @Value("${KEEP_ALIVE_URL:${app.keep-alive.url:}}")
     private String keepAliveUrl;
     
     private final RestTemplate restTemplate;
@@ -35,7 +35,7 @@ public class KeepAliveService {
                 log.warn("Falha ao executar ping de keep-alive: {}", e.getMessage());
             }
         } else {
-            log.info("Ping de keep-alive ignorado. A variável 'app.keep-alive.url' não está configurada.");
+            log.info("Ping de keep-alive ignorado. A variável 'KEEP_ALIVE_URL' não está configurada.");
         }
     }
 }
