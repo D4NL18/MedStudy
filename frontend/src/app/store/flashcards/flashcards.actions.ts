@@ -13,7 +13,7 @@ export const FlashcardsActions = createActionGroup({
     'Load Study Queue Success': props<{ flashcards: Flashcard[] }>(),
     'Load Study Queue Failure': props<{ error: string }>(),
     
-    'Load Flashcards': props<{ page?: number, size?: number, filter?: any }>(),
+    'Load Flashcards': props<{ page?: number, size?: number, query?: string }>(),
     'Load Flashcards Success': props<{ flashcards: Flashcard[], totalElements: number }>(),
     'Load Flashcards Failure': props<{ error: string }>(),
 

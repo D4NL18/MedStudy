@@ -51,8 +51,10 @@ public class FlashcardController {
     @Operation(summary = "List flashcards", description = "Retrieves a paginated list of flashcards for the current user.")
     @ApiResponse(responseCode = "200", description = "List of flashcards retrieved successfully")
     @GetMapping
-    public ResponseEntity<Page<FlashcardResponse>> list(Pageable pageable) {
-        return ResponseEntity.ok(service.listAll(pageable));
+    public ResponseEntity<Page<FlashcardResponse>> list(
+            @RequestParam(required = false) String query,
+            Pageable pageable) {
+        return ResponseEntity.ok(service.listAll(query, pageable));
     }
 
     /**

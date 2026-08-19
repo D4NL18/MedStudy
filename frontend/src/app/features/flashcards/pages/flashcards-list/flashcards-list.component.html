@@ -42,8 +42,13 @@
     <div class="list-header">
       <div class="list-title">Deck ({{ (cards$ | async)?.length || 0 }})</div>
       <div class="filters">
+        <div class="search-box">
+          <lucide-icon name="search" [size]="16"></lucide-icon>
+          <input type="text" placeholder="Buscar flashcards..." (input)="onSearch($event)">
+        </div>
         <select aria-label="Filtrar por Grande Área">
-          <option>Todas as Áreas</option>
+          <option value="">Todas as Áreas</option>
+          <option *ngFor="let area of areas" [value]="area">{{ area }}</option>
         </select>
       </div>
     </div>

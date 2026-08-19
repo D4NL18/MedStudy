@@ -30,6 +30,8 @@ export class FlashcardsListComponent implements OnInit {
 
   pageSize = 10;
   pageIndex = 0;
+  searchQuery = '';
+  areas = ['Clínica Médica', 'Cirurgia', 'Pediatria', 'Ginecologia e Obstetrícia', 'Preventiva'];
 
   ngOnInit() {
     this.loadCards();
@@ -37,7 +39,17 @@ export class FlashcardsListComponent implements OnInit {
   }
 
   loadCards() {
-    this.store.dispatch(FlashcardsActions.loadFlashcards({ page: this.pageIndex, size: this.pageSize }));
+    this.store.dispatch(FlashcardsActions.loadFlashcards({ 
+      page: this.pageIndex, 
+      size: this.pageSize, 
+      query: this.searchQuery 
+    }));
+  }
+
+  onSearch(event: Event) {
+    this.searchQuery = (event.target as HTMLInputElement).value;
+    this.pageIndex = 0;
+    this.loadCards();
   }
 
   onPageChange(event: PageEvent) {
