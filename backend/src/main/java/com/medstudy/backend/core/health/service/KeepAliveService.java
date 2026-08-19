@@ -23,8 +23,8 @@ public class KeepAliveService {
         this.restTemplate = new RestTemplate();
     }
 
-    // Executa a cada 14 minutos (840.000 milissegundos) para evitar que o servidor hiberne
-    @Scheduled(fixedRate = 840000)
+    // Executa a cada 10 minutos (600.000 milissegundos) para evitar que o servidor hiberne
+    @Scheduled(fixedRate = 600000)
     public void ping() {
         if (keepAliveUrl != null && !keepAliveUrl.isEmpty()) {
             try {
