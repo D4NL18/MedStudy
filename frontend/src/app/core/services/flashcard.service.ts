@@ -24,8 +24,12 @@ export class FlashcardService {
     return this.http.post<Flashcard>(`${this.apiUrl}/responder`, rating);
   }
 
-  getFlashcards(page: number, size: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}?page=${page}&size=${size}`);
+  getFlashcards(page: number, size: number, query?: string): Observable<any> {
+    let url = `${this.apiUrl}?page=${page}&size=${size}`;
+    if (query) {
+      url += `&query=${encodeURIComponent(query)}`;
+    }
+    return this.http.get(url);
   }
 
   createFlashcard(flashcard: any): Observable<Flashcard> {

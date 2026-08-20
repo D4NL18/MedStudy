@@ -54,8 +54,11 @@ public class FlashcardService {
      * @return a page of flashcard responses
      */
     @Transactional(readOnly = true)
-    public Page<FlashcardResponse> listAll(Pageable pageable) {
+    public Page<FlashcardResponse> listAll(String query, Pageable pageable) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (query != null && !query.trim().isEmpty()) {
+            return repository.searchByUserIdAndQuery(user.getId(), query, pageable).map(mapper::toResponse);
+        }
         return repository.findAllByUserId(user.getId(), pageable).map(mapper::toResponse);
     }
 

@@ -27,6 +27,17 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, UUID>, Jpa
     Page<Flashcard> findAllByUserId(UUID userId, Pageable pageable);
 
     /**
+     * Searches a paginated list of flashcards by user ID and query string.
+     *
+     * @param userId the user ID
+     * @param query the text to search in frente or verso
+     * @param pageable pagination information
+     * @return a page of flashcards matching the query
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT f FROM Flashcard f WHERE f.user.id = :userId AND (LOWER(CAST(f.frente AS string)) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(CAST(f.verso AS string)) LIKE LOWER(CONCAT('%', :query, '%')))")
+    Page<Flashcard> searchByUserIdAndQuery(@org.springframework.data.repository.query.Param("userId") UUID userId, @org.springframework.data.repository.query.Param("query") String query, Pageable pageable);
+
+    /**
      * Finds a list of all flashcards by user ID.
      *
      * @param userId the user ID
