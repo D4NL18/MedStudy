@@ -13,25 +13,15 @@
 
   <!-- Card State -->
   <div class="card-container" *ngIf="currentCard() as card">
-    <div class="flashcard" [class.is-flipped]="isFlipped()" (click)="handleCardClick($event)">
-      <div class="card-face front">
-        <div class="card-label">Pergunta</div>
+    <div class="flashcard" (click)="handleCardClick($event)">
+      <div class="card-face">
+        <div class="card-label">{{ isFlipped() ? 'Resposta' : 'Pergunta' }}</div>
         <div class="content-wrapper">
-          <app-markdown-renderer [data]="card.frente"></app-markdown-renderer>
+          <app-markdown-renderer [data]="isFlipped() ? card.verso : card.frente"></app-markdown-renderer>
         </div>
         <div class="flip-hint">
-          <lucide-icon name="rotate-cw" [size]="16"></lucide-icon>
-          Clique para girar
-        </div>
-      </div>
-      <div class="card-face back">
-        <div class="card-label">Resposta</div>
-        <div class="content-wrapper">
-          <app-markdown-renderer [data]="card.verso"></app-markdown-renderer>
-        </div>
-        <div class="flip-hint">
-          <lucide-icon name="rotate-ccw" [size]="16"></lucide-icon>
-          Clique para desvirar
+          <lucide-icon [name]="isFlipped() ? 'rotate-ccw' : 'rotate-cw'" [size]="16"></lucide-icon>
+          {{ isFlipped() ? 'Clique para ver a pergunta' : 'Clique para ver a resposta' }}
         </div>
       </div>
     </div>

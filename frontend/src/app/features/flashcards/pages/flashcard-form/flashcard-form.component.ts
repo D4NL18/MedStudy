@@ -1,5 +1,5 @@
 import { ButtonComponent } from '@shared/components/button/button.component';
-import { Component, inject, ElementRef, ViewChild, OnInit, Inject, Optional } from '@angular/core';
+import { Component, inject, ElementRef, ViewChild, OnInit, AfterViewInit, Inject, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -21,7 +21,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './flashcard-form.component.html',
   styleUrl: './flashcard-form.component.scss'
 })
-export class FlashcardFormComponent implements OnInit {
+export class FlashcardFormComponent implements OnInit, AfterViewInit {
   private flashcardService = inject(FlashcardService);
   private imageCompressor = inject(ImageCompressorService);
   private dialogRef = inject(MatDialogRef<FlashcardFormComponent>);
@@ -40,17 +40,26 @@ export class FlashcardFormComponent implements OnInit {
     if (data && data.flashcard) {
       this.isEdit = true;
       this.editingId = data.flashcard.id;
-      this.grandeArea = data.flashcard.grandeArea;
+      
+      const incomingArea = data.flashcard.grandeArea;
+      const matched = this.areas.find(a => this.normalizeString(a) === this.normalizeString(incomingArea));
+      this.grandeArea = matched || incomingArea;
     }
   }
 
+  private normalizeString(str: string): string {
+    if (!str) return '';
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
   ngOnInit() {
-    setTimeout(() => {
-      if (this.isEdit && this.data.flashcard) {
-        this.frenteEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.frente);
-        this.versoEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.verso);
-      }
-    }, 100);
+  }
+
+  ngAfterViewInit() {
+    if (this.isEdit && this.data.flashcard) {
+      this.frenteEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.frente);
+      this.versoEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.verso);
+    }
   }
 
   async onImagePasted(base64: string, field: 'frente' | 'verso') {
@@ -152,7 +161,7 @@ export class FlashcardFormComponent implements OnInit {
 
   private markdownToHtml(md: string): string {
     if (!md) return '';
-    let html = md.replace(/\n!\[image\]\((.*?)\)\n/g, '<img src="$1" style="max-width: 100%; border-radius: 8px; margin: 8px 0;">');
+    let html = md.replace(/!\[image\]\((.*?)\)/g, '<img src="$1" style="max-width: 100%; border-radius: 8px; margin: 8px 0;">');
     html = html.replace(/\n/g, '<br>');
     return html;
   }
