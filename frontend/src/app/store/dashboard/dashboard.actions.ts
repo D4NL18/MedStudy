@@ -1,4 +1,4 @@
-import { createAction, props } from '@ngrx/store';
+﻿import { createAction, props } from '@ngrx/store';
 
 
 /**
@@ -28,6 +28,8 @@ export interface DashboardKPIs {
     totalQuestions: number;
     successRate: number;
     performanceLevel: string;
+    monthlyQuestions: number;
+    monthlySuccessRate: number;
   };
   simulados: {
     totalSimulados: number;

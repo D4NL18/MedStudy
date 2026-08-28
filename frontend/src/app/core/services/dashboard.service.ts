@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { DashboardKPIs } from '@store/dashboard/dashboard.actions';
@@ -27,7 +27,9 @@ export class DashboardService {
         totalSessions: 45, 
         totalQuestions: 450, 
         successRate: 78.5,
-        performanceLevel: 'MEDIUM' 
+        performanceLevel: 'MEDIUM',
+        monthlyQuestions: 52,
+        monthlySuccessRate: 74.0
       },
       simulados: { 
         totalSimulados: 12, 

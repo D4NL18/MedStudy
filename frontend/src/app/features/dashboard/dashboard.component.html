@@ -34,6 +34,22 @@
           <div class="kpi-value">{{ kpis()?.sessions?.totalQuestions || 0 }}</div>
         </div>
         <div class="kpi-card glass">
+          <div class="kpi-label">
+            Questões (Mês)
+            <lucide-icon name="info" class="info-icon" title="Total de questões respondidas no mês atual."></lucide-icon>
+          </div>
+          <div class="kpi-value">{{ kpis()?.sessions?.monthlyQuestions || 0 }}</div>
+        </div>
+        <div class="kpi-card glass">
+          <div class="kpi-label">
+            Taxa do Mês
+            <lucide-icon name="info" class="info-icon" title="Porcentagem de acertos calculada sobre as questões do mês atual."></lucide-icon>
+          </div>
+          <div class="kpi-value" [style.color]="perfTheme.getColor(kpis()?.sessions?.monthlySuccessRate || 0)">
+            {{ kpis()?.sessions?.monthlySuccessRate || 0 | number:'1.0-0' }}%
+          </div>
+        </div>
+        <div class="kpi-card glass">
           <div class="kpi-label">Sessões Realizadas</div>
           <div class="kpi-value">{{ kpis()?.sessions?.totalSessions || 0 }}</div>
         </div>
