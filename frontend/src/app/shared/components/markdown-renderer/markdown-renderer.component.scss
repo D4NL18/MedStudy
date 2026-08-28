@@ -1,7 +1,7 @@
 .markdown-container {
   color: var(--color-text);
   line-height: 1.6;
-  font-size: 1rem;
+  font-size: inherit;
 }
 
 :host ::ng-deep img {

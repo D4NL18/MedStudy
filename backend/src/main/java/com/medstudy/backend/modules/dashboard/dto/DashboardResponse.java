@@ -41,12 +41,16 @@ public class DashboardResponse {
      * @param totalQuestions total number of questions answered
      * @param successRate percentage of correctly answered questions
      * @param performanceLevel performance level string classification
+     * @param monthlyQuestions total questions answered in the current month
+     * @param monthlySuccessRate percentage of correctly answered questions in the current month
      */
     public record StudyMetrics(
         long totalSessions,
         long totalQuestions,
         double successRate,
-        String performanceLevel
+        String performanceLevel,
+        long monthlyQuestions,
+        double monthlySuccessRate
     ) {}
 
     /**

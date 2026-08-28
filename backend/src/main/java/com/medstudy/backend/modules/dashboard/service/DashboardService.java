@@ -65,11 +65,23 @@ public class DashboardService {
         double successRate = totalQuestions > 0 ? (double) totalCorrect / totalQuestions * 100 : 0.0;
         String perfLevel = calculatePerformanceLevel(successRate);
 
+        // Monthly metrics for current month
+        LocalDate now = LocalDate.now();
+        int currentMonth = now.getMonthValue();
+        int currentYear = now.getYear();
+        Long monthlyQuestions = studySessionRepository.sumTotalQuestionsByUserIdAndMonth(userId, currentMonth, currentYear);
+        Long monthlyCorrect = studySessionRepository.sumTotalCorrectByUserIdAndMonth(userId, currentMonth, currentYear);
+        monthlyQuestions = monthlyQuestions != null ? monthlyQuestions : 0L;
+        monthlyCorrect = monthlyCorrect != null ? monthlyCorrect : 0L;
+        double monthlySuccessRate = monthlyQuestions > 0 ? (double) monthlyCorrect / monthlyQuestions * 100 : 0.0;
+
         DashboardResponse.StudyMetrics studyMetrics = new DashboardResponse.StudyMetrics(
             totalSessions,
             totalQuestions,
             successRate,
-            perfLevel
+            perfLevel,
+            monthlyQuestions,
+            monthlySuccessRate
         );
 
         List<Simulado> simulados = simuladoRepository.findAllByUserId(userId);
