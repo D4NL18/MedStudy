@@ -82,16 +82,17 @@
 .card-face {
   flex: 1;
   min-height: 0;
-  background: #1e1e1e; // Solid dark for better contrast
+  background: #FFFFFF;
   border-radius: 40px;
   padding: 50px 60px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  color: var(--color-primary);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
 
   .card-label {
     position: absolute;
@@ -100,7 +101,7 @@
     font-size: 0.7rem;
     font-weight: 900;
     letter-spacing: 3px;
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--color-accent);
     text-transform: uppercase;
   }
 
@@ -111,18 +112,30 @@
     overflow-y: auto;
     
     ::ng-deep {
+      // Força cor do tema no conteúdo markdown (fundo branco)
+      .markdown-container {
+        color: var(--color-primary);
+      }
+
       // Força herança de font-size em todos os elementos de texto do markdown
       p, li, span, td, th, blockquote,
       h1, h2, h3, h4, h5, h6,
       strong, em, code, pre {
         font-size: inherit;
         line-height: 1.6;
+        color: inherit;
       }
       // Hierarquia de cabeçalhos relativa ao tamanho base
       h1 { font-size: 1.3em; font-weight: 800; }
       h2 { font-size: 1.15em; font-weight: 700; }
       h3 { font-size: 1.05em; font-weight: 600; }
       p { margin: 0.3em 0; }
+      code {
+        background: rgba(var(--color-accent-rgb), 0.1);
+        color: var(--color-primary-light);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
       img {
         max-width: 100%;
         max-height: 300px;
@@ -192,7 +205,7 @@
   align-items: center;
   gap: 10px;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.2);
+  color: var(--color-accent);
   font-weight: 500;
   animation: pulse 2s infinite;
 }
@@ -201,6 +214,39 @@
   0% { opacity: 0.2; transform: translateY(0); }
   50% { opacity: 0.5; transform: translateY(-5px); }
   100% { opacity: 0.2; transform: translateY(0); }
+}
+
+// Theme escuro: manter card com fundo escuro
+:host-context([data-theme="escuro"]) {
+  .card-face {
+    background: #1e1e1e;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+
+    .card-label {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .content-wrapper ::ng-deep {
+      .markdown-container {
+        color: #FFFFFF;
+      }
+      p, li, span, td, th, blockquote,
+      h1, h2, h3, h4, h5, h6,
+      strong, em, code, pre {
+        color: inherit;
+      }
+      code {
+        background: rgba(255, 255, 255, 0.1);
+        color: #e0e0e0;
+      }
+    }
+  }
+
+  .flip-hint {
+    color: rgba(255, 255, 255, 0.2);
+  }
 }
 
 .actions {
