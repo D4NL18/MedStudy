@@ -11,3 +11,7 @@ spring:
 
 jwt:
   secret: test-secret-key-123456789012345678901234567890
+
+mercadopago:
+  access-token: test-token
+  public-key: test-key
