@@ -8,14 +8,15 @@
   flex-direction: column;
   padding: 40px;
   color: white;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
   
   .progress-info {
     flex: 1;
@@ -62,26 +63,28 @@
 
 .card-container {
   flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 .flashcard {
   width: 100%;
   max-width: 1100px;
-  min-height: 580px;
-  position: relative;
+  height: 100%;
+  max-height: 580px;
+  display: flex;
   cursor: pointer;
 }
 
 .card-face {
-  position: absolute;
-  inset: 0;
+  flex: 1;
+  min-height: 0;
   background: #1e1e1e; // Solid dark for better contrast
   border-radius: 40px;
-  padding: 60px;
+  padding: 50px 60px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
@@ -203,9 +206,9 @@
 .actions {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 12px;
   max-width: 900px;
-  margin: 40px auto 0;
+  margin: 10px auto 0;
   width: 100%;
   flex-shrink: 0;
 }
@@ -213,69 +216,70 @@
 ::ng-deep {
   .result-btn {
     flex: 1;
-    max-width: 250px;
-    height: 120px;
-    border-radius: 24px;
+    max-width: 180px;
+    height: 44px;
+    border-radius: 12px;
     border: none;
     color: white;
     font-weight: 800;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 8px;
     cursor: pointer;
     transition: all 0.3s;
 
-    span { font-size: 1.2rem; }
+    lucide-icon { display: inline-flex; }
+    span { font-size: 0.88rem; }
 
     &:hover { transform: scale(1.05); }
 
     &.wrong { 
       background: #DC2626; 
-      box-shadow: 0 15px 30px rgba(220, 38, 38, 0.3);
+      box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
     }
     &.correct { 
       background: #059669; 
-      box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
+      box-shadow: 0 6px 12px rgba(5, 150, 105, 0.3);
     }
   }
 
   .diff-btn {
     flex: 1;
-    max-width: 200px;
-    height: 100px;
-    border-radius: 24px;
+    max-width: 150px;
+    height: 40px;
+    border-radius: 12px;
     border: none;
     color: white;
     font-weight: 800;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-    lucide-icon { opacity: 0.8; }
-    span { font-size: 1.1rem; }
+    lucide-icon { display: inline-flex; opacity: 0.8; }
+    span { font-size: 0.8rem; }
 
     &:hover { 
-      transform: translateY(-10px) scale(1.05);
+      transform: translateY(-3px) scale(1.05);
       filter: brightness(1.1);
     }
 
     &.easy { 
       background: linear-gradient(135deg, #10B981, #059669);
-      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
     }
     &.medium { 
       background: linear-gradient(135deg, #F59E0B, #D97706);
-      box-shadow: 0 15px 30px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
     }
     &.hard { 
       background: linear-gradient(135deg, #EF4444, #DC2626);
-      box-shadow: 0 15px 30px rgba(239, 68, 68, 0.3);
+      box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
     }
   }
 }
@@ -321,39 +325,49 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 768px) {
-  .study-overlay { padding: 16px; }
+  .study-overlay { padding: 12px; }
   
   .header {
-    margin-bottom: 24px;
+    margin-bottom: 12px;
     .progress-info { max-width: none; }
-    .close-btn { width: 40px; height: 40px; }
+    .close-btn { width: 36px; height: 36px; border-radius: 10px; }
   }
 
   .card-container { padding: 0; }
-  .flashcard { min-height: 350px; }
+  .flashcard { max-height: none; }
   .card-face { 
-    padding: 30px; 
-    border-radius: 24px;
-    .content-wrapper { font-size: 1.35rem; }
-    .card-label { top: 20px; left: 20px; font-size: 0.6rem; }
+    padding: 30px 24px; 
+    border-radius: 20px;
+    .content-wrapper { font-size: 1.2rem; }
+    .card-label { top: 14px; left: 20px; font-size: 0.6rem; }
+  }
+  .flip-hint {
+    bottom: 16px;
+    font-size: 0.75rem;
+    gap: 6px;
   }
   
   .actions { 
-    gap: 12px;
-    margin-top: 24px;
+    gap: 10px;
+    margin-top: 10px;
   }
   
-  .diff-btn { 
-    height: 80px; 
-    border-radius: 16px;
-    span { font-size: 0.8rem; }
-    lucide-icon { width: 18px; height: 18px; }
-  }
-  
-  .result-btn {
-    height: 80px;
-    border-radius: 16px;
-    span { font-size: 1rem; }
+  ::ng-deep {
+    .diff-btn { 
+      height: 30px; 
+      border-radius: 8px;
+      gap: 4px;
+      span { font-size: 0.68rem; }
+      lucide-icon { display: inline-flex; }
+    }
+    
+    .result-btn {
+      height: 34px;
+      border-radius: 8px;
+      gap: 5px;
+      lucide-icon { display: inline-flex; }
+      span { font-size: 0.75rem; }
+    }
   }
 
   .close-zoom-btn {
@@ -366,18 +380,46 @@
 }
 
 @media (max-width: 480px) {
+  .study-overlay { padding: 8px; }
+  
+  .header {
+    margin-bottom: 8px;
+    .progress-info {
+      .count { font-size: 0.8rem; margin-bottom: 6px; }
+      .progress-bar { height: 6px; }
+    }
+  }
+
+  .card-face {
+    padding: 24px 18px;
+    border-radius: 16px;
+    .content-wrapper { font-size: 1.05rem; }
+    .card-label { top: 12px; left: 16px; font-size: 0.55rem; letter-spacing: 2px; }
+  }
+  .flip-hint {
+    bottom: 12px;
+    font-size: 0.7rem;
+  }
+
   .actions {
-    display: grid;
-    grid-template-columns: 1fr;
     gap: 8px;
-    
+    margin-top: 8px;
+  }
+
+  ::ng-deep {
     .result-btn, .diff-btn {
       max-width: none;
-      height: 60px;
-      flex-direction: row;
-      justify-content: center;
-      padding: 0 20px;
-      gap: 12px;
+      height: 28px;
+      border-radius: 6px;
+      gap: 4px;
+    }
+    .result-btn {
+      lucide-icon { display: inline-flex; }
+      span { font-size: 0.7rem; }
+    }
+    .diff-btn {
+      lucide-icon { display: inline-flex; }
+      span { font-size: 0.65rem; }
     }
   }
 }

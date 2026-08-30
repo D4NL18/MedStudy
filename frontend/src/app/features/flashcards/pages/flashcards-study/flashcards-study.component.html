@@ -40,26 +40,26 @@
   <!-- Actions -->
   <div class="actions result-step" *ngIf="currentCard() && isFlipped() && !hasResult()">
     <button class="result-btn wrong" (click)="setResult(true)">
-      <lucide-icon name="x-circle" [size]="32"></lucide-icon>
+      <lucide-icon name="x-circle" [size]="18"></lucide-icon>
       <span>Errei</span>
     </button>
     <button class="result-btn correct" (click)="setResult(false)">
-      <lucide-icon name="check-circle" [size]="32"></lucide-icon>
+      <lucide-icon name="check-circle" [size]="18"></lucide-icon>
       <span>Acertei</span>
     </button>
   </div>
 
   <div class="actions difficulty-step" *ngIf="currentCard() && hasResult()">
     <button class="diff-btn hard" (click)="rate('HARD')">
-      <lucide-icon name="alert-triangle" [size]="24"></lucide-icon>
+      <lucide-icon name="alert-triangle" [size]="16"></lucide-icon>
       <span>Difícil</span>
     </button>
     <button class="diff-btn medium" (click)="rate('MEDIUM')">
-      <lucide-icon name="clock" [size]="24"></lucide-icon>
+      <lucide-icon name="clock" [size]="16"></lucide-icon>
       <span>Médio</span>
     </button>
     <button class="diff-btn easy" (click)="rate('EASY')">
-      <lucide-icon name="check" [size]="24"></lucide-icon>
+      <lucide-icon name="check" [size]="16"></lucide-icon>
       <span>Fácil</span>
     </button>
   </div>

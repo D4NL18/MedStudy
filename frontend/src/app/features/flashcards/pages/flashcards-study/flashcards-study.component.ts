@@ -82,6 +82,12 @@ export class FlashcardsStudyComponent {
 
     // Toggle flip (permite desvirar)
     this.isFlipped.update(v => !v);
+
+    // Ao voltar para a frente, reseta o estado de resultado
+    if (!this.isFlipped()) {
+      this.hasResult.set(false);
+      this.lastResultMissed.set(false);
+    }
   }
 
   closeZoom(event?: Event) {
