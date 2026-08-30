@@ -57,8 +57,8 @@ jwt:
   expiration: 14400000
 
 mercadopago:
-  access-token: ${MERCADOPAGO_ACCESS_TOKEN}
-  public-key: ${MERCADOPAGO_PUBLIC_KEY}
+  access-token: ${MERCADOPAGO_ACCESS_TOKEN:}
+  public-key: ${MERCADOPAGO_PUBLIC_KEY:}
 
 app:
   premium-price: 49.90
