@@ -84,6 +84,17 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, UUID>, Jpa
     long countByUserIdAndProximaRevisao(UUID userId, LocalDate date);
 
     /**
+     * Counts the number of flashcards grouped by scheduled revision date for a user in a date range.
+     *
+     * @param userId the user ID
+     * @param startDate the start date (inclusive)
+     * @param endDate the end date (inclusive)
+     * @return a list of Object arrays where [0] is LocalDate and [1] is Long count
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT f.proximaRevisao, COUNT(f) FROM Flashcard f WHERE f.user.id = :userId AND f.proximaRevisao >= :startDate AND f.proximaRevisao <= :endDate GROUP BY f.proximaRevisao")
+    List<Object[]> countByUserIdAndProximaRevisaoBetweenGroupByDate(@org.springframework.data.repository.query.Param("userId") UUID userId, @org.springframework.data.repository.query.Param("startDate") LocalDate startDate, @org.springframework.data.repository.query.Param("endDate") LocalDate endDate);
+
+    /**
      * Counts the number of flashcards scheduled after a certain date for a user.
      *
      * @param userId the user ID

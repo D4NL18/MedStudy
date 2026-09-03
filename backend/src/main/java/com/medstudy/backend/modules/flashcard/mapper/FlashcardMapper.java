@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medstudy.backend.modules.flashcard.dto.FlashcardRequest;
 import com.medstudy.backend.modules.flashcard.dto.FlashcardResponse;
 import com.medstudy.backend.modules.flashcard.entity.Flashcard;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
@@ -25,6 +27,7 @@ public abstract class FlashcardMapper {
 
     public abstract FlashcardResponse toResponse(Flashcard entity);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -44,4 +47,3 @@ public abstract class FlashcardMapper {
         }
     }
 }
-
