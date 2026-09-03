@@ -4,6 +4,7 @@ import com.medstudy.backend.modules.flashcard.entity.Flashcard;
 import com.medstudy.backend.modules.flashcard.entity.FlashcardDifficulty;
 import com.medstudy.backend.modules.flashcard.repository.FlashcardRepository;
 import com.medstudy.backend.modules.user.service.UserSettingsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ public class SpacedRepetitionService {
      * @param repository the flashcard repository
      * @param userSettingsService the user settings service
      */
+    @Autowired
     public SpacedRepetitionService(FlashcardRepository repository, UserSettingsService userSettingsService) {
         this.repository = repository;
         this.userSettingsService = userSettingsService;
