@@ -44,6 +44,9 @@ public class FlashcardService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Flashcard flashcard = mapper.toEntity(request);
         flashcard.setUser(user);
+        if (flashcard.getProximaRevisao() == null || !flashcard.getProximaRevisao().isAfter(LocalDate.now())) {
+            flashcard.setProximaRevisao(srService.calculateInitialRevisionDate(user.getId()));
+        }
         return mapper.toResponse(repository.save(flashcard));
     }
 
@@ -123,7 +126,12 @@ public class FlashcardService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         LocalDate today = LocalDate.now();
         List<FlashcardResponse> queue = repository.findAllByUserId(user.getId()).stream()
-            .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
+            .filter(f -> {
+                if (f.getCreatedAt() != null && f.getCreatedAt().toLocalDate().isEqual(today)) {
+                    return false;
+                }
+                return f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today);
+            })
             .map(mapper::toResponse)
             .collect(Collectors.toList());
         
@@ -144,7 +152,12 @@ public class FlashcardService {
         
         long total = cards.size();
         long disponiveis = cards.stream()
-            .filter(f -> f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today))
+            .filter(f -> {
+                if (f.getCreatedAt() != null && f.getCreatedAt().toLocalDate().isEqual(today)) {
+                    return false;
+                }
+                return f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today);
+            })
             .count();
         
         long concluidosHoje = cards.stream()

@@ -65,6 +65,7 @@ class FlashcardServiceTest {
         FlashcardResponse response = new FlashcardResponse(UUID.randomUUID(), "GINECOLOGIA", "Frente", "Verso", null, null, 0);
 
         when(mapper.toEntity(request)).thenReturn(flashcard);
+        when(srService.calculateInitialRevisionDate(user.getId())).thenReturn(LocalDate.now().plusDays(2));
         when(repository.save(any(Flashcard.class))).thenReturn(flashcard);
         when(mapper.toResponse(flashcard)).thenReturn(response);
 
@@ -73,6 +74,7 @@ class FlashcardServiceTest {
         assertNotNull(result);
         verify(repository).save(flashcard);
         assertEquals(user, flashcard.getUser());
+        assertEquals(LocalDate.now().plusDays(2), flashcard.getProximaRevisao());
     }
 
     @Test
@@ -147,5 +149,41 @@ class FlashcardServiceTest {
 
         assertEquals(1, result.size());
     }
+
+    @Test
+    void getTodayQueue_ShouldExcludeCardsCreatedToday() {
+        Flashcard f1 = TestDataFactory.createFlashcard(user);
+        f1.setProximaRevisao(LocalDate.now());
+        f1.setCreatedAt(java.time.OffsetDateTime.now()); // created today
+
+        Flashcard f2 = TestDataFactory.createFlashcard(user);
+        f2.setProximaRevisao(LocalDate.now());
+        f2.setCreatedAt(java.time.OffsetDateTime.now().minusDays(2)); // created 2 days ago
+
+        when(repository.findAllByUserId(user.getId())).thenReturn(java.util.List.of(f1, f2));
+
+        var result = flashcardService.getTodayQueue();
+
+        assertEquals(1, result.size(), "Card created today must not be included in today queue");
+    }
+
+    @Test
+    void getSummary_ShouldExcludeCardsCreatedTodayFromAvailable() {
+        Flashcard f1 = TestDataFactory.createFlashcard(user);
+        f1.setProximaRevisao(LocalDate.now());
+        f1.setCreatedAt(java.time.OffsetDateTime.now()); // created today
+
+        Flashcard f2 = TestDataFactory.createFlashcard(user);
+        f2.setProximaRevisao(LocalDate.now());
+        f2.setCreatedAt(java.time.OffsetDateTime.now().minusDays(1)); // created yesterday
+
+        when(repository.findAllByUserId(user.getId())).thenReturn(java.util.List.of(f1, f2));
+
+        Map<String, Object> summary = flashcardService.getSummary();
+
+        assertEquals(2L, summary.get("total"));
+        assertEquals(1L, summary.get("disponiveisHoje"), "Only cards created before today should be available today");
+    }
 }
+
 

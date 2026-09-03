@@ -72,4 +72,82 @@ describe('FlashcardFormComponent', () => {
     fixture.point.componentInstance.save();
     expect(createSpy).toHaveBeenCalled();
   });
+
+  it('should convert TipTap object to HTML without throwing', () => {
+    const fixture = MockRender(FlashcardFormComponent, null, { reset: true });
+    const component = fixture.point.componentInstance;
+
+    const tipTapObj = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            { type: 'text', text: 'Quais são as indicações de biópsia renal?' }
+          ]
+        }
+      ]
+    };
+
+    const html = component.toEditorHtml(tipTapObj);
+    expect(html).toContain('Quais são as indicações de biópsia renal?');
+    expect(html).toContain('<div>');
+  });
+
+  it('should convert TipTap JSON string to HTML correctly', () => {
+    const fixture = MockRender(FlashcardFormComponent, null, { reset: true });
+    const component = fixture.point.componentInstance;
+
+    const tipTapJson = JSON.stringify({
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            { type: 'text', text: 'Síndrome Nefrítica', marks: [{ type: 'bold' }] }
+          ]
+        }
+      ]
+    });
+
+    const html = component.toEditorHtml(tipTapJson);
+    expect(html).toContain('<strong>Síndrome Nefrítica</strong>');
+  });
+
+  it('should handle markdown strings in toEditorHtml', () => {
+    const fixture = MockRender(FlashcardFormComponent, null, { reset: true });
+    const component = fixture.point.componentInstance;
+
+    const md = 'Linha 1\nLinha 2';
+    const html = component.toEditorHtml(md);
+    expect(html).toBe('Linha 1<br>Linha 2');
+  });
+
+  it('should safely populate editors on ngAfterViewInit when editing TipTap card', () => {
+    const fixture = MockRender(FlashcardFormComponent, null, { reset: true });
+    const component = fixture.point.componentInstance;
+
+    component.isEdit = true;
+    component.data = {
+      flashcard: {
+        id: '123',
+        grandeArea: 'Pediatria',
+        frente: {
+          type: 'doc',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Pergunta TipTap' }] }]
+        },
+        verso: {
+          type: 'doc',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Resposta TipTap' }] }]
+        }
+      }
+    };
+
+    component.frenteEditor = { nativeElement: document.createElement('div') } as any;
+    component.versoEditor = { nativeElement: document.createElement('div') } as any;
+
+    expect(() => component.ngAfterViewInit()).not.toThrow();
+    expect(component.frenteEditor.nativeElement.innerHTML).toContain('Pergunta TipTap');
+    expect(component.versoEditor.nativeElement.innerHTML).toContain('Resposta TipTap');
+  });
 });

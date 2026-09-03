@@ -56,9 +56,9 @@ export class FlashcardFormComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.isEdit && this.data.flashcard) {
-      this.frenteEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.frente);
-      this.versoEditor.nativeElement.innerHTML = this.markdownToHtml(this.data.flashcard.verso);
+    if (this.isEdit && this.data?.flashcard) {
+      this.frenteEditor.nativeElement.innerHTML = this.toEditorHtml(this.data.flashcard.frente);
+      this.versoEditor.nativeElement.innerHTML = this.toEditorHtml(this.data.flashcard.verso);
     }
   }
 
@@ -148,19 +148,118 @@ export class FlashcardFormComponent implements OnInit, AfterViewInit {
     this.dialogRef.close(false);
   }
 
-  private htmlToMarkdown(html: string): string {
+  toEditorHtml(content: any): string {
+    if (!content) return '';
+    try {
+      let parsed = content;
+      if (typeof parsed === 'string') {
+        const trimmed = parsed.trim();
+        if (trimmed.startsWith('{') || (trimmed.startsWith('"') && trimmed.endsWith('"'))) {
+          try {
+            const temp = JSON.parse(trimmed);
+            if (typeof temp === 'object' && temp !== null) {
+              parsed = temp;
+            } else if (typeof temp === 'string' && temp.trim().startsWith('{')) {
+              parsed = JSON.parse(temp);
+            }
+          } catch (e) {
+            // Keep as string
+          }
+        }
+      }
+
+      if (typeof parsed === 'object' && parsed !== null) {
+        if (parsed.type === 'doc' || parsed.content) {
+          const html = this.tipTapToHtml(parsed);
+          if (html) return html;
+        }
+      }
+
+      return this.markdownToHtml(typeof parsed === 'string' ? parsed : JSON.stringify(parsed));
+    } catch (e) {
+      console.error('Error converting flashcard content to HTML:', e);
+      return typeof content === 'string' ? content : '';
+    }
+  }
+
+  private tipTapToHtml(node: any): string {
+    if (!node) return '';
+    if (typeof node === 'string') return node;
+
+    if (node.type === 'text') {
+      let text = node.text || '';
+      text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      if (node.marks && Array.isArray(node.marks)) {
+        node.marks.forEach((mark: any) => {
+          if (mark.type === 'bold') text = `<strong>${text}</strong>`;
+          else if (mark.type === 'italic') text = `<em>${text}</em>`;
+          else if (mark.type === 'underline') text = `<u>${text}</u>`;
+          else if (mark.type === 'strike') text = `<s>${text}</s>`;
+        });
+      }
+      return text;
+    }
+
+    if (node.type === 'image') {
+      const src = node.attrs?.src || node.src || '';
+      if (!src) return '';
+      return `<img src="${src}" style="max-width: 100%; border-radius: 8px; margin: 8px 0;">`;
+    }
+
+    if (node.type === 'hardBreak') {
+      return '<br>';
+    }
+
+    if (node.type === 'paragraph') {
+      const content = (node.content || []).map((c: any) => this.tipTapToHtml(c)).join('');
+      return content ? `<div>${content}</div>` : '<div><br></div>';
+    }
+
+    if (node.type === 'bulletList') {
+      const items = (node.content || []).map((c: any) => this.tipTapToHtml(c)).join('');
+      return `<ul>${items}</ul>`;
+    }
+
+    if (node.type === 'orderedList') {
+      const items = (node.content || []).map((c: any) => this.tipTapToHtml(c)).join('');
+      return `<ol>${items}</ol>`;
+    }
+
+    if (node.type === 'listItem') {
+      const content = (node.content || []).map((c: any) => this.tipTapToHtml(c)).join('');
+      return `<li>${content}</li>`;
+    }
+
+    if (node.content && Array.isArray(node.content)) {
+      return node.content.map((c: any) => this.tipTapToHtml(c)).join('');
+    }
+
+    return '';
+  }
+
+  htmlToMarkdown(html: string): string {
+    if (!html) return '';
     let md = html
       .replace(/<img src="([^"]+)"[^>]*>/g, '\n![image]($1)\n')
-      .replace(/<div>/g, '\n')
-      .replace(/<\/div>/g, '')
-      .replace(/<br>/g, '\n')
-      .replace(/&nbsp;/g, ' ');
+      .replace(/<strong>(.*?)<\/strong>/gi, '**$1**')
+      .replace(/<b>(.*?)<\/b>/gi, '**$1**')
+      .replace(/<em>(.*?)<\/em>/gi, '*$1*')
+      .replace(/<i>(.*?)<\/i>/gi, '*$1*')
+      .replace(/<div>/gi, '\n')
+      .replace(/<\/div>/gi, '')
+      .replace(/<p>/gi, '\n')
+      .replace(/<\/p>/gi, '')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+      .replace(/&lt;/gi, '<')
+      .replace(/&gt;/gi, '>');
     md = md.replace(/<[^>]*>/g, '');
     return md.trim();
   }
 
-  private markdownToHtml(md: string): string {
-    if (!md) return '';
+  markdownToHtml(md: any): string {
+    if (!md || typeof md !== 'string') return '';
     let html = md.replace(/!\[image\]\((.*?)\)/g, '<img src="$1" style="max-width: 100%; border-radius: 8px; margin: 8px 0;">');
     html = html.replace(/\n/g, '<br>');
     return html;
