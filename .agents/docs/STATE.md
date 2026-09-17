@@ -1,10 +1,10 @@
-﻿# Status Atual do Desenvolvimento (Context Window)
+# Status Atual do Desenvolvimento (Context Window)
 
 ## Tarefa Atual em Foco
-- **Feature/Entidade:** Nenhuma tarefa em execução (Aguardando nova demanda)
-- **Branch:** develop
-- **Etapa Atual:** Ocioso / Pronto
-- **Última Ação:** Conclusão da feature [P-030] Visualização de Flashcard sob Demanda (Preview Mode) com sucesso total em todos os 12 passos.
+- **Feature/Entidade:** Flashcards - Visualização sob Demanda [P-030, P-031]
+- **Branch:** feature/P-030-visualizar-flashcards -> PR #56 para main
+- **Etapa Atual:** Concluído / PR Aberto
+- **Última Ação:** Pull Request #56 aberto com sucesso no GitHub (https://github.com/D4NL18/MedStudy/pull/56). Pronto para revisão humana e merge.
 
 ## Progresso do Workflow (Checklist de Esteira)
 - [ ] 1. Quebra de Escopo (Product Owner)
