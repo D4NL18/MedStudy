@@ -3,7 +3,6 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { LucideAngularModule } from 'lucide-angular';
-import { RouterLink } from '@angular/router';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -11,11 +10,12 @@ import { FlashcardResetModalComponent } from '@features/flashcards/components/re
 import { FlashcardsActions } from '@store/flashcards/flashcards.actions';
 import { selectAllCards, selectSummary, selectLoading, selectTotalElements } from '@store/flashcards/flashcards.reducer';
 import { FlashcardFormComponent } from '@features/flashcards/pages/flashcard-form/flashcard-form.component';
+import { Flashcard } from '@core/models/flashcard.model';
 
 @Component({
   selector: 'app-flashcards-list',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, LucideAngularModule, RouterLink, MatDialogModule, MatPaginatorModule],
+  imports: [ButtonComponent, CommonModule, LucideAngularModule, MatDialogModule, MatPaginatorModule],
   templateUrl: './flashcards-list.component.html',
   styleUrl: './flashcards-list.component.scss'
 })
@@ -67,6 +67,10 @@ export class FlashcardsListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       if (res) this.loadCards();
     });
+  }
+
+  previewCard(card: Flashcard) {
+    this.store.dispatch(FlashcardsActions.openPreviewMode({ flashcard: card }));
   }
 
   editCard(card: any) {
@@ -132,7 +136,7 @@ export class FlashcardsListComponent implements OnInit {
       try {
         const json = JSON.parse(content);
         text = this.extractTextFromTipTap(json);
-      } catch (e) {}
+      } catch {}
     } else if (typeof content === 'object' && content.type === 'doc') {
       text = this.extractTextFromTipTap(content);
     }

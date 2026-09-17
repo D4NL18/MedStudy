@@ -83,12 +83,15 @@
              <span *ngIf="!card.dificuldadeUltima">—</span>
           </td>
           <td class="actions-cell">
-            <app-button variant="icon-btn" (onClick)="editCard(card)" aria-label="Editar flashcard">
-              <lucide-icon name="edit" [size]="16"></lucide-icon>
-            </app-button>
-            <app-button variant="icon-btn delete" (onClick)="deleteCard(card.id)" aria-label="Excluir flashcard">
-              <lucide-icon name="trash-2" [size]="16"></lucide-icon>
-            </app-button>
+            <button type="button" class="action-icon-btn preview-btn" (click)="previewCard(card)" aria-label="Visualizar flashcard" title="Visualizar flashcard">
+              <lucide-icon name="eye" [size]="18"></lucide-icon>
+            </button>
+            <button type="button" class="action-icon-btn edit-btn" (click)="editCard(card)" aria-label="Editar flashcard" title="Editar flashcard">
+              <lucide-icon name="edit" [size]="18"></lucide-icon>
+            </button>
+            <button type="button" class="action-icon-btn delete-btn" (click)="deleteCard(card.id)" aria-label="Excluir flashcard" title="Excluir flashcard">
+              <lucide-icon name="trash-2" [size]="18"></lucide-icon>
+            </button>
           </td>
         </tr>
       </tbody>

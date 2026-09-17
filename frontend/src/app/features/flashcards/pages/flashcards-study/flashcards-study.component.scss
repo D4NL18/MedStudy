@@ -42,6 +42,31 @@
     }
   }
 
+  .preview-mode-info {
+    display: flex;
+    align-items: center;
+
+    .preview-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #818CF8;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      backdrop-filter: blur(10px);
+      letter-spacing: 0.01em;
+
+      lucide-icon {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
   .close-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);

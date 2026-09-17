@@ -1,5 +1,5 @@
 import { ButtonComponent } from '@shared/components/button/button.component';
-import { Component, inject, ElementRef, ViewChild, OnInit, AfterViewInit, Inject, Optional } from '@angular/core';
+import { Component, inject, ElementRef, ViewChild, AfterViewInit, Inject, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -21,7 +21,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './flashcard-form.component.html',
   styleUrl: './flashcard-form.component.scss'
 })
-export class FlashcardFormComponent implements OnInit, AfterViewInit {
+export class FlashcardFormComponent implements AfterViewInit {
   private flashcardService = inject(FlashcardService);
   private imageCompressor = inject(ImageCompressorService);
   private dialogRef = inject(MatDialogRef<FlashcardFormComponent>);
@@ -50,9 +50,6 @@ export class FlashcardFormComponent implements OnInit, AfterViewInit {
   private normalizeString(str: string): string {
     if (!str) return '';
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  }
-
-  ngOnInit() {
   }
 
   ngAfterViewInit() {
@@ -127,7 +124,7 @@ export class FlashcardFormComponent implements OnInit, AfterViewInit {
 
     if (this.isEdit && this.editingId) {
       this.flashcardService.updateFlashcard(this.editingId, payload).subscribe({
-        next: (res) => {
+        next: () => {
           this.loading = false;
           this.dialogRef.close(true);
         },
@@ -135,7 +132,7 @@ export class FlashcardFormComponent implements OnInit, AfterViewInit {
       });
     } else {
       this.flashcardService.createFlashcard(payload).subscribe({
-        next: (res) => {
+        next: () => {
           this.loading = false;
           this.dialogRef.close(true);
         },
@@ -162,7 +159,7 @@ export class FlashcardFormComponent implements OnInit, AfterViewInit {
             } else if (typeof temp === 'string' && temp.trim().startsWith('{')) {
               parsed = JSON.parse(temp);
             }
-          } catch (e) {
+          } catch {
             // Keep as string
           }
         }

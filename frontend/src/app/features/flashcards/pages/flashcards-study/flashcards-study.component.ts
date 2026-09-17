@@ -1,11 +1,10 @@
-import { ButtonComponent } from '@shared/components/button/button.component';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { LucideAngularModule } from 'lucide-angular';
 import { FlashcardsActions } from '@store/flashcards/flashcards.actions';
-import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading } from '@store/flashcards/flashcards.reducer';
+import { selectQueue, selectCurrentIndex, selectStudyModeActive, selectLoading, selectIsReadOnly } from '@store/flashcards/flashcards.reducer';
 import { FlashcardDifficulty } from '@core/models/flashcard.model';
 import { MarkdownRendererComponent } from '@shared/components/markdown-renderer/markdown-renderer.component';
 import { tap } from 'rxjs';
@@ -18,7 +17,7 @@ import { tap } from 'rxjs';
 @Component({
   selector: 'app-flashcards-study',
   standalone: true,
-  imports: [ButtonComponent, 
+  imports: [
     CommonModule, 
     LucideAngularModule, 
     MarkdownRendererComponent
@@ -31,6 +30,7 @@ export class FlashcardsStudyComponent {
   private actions$ = inject(Actions);
   
   active$ = this.store.select(selectStudyModeActive);
+  isReadOnly$ = this.store.select(selectIsReadOnly);
   queue$ = this.store.select(selectQueue);
   currentIndex$ = this.store.select(selectCurrentIndex);
   loading$ = this.store.select(selectLoading);
@@ -70,11 +70,11 @@ export class FlashcardsStudyComponent {
   }
 
   handleCardClick(event: MouseEvent) {
+    event.stopPropagation();
     const target = event.target as HTMLElement;
     
     // Se clicou numa imagem, abre o zoom e não vira o card
     if (target.tagName === 'IMG') {
-      event.stopPropagation();
       this.zoomImageUrl.set((target as HTMLImageElement).src);
       this.isZoomed.set(true);
       return;
@@ -87,6 +87,22 @@ export class FlashcardsStudyComponent {
     if (!this.isFlipped()) {
       this.hasResult.set(false);
       this.lastResultMissed.set(false);
+    }
+  }
+
+  handleOverlayClick(event: MouseEvent) {
+    if (this.isZoomed()) return;
+
+    const target = event.target as HTMLElement;
+    if (!target) return;
+
+    const clickedInsideCard = target.closest('.flashcard');
+    const clickedInsideHeader = target.closest('.header');
+    const clickedInsideActions = target.closest('.actions');
+    const clickedInsideZoom = target.closest('.zoom-backdrop');
+
+    if (!clickedInsideCard && !clickedInsideHeader && !clickedInsideActions && !clickedInsideZoom) {
+      this.close();
     }
   }
 

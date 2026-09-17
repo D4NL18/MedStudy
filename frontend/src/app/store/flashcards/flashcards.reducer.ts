@@ -1,7 +1,6 @@
-import { createFeature, createReducer, on } from '@ngrx/store';
+﻿import { createFeature, createReducer, on } from '@ngrx/store';
 import { Flashcard } from '@core/models/flashcard.model';
 import { FlashcardsActions } from './flashcards.actions';
-
 
 /**
  * NgRx reducer for the Flashcards feature slice.
@@ -16,6 +15,7 @@ export interface FlashcardsState {
   loading: boolean;
   error: string | null;
   studyModeActive: boolean;
+  isReadOnly: boolean;
 }
 
 export const initialState: FlashcardsState = {
@@ -27,16 +27,27 @@ export const initialState: FlashcardsState = {
   loading: false,
   error: null,
   studyModeActive: false,
+  isReadOnly: false,
 };
 
 export const flashcardsFeature = createFeature({
   name: 'flashcards',
   reducer: createReducer(
     initialState,
+    on(FlashcardsActions.openPreviewMode, (state, { flashcard }) => ({
+      ...state,
+      queue: [flashcard],
+      currentIndex: 0,
+      loading: false,
+      studyModeActive: true,
+      isReadOnly: true,
+      error: null
+    })),
     on(FlashcardsActions.loadStudyQueue, (state) => ({
       ...state,
       loading: true,
       studyModeActive: true,
+      isReadOnly: false,
       currentIndex: 0
     })),
     on(FlashcardsActions.loadStudyQueueSuccess, (state, { flashcards }) => ({
@@ -89,6 +100,7 @@ export const flashcardsFeature = createFeature({
     on(FlashcardsActions.closeStudyMode, (state) => ({
       ...state,
       studyModeActive: false,
+      isReadOnly: false,
       queue: [],
       currentIndex: 0
     })),
@@ -107,4 +119,5 @@ export const {
   selectLoading,
   selectError,
   selectStudyModeActive,
+  selectIsReadOnly,
 } = flashcardsFeature;
