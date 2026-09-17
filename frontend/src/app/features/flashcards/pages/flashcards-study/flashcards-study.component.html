@@ -1,5 +1,5 @@
-<div class="study-overlay" *ngIf="active$ | async">
-  <div class="header">
+<div class="study-overlay" *ngIf="active$ | async" (click)="handleOverlayClick($event)">
+  <div class="header" (click)="$event.stopPropagation()">
     <div class="progress-info" *ngIf="!(isReadOnly$ | async)">
       <span class="count">Card {{ (currentIndex$ | async)! + 1 }} de {{ (queue$ | async)?.length }}</span>
       <div class="progress-bar">
@@ -44,7 +44,7 @@
   </div>
 
   <!-- Actions -->
-  <div class="actions result-step" *ngIf="!(isReadOnly$ | async) && currentCard() && isFlipped() && !hasResult()">
+  <div class="actions result-step" (click)="$event.stopPropagation()" *ngIf="!(isReadOnly$ | async) && currentCard() && isFlipped() && !hasResult()">
     <button class="result-btn wrong" (click)="setResult(true)">
       <lucide-icon name="x-circle" [size]="18"></lucide-icon>
       <span>Errei</span>
@@ -55,7 +55,7 @@
     </button>
   </div>
 
-  <div class="actions difficulty-step" *ngIf="!(isReadOnly$ | async) && currentCard() && hasResult()">
+  <div class="actions difficulty-step" (click)="$event.stopPropagation()" *ngIf="!(isReadOnly$ | async) && currentCard() && hasResult()">
     <button class="diff-btn hard" (click)="rate('HARD')">
       <lucide-icon name="alert-triangle" [size]="16"></lucide-icon>
       <span>Difícil</span>

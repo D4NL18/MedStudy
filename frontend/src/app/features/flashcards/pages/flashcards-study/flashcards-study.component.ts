@@ -70,11 +70,11 @@ export class FlashcardsStudyComponent {
   }
 
   handleCardClick(event: MouseEvent) {
+    event.stopPropagation();
     const target = event.target as HTMLElement;
     
     // Se clicou numa imagem, abre o zoom e não vira o card
     if (target.tagName === 'IMG') {
-      event.stopPropagation();
       this.zoomImageUrl.set((target as HTMLImageElement).src);
       this.isZoomed.set(true);
       return;
@@ -87,6 +87,22 @@ export class FlashcardsStudyComponent {
     if (!this.isFlipped()) {
       this.hasResult.set(false);
       this.lastResultMissed.set(false);
+    }
+  }
+
+  handleOverlayClick(event: MouseEvent) {
+    if (this.isZoomed()) return;
+
+    const target = event.target as HTMLElement;
+    if (!target) return;
+
+    const clickedInsideCard = target.closest('.flashcard');
+    const clickedInsideHeader = target.closest('.header');
+    const clickedInsideActions = target.closest('.actions');
+    const clickedInsideZoom = target.closest('.zoom-backdrop');
+
+    if (!clickedInsideCard && !clickedInsideHeader && !clickedInsideActions && !clickedInsideZoom) {
+      this.close();
     }
   }
 

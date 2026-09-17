@@ -65,4 +65,40 @@ describe('FlashcardsStudyComponent', () => {
     const fixture = MockRender(FlashcardsStudyComponent, null, { reset: true });
     expect(fixture.point.componentInstance.isReadOnly$).toBeDefined();
   });
+
+  it('should close when clicking outside flashcard (overlay backdrop)', () => {
+    const fixture = MockRender(FlashcardsStudyComponent, null, { reset: true });
+    const store = fixture.point.injector.get(Store);
+    const dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
+
+    const backdropTarget = document.createElement('div');
+    backdropTarget.className = 'card-container';
+    
+    const fakeEvent = {
+      target: backdropTarget
+    } as unknown as MouseEvent;
+
+    fixture.point.componentInstance.handleOverlayClick(fakeEvent);
+
+    expect(dispatchSpy).toHaveBeenCalled();
+  });
+
+  it('should NOT close when clicking inside flashcard', () => {
+    const fixture = MockRender(FlashcardsStudyComponent, null, { reset: true });
+    const store = fixture.point.injector.get(Store);
+    const dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
+
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'flashcard';
+    const cardContent = document.createElement('span');
+    cardDiv.appendChild(cardContent);
+
+    const fakeEvent = {
+      target: cardContent
+    } as unknown as MouseEvent;
+
+    fixture.point.componentInstance.handleOverlayClick(fakeEvent);
+
+    expect(dispatchSpy).not.toHaveBeenCalled();
+  });
 });
