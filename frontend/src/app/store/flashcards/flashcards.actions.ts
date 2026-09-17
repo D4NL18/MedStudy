@@ -34,5 +34,6 @@ export const FlashcardsActions = createActionGroup({
     'Reset Progress': props<{ grandeArea?: string }>(),
     'Reset Progress Success': emptyProps(),
     'Reset Progress Failure': props<{ error: string }>(),
+    'Open Preview Mode': props<{ flashcard: Flashcard }>(),
   }
 });

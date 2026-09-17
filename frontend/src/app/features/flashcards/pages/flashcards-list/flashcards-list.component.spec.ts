@@ -50,4 +50,15 @@ describe('FlashcardsListComponent', () => {
     
     expect(dispatchSpy).toHaveBeenCalled();
   });
+
+  it('should dispatch openPreviewMode on previewCard', () => {
+    const fixture = MockRender(FlashcardsListComponent, null, { reset: true });
+    const store = fixture.point.injector.get(Store);
+    const dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
+    const mockCard = { id: 'card-1', frente: 'P', verso: 'R' } as any;
+    
+    fixture.point.componentInstance.previewCard(mockCard);
+    
+    expect(dispatchSpy).toHaveBeenCalledWith(FlashcardsActions.openPreviewMode({ flashcard: mockCard }));
+  });
 });

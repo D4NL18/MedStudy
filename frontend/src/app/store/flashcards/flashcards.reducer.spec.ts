@@ -51,11 +51,23 @@ describe('FlashcardsReducer', () => {
   });
 
   it('should clear state on closeStudyMode', () => {
-    const startState = { ...initialState, studyModeActive: true, queue: [createMockFlashcard()] };
+    const startState = { ...initialState, studyModeActive: true, isReadOnly: true, queue: [createMockFlashcard()] };
     const action = FlashcardsActions.closeStudyMode();
     const state = reducer(startState, action);
     expect(state.studyModeActive).toBeFalse();
+    expect(state.isReadOnly).toBeFalse();
     expect(state.queue.length).toBe(0);
+  });
+
+  it('should set preview mode on openPreviewMode', () => {
+    const card = createMockFlashcard({ id: 'preview-1' });
+    const action = FlashcardsActions.openPreviewMode({ flashcard: card });
+    const state = reducer(initialState, action);
+    expect(state.studyModeActive).toBeTrue();
+    expect(state.isReadOnly).toBeTrue();
+    expect(state.queue).toEqual([card]);
+    expect(state.currentIndex).toBe(0);
+    expect(state.loading).toBeFalse();
   });
 
   it('should set allCards on loadFlashcardsSuccess', () => {

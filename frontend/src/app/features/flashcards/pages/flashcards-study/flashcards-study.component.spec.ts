@@ -60,4 +60,9 @@ describe('FlashcardsStudyComponent', () => {
     
     expect(dispatchSpy).toHaveBeenCalled();
   });
+
+  it('should initialize isReadOnly$ observable from store', () => {
+    const fixture = MockRender(FlashcardsStudyComponent, null, { reset: true });
+    expect(fixture.point.componentInstance.isReadOnly$).toBeDefined();
+  });
 });

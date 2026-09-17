@@ -1,10 +1,16 @@
 <div class="study-overlay" *ngIf="active$ | async">
   <div class="header">
-    <div class="progress-info">
+    <div class="progress-info" *ngIf="!(isReadOnly$ | async)">
       <span class="count">Card {{ (currentIndex$ | async)! + 1 }} de {{ (queue$ | async)?.length }}</span>
       <div class="progress-bar">
         <div class="fill" [style.width.%]="getProgress((currentIndex$ | async)!, (queue$ | async)?.length || 0)"></div>
       </div>
+    </div>
+    <div class="preview-mode-info" *ngIf="isReadOnly$ | async">
+      <span class="preview-badge">
+        <lucide-icon name="eye" [size]="16"></lucide-icon>
+        Modo de Visualização
+      </span>
     </div>
     <button class="close-btn" (click)="close()" aria-label="Fechar estudo">
       <lucide-icon name="x" [size]="24"></lucide-icon>
@@ -38,7 +44,7 @@
   </div>
 
   <!-- Actions -->
-  <div class="actions result-step" *ngIf="currentCard() && isFlipped() && !hasResult()">
+  <div class="actions result-step" *ngIf="!(isReadOnly$ | async) && currentCard() && isFlipped() && !hasResult()">
     <button class="result-btn wrong" (click)="setResult(true)">
       <lucide-icon name="x-circle" [size]="18"></lucide-icon>
       <span>Errei</span>
@@ -49,7 +55,7 @@
     </button>
   </div>
 
-  <div class="actions difficulty-step" *ngIf="currentCard() && hasResult()">
+  <div class="actions difficulty-step" *ngIf="!(isReadOnly$ | async) && currentCard() && hasResult()">
     <button class="diff-btn hard" (click)="rate('HARD')">
       <lucide-icon name="alert-triangle" [size]="16"></lucide-icon>
       <span>Difícil</span>
@@ -65,14 +71,14 @@
   </div>
 
   <!-- Empty State -->
-  <div class="no-cards" *ngIf="isEmpty$ | async">
+  <div class="no-cards" *ngIf="!(isReadOnly$ | async) && (isEmpty$ | async)">
     <h3>Nada por aqui!</h3>
     <p>Você não tem cards para revisar hoje. Ótimo trabalho!</p>
     <button class="finish-btn" (click)="close()">Voltar</button>
   </div>
 
   <!-- Finished State -->
-  <div class="no-cards" *ngIf="isSessionOver$ | async">
+  <div class="no-cards" *ngIf="!(isReadOnly$ | async) && (isSessionOver$ | async)">
     <h3>Sessão Finalizada!</h3>
     <p>Você revisou todos os cartões desta sessão.</p>
     <button class="finish-btn" (click)="close()">Concluir</button>

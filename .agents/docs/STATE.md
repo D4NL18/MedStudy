@@ -1,21 +1,22 @@
 # Status Atual do Desenvolvimento (Context Window)
 
 ## Tarefa Atual em Foco
-- **Feature/Entidade:** FLASHCARDS — Distribuição de Novos Flashcards para Dias Futuros + Fix Edição TipTap
-- **Branch:** feat/flashcard-distribution-and-edit-fix
-- **Etapa Atual:** 12. DevOps — Finalizado (Testes Backend 23/23 OK, Build Frontend OK, Validação Real 346/346 Cards OK)
-- **Última Ação:** Backup dos 346 flashcards salvo, implementação backend/frontend concluída e testada.
+- **Feature/Entidade:** FLASHCARDS — Visualização de Flashcard sob demanda (Modo Leitura / Preview)
+- **Branch:** feature/P-030-visualizar-flashcards
+- **Etapa Atual:** 5. Planejar as Tarefas (Task Planning) — Aguardando Aprovação do Plano pelo Usuário
+- **Última Ação:** Especificação técnica e visual concluída, plano de implementação gerado.
 
 ## Progresso do Workflow (Checklist de Esteira)
-- [x] 1. Quebra de Escopo (Product Owner) — 2 histórias claras (distribuição futura + parser de edição TipTap)
-- [x] 2. Especificar (Analista) — regras de negócio mapeadas (janela de distribuição por vales + compatibilidade TipTap)
-- [x] 3. Projetar (Arquiteto) — SpacedRepetitionService + FlashcardRepository + FlashcardFormComponent
-- [x] 4. DBA — BYPASS: sem alterações de schema DDL necessárias
-- [x] 5. Planejar Tarefas (Arquiteto) — checklist detalhado pronto no Implementation Plan
-- [x] 6. TDD (Tester) — testes unitários para o cálculo de distribuição e parser TipTap
-- [x] 7. Executar (Desenvolvedor) — implementação no backend e frontend
-- [x] 8. Code Review (Reviewer) — auditoria de Clean Code, MapStruct null strategy e escape seguro
-- [x] 9. UX Review (UX Reviewer) — validação da renderização e edição dos campos de frente e verso
-- [x] 10. QA & Auto-Healer (Tester) — 23 testes backend aprovados e build frontend gerado com sucesso
-- [x] 11. SecOps — validação contra XSS em nós de texto e isolamento multitenant verificado
-- [x] 12. DevOps — branch feat/flashcard-distribution-and-edit-fix pronta para commit/PR
+- [x] 1. Quebra de Escopo (Product Owner) — História de valor vertical definida no ROADMAP.md (skill agile-coach)
+- [x] 2. Especificar (Analista) — Regras de negócio P-030 e P-031 registradas em business_rules/visualizacao-flashcard.md
+- [x] 3. Projetar (Arquiteto & Designer) — Fluxo visual, desacoplamento e modo preview no FlashcardsStudyComponent
+- [x] 4. DBA — BYPASS aprovado: funcionalidade client-side/read-only sem alterações de banco de dados
+- [x] 5. Planejar Tarefas (Arquiteto & Tester) — Checklist em docs/tasks/ e implementation_plan.md aprovado
+- [x] 6. TDD (Tester) — Testes unitários para ações NgRx, reducer e componente de visualização
+- [x] 7. Executar (Desenvolvedor) — Implementação dos componentes, ações, reducer e tabela
+- [x] 8. Code Review (Reviewer) — Auditoria de Clean Code, boas práticas e zero warnings de linter
+- [x] 9. UX Review (UX Reviewer) — Vibe check aprovado com badge sofisticado e supressão de botões
+- [x] 10. QA & Auto-Healer (Tester) — Suíte de testes automatizados e build frontend 100% verde
+- [x] 11. SecOps — Auditoria defensiva de segurança aprovada (sem IDOR, XSS protegido, sem manipulação de rating)
+- [x] 12. DevOps — Finalização de branch e preparação de Pull Request para develop (skill git-expert)
+

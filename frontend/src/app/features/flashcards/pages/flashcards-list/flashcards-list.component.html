@@ -83,6 +83,9 @@
              <span *ngIf="!card.dificuldadeUltima">—</span>
           </td>
           <td class="actions-cell">
+            <app-button variant="icon-btn" (onClick)="previewCard(card)" aria-label="Visualizar flashcard">
+              <lucide-icon name="eye" [size]="16"></lucide-icon>
+            </app-button>
             <app-button variant="icon-btn" (onClick)="editCard(card)" aria-label="Editar flashcard">
               <lucide-icon name="edit" [size]="16"></lucide-icon>
             </app-button>
