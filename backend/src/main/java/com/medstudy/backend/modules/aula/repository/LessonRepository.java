@@ -23,6 +23,8 @@ public interface LessonRepository extends JpaRepository<Lesson, UUID>, JpaSpecif
      * @return list of lessons
      */
     java.util.List<Lesson> findByUserIdAndTemaContainingIgnoreCase(UUID userId, String tema);
+
+    java.util.List<Lesson> findAllByUserId(UUID userId);
     
     /**
      * Finds a lesson by user and specific theme.

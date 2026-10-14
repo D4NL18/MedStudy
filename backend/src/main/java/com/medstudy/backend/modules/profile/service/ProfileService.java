@@ -35,6 +35,7 @@ public class ProfileService {
     private final UserBadgeRepository userBadgeRepository;
     private final FriendshipRepository friendshipRepository;
     private final com.medstudy.backend.core.storage.StorageService storageService;
+    private final com.medstudy.backend.modules.gamificacao.repository.StreakRepairRepository streakRepairRepository;
 
     /**
      * Constructs a new ProfileService.
@@ -52,7 +53,8 @@ public class ProfileService {
                           StudySessionRepository studySessionRepository,
                           UserBadgeRepository userBadgeRepository,
                           FriendshipRepository friendshipRepository,
-                          com.medstudy.backend.core.storage.StorageService storageService) {
+                          com.medstudy.backend.core.storage.StorageService storageService,
+                          @org.springframework.beans.factory.annotation.Autowired(required = false) com.medstudy.backend.modules.gamificacao.repository.StreakRepairRepository streakRepairRepository) {
         this.profileRepository = profileRepository;
         this.profileMapper = profileMapper;
         this.userRepository = userRepository;
@@ -60,6 +62,7 @@ public class ProfileService {
         this.userBadgeRepository = userBadgeRepository;
         this.friendshipRepository = friendshipRepository;
         this.storageService = storageService;
+        this.streakRepairRepository = streakRepairRepository;
     }
 
     private User getCurrentUser() {
@@ -74,8 +77,19 @@ public class ProfileService {
     }
 
     private int calculateStreak(UUID userId) {
-        List<LocalDate> dates = studySessionRepository.findDistinctSessionDatesByUserId(userId);
-        if (dates.isEmpty()) return 0;
+        List<LocalDate> sessionDates = studySessionRepository.findDistinctSessionDatesByUserId(userId);
+        List<LocalDate> repairedDates = (streakRepairRepository != null)
+                ? streakRepairRepository.findRepairedDatesByUserId(userId)
+                : java.util.Collections.emptyList();
+
+        java.util.Set<LocalDate> allDates = new java.util.HashSet<>(sessionDates);
+        allDates.addAll(repairedDates);
+
+        if (allDates.isEmpty()) return 0;
+
+        List<LocalDate> dates = allDates.stream()
+                .sorted(java.util.Comparator.reverseOrder())
+                .toList();
 
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);

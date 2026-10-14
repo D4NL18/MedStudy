@@ -25,7 +25,17 @@ public abstract class FlashcardMapper {
     @Mapping(target = "updatedAt", ignore = true)
     public abstract Flashcard toEntity(FlashcardRequest request);
 
+    @Mapping(target = "bountyCard", ignore = true)
     public abstract FlashcardResponse toResponse(Flashcard entity);
+
+    @org.mapstruct.AfterMapping
+    protected void setBountyCard(Flashcard entity, @MappingTarget FlashcardResponse response) {
+        if (entity != null) {
+            boolean isHardCount = entity.getConsecutiveHardCount() != null && entity.getConsecutiveHardCount() >= 2;
+            boolean isLowEase = entity.getEaseFactor() != null && entity.getEaseFactor() < 1.7;
+            response.setBountyCard(isHardCount || isLowEase);
+        }
+    }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)

@@ -5,6 +5,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
+import { FlashcardsActions } from '@store/flashcards/flashcards.actions';
 
 describe('FlashcardsListComponent', () => {
   MockInstance.scope();

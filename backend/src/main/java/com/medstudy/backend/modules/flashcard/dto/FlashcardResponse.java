@@ -1,5 +1,5 @@
 package com.medstudy.backend.modules.flashcard.dto;
-import com.medstudy.backend.core.constants.ValidationMessages;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,19 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FlashcardResponse {
+
+    public FlashcardResponse(UUID id, String grandeArea, Object frente, Object verso, LocalDate proximaRevisao, FlashcardDifficulty dificuldadeUltima, Integer intervaloAtual) {
+        this.id = id;
+        this.grandeArea = grandeArea;
+        this.frente = frente;
+        this.verso = verso;
+        this.proximaRevisao = proximaRevisao;
+        this.dificuldadeUltima = dificuldadeUltima;
+        this.intervaloAtual = intervaloAtual;
+        this.bountyCard = false;
+        this.easeFactor = 2.5;
+        this.consecutiveHardCount = 0;
+    }
     
     /**
      * The unique identifier of the flashcard.
@@ -61,4 +74,21 @@ public class FlashcardResponse {
     @Schema(description = "Current interval in days until the next revision, progressively calculated by the spaced repetition algorithm.", example = "7")
     private Integer intervaloAtual;
 
+    /**
+     * Indicates whether this card is a bounty card (high difficulty or repeated consecutive errors).
+     */
+    @Schema(description = "Indicates whether this card is a bounty card.", example = "true")
+    private boolean bountyCard;
+
+    /**
+     * Ease factor of the card in spaced repetition.
+     */
+    @Schema(description = "Ease factor of the card.", example = "2.1")
+    private Double easeFactor;
+
+    /**
+     * Number of consecutive hard/error evaluations.
+     */
+    @Schema(description = "Number of consecutive hard/error evaluations.", example = "2")
+    private Integer consecutiveHardCount;
 }

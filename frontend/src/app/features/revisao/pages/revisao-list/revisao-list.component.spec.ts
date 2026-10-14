@@ -38,7 +38,7 @@ describe('RevisaoListComponent', () => {
     fixture.detectChanges();
     
     expect(dispatchSpy).toHaveBeenCalledWith(RevisionActions.loadSummary());
-    expect(dispatchSpy).toHaveBeenCalledWith(RevisionActions.loadSessions({ filter: 'HOJE' }));
+    expect(dispatchSpy).toHaveBeenCalledWith(RevisionActions.loadSessions({ filter: 'HOJE', page: 0, search: '' }));
   });
 
   it('should change tab and reload sessions', () => {
@@ -49,7 +49,7 @@ describe('RevisaoListComponent', () => {
     fixture.componentInstance.setActiveTab('ATRASADAS');
     
     expect(fixture.componentInstance.activeTab).toBe('ATRASADAS');
-    expect(dispatchSpy).toHaveBeenCalledWith(RevisionActions.loadSessions({ filter: 'ATRASADAS' }));
+    expect(dispatchSpy).toHaveBeenCalledWith(RevisionActions.loadSessions({ filter: 'ATRASADAS', page: 0, search: '' }));
   });
 
   it('should calculate accuracy correctly', () => {

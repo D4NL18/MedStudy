@@ -61,7 +61,35 @@ public enum BadgeType {
     MASTER_PREVENTIVA("Mestre da Preventiva", "Resolveu mais de 1000 questões de Preventiva"),
     MASTER_CLINICA("Mestre da Clínica Médica", "Resolveu mais de 1000 questões de Clínica Médica"),
     MASTER_GO("Mestre de GO", "Resolveu mais de 1000 questões de GO"),
-    MEDICINE_AVATAR("O Avatar da Medicina", "Mestre em todas as grandes áreas");
+    MEDICINE_AVATAR("O Avatar da Medicina", "Mestre em todas as grandes áreas"),
+
+    // Flashcard Badges
+    FLASH_FIRST_STEP("Primeira Sinapse", "Concluiu a primeira sessão de flashcards"),
+    FLASH_10_CARDS("Aquecimento Neural", "Revisou 10 flashcards no total"),
+    FLASH_50_CARDS("Impulso Sináptico", "Revisou 50 flashcards no total"),
+    FLASH_100_CARDS("Córtex Ativado", "Revisou 100 flashcards no total"),
+    FLASH_250_CARDS("Memória Consolidada", "Revisou 250 flashcards no total"),
+    FLASH_500_CARDS("Caminho Mielinizado", "Revisou 500 flashcards no total"),
+    FLASH_1000_CARDS("Enciclopédia Médica", "Revisou 1.000 flashcards no total"),
+    FLASH_2500_CARDS("Mestre do Active Recall", "Revisou 2.500 flashcards no total"),
+    FLASH_5000_CARDS("Semideus da Retenção", "Revisou 5.000 flashcards no total"),
+
+    FLASH_COMBO_5("Centelha de Foco", "Atingiu um combo de 5 acertos consecutivos"),
+    FLASH_COMBO_10("Chamas do Saber", "Atingiu um combo de 10 acertos consecutivos"),
+    FLASH_COMBO_20("Hiperfoco Imbatível", "Atingiu um combo de 20 acertos consecutivos"),
+
+    FLASH_INBOX_ZERO_1("Plantão Cumprido", "Zerou a fila diária de flashcards pela 1ª vez"),
+    FLASH_INBOX_ZERO_7("Semana Impecável", "Zerou a fila diária de revisões por 7 dias seguidos"),
+    FLASH_INBOX_ZERO_30("Rotina de Ferro", "Zerou a fila diária de revisões por 30 dias seguidos"),
+
+    FLASH_BOUNTY_1("Ressuscitação Neural", "Acertou um Bounty Card crítico com histórico de erro"),
+    FLASH_BOUNTY_10("Caçador de Lacunas", "Acertou 10 Bounty Cards críticos"),
+    FLASH_BOUNTY_50("Cirurgião de Pontos Cegos", "Acertou 50 Bounty Cards críticos"),
+
+    FLASH_EARLY_BIRD("Madrugador da Retenção", "Concluiu uma sessão de flashcards antes das 07:00 da manhã"),
+    FLASH_NIGHT_OWL("Plantão Noturno", "Concluiu uma sessão de flashcards entre 23:00 e 04:00"),
+    FLASH_SPEED_DEMON("Reflexo de Pronto-Socorro", "Média inferior a 5s por card em sessão com >85% de acerto"),
+    FLASH_CREATOR_10("Preceptor de Conteúdo", "Criou 10 flashcards próprios para estudo pessoal");
 
     private final String name;
     private final String displayName;

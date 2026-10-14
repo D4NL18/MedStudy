@@ -7,6 +7,8 @@ import { selectDashboardKPIs, selectDashboardLoading } from '@store/dashboard/da
 import { EvolutionChartComponent } from './components/evolution-chart/evolution-chart.component';
 import { AreaChartComponent } from './components/area-chart/area-chart.component';
 import { DistributionChartComponent } from './components/distribution-chart/distribution-chart.component';
+import { CorpoHumanoMaestriaComponent } from './components/corpo-humano-maestria/corpo-humano-maestria.component';
+import { StreakRepairBannerComponent } from './components/streak-repair-banner/streak-repair-banner.component';
 import { loadDashboard } from '@store/dashboard/dashboard.actions';
 
 describe('DashboardComponent', () => {
@@ -15,6 +17,8 @@ describe('DashboardComponent', () => {
       .mock(EvolutionChartComponent)
       .mock(AreaChartComponent)
       .mock(DistributionChartComponent)
+      .mock(CorpoHumanoMaestriaComponent)
+      .mock(StreakRepairBannerComponent)
       .provide(provideMockStore({
         initialState: {
           auth: { user: null },

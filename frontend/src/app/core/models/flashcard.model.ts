@@ -16,6 +16,7 @@ export interface Flashcard {
   proximaRevisao: string;
   dificuldadeUltima: FlashcardDifficulty;
   intervaloAtual: number;
+  bountyCard?: boolean;
 }
 
 export interface FlashcardStudyRating {

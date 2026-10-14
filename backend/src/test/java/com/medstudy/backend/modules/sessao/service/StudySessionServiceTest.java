@@ -96,29 +96,29 @@ class StudySessionServiceTest {
         // Mock access to private method via a public call or reflection? 
         // Better to test via createSession with different inputs.
 
-        // 60% (50-75% -> 3 dias)
+        // 60% (50-75% -> 2 + reviewsBoas = 2 dias)
         StudySessionRequest r2 = new StudySessionRequest("A", "T", LocalDate.now(), 10, 6, "I", "O", null, false);
         StudySession e2 = new StudySession();
         when(mapper.toEntity(any())).thenReturn(e2);
         when(repository.save(any())).thenReturn(e2);
         service.createSession(r2);
         assertFalse(e2.getUrgente());
-        assertEquals(LocalDate.now().plusDays(3), e2.getDataProximaRevisao());
+        assertEquals(LocalDate.now().plusDays(2), e2.getDataProximaRevisao());
 
-        // 80% (75-90% -> 7 dias)
+        // 80% (75-90% -> 5 + reviewsBoas*3 = 5 dias)
         StudySessionRequest r3 = new StudySessionRequest("A", "T", LocalDate.now(), 10, 8, "I", "O", null, false);
         StudySession e3 = new StudySession();
         when(mapper.toEntity(any())).thenReturn(e3);
         when(repository.save(any())).thenReturn(e3);
         service.createSession(r3);
-        assertEquals(LocalDate.now().plusDays(7), e3.getDataProximaRevisao());
+        assertEquals(LocalDate.now().plusDays(5), e3.getDataProximaRevisao());
 
-        // 100% (>90% -> 15 dias)
+        // 100% (>90% -> 10 + reviewsBoas*5 = 10 dias)
         StudySessionRequest r4 = new StudySessionRequest("A", "T", LocalDate.now(), 10, 10, "I", "O", null, false);
         StudySession e4 = new StudySession();
         when(mapper.toEntity(any())).thenReturn(e4);
         when(repository.save(any())).thenReturn(e4);
         service.createSession(r4);
-        assertEquals(LocalDate.now().plusDays(15), e4.getDataProximaRevisao());
+        assertEquals(LocalDate.now().plusDays(10), e4.getDataProximaRevisao());
     }
 }

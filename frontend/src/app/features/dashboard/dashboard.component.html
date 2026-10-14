@@ -19,6 +19,12 @@
       <app-dashboard-skeleton></app-dashboard-skeleton>
     } @else if (kpis()) {
       <div class="dashboard-grid-wrapper" [class.dashboard-updating]="loading()">
+        <!-- Banner de Streak Repair em caso de risco -->
+        <app-streak-repair-banner></app-streak-repair-banner>
+
+        <!-- Mapa Anatômico Interativo de Maestria Clínica -->
+        <app-corpo-humano-maestria></app-corpo-humano-maestria>
+
         <div class="kpi-grid">
         <div class="kpi-card glass highlight">
           <div class="kpi-label">

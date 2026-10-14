@@ -6,7 +6,8 @@ describe('AuthSelectors', () => {
     user: { email: 'test@test.com' } as any,
     token: 'token',
     loading: false,
-    error: null
+    error: null,
+    showPaywall: false
   };
 
   it('should select token', () => {

@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -45,6 +47,7 @@ public class StudySessionService {
     private final com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository;
     private final com.medstudy.backend.modules.notificacao.service.NotificationService notificationService;
     private final com.medstudy.backend.modules.competition.service.CompetitionService competitionService;
+    private final com.medstudy.backend.modules.gamificacao.repository.StreakRepairRepository streakRepairRepository;
 
     private final org.springframework.context.ApplicationEventPublisher eventPublisher;
 
@@ -57,7 +60,8 @@ public class StudySessionService {
                                com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository,
                                com.medstudy.backend.modules.notificacao.service.NotificationService notificationService,
                                com.medstudy.backend.modules.competition.service.CompetitionService competitionService,
-                               org.springframework.context.ApplicationEventPublisher eventPublisher) {
+                               org.springframework.context.ApplicationEventPublisher eventPublisher,
+                               @org.springframework.beans.factory.annotation.Autowired(required = false) com.medstudy.backend.modules.gamificacao.repository.StreakRepairRepository streakRepairRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.mapper = mapper;
@@ -68,6 +72,21 @@ public class StudySessionService {
         this.notificationService = notificationService;
         this.competitionService = competitionService;
         this.eventPublisher = eventPublisher;
+        this.streakRepairRepository = streakRepairRepository;
+    }
+
+    public StudySessionService(StudySessionRepository repository, 
+                               UserRepository userRepository, 
+                               StudySessionMapper mapper,
+                               com.medstudy.backend.modules.aula.repository.LessonRepository lessonRepository,
+                               com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService,
+                               com.medstudy.backend.modules.profile.repository.ProfileRepository profileRepository,
+                               com.medstudy.backend.modules.friendship.repository.FriendshipRepository friendshipRepository,
+                               com.medstudy.backend.modules.notificacao.service.NotificationService notificationService,
+                               com.medstudy.backend.modules.competition.service.CompetitionService competitionService,
+                               org.springframework.context.ApplicationEventPublisher eventPublisher) {
+        this(repository, userRepository, mapper, lessonRepository, badgeService, profileRepository,
+             friendshipRepository, notificationService, competitionService, eventPublisher, null);
     }
 
     private User getCurrentUser() {
@@ -312,9 +331,20 @@ public class StudySessionService {
     private int calculateStreak(List<StudySession> sessions) {
         if (sessions.isEmpty()) return 0;
 
-        List<LocalDate> dates = sessions.stream()
+        Set<LocalDate> allDates = new HashSet<>(
+            sessions.stream()
                 .map(StudySession::getDataSessao)
-                .distinct()
+                .toList()
+        );
+
+        if (streakRepairRepository != null) {
+            UUID userId = sessions.get(0).getUser() != null ? sessions.get(0).getUser().getId() : null;
+            if (userId != null) {
+                allDates.addAll(streakRepairRepository.findRepairedDatesByUserId(userId));
+            }
+        }
+
+        List<LocalDate> dates = allDates.stream()
                 .sorted(Comparator.reverseOrder())
                 .toList();
 

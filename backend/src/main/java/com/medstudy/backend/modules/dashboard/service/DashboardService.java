@@ -25,6 +25,7 @@ public class DashboardService {
     private final SimuladoRepository simuladoRepository;
     private final com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService;
     private final com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService;
+    private final com.medstudy.backend.modules.gamificacao.repository.StreakRepairRepository streakRepairRepository;
 
     /**
      * Constructs a new DashboardService with necessary dependencies.
@@ -37,11 +38,13 @@ public class DashboardService {
     public DashboardService(StudySessionRepository studySessionRepository, 
                             SimuladoRepository simuladoRepository,
                             com.medstudy.backend.modules.analytics.service.AnalyticsService analyticsService,
-                            com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService) {
+                            com.medstudy.backend.modules.gamificacao.service.BadgeService badgeService,
+                            @org.springframework.beans.factory.annotation.Autowired(required = false) com.medstudy.backend.modules.gamificacao.repository.StreakRepairRepository streakRepairRepository) {
         this.studySessionRepository = studySessionRepository;
         this.simuladoRepository = simuladoRepository;
         this.analyticsService = analyticsService;
         this.badgeService = badgeService;
+        this.streakRepairRepository = streakRepairRepository;
     }
 
     /**
@@ -181,8 +184,19 @@ public class DashboardService {
     }
 
     private int calculateStreak(UUID userId) {
-        List<LocalDate> dates = studySessionRepository.findDistinctSessionDatesByUserId(userId);
-        if (dates.isEmpty()) return 0;
+        List<LocalDate> sessionDates = studySessionRepository.findDistinctSessionDatesByUserId(userId);
+        List<LocalDate> repairedDates = (streakRepairRepository != null)
+                ? streakRepairRepository.findRepairedDatesByUserId(userId)
+                : Collections.emptyList();
+
+        Set<LocalDate> allDates = new HashSet<>(sessionDates);
+        allDates.addAll(repairedDates);
+
+        if (allDates.isEmpty()) return 0;
+
+        List<LocalDate> dates = allDates.stream()
+                .sorted(Comparator.reverseOrder())
+                .toList();
 
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
