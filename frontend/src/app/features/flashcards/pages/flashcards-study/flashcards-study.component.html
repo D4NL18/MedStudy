@@ -110,26 +110,14 @@
     <button class="finish-btn" (click)="close()">Voltar ao Dashboard</button>
   </div>
 
-  <!-- Inbox Zero Celebration State / Fim de Sessão -->
+  <!-- Celebration State / Fim de Sessão -->
   <div class="session-celebration-overlay" *ngIf="!(isReadOnly$ | async) && (isSessionOver$ | async)">
-    <!-- Confetti Pieces Background -->
-    <div class="confetti-container">
-      <div *ngFor="let c of confettiPieces" 
-           class="confetti-piece"
-           [style.left.%]="c.left"
-           [style.background-color]="c.color"
-           [style.animation-delay.s]="c.animDelay">
-      </div>
-    </div>
-
-    <div class="celebration-card glass animate-scale-up" (click)="$event.stopPropagation()">
-      <div class="celebration-badge">
-        <lucide-icon name="sparkles" [size]="18"></lucide-icon>
-        <span>INBOX ZERO CONQUISTADO</span>
-      </div>
-
-      <div class="hero-trophy">
-        <lucide-icon name="award" [size]="64" class="trophy-svg"></lucide-icon>
+    <div class="celebration-card animate-scale-up" (click)="$event.stopPropagation()">
+      <div class="medal-icon-wrap">
+        <svg viewBox="0 0 24 24" class="medal-svg" width="56" height="56" fill="none" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="6"></circle>
+          <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+        </svg>
       </div>
 
       <h2>Plantão Concluído! 🎉</h2>

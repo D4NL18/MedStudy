@@ -501,38 +501,16 @@
   }
 }
 
-/* Modal e Celebração Inbox Zero */
+/* Modal de Fim de Sessão */
 .session-celebration-overlay {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(20px);
+  background: rgba(0, 0, 0, 0.75);
   z-index: 2500;
   padding: 20px;
-}
-
-.confetti-container {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-
-  .confetti-piece {
-    position: absolute;
-    top: -20px;
-    width: 10px;
-    height: 16px;
-    opacity: 0.8;
-    animation: confettiFall 3.5s linear infinite;
-  }
-}
-
-@keyframes confettiFall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
 .celebration-card {
@@ -541,51 +519,33 @@
   max-width: 580px;
   width: 100%;
   padding: 40px;
-  border-radius: 32px;
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  border-radius: 24px;
+  background: var(--color-surface, #1e293b);
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.12));
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
   text-align: center;
 
-  .celebration-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    border-radius: 999px;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    color: #34D399;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    margin-bottom: 20px;
-  }
-
-  .hero-trophy {
+  .medal-icon-wrap {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 96px;
-    height: 96px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(245, 158, 11, 0.2));
-    border: 1px solid rgba(234, 179, 8, 0.35);
-    color: #FACC15;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 30px rgba(234, 179, 8, 0.25);
+    margin-bottom: 16px;
+
+    .medal-svg {
+      display: block;
+    }
   }
 
   h2 {
     font-size: 2rem;
     font-weight: 900;
     margin: 0 0 8px;
-    color: #ffffff;
+    color: var(--color-text, #ffffff);
   }
 
   .celebration-subtitle {
     font-size: 0.95rem;
-    color: #94A3B8;
+    color: var(--color-text-muted, #94A3B8);
     margin: 0 0 28px;
   }
 
@@ -603,24 +563,24 @@
       display: flex;
       flex-direction: column;
       padding: 14px 10px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
 
       .m-val {
         font-size: 1.25rem;
         font-weight: 800;
-        color: #ffffff;
+        color: var(--color-text, #ffffff);
         margin-bottom: 4px;
       }
 
       .m-lbl {
         font-size: 0.72rem;
-        color: #94A3B8;
+        color: var(--color-text-muted, #94A3B8);
       }
 
-      &.highlight-green .m-val { color: #34D399; }
-      &.highlight-gold .m-val { color: #FBBF24; }
+      &.highlight-green .m-val { color: #10B981; }
+      &.highlight-gold .m-val { color: #F59E0B; }
       &.highlight-xp .m-val { color: #A78BFA; }
     }
   }
@@ -632,21 +592,22 @@
     .btn-primary {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
       padding: 14px 36px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      border-radius: 14px;
+      background: var(--color-primary, #2563EB);
       color: #ffffff;
       font-weight: 800;
       font-size: 1rem;
       border: none;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
-      transition: all 0.25s;
+      box-shadow: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
 
       &:hover {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.45);
+        opacity: 0.92;
+        transform: translateY(-1px);
       }
     }
   }
