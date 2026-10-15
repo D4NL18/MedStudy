@@ -11,19 +11,17 @@ import { ToastService } from '@core/services/toast.service';
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
   template: `
-    <div *ngIf="status()?.streakAtRisk" class="streak-repair-card glass animate-fade-in">
-      <div class="glow-accent"></div>
-      
+    <div *ngIf="status()?.streakAtRisk" class="streak-repair-card animate-fade-in">
       <div class="content-left">
-        <div class="icon-wrap warning-pulse">
-          <lucide-icon name="flame" [size]="28" class="flame-icon"></lucide-icon>
-          <span class="warning-badge">!</span>
+        <div class="flame-svg-wrap">
+          <svg viewBox="0 0 24 24" class="flame-svg" width="32" height="32" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+          </svg>
         </div>
         
         <div class="text-block">
           <div class="badge-title">
-            <span class="pill-badge">RESGATE DE OFENSIVA</span>
-            <span class="countdown-badge">
+            <span class="countdown-text">
               <lucide-icon name="clock" [size]="14"></lucide-icon>
               {{ remainingTime() }} restante
             </span>
@@ -79,10 +77,11 @@ import { ToastService } from '@core/services/toast.service';
       padding: 24px 28px;
       margin-bottom: 24px;
       border-radius: 20px;
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.08));
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.15);
-      backdrop-filter: blur(16px);
+      background: transparent !important;
+      border: 1.5px solid #EF4444;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       overflow: hidden;
 
       @media (max-width: 900px) {
@@ -91,19 +90,9 @@ import { ToastService } from '@core/services/toast.service';
       }
     }
 
-    .glow-accent {
-      position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
     .content-left {
       display: flex;
-      gap: 20px;
+      gap: 18px;
       align-items: flex-start;
       flex: 1;
 
@@ -112,37 +101,15 @@ import { ToastService } from '@core/services/toast.service';
       }
     }
 
-    .icon-wrap {
-      position: relative;
+    .flame-svg-wrap {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #F59E0B, #DC2626);
-      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
       flex-shrink: 0;
+      padding-top: 2px;
 
-      .flame-icon {
-        color: #ffffff;
-      }
-
-      .warning-badge {
-        position: absolute;
-        top: -4px;
-        right: -4px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #ffffff;
-        color: #DC2626;
-        font-weight: 900;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      .flame-svg {
+        filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.5));
       }
     }
 
@@ -152,31 +119,15 @@ import { ToastService } from '@core/services/toast.service';
       .badge-title {
         display: flex;
         align-items: center;
-        gap: 10px;
         margin-bottom: 8px;
-        flex-wrap: wrap;
 
-        .pill-badge {
-          font-size: 0.72rem;
-          font-weight: 800;
-          letter-spacing: 0.05em;
-          padding: 4px 10px;
-          border-radius: 999px;
-          background: rgba(245, 158, 11, 0.2);
-          color: #F59E0B;
-          border: 1px solid rgba(245, 158, 11, 0.4);
-        }
-
-        .countdown-badge {
+        .countdown-text {
           display: inline-flex;
           align-items: center;
-          gap: 5px;
-          font-size: 0.75rem;
-          font-weight: 600;
+          gap: 6px;
+          font-size: 0.8rem;
+          font-weight: 700;
           color: #EF4444;
-          background: rgba(239, 68, 68, 0.1);
-          padding: 3px 8px;
-          border-radius: 6px;
         }
       }
 

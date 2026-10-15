@@ -9,17 +9,12 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
   template: `
-    <div class="maestria-container glass">
+    <div class="maestria-container">
       <!-- Cabeçalho do Card -->
       <div class="maestria-header">
         <div class="title-wrap">
-          <div class="icon-avatar">
-            <lucide-icon name="sparkles" [size]="22"></lucide-icon>
-          </div>
-          <div>
-            <h3>Estrela da Vida — Maestria Clínica</h3>
-            <p>Os 5 pilares fundamentais da formação médica integrados na clássica mandala de excelência</p>
-          </div>
+          <h3>Estrela da Vida — Maestria Clínica</h3>
+          <p>Os 5 pilares fundamentais da formação médica integrados na clássica mandala de excelência</p>
         </div>
 
         <div class="overall-badge" [attr.data-tier]="data()?.overallTier">
@@ -127,7 +122,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
               </g>
             </defs>
 
-            <!-- Círculos de Fundo Geométricos (Aura Astronômica/Médica) -->
+            <!-- Círculos de Fundo Geométricos Estáticos (Sem rotação) -->
             <circle cx="280" cy="280" r="255" class="bg-orbit-ring ring-outer" />
             <circle cx="280" cy="280" r="235" class="bg-orbit-ring ring-dashed" />
             <circle cx="280" cy="280" r="150" class="bg-orbit-ring ring-mid" />
@@ -144,22 +139,24 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                    [attr.filter]="getTierFilter('CLINICA_MEDICA')">
                   <use href="#star-arm-master" />
                 </g>
-                <!-- Contorno da área -->
-                <path class="arm-stroke stroke-clinica"
+                <!-- Contorno com a cor do Nível/Tier -->
+                <path class="arm-stroke"
+                      [attr.stroke]="getTierColor(getAreaTier('CLINICA_MEDICA'))"
                       d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
                 <!-- Ícone da Especialidade (ECG / Pulso Cardíaco Clínico) -->
                 <g transform="translate(280, 115) rotate(0)">
-                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <circle cx="0" cy="0" r="18" class="icon-backing" 
+                          [attr.stroke]="getTierColor(getAreaTier('CLINICA_MEDICA')) + '99'" />
                   <path d="M -13,0 L -7,0 L -3,-9 L 1,11 L 5,-6 L 8,3 L 13,0"
-                        fill="none" stroke="#93C5FD" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                        fill="none" [attr.stroke]="getTierColor(getAreaTier('CLINICA_MEDICA'))" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
                 </g>
               </g>
               <!-- Tag de Identificação Superior -->
               <g class="arm-tag tag-top" (click)="onSelectArea('CLINICA_MEDICA')">
-                <rect x="200" y="6" width="160" height="26" rx="13" class="tag-bg" />
-                <circle cx="214" cy="19" r="4.5" fill="#3B82F6" />
-                <text x="226" y="23" class="tag-text">Clínica Médica</text>
-                <text x="345" y="23" text-anchor="end" class="tag-percent">{{ getAreaPercent('CLINICA_MEDICA') }}%</text>
+                <rect x="195" y="6" width="170" height="26" rx="13" class="tag-bg" />
+                <circle cx="209" cy="19" r="4.5" [attr.fill]="getTierColor(getAreaTier('CLINICA_MEDICA'))" />
+                <text x="221" y="23" class="tag-text">Clínica Médica</text>
+                <text x="353" y="23" text-anchor="end" class="tag-percent" [attr.fill]="getTierColor(getAreaTier('CLINICA_MEDICA'))">{{ getAreaPercent('CLINICA_MEDICA') }}%</text>
               </g>
             </g>
 
@@ -175,22 +172,24 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                    [attr.filter]="getTierFilter('CIRURGIA_GERAL')">
                   <use href="#star-arm-master" />
                 </g>
-                <path class="arm-stroke stroke-cirurgia"
+                <path class="arm-stroke"
+                      [attr.stroke]="getTierColor(getAreaTier('CIRURGIA_GERAL'))"
                       d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
                 <!-- Ícone da Especialidade (Bisturi de Precisão Cirúrgica) -->
                 <g transform="translate(280, 115) rotate(-72)">
-                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <circle cx="0" cy="0" r="18" class="icon-backing" 
+                          [attr.stroke]="getTierColor(getAreaTier('CIRURGIA_GERAL')) + '99'" />
                   <path d="M -9,9 L 3,-3 C 7,-7 12,-9 12,-9 C 12,-9 9,-4 5,0 L -7,12 Z"
-                        fill="none" stroke="#FDBA74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  <line x1="-3" y1="3" x2="-6" y2="6" stroke="#FDBA74" stroke-width="1.8" />
+                        fill="none" [attr.stroke]="getTierColor(getAreaTier('CIRURGIA_GERAL'))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <line x1="-3" y1="3" x2="-6" y2="6" [attr.stroke]="getTierColor(getAreaTier('CIRURGIA_GERAL'))" stroke-width="1.8" />
                 </g>
               </g>
               <!-- Tag de Identificação Superior Direita -->
               <g class="arm-tag tag-tr" (click)="onSelectArea('CIRURGIA_GERAL')">
-                <rect x="390" y="110" width="155" height="26" rx="13" class="tag-bg" />
-                <circle cx="404" cy="123" r="4.5" fill="#F97316" />
-                <text x="416" y="127" class="tag-text">Cirurgia Geral</text>
-                <text x="532" y="127" text-anchor="end" class="tag-percent">{{ getAreaPercent('CIRURGIA_GERAL') }}%</text>
+                <rect x="400" y="110" width="150" height="26" rx="13" class="tag-bg" />
+                <circle cx="414" cy="123" r="4.5" [attr.fill]="getTierColor(getAreaTier('CIRURGIA_GERAL'))" />
+                <text x="426" y="127" class="tag-text">Cirurgia Geral</text>
+                <text x="538" y="127" text-anchor="end" class="tag-percent" [attr.fill]="getTierColor(getAreaTier('CIRURGIA_GERAL'))">{{ getAreaPercent('CIRURGIA_GERAL') }}%</text>
               </g>
             </g>
 
@@ -206,22 +205,24 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                    [attr.filter]="getTierFilter('GINECOLOGIA_OBSTETRICIA')">
                   <use href="#star-arm-master" />
                 </g>
-                <path class="arm-stroke stroke-go"
+                <path class="arm-stroke"
+                      [attr.stroke]="getTierColor(getAreaTier('GINECOLOGIA_OBSTETRICIA'))"
                       d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
                 <!-- Ícone da Especialidade (Símbolo de Vênus & Ciclo da Vida) -->
                 <g transform="translate(280, 115) rotate(-144)">
-                  <circle cx="0" cy="0" r="18" class="icon-backing" />
-                  <circle cx="0" cy="-3" r="7" fill="none" stroke="#F472B6" stroke-width="2.2" />
-                  <line x1="0" y1="4" x2="0" y2="12" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round" />
-                  <line x1="-4" y1="8" x2="4" y2="8" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round" />
+                  <circle cx="0" cy="0" r="18" class="icon-backing" 
+                          [attr.stroke]="getTierColor(getAreaTier('GINECOLOGIA_OBSTETRICIA')) + '99'" />
+                  <circle cx="0" cy="-3" r="7" fill="none" [attr.stroke]="getTierColor(getAreaTier('GINECOLOGIA_OBSTETRICIA'))" stroke-width="2.2" />
+                  <line x1="0" y1="4" x2="0" y2="12" [attr.stroke]="getTierColor(getAreaTier('GINECOLOGIA_OBSTETRICIA'))" stroke-width="2.2" stroke-linecap="round" />
+                  <line x1="-4" y1="8" x2="4" y2="8" [attr.stroke]="getTierColor(getAreaTier('GINECOLOGIA_OBSTETRICIA'))" stroke-width="2.2" stroke-linecap="round" />
                 </g>
               </g>
               <!-- Tag de Identificação Inferior Direita -->
               <g class="arm-tag tag-br" (click)="onSelectArea('GINECOLOGIA_OBSTETRICIA')">
-                <rect x="375" y="490" width="168" height="26" rx="13" class="tag-bg" />
-                <circle cx="389" cy="503" r="4.5" fill="#EC4899" />
-                <text x="401" y="507" class="tag-text">Gineco & Obstetrícia</text>
-                <text x="532" y="507" text-anchor="end" class="tag-percent">{{ getAreaPercent('GINECOLOGIA_OBSTETRICIA') }}%</text>
+                <rect x="360" y="492" width="188" height="26" rx="13" class="tag-bg" />
+                <circle cx="374" cy="505" r="4.5" [attr.fill]="getTierColor(getAreaTier('GINECOLOGIA_OBSTETRICIA'))" />
+                <text x="386" y="509" class="tag-text">Gineco & Obstetrícia</text>
+                <text x="536" y="509" text-anchor="end" class="tag-percent" [attr.fill]="getTierColor(getAreaTier('GINECOLOGIA_OBSTETRICIA'))">{{ getAreaPercent('GINECOLOGIA_OBSTETRICIA') }}%</text>
               </g>
             </g>
 
@@ -237,22 +238,24 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                    [attr.filter]="getTierFilter('MEDICINA_PREVENTIVA')">
                   <use href="#star-arm-master" />
                 </g>
-                <path class="arm-stroke stroke-preventiva"
+                <path class="arm-stroke"
+                      [attr.stroke]="getTierColor(getAreaTier('MEDICINA_PREVENTIVA'))"
                       d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
                 <!-- Ícone da Especialidade (Escudo Protetor & Saúde Pública) -->
                 <g transform="translate(280, 115) rotate(-216)">
-                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <circle cx="0" cy="0" r="18" class="icon-backing" 
+                          [attr.stroke]="getTierColor(getAreaTier('MEDICINA_PREVENTIVA')) + '99'" />
                   <path d="M 0,-11 L 9,-6 C 9,4 0,11 0,11 C 0,11 -9,4 -9,-6 Z"
-                        fill="none" stroke="#FACC15" stroke-width="2" stroke-linejoin="round" />
-                  <path d="M 0,-5 L 0,3 M -4,-1 L 4,-1" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" />
+                        fill="none" [attr.stroke]="getTierColor(getAreaTier('MEDICINA_PREVENTIVA'))" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M 0,-5 L 0,3 M -4,-1 L 4,-1" [attr.stroke]="getTierColor(getAreaTier('MEDICINA_PREVENTIVA'))" stroke-width="1.8" stroke-linecap="round" />
                 </g>
               </g>
               <!-- Tag de Identificação Inferior Esquerda -->
               <g class="arm-tag tag-bl" (click)="onSelectArea('MEDICINA_PREVENTIVA')">
-                <rect x="18" y="490" width="168" height="26" rx="13" class="tag-bg" />
-                <circle cx="32" cy="503" r="4.5" fill="#EAB308" />
-                <text x="44" y="507" class="tag-text">Medicina Preventiva</text>
-                <text x="175" y="507" text-anchor="end" class="tag-percent">{{ getAreaPercent('MEDICINA_PREVENTIVA') }}%</text>
+                <rect x="12" y="492" width="182" height="26" rx="13" class="tag-bg" />
+                <circle cx="26" cy="505" r="4.5" [attr.fill]="getTierColor(getAreaTier('MEDICINA_PREVENTIVA'))" />
+                <text x="38" y="509" class="tag-text">Medicina Preventiva</text>
+                <text x="182" y="509" text-anchor="end" class="tag-percent" [attr.fill]="getTierColor(getAreaTier('MEDICINA_PREVENTIVA'))">{{ getAreaPercent('MEDICINA_PREVENTIVA') }}%</text>
               </g>
             </g>
 
@@ -268,30 +271,32 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                    [attr.filter]="getTierFilter('PEDIATRIA')">
                   <use href="#star-arm-master" />
                 </g>
-                <path class="arm-stroke stroke-pediatria"
+                <path class="arm-stroke"
+                      [attr.stroke]="getTierColor(getAreaTier('PEDIATRIA'))"
                       d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
                 <!-- Ícone da Especialidade (Pegada Neonatal / Cuidados da Infância) -->
                 <g transform="translate(280, 115) rotate(-288)">
-                  <circle cx="0" cy="0" r="18" class="icon-backing" />
-                  <ellipse cx="-1" cy="2" rx="5.5" ry="8" transform="rotate(-10 -1 2)" fill="#34D399" opacity="0.9" />
-                  <circle cx="-5" cy="-8" r="1.6" fill="#34D399" />
-                  <circle cx="-1.5" cy="-9.5" r="1.6" fill="#34D399" />
-                  <circle cx="2" cy="-9" r="1.5" fill="#34D399" />
-                  <circle cx="5" cy="-7" r="1.3" fill="#34D399" />
-                  <circle cx="7" cy="-4" r="1.1" fill="#34D399" />
+                  <circle cx="0" cy="0" r="18" class="icon-backing" 
+                          [attr.stroke]="getTierColor(getAreaTier('PEDIATRIA')) + '99'" />
+                  <ellipse cx="-1" cy="2" rx="5.5" ry="8" transform="rotate(-10 -1 2)" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))" opacity="0.9" />
+                  <circle cx="-5" cy="-8" r="1.6" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))" />
+                  <circle cx="-1.5" cy="-9.5" r="1.6" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))" />
+                  <circle cx="2" cy="-9" r="1.5" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))" />
+                  <circle cx="5" cy="-7" r="1.3" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))" />
+                  <circle cx="7" cy="-4" r="1.1" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))" />
                 </g>
               </g>
               <!-- Tag de Identificação Superior Esquerda -->
               <g class="arm-tag tag-tl" (click)="onSelectArea('PEDIATRIA')">
-                <rect x="20" y="110" width="145" height="26" rx="13" class="tag-bg" />
-                <circle cx="34" cy="123" r="4.5" fill="#10B981" />
-                <text x="46" y="127" class="tag-text">Pediatria</text>
-                <text x="154" y="127" text-anchor="end" class="tag-percent">{{ getAreaPercent('PEDIATRIA') }}%</text>
+                <rect x="15" y="110" width="145" height="26" rx="13" class="tag-bg" />
+                <circle cx="29" cy="123" r="4.5" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))" />
+                <text x="41" y="127" class="tag-text">Pediatria</text>
+                <text x="148" y="127" text-anchor="end" class="tag-percent" [attr.fill]="getTierColor(getAreaTier('PEDIATRIA'))">{{ getAreaPercent('PEDIATRIA') }}%</text>
               </g>
             </g>
 
             <!-- ========================================== -->
-            <!-- MEDALHÃO CENTRAL: BASTÃO DE ASCLÉPIO -->
+            <!-- MEDALHÃO CENTRAL: BASTÃO DE ASCLÉPIO (Estático) -->
             <!-- ========================================== -->
             <g class="center-medallion">
               <!-- Halo de Luz do Núcleo -->
@@ -302,7 +307,6 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
               <circle cx="280" cy="280" r="50" class="medallion-core" />
 
               <!-- Bastão de Asclépio Dourado Central -->
-              <!-- Bastão Rígido -->
               <line x1="280" y1="244" x2="280" y2="314"
                     stroke="url(#grad-asclepius)" stroke-width="3.5" stroke-linecap="round" />
               <!-- Pomo Superior -->
@@ -314,19 +318,16 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                     fill="none" stroke="url(#grad-asclepius)" stroke-width="3" stroke-linecap="round" />
               <!-- Olho Brilhante da Serpente -->
               <circle cx="275" cy="246" r="0.9" fill="#FFFFFF" />
-
-              <!-- Brilho no Centro -->
-              <circle cx="280" cy="280" r="4" fill="#FEF08A" opacity="0.6" class="center-pulse" />
             </g>
           </svg>
         </div>
 
-        <!-- Painel Lateral de Detalhes / Popover de Informações -->
+        <!-- Painel Lateral de Detalhes / Informações -->
         <div class="details-panel" *ngIf="selectedArea() as area">
-          <div class="panel-card glass" [style.border-color]="area.corHex + '55'">
+          <div class="panel-card" [style.border-color]="getTierColor(area.tier) + '44'">
             <div class="panel-header">
               <div class="area-title">
-                <span class="color-dot" [style.background-color]="area.corHex"></span>
+                <span class="color-dot" [style.background-color]="getTierColor(area.tier)" [style.box-shadow]="'0 0 10px ' + getTierColor(area.tier)"></span>
                 <h4>{{ area.displayName }}</h4>
               </div>
               <span class="tier-pill" [attr.data-tier]="area.tier">
@@ -339,7 +340,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
               <div class="score-desc">
                 <span>Maestria na Especialidade</span>
                 <div class="bar-bg">
-                  <div class="bar-fill" [style.width.%]="area.masteryPercentage" [style.background-color]="area.corHex"></div>
+                  <div class="bar-fill" [style.width.%]="area.masteryPercentage" [style.background-color]="getTierColor(area.tier)"></div>
                 </div>
               </div>
             </div>
@@ -387,7 +388,6 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
             </div>
 
             <div class="tier-hint">
-              <lucide-icon name="sparkles" [size]="14"></lucide-icon>
               <span>Próximo Tier em <strong>{{ getNextTierGap(area.masteryPercentage) }}%</strong> de evolução</span>
             </div>
           </div>
@@ -398,10 +398,22 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                     class="nav-chip"
                     [class.active]="selectedArea()?.grandeArea === a.grandeArea"
                     (click)="selectedArea.set(a)">
-              <span class="chip-dot" [style.background-color]="a.corHex"></span>
+              <span class="chip-dot" [style.background-color]="getTierColor(a.tier)"></span>
               <span class="chip-name">{{ a.displayName }}</span>
               <span class="chip-tier">{{ a.masteryPercentage }}%</span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra Inferior: Legenda de Cores dos Níveis de Maestria -->
+      <div class="mastery-legend-bar">
+        <span class="legend-header">Legenda de Maestria:</span>
+        <div class="legend-chips">
+          <div class="tier-legend-chip" *ngFor="let t of tierLevels">
+            <span class="swatch-dot" [style.background]="t.color" [style.box-shadow]="'0 0 8px ' + t.color + '66'"></span>
+            <span class="tier-label">{{ t.name }}</span>
+            <span class="tier-range">{{ t.range }}</span>
           </div>
         </div>
       </div>
@@ -410,12 +422,11 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
   styles: [`
     .maestria-container {
       padding: 24px 28px;
-      border-radius: 24px;
+      border-radius: 20px;
       margin-bottom: 24px;
       position: relative;
-      background: rgba(15, 23, 42, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
+      background: var(--color-surface, #121212);
+      border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
     }
 
     .maestria-header {
@@ -428,24 +439,11 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
       .title-wrap {
         display: flex;
-        align-items: center;
-        gap: 14px;
-
-        .icon-avatar {
-          width: 44px;
-          height: 44px;
-          border-radius: 12px;
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(234, 179, 8, 0.25));
-          border: 1px solid rgba(59, 130, 246, 0.35);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #FACC15;
-          box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
-        }
+        flex-direction: column;
+        gap: 4px;
 
         h3 {
-          margin: 0 0 4px;
+          margin: 0;
           font-size: 1.25rem;
           font-weight: 800;
           color: var(--color-text, #ffffff);
@@ -462,8 +460,8 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       .overall-badge {
         padding: 8px 18px;
         border-radius: 14px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -472,7 +470,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           font-size: 0.7rem;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          color: #94A3B8;
+          color: var(--color-text-muted, #94A3B8);
         }
 
         .tier-val {
@@ -489,7 +487,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           .percentage {
             font-weight: 700;
             font-size: 0.9rem;
-            color: #E2E8F0;
+            color: var(--color-text, #E2E8F0);
           }
         }
       }
@@ -500,6 +498,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       grid-template-columns: 460px 1fr;
       gap: 32px;
       align-items: center;
+      margin-bottom: 24px;
 
       @media (max-width: 1080px) {
         grid-template-columns: 1fr;
@@ -510,19 +509,19 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle, rgba(30, 41, 59, 0.45) 0%, transparent 75%);
-      border-radius: 20px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 75%);
+      border-radius: 18px;
       padding: 10px;
 
       .estrela-vida-svg {
         width: 100%;
         max-width: 440px;
         height: auto;
-        filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
+        filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5));
       }
     }
 
-    /* Elementos Geométricos de Fundo */
+    /* Elementos Geométricos de Fundo (Estáticos) */
     .bg-orbit-ring {
       fill: none;
       pointer-events: none;
@@ -533,31 +532,24 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       }
 
       &.ring-dashed {
-        stroke: rgba(255, 255, 255, 0.07);
+        stroke: rgba(255, 255, 255, 0.06);
         stroke-width: 1.2;
         stroke-dasharray: 4 8;
-        animation: rotateOrbits 60s infinite linear;
-        transform-origin: 280px 280px;
       }
 
       &.ring-mid {
-        stroke: rgba(255, 255, 255, 0.05);
+        stroke: rgba(255, 255, 255, 0.04);
         stroke-width: 1;
       }
-    }
-
-    @keyframes rotateOrbits {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
     }
 
     /* Grupos das Pontas da Estrela */
     .star-arm-group {
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s ease-out;
 
       .arm-facet {
-        transition: all 0.3s ease;
+        transition: all 0.25s ease;
       }
 
       .arm-facet-left {
@@ -586,20 +578,13 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
         stroke-width: 2.8px;
         stroke-linecap: round;
         stroke-linejoin: round;
-        transition: all 0.3s ease;
+        transition: all 0.25s ease;
       }
-
-      .stroke-clinica { stroke: #3B82F6; }
-      .stroke-cirurgia { stroke: #F97316; }
-      .stroke-pediatria { stroke: #10B981; }
-      .stroke-go { stroke: #EC4899; }
-      .stroke-preventiva { stroke: #EAB308; }
 
       .icon-backing {
         fill: rgba(15, 23, 42, 0.85);
-        stroke: rgba(255, 255, 255, 0.2);
         stroke-width: 1;
-        transition: all 0.3s ease;
+        transition: all 0.25s ease;
       }
 
       /* Hover & Ativo */
@@ -614,12 +599,11 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
         .icon-backing {
           fill: rgba(15, 23, 42, 0.95);
-          stroke: #ffffff;
           stroke-width: 1.5;
         }
 
         .arm-tag .tag-bg {
-          fill: rgba(30, 41, 59, 0.95);
+          fill: rgba(255, 255, 255, 0.08);
           stroke: rgba(255, 255, 255, 0.35);
         }
       }
@@ -631,35 +615,33 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       transition: all 0.2s ease;
 
       .tag-bg {
-        fill: rgba(15, 23, 42, 0.78);
-        stroke: rgba(255, 255, 255, 0.15);
+        fill: rgba(255, 255, 255, 0.04);
+        stroke: rgba(255, 255, 255, 0.12);
         stroke-width: 1;
-        backdrop-filter: blur(8px);
         transition: all 0.2s ease;
       }
 
       .tag-text {
         font-size: 0.76rem;
         font-weight: 700;
-        fill: #E2E8F0;
+        fill: var(--color-text, #E2E8F0);
         letter-spacing: -0.01em;
       }
 
       .tag-percent {
         font-size: 0.76rem;
         font-weight: 800;
-        fill: #38BDF8;
       }
 
       &:hover {
         .tag-bg {
-          fill: rgba(30, 41, 59, 0.95);
-          stroke: rgba(255, 255, 255, 0.4);
+          fill: rgba(255, 255, 255, 0.08);
+          stroke: rgba(255, 255, 255, 0.35);
         }
       }
     }
 
-    /* Medalhão Central & Bastão de Asclépio */
+    /* Medalhão Central & Bastão de Asclépio (Estático) */
     .center-medallion {
       pointer-events: none;
 
@@ -667,7 +649,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
         fill: none;
         stroke: rgba(234, 179, 8, 0.25);
         stroke-width: 2;
-        filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.4));
+        filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.35));
       }
 
       .medallion-ring {
@@ -686,15 +668,6 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       .asclepius-snake {
         filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.5));
       }
-
-      .center-pulse {
-        animation: centerPulse 2.5s infinite ease-in-out;
-      }
-    }
-
-    @keyframes centerPulse {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 0.9; transform: scale(1.6); }
     }
 
     /* Painel de Detalhes à Direita */
@@ -705,10 +678,9 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
       .panel-card {
         padding: 24px;
-        border-radius: 20px;
-        background: rgba(30, 41, 59, 0.55);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(14px);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
       }
 
       .panel-header {
@@ -726,14 +698,13 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            box-shadow: 0 0 8px currentColor;
           }
 
           h4 {
             margin: 0;
             font-size: 1.2rem;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--color-text, #ffffff);
           }
         }
 
@@ -743,17 +714,17 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           font-size: 0.75rem;
           font-weight: 800;
           letter-spacing: 0.05em;
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
           color: #ffffff;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.15);
 
-          &[data-tier="DIAMANTE"] { background: rgba(56, 189, 248, 0.2); color: #38BDF8; border-color: #38BDF8; }
-          &[data-tier="ESMERALDA"] { background: rgba(16, 185, 129, 0.2); color: #10B981; border-color: #10B981; }
-          &[data-tier="RUBI"] { background: rgba(225, 29, 72, 0.2); color: #FB7185; border-color: #FB7185; }
-          &[data-tier="PLATINA"] { background: rgba(125, 211, 252, 0.2); color: #BAE6FD; border-color: #7DD3FC; }
-          &[data-tier="OURO"] { background: rgba(234, 179, 8, 0.2); color: #FACC15; border-color: #EAB308; }
-          &[data-tier="PRATA"] { background: rgba(203, 213, 225, 0.2); color: #E2E8F0; border-color: #CBD5E1; }
-          &[data-tier="BRONZE"] { background: rgba(205, 127, 50, 0.2); color: #F59E0B; border-color: #CD7F32; }
+          &[data-tier="DIAMANTE"] { background: rgba(56, 189, 248, 0.15); color: #38BDF8; border-color: #38BDF8; }
+          &[data-tier="ESMERALDA"] { background: rgba(16, 185, 129, 0.15); color: #10B981; border-color: #10B981; }
+          &[data-tier="RUBI"] { background: rgba(225, 29, 72, 0.15); color: #FB7185; border-color: #FB7185; }
+          &[data-tier="PLATINA"] { background: rgba(125, 211, 252, 0.15); color: #BAE6FD; border-color: #7DD3FC; }
+          &[data-tier="OURO"] { background: rgba(234, 179, 8, 0.15); color: #FACC15; border-color: #EAB308; }
+          &[data-tier="PRATA"] { background: rgba(203, 213, 225, 0.15); color: #E2E8F0; border-color: #CBD5E1; }
+          &[data-tier="BRONZE"] { background: rgba(205, 127, 50, 0.15); color: #F59E0B; border-color: #CD7F32; }
         }
       }
 
@@ -766,7 +737,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
         .score-number {
           font-size: 2.2rem;
           font-weight: 900;
-          color: #ffffff;
+          color: var(--color-text, #ffffff);
           line-height: 1;
         }
 
@@ -775,7 +746,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
           span {
             font-size: 0.78rem;
-            color: #94A3B8;
+            color: var(--color-text-muted, #94A3B8);
             display: block;
             margin-bottom: 6px;
           }
@@ -807,15 +778,15 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           gap: 12px;
           padding: 12px 14px;
           border-radius: 12px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.05);
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid var(--color-border, rgba(255, 255, 255, 0.06));
 
           &.full-span {
             grid-column: span 2;
           }
 
           .m-icon {
-            color: #94A3B8;
+            color: var(--color-text-muted, #94A3B8);
           }
 
           .m-data {
@@ -825,12 +796,12 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
             .m-val {
               font-size: 1rem;
               font-weight: 700;
-              color: #ffffff;
+              color: var(--color-text, #ffffff);
             }
 
             .m-lbl {
               font-size: 0.72rem;
-              color: #94A3B8;
+              color: var(--color-text-muted, #94A3B8);
             }
           }
         }
@@ -841,10 +812,10 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
         align-items: center;
         gap: 8px;
         font-size: 0.8rem;
-        color: #94A3B8;
+        color: var(--color-text-muted, #94A3B8);
 
         strong {
-          color: #38BDF8;
+          color: var(--color-text, #ffffff);
         }
       }
 
@@ -859,9 +830,9 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           gap: 8px;
           padding: 8px 14px;
           border-radius: 12px;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          color: #94A3B8;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+          color: var(--color-text-muted, #94A3B8);
           cursor: pointer;
           font-size: 0.8rem;
           font-weight: 600;
@@ -874,15 +845,69 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           }
 
           .chip-tier {
-            color: #ffffff;
+            color: var(--color-text, #ffffff);
             font-weight: 700;
           }
 
           &:hover, &.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--color-text, #ffffff);
+            border-color: var(--color-border, rgba(255, 255, 255, 0.2));
             transform: translateY(-1px);
+          }
+        }
+      }
+    }
+
+    /* Barra de Legenda de Cores para cada Maestria */
+    .mastery-legend-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 18px;
+      border-top: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+      flex-wrap: wrap;
+
+      .legend-header {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-text-muted, #94A3B8);
+      }
+
+      .legend-chips {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+
+        .tier-legend-chip {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 12px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid var(--color-border, rgba(255, 255, 255, 0.06));
+
+          .swatch-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+          }
+
+          .tier-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--color-text, #ffffff);
+          }
+
+          .tier-range {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--color-text-muted, #94A3B8);
           }
         }
       }
@@ -894,6 +919,16 @@ export class EstrelaVidaMaestriaComponent implements OnInit {
 
   data = signal<ClinicalMasteryResponse | null>(null);
   selectedArea = signal<AreaMastery | null>(null);
+
+  readonly tierLevels = [
+    { name: 'Bronze', range: '15-29%', color: '#CD7F32' },
+    { name: 'Prata', range: '30-44%', color: '#CBD5E1' },
+    { name: 'Ouro', range: '45-59%', color: '#EAB308' },
+    { name: 'Platina', range: '60-74%', color: '#7DD3FC' },
+    { name: 'Rubi', range: '75-84%', color: '#E11D48' },
+    { name: 'Esmeralda', range: '85-94%', color: '#10B981' },
+    { name: 'Diamante', range: '95-100%', color: '#38BDF8' }
+  ];
 
   ngOnInit() {
     this.masteryService.getMastery().subscribe({
@@ -920,9 +955,27 @@ export class EstrelaVidaMaestriaComponent implements OnInit {
     }
   }
 
+  getAreaTier(grandeAreaKey: string): string {
+    const area = this.data()?.areas.find(a => a.grandeArea === grandeAreaKey);
+    return area ? area.tier : 'INICIANTE';
+  }
+
   getAreaPercent(grandeAreaKey: string): number {
     const area = this.data()?.areas.find(a => a.grandeArea === grandeAreaKey);
     return area ? Math.round(area.masteryPercentage) : 0;
+  }
+
+  getTierColor(tier?: string): string {
+    switch (tier) {
+      case 'DIAMANTE': return '#38BDF8';
+      case 'ESMERALDA': return '#10B981';
+      case 'RUBI': return '#E11D48';
+      case 'PLATINA': return '#7DD3FC';
+      case 'OURO': return '#EAB308';
+      case 'PRATA': return '#CBD5E1';
+      case 'BRONZE': return '#CD7F32';
+      default: return '#64748B';
+    }
   }
 
   getAreaFill(grandeAreaKey: string): string {
