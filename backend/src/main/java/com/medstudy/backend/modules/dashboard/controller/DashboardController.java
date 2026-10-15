@@ -20,14 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class DashboardController {
 
     private final DashboardService service;
+    private final com.medstudy.backend.modules.dashboard.service.ClinicalMasteryService clinicalMasteryService;
 
     /**
-     * Constructs a new DashboardController with the required service.
+     * Constructs a new DashboardController with the required services.
      *
      * @param service the DashboardService to be used
+     * @param clinicalMasteryService the ClinicalMasteryService to be used
      */
-    public DashboardController(DashboardService service) {
+    public DashboardController(DashboardService service,
+                               com.medstudy.backend.modules.dashboard.service.ClinicalMasteryService clinicalMasteryService) {
         this.service = service;
+        this.clinicalMasteryService = clinicalMasteryService;
     }
 
     /**
@@ -40,5 +44,19 @@ public class DashboardController {
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboard() {
         return ResponseEntity.ok(service.getDashboardData());
+    }
+
+    /**
+     * Retrieves the clinical mastery map for the authenticated user.
+     *
+     * @param user the authenticated user
+     * @return a ResponseEntity containing the ClinicalMasteryResponse with area metrics and tiers
+     */
+    @Operation(summary = "Get Clinical Mastery", description = "Retorna o mapa de maestria anatômica e das 5 grandes áreas médicas com os respectivos níveis e tiers.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved clinical mastery")
+    @GetMapping("/maestria-clinica")
+    public ResponseEntity<com.medstudy.backend.modules.dashboard.dto.ClinicalMasteryResponse> getClinicalMastery(
+            @org.springframework.security.core.annotation.AuthenticationPrincipal com.medstudy.backend.modules.user.entity.User user) {
+        return ResponseEntity.ok(clinicalMasteryService.calculateMastery(user));
     }
 }

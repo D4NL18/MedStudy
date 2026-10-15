@@ -149,4 +149,21 @@ export class AulasListComponent implements OnInit {
     this.loadLessons();
   }
 
+  getAssistedCount(lessons: Lesson[]): number {
+    return lessons.filter(l => l.aulaAssistida).length;
+  }
+
+  getPendingCount(lessons: Lesson[]): number {
+    return lessons.filter(l => !l.aulaAssistida).length;
+  }
+
+  getDiamondPendingCount(lessons: Lesson[]): number {
+    return lessons.filter(l => !l.aulaAssistida).length;
+  }
+
+  getProgress(lessons: Lesson[]): number {
+    if (!lessons || lessons.length === 0) return 0;
+    return Math.round((this.getAssistedCount(lessons) / lessons.length) * 100);
+  }
+
 }

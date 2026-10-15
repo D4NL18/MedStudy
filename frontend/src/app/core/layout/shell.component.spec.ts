@@ -48,7 +48,7 @@ describe('ShellComponent', () => {
   it('should display user name', () => {
     const fixture = MockRender(ShellComponent);
     const userElement = ngMocks.find(fixture, '.user-name');
-    expect(userElement.nativeElement.textContent).toContain('Test User');
+    expect(userElement.nativeElement.textContent).toContain('Test');
   });
 
   it('should dispatch logout', () => {

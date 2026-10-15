@@ -4,11 +4,18 @@ import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { ProfileActions } from '@store/profile/profile.actions';
 
+import { Actions } from '@ngrx/effects';
+import { of } from 'rxjs';
+
 describe('OnboardingComponent', () => {
   MockInstance.scope();
 
   beforeEach(() => {
     return MockBuilder(OnboardingComponent)
+      .provide({
+        provide: Actions,
+        useValue: of()
+      })
       .provide(provideMockStore({
         initialState: {
           profile: {

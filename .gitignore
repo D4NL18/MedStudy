@@ -23,3 +23,7 @@ backend/*.log
 
 # Scripts
 scripts/node_modules/
+
+# Local data backups and scratch
+backup_*.json
+flash_reais.txt

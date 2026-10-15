@@ -115,6 +115,10 @@ export class PerfilComponent implements OnInit {
         else if (b.name.includes('PRECISION') || b.name.includes('QUESTIONS')) b.icon = 'target';
         else if (b.name.includes('SIMULADO')) b.icon = 'award';
         else if (b.name.includes('MASTER') || b.name.includes('AVATAR')) b.icon = 'sparkles';
+        else if (b.name.includes('FLASH_COMBO')) b.icon = 'flame';
+        else if (b.name.includes('FLASH_BOUNTY')) b.icon = 'crosshair';
+        else if (b.name.includes('FLASH_INBOX_ZERO')) b.icon = 'check-circle-2';
+        else if (b.name.startsWith('FLASH_')) b.icon = 'layers';
         else b.icon = 'check-circle';
       });
 

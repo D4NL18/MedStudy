@@ -38,12 +38,19 @@ describe('RevisionEffects', () => {
 
   it('should load sessions successfully', (done) => {
     const mockSessions = [createMockRevisionSession()];
-    revisionService.getSessions.and.returnValue(of(mockSessions));
+    const mockResponse = {
+      content: mockSessions,
+      totalElements: 1,
+      totalPages: 1,
+      size: 10,
+      number: 0
+    };
+    revisionService.getSessions.and.returnValue(of(mockResponse));
     actions$ = of(RevisionActions.loadSessions({ filter: 'HOJE' }));
 
     effects.loadSessions$.subscribe(action => {
       expect(action).toEqual(RevisionActions.loadSessionsSuccess({ 
-        sessions: mockSessions
+        response: mockResponse
       }));
       done();
     });

@@ -1,0 +1,303 @@
+import { Component, Input, Output, EventEmitter, computed, signal, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { LucideAngularModule } from 'lucide-angular';
+import { Router } from '@angular/router';
+import { StreakRepairService } from '@core/services/streak-repair.service';
+import { StreakStatusResponse } from '@core/models/streak-repair.model';
+import { ToastService } from '@core/services/toast.service';
+
+@Component({
+  selector: 'app-streak-repair-banner',
+  standalone: true,
+  imports: [CommonModule, LucideAngularModule],
+  template: `
+    <div *ngIf="status()?.streakAtRisk" class="streak-repair-card animate-fade-in">
+      <div class="content-left">
+        <div class="flame-svg-wrap">
+          <svg viewBox="0 0 24 24" class="flame-svg" width="32" height="32" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+          </svg>
+        </div>
+        
+        <div class="text-block">
+          <div class="badge-title">
+            <span class="countdown-text">
+              <lucide-icon name="clock" [size]="14"></lucide-icon>
+              {{ remainingTime() }} restante
+            </span>
+          </div>
+          <h3>Sua Ofensiva de {{ status()?.currentStreak }} dias está em risco!</h3>
+          <p>
+            Você não estudou ontem, mas o <strong>Plantão de Resgate</strong> está aberto.
+            Complete sua meta diária intensiva de revisões para restaurar seu streak sem quebrar seu recorde.
+          </p>
+
+          <div class="progress-container">
+            <div class="progress-labels">
+              <span>Meta de recuperação</span>
+              <span><strong>{{ status()?.currentRepairedCount }}</strong> / {{ status()?.requiredCardsCount }} cards</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" [style.width.%]="progressPercent()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-right">
+        <div class="action-buttons">
+          <button 
+            *ngIf="canExecuteRepair()" 
+            class="btn-repair"
+            [disabled]="isRepairing()"
+            (click)="triggerRepair()">
+            <lucide-icon name="check-circle" [size]="18"></lucide-icon>
+            {{ isRepairing() ? 'Resgatando...' : 'Resgatar Streak Agora' }}
+          </button>
+
+          <button 
+            *ngIf="!canExecuteRepair()" 
+            class="btn-action"
+            (click)="goToStudy()">
+            <lucide-icon name="play" [size]="18"></lucide-icon>
+            Continuar Missão
+          </button>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .streak-repair-card {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      border-radius: 20px;
+      background: transparent !important;
+      border: 1.5px solid #EF4444;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      overflow: hidden;
+
+      @media (max-width: 900px) {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    .content-left {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      flex: 1;
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+      }
+    }
+
+    .flame-svg-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding-top: 2px;
+
+      .flame-svg {
+        filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.5));
+      }
+    }
+
+    .text-block {
+      flex: 1;
+
+      .badge-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .countdown-text {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #EF4444;
+        }
+      }
+
+      h3 {
+        margin: 0 0 6px;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--color-text, #ffffff);
+      }
+
+      p {
+        margin: 0 0 16px;
+        font-size: 0.88rem;
+        line-height: 1.45;
+        color: var(--color-text-muted, #94A3B8);
+
+        strong {
+          color: #F59E0B;
+        }
+      }
+    }
+
+    .progress-container {
+      max-width: 460px;
+
+      .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--color-text-muted, #94A3B8);
+        margin-bottom: 6px;
+
+        strong {
+          color: var(--color-text, #ffffff);
+        }
+      }
+
+      .progress-bar-bg {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+
+        .progress-bar-fill {
+          height: 100%;
+          background: var(--color-primary, #10B981);
+          border-radius: 999px;
+          transition: width 0.4s ease-out;
+        }
+      }
+    }
+
+    .content-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      .action-buttons {
+        button {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 24px;
+          border-radius: 14px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          white-space: nowrap;
+
+          @media (max-width: 900px) {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        .btn-action {
+          background: linear-gradient(135deg, #F59E0B, #D97706);
+          color: #ffffff;
+          box-shadow: none;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: none;
+          }
+        }
+
+        .btn-repair {
+          background: linear-gradient(135deg, #10B981, #059669);
+          color: #ffffff;
+          box-shadow: none;
+
+          &:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: none;
+          }
+        }
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    .warning-pulse {
+      animation: pulse 2.5s infinite ease-in-out;
+    }
+  `]
+})
+export class StreakRepairBannerComponent implements OnInit {
+  private streakRepairService = inject(StreakRepairService);
+  private toastService = inject(ToastService);
+  private router = inject(Router);
+
+  status = signal<StreakStatusResponse | null>(null);
+  isRepairing = signal(false);
+
+  remainingTime = computed(() => {
+    const deadline = this.status()?.repairDeadline;
+    if (!deadline) return '24h';
+    const diff = new Date(deadline).getTime() - Date.now();
+    if (diff <= 0) return 'Expirado';
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  });
+
+  progressPercent = computed(() => {
+    const st = this.status();
+    if (!st || st.requiredCardsCount <= 0) return 0;
+    return Math.min(100, Math.round((st.currentRepairedCount / st.requiredCardsCount) * 100));
+  });
+
+  canExecuteRepair = computed(() => {
+    const st = this.status();
+    return !!st && st.canRepair && st.currentRepairedCount >= st.requiredCardsCount;
+  });
+
+  ngOnInit() {
+    this.loadStatus();
+  }
+
+  loadStatus() {
+    this.streakRepairService.getStreakStatus().subscribe({
+      next: (res) => this.status.set(res)
+    });
+  }
+
+  goToStudy() {
+    this.router.navigate(['/flashcards']);
+  }
+
+  triggerRepair() {
+    this.isRepairing.set(true);
+    this.streakRepairService.repairStreak().subscribe({
+      next: (res) => {
+        this.isRepairing.set(false);
+        if (res.success) {
+          this.toastService.success(res.message || 'Streak recuperado com sucesso!');
+          this.status.update(s => s ? { ...s, streakAtRisk: false, currentStreak: res.newStreak } : null);
+        } else {
+          this.toastService.error(res.message || 'Não foi possível restaurar o streak.');
+        }
+      },
+      error: () => {
+        this.isRepairing.set(false);
+        this.toastService.error('Erro de conexão ao processar resgate de streak.');
+      }
+    });
+  }
+}

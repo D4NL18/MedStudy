@@ -24,7 +24,14 @@ describe('RevisionReducer', () => {
 
   it('should set sessions on loadSessionsSuccess', () => {
     const sessions = [{ id: '1' } as any];
-    const action = RevisionActions.loadSessionsSuccess({ sessions });
+    const response = {
+      content: sessions,
+      totalElements: 1,
+      totalPages: 1,
+      size: 10,
+      number: 0
+    };
+    const action = RevisionActions.loadSessionsSuccess({ response });
     const state = reducer(initialState, action);
     expect(state.sessions).toEqual(sessions);
     expect(state.loading).toBeFalse();

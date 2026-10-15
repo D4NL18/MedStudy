@@ -52,6 +52,7 @@ describe('SessionModalComponent', () => {
       tema: 'Novo Tema',
       totalQuestoes: 10,
       acertos: 8,
+      erros: 2,
       data: '2023-01-01'
     });
     

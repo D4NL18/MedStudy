@@ -38,7 +38,7 @@ describe('AulasListComponent', () => {
     const fixture = TestBed.createComponent(AulasListComponent);
     fixture.detectChanges();
     
-    expect(dispatchSpy).toHaveBeenCalledWith(StudyPlanActions.loadLessons({ page: 0, size: 10 }));
+    expect(dispatchSpy).toHaveBeenCalledWith(StudyPlanActions.loadLessons({ sort: 'dataAula,desc', page: 0, size: 10 }));
   });
 
   it('should calculate counts correctly', () => {

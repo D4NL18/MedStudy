@@ -29,7 +29,13 @@ describe('RevisionService', () => {
   });
 
   it('should get sessions with filter', () => {
-    const mockSessions = [{ id: '1' } as any];
+    const mockSessions: any = {
+      content: [{ id: '1' }],
+      totalElements: 1,
+      totalPages: 1,
+      size: 10,
+      number: 0
+    };
     service.getSessions('REFORCO').subscribe(res => {
       expect(res).toEqual(mockSessions);
     });

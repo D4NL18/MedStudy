@@ -1,17 +1,31 @@
 <div class="study-overlay" *ngIf="active$ | async" (click)="handleOverlayClick($event)">
   <div class="header" (click)="$event.stopPropagation()">
     <div class="progress-info" *ngIf="!(isReadOnly$ | async)">
-      <span class="count">Card {{ (currentIndex$ | async)! + 1 }} de {{ (queue$ | async)?.length }}</span>
+      <div class="meta-row">
+        <span class="count">Card {{ (currentIndex$ | async)! + 1 }} de {{ (queue$ | async)?.length }}</span>
+
+        <!-- Combo Badge Reativo -->
+        <div class="combo-meter" *ngIf="combo() > 0" [attr.data-tier]="comboTier()">
+          <span class="combo-icon" *ngIf="comboTier() === 'em_chamas'">⚡🔥</span>
+          <span class="combo-icon" *ngIf="comboTier() === 'foco_quente'">🔥</span>
+          <span class="combo-icon" *ngIf="comboTier() === 'streak'">✨</span>
+          <span class="combo-val">{{ combo() }}x COMBO</span>
+          <span class="xp-multiplier" *ngIf="comboMultiplier()">{{ comboMultiplier() }}</span>
+        </div>
+      </div>
+
       <div class="progress-bar">
         <div class="fill" [style.width.%]="getProgress((currentIndex$ | async)!, (queue$ | async)?.length || 0)"></div>
       </div>
     </div>
+
     <div class="preview-mode-info" *ngIf="isReadOnly$ | async">
       <span class="preview-badge">
         <lucide-icon name="eye" [size]="16"></lucide-icon>
         Modo de Visualização
       </span>
     </div>
+
     <button class="close-btn" (click)="close()" aria-label="Fechar estudo">
       <lucide-icon name="x" [size]="24"></lucide-icon>
     </button>
@@ -19,12 +33,28 @@
 
   <!-- Card State -->
   <div class="card-container" *ngIf="currentCard() as card">
-    <div class="flashcard" (click)="handleCardClick($event)">
+    <div class="flashcard" 
+         [class.bounty-card]="card.bountyCard"
+         (click)="handleCardClick($event)">
+      
+      <!-- Efeito Moldura Bounty Carmesim -->
+      <div class="bounty-glow" *ngIf="card.bountyCard"></div>
+
       <div class="card-face">
-        <div class="card-label">{{ isFlipped() ? 'Resposta' : 'Pergunta' }}</div>
+        <!-- Cabeçalho do Card: Label e Badge de Bounty -->
+        <div class="card-header-bar">
+          <div class="card-label">{{ isFlipped() ? 'Resposta' : 'Pergunta' }}</div>
+
+          <div class="bounty-badge" *ngIf="card.bountyCard">
+            <lucide-icon name="crosshair" [size]="14"></lucide-icon>
+            <span>BOUNTY CARD • 3x XP</span>
+          </div>
+        </div>
+
         <div class="content-wrapper">
           <app-markdown-renderer [data]="isFlipped() ? card.verso : card.frente"></app-markdown-renderer>
         </div>
+
         <div class="flip-hint">
           <lucide-icon [name]="isFlipped() ? 'rotate-ccw' : 'rotate-cw'" [size]="16"></lucide-icon>
           {{ isFlipped() ? 'Clique para ver a pergunta' : 'Clique para ver a resposta' }}
@@ -72,16 +102,78 @@
 
   <!-- Empty State -->
   <div class="no-cards" *ngIf="!(isReadOnly$ | async) && (isEmpty$ | async)">
+    <div class="trophy-icon-wrap">
+      <lucide-icon name="check-circle-2" [size]="48"></lucide-icon>
+    </div>
     <h3>Nada por aqui!</h3>
     <p>Você não tem cards para revisar hoje. Ótimo trabalho!</p>
-    <button class="finish-btn" (click)="close()">Voltar</button>
+    <button class="finish-btn" (click)="close()">Voltar ao Dashboard</button>
   </div>
 
-  <!-- Finished State -->
-  <div class="no-cards" *ngIf="!(isReadOnly$ | async) && (isSessionOver$ | async)">
-    <h3>Sessão Finalizada!</h3>
-    <p>Você revisou todos os cartões desta sessão.</p>
-    <button class="finish-btn" (click)="close()">Concluir</button>
+  <!-- Celebration State / Fim de Sessão -->
+  <div class="session-celebration-overlay" *ngIf="!(isReadOnly$ | async) && (isSessionOver$ | async)">
+    <div class="confetti-container">
+      <div 
+        *ngFor="let piece of confettiPieces" 
+        class="confetti-piece"
+        [style.left.%]="piece.left"
+        [style.animationDelay.s]="piece.animDelay"
+        [style.backgroundColor]="piece.color"
+      ></div>
+    </div>
+
+    <div class="celebration-card animate-scale-up" (click)="$event.stopPropagation()">
+      <div class="medal-icon-wrap">
+        <svg viewBox="0 0 24 24" class="medal-svg" width="56" height="56" fill="none" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="6"></circle>
+          <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+        </svg>
+      </div>
+
+      <h2>Sessão Concluída!</h2>
+      <p class="celebration-subtitle">Você esvaziou sua fila diária e consolidou sua retenção neural.</p>
+
+      <!-- Grade de Estatísticas da Sessão -->
+      <div class="session-metrics-grid">
+        <div class="metric-box">
+          <span class="m-val">{{ sessionStats().totalCards }}</span>
+          <span class="m-lbl">Cards Estudados</span>
+        </div>
+
+        <div class="metric-box highlight-green">
+          <span class="m-val">{{ sessionStats().accuracy }}%</span>
+          <span class="m-lbl">Taxa de Acerto</span>
+        </div>
+
+        <div class="metric-box">
+          <span class="m-val">{{ sessionStats().durationMinutes }}m {{ sessionStats().durationSecondsRem }}s</span>
+          <span class="m-lbl">Tempo Total</span>
+        </div>
+
+        <div class="metric-box">
+          <span class="m-val">{{ sessionStats().avgSecondsPerCard }}s</span>
+          <span class="m-lbl">Média / Card</span>
+        </div>
+
+        <div class="metric-box highlight-gold" *ngIf="sessionStats().highestCombo > 0">
+          <span class="m-val">🔥 {{ sessionStats().highestCombo }}x</span>
+          <span class="m-lbl">Maior Combo</span>
+        </div>
+
+        <div class="metric-box highlight-xp">
+          <span class="m-val">+{{ sessionStats().bonusXp }}</span>
+          <span class="m-lbl">XP Conquistado</span>
+        </div>
+      </div>
+
+      <!-- Ações do Modal -->
+      <div class="celebration-actions">
+        <button class="btn-primary" (click)="close()">
+          <lucide-icon name="layout-dashboard" [size]="18"></lucide-icon>
+          Voltar ao Dashboard
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="loading-state" *ngIf="loading$ | async">

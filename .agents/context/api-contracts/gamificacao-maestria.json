@@ -1,0 +1,71 @@
+{
+  "title": "Gamificação de Flashcards, Maestria Clínica e Streak Repair",
+  "version": "1.0.0",
+  "endpoints": {
+    "GET /api/dashboard/maestria-clinica": {
+      "summary": "Retorna o mapa de maestria anatômica e das 5 grandes áreas médicas com os respectivos níveis e tiers",
+      "response": {
+        "status": 200,
+        "body": {
+          "overallMastery": "number (0-100)",
+          "overallTier": "string (BRONZE, PRATA, OURO, PLATINA, RUBI, ESMERALDA, DIAMANTE)",
+          "areas": [
+            {
+              "grandeArea": "CLINICA_MEDICA | CIRURGIA_GERAL | PEDIATRIA | GINECOLOGIA_OBSTETRICIA | MEDICINA_PREVENTIVA",
+              "displayName": "string",
+              "regionKey": "torax_snc | abdome_tgi | cabeca_membros | pelve_urogenital | silhueta_sistemica",
+              "masteryPercentage": "number (0-100)",
+              "tier": "INICIANTE | BRONZE | PRATA | OURO | PLATINA | RUBI | ESMERALDA | DIAMANTE",
+              "corHex": "string",
+              "questoesFeitas": "number",
+              "taxaAcertoQuestoes": "number",
+              "cardsRevisados": "number",
+              "taxaRetencaoCards": "number",
+              "aulasAssistidas": "number",
+              "totalAulas": "number"
+            }
+          ]
+        }
+      }
+    },
+    "GET /api/gamificacao/streak-status": {
+      "summary": "Retorna o status atual do streak, verificação de quebra de 24h e elegibilidade de Streak Repair",
+      "response": {
+        "status": 200,
+        "body": {
+          "currentStreak": "number",
+          "streakAtRisk": "boolean",
+          "canRepair": "boolean",
+          "repairDeadline": "string (ISO-8601)",
+          "requiredCardsCount": "number",
+          "currentRepairedCount": "number",
+          "lastRepairedAt": "string (ISO-8601) | null"
+        }
+      }
+    },
+    "POST /api/gamificacao/streak-repair": {
+      "summary": "Executa a recuperação do streak caso a missão de resgate tenha sido cumprida",
+      "response": {
+        "status": 200,
+        "body": {
+          "success": "boolean",
+          "newStreak": "number",
+          "message": "string"
+        }
+      }
+    },
+    "GET /api/flashcards/hoje": {
+      "summary": "Fila de estudo diária; FlashcardResponse inclui agora a flag booleana bountyCard",
+      "flashcardResponse": {
+        "id": "uuid",
+        "grandeArea": "string",
+        "frente": "object",
+        "verso": "object",
+        "proximaRevisao": "date",
+        "bountyCard": "boolean",
+        "easeFactor": "number",
+        "consecutiveHardCount": "number"
+      }
+    }
+  }
+}

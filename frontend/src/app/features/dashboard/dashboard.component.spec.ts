@@ -7,6 +7,9 @@ import { selectDashboardKPIs, selectDashboardLoading } from '@store/dashboard/da
 import { EvolutionChartComponent } from './components/evolution-chart/evolution-chart.component';
 import { AreaChartComponent } from './components/area-chart/area-chart.component';
 import { DistributionChartComponent } from './components/distribution-chart/distribution-chart.component';
+import { CorpoHumanoMaestriaComponent } from './components/corpo-humano-maestria/corpo-humano-maestria.component';
+import { StreakRepairBannerComponent } from './components/streak-repair-banner/streak-repair-banner.component';
+import { DashboardSkeletonComponent } from './components/dashboard-skeleton/dashboard-skeleton.component';
 import { loadDashboard } from '@store/dashboard/dashboard.actions';
 
 describe('DashboardComponent', () => {
@@ -15,6 +18,9 @@ describe('DashboardComponent', () => {
       .mock(EvolutionChartComponent)
       .mock(AreaChartComponent)
       .mock(DistributionChartComponent)
+      .mock(CorpoHumanoMaestriaComponent)
+      .mock(StreakRepairBannerComponent)
+      .mock(DashboardSkeletonComponent)
       .provide(provideMockStore({
         initialState: {
           auth: { user: null },
@@ -43,11 +49,12 @@ describe('DashboardComponent', () => {
   it('should display loading skeleton when loading is true', () => {
     const store = TestBed.inject(MockStore);
     store.overrideSelector(selectDashboardLoading, true);
+    store.overrideSelector(selectDashboardKPIs, null);
     store.refreshState();
     
-    ngMocks.flushTestBed();
-    const fixture = MockRender(DashboardComponent);
-    const skeleton = ngMocks.find(fixture, '.skeleton-grid', null);
+    const fixture = MockRender(DashboardComponent, null, { reset: true });
+    fixture.detectChanges();
+    const skeleton = ngMocks.find(fixture, DashboardSkeletonComponent, null);
     
     expect(skeleton).not.toBeNull();
   });
@@ -68,7 +75,8 @@ describe('DashboardComponent', () => {
     store.overrideSelector(selectDashboardKPIs, mockKPIs);
     store.refreshState();
     
-    const fixture = MockRender(DashboardComponent);
+    const fixture = MockRender(DashboardComponent, null, { reset: true });
+    fixture.detectChanges();
     const accuracy = ngMocks.find(fixture, '.highlight .kpi-value');
     
     expect(accuracy.nativeElement.textContent).toContain('85%');

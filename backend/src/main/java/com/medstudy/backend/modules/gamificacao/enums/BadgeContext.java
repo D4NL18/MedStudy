@@ -13,6 +13,11 @@ public enum BadgeContext {
      * Context when evaluating badges related to simulado sessions.
      */
     SIMULADO_SESSION,
+
+    /**
+     * Context when evaluating badges related to flashcard sessions.
+     */
+    FLASHCARD_SESSION,
     
     /**
      * General context for overall evaluations, such as scheduled jobs.

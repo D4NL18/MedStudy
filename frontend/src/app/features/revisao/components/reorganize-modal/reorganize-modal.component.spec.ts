@@ -1,18 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReorganizeModalComponent } from './reorganize-modal.component';
+import { provideMockStore } from '@ngrx/store/testing';
+import { Actions } from '@ngrx/effects';
+import { of } from 'rxjs';
 
-import { ReorganizeModal } from './reorganize-modal';
-
-describe('ReorganizeModal', () => {
-  let component: ReorganizeModal;
-  let fixture: ComponentFixture<ReorganizeModal>;
+describe('ReorganizeModalComponent', () => {
+  let component: ReorganizeModalComponent;
+  let fixture: ComponentFixture<ReorganizeModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReorganizeModal]
+      imports: [ReorganizeModalComponent],
+      providers: [
+        provideMockStore({
+          initialState: {
+            revision: {
+              redistributionDraft: null,
+              isRedistributing: false
+            }
+          }
+        }),
+        { provide: Actions, useValue: of() }
+      ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ReorganizeModal);
+    fixture = TestBed.createComponent(ReorganizeModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

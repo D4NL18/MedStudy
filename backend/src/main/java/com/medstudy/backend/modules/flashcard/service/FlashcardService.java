@@ -47,7 +47,7 @@ public class FlashcardService {
         if (flashcard.getProximaRevisao() == null || !flashcard.getProximaRevisao().isAfter(LocalDate.now())) {
             flashcard.setProximaRevisao(srService.calculateInitialRevisionDate(user.getId()));
         }
-        return mapper.toResponse(repository.save(flashcard));
+        return toResponseWithBounty(repository.save(flashcard));
     }
 
     /**
@@ -60,9 +60,9 @@ public class FlashcardService {
     public Page<FlashcardResponse> listAll(String query, Pageable pageable) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (query != null && !query.trim().isEmpty()) {
-            return repository.searchByUserIdAndQuery(user.getId(), query, pageable).map(mapper::toResponse);
+            return repository.searchByUserIdAndQuery(user.getId(), query, pageable).map(this::toResponseWithBounty);
         }
-        return repository.findAllByUserId(user.getId(), pageable).map(mapper::toResponse);
+        return repository.findAllByUserId(user.getId(), pageable).map(this::toResponseWithBounty);
     }
 
     /**
@@ -73,7 +73,7 @@ public class FlashcardService {
      */
     @Transactional(readOnly = true)
     public FlashcardResponse getById(UUID id) {
-        return mapper.toResponse(findByIdAndValidateUser(id));
+        return toResponseWithBounty(findByIdAndValidateUser(id));
     }
 
     /**
@@ -87,7 +87,7 @@ public class FlashcardService {
     public FlashcardResponse update(UUID id, FlashcardRequest request) {
         Flashcard flashcard = findByIdAndValidateUser(id);
         mapper.updateEntity(request, flashcard);
-        return mapper.toResponse(repository.save(flashcard));
+        return toResponseWithBounty(repository.save(flashcard));
     }
 
     /**
@@ -113,7 +113,7 @@ public class FlashcardService {
         srService.calculateNextRevision(flashcard, request.getDificuldade());
         flashcard.setLastStudiedAt(LocalDate.now());
         flashcard.setUltimaRevisao(LocalDate.now());
-        return mapper.toResponse(repository.save(flashcard));
+        return toResponseWithBounty(repository.save(flashcard));
     }
 
     /**
@@ -132,11 +132,21 @@ public class FlashcardService {
                 }
                 return f.getProximaRevisao() == null || !f.getProximaRevisao().isAfter(today);
             })
-            .map(mapper::toResponse)
+            .map(this::toResponseWithBounty)
             .collect(Collectors.toList());
         
         Collections.shuffle(queue);
         return queue;
+    }
+
+    private FlashcardResponse toResponseWithBounty(Flashcard entity) {
+        FlashcardResponse res = mapper.toResponse(entity);
+        if (res != null && entity != null) {
+            boolean isHardCount = entity.getConsecutiveHardCount() != null && entity.getConsecutiveHardCount() >= 2;
+            boolean isLowEase = entity.getEaseFactor() != null && entity.getEaseFactor() < 1.7;
+            res.setBountyCard(isHardCount || isLowEase);
+        }
+        return res;
     }
 
     /**
