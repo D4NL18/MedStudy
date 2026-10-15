@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { BancoEffects } from './banco.effects';
 import { BancoService } from '@core/services/banco.service';
 import * as BancoActions from './banco.actions';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('BancoEffects', () => {
   let actions$: Observable<any>;
@@ -22,6 +23,13 @@ describe('BancoEffects', () => {
       providers: [
         BancoEffects,
         provideMockActions(() => actions$),
+        provideMockStore({
+          initialState: {
+            banco: {
+              filters: { page: 0, size: 10 }
+            }
+          }
+        }),
         { provide: BancoService, useValue: bancoService }
       ]
     });

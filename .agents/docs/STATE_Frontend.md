@@ -36,5 +36,6 @@
 - [x] **5. Conquistas & Perfil:**
   - [x] Adicionado suporte aos novos badges no `perfil.component.ts` com mapeamento de ícones específicos (`FLASH_COMBO`, `FLASH_BOUNTY`, `FLASH_INBOX_ZERO`, `FLASH_`).
 - [x] **6. Validação e Qualidade:**
-  - [x] `ng build` do Angular compilado com 100% de sucesso sem erros.
-  - [x] Especificações de testes unitários anteriores ajustadas para manter a integridade de compilação dos specs.
+  - [x] `ng build` do Angular compilado com 100% de sucesso sem erros (Exit code 0).
+  - [x] Suíte de testes unitários do frontend (`ng test --no-watch --browsers=ChromeHeadless`) executada com **100% de aprovação (243 testes executados, 0 falhas, 243 sucessos)**.
+  - [x] Especificações de testes unitários e seletores ajustados para manter a integridade contínua da suíte.

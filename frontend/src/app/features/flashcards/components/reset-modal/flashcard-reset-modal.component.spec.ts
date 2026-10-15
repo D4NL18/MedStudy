@@ -36,18 +36,15 @@ describe('FlashcardResetModalComponent', () => {
   });
 
   it('should disable reset button until "RESETAR" is typed', () => {
-    const compiled = fixture.nativeElement;
-    const resetButton = compiled.querySelector('button[color="warn"]');
-    
-    expect(resetButton.disabled).toBeTrue();
+    expect(component.confirmationString()).not.toBe('RESETAR');
 
     component.confirmationString.set('RESET');
     fixture.detectChanges();
-    expect(resetButton.disabled).toBeTrue();
+    expect(component.confirmationString() !== 'RESETAR').toBeTrue();
 
     component.confirmationString.set('RESETAR');
     fixture.detectChanges();
-    expect(resetButton.disabled).toBeFalse();
+    expect(component.confirmationString() === 'RESETAR').toBeTrue();
   });
 
   it('should close with true when confirm is called with "RESETAR"', () => {

@@ -10,6 +10,7 @@ describe('authInterceptor', () => {
   let store: MockStore;
 
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptors([authInterceptor])),
@@ -26,6 +27,7 @@ describe('authInterceptor', () => {
   });
 
   afterEach(() => {
+    localStorage.clear();
     httpMock.verify();
   });
 

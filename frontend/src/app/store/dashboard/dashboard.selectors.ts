@@ -10,12 +10,12 @@ export const selectDashboardState = createFeatureSelector<DashboardState>('dashb
 
 export const selectDashboardKPIs = createSelector(
   selectDashboardState,
-  (state: DashboardState) => state.kpis
+  (state: DashboardState) => state?.kpis
 );
 
 export const selectDashboardLoading = createSelector(
   selectDashboardState,
-  (state) => state.loading
+  (state) => state?.loading
 );
 
 export const selectAreaAnalytics = createSelector(
@@ -30,5 +30,5 @@ export const selectTopErrors = createSelector(
 
 export const selectDashboardError = createSelector(
   selectDashboardState,
-  (state: DashboardState) => state.error
+  (state: DashboardState) => state?.error
 );

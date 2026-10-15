@@ -8,6 +8,8 @@ import { of } from 'rxjs';
 import { ImagePasteDirective } from '@shared/directives/image-paste.directive';
 import { ImageCompressorService } from '@core/services/image-compressor.service';
 
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 describe('FlashcardFormComponent', () => {
   MockInstance.scope();
 
@@ -17,6 +19,7 @@ describe('FlashcardFormComponent', () => {
       .mock(ImagePasteDirective)
       .mock(FlashcardService)
       .mock(ImageCompressorService)
+      .mock(MatDialogRef)
       .mock(Router);
   });
 
@@ -25,13 +28,13 @@ describe('FlashcardFormComponent', () => {
     expect(fixture.point.componentInstance).toBeTruthy();
   });
 
-  it('should navigate to flashcards on cancel', () => {
-    const navigateSpy = jasmine.createSpy('navigate');
-    MockInstance(Router, 'navigate', navigateSpy);
-    
+  it('should close dialog on cancel', () => {
     const fixture = MockRender(FlashcardFormComponent, null, { reset: true });
+    const dialogRef = fixture.point.injector.get(MatDialogRef);
+    const closeSpy = spyOn(dialogRef, 'close');
+    
     fixture.point.componentInstance.cancel();
-    expect(navigateSpy).toHaveBeenCalledWith(['/flashcards']);
+    expect(closeSpy).toHaveBeenCalledWith(false);
   });
 
   it('should convert HTML to Markdown correctly', () => {

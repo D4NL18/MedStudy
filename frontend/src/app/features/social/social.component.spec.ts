@@ -22,10 +22,10 @@ describe('SocialComponent', () => {
     expect(fixture.point.componentInstance).toBeTruthy();
   });
 
-  it('should start with activeTab = friends', () => {
+  it('should start with activeTab = feed', () => {
     const fixture = MockRender(SocialComponent);
     const comp = fixture.point.componentInstance;
-    expect(comp.activeTab()).toBe('friends');
+    expect(comp.activeTab()).toBe('feed');
   });
 
   it('should change active tab and load appropriate data', () => {

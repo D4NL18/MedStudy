@@ -15,7 +15,8 @@ export const StudyPlanActions = createActionGroup({
       grandeArea?: string, 
       prioridade?: string, 
       aulaAssistida?: boolean, 
-      tema?: string 
+      tema?: string,
+      sort?: string
     }>(),
     'Load Lessons Success': props<{ lessons: Lesson[], totalElements: number }>(),
     'Load Lessons Failure': props<{ error: string }>(),
@@ -27,7 +28,7 @@ export const StudyPlanActions = createActionGroup({
     'Create Lesson': props<{ lesson: Partial<Lesson> }>(),
     'Create Lesson Success': props<{ lesson: Lesson }>(),
     'Create Lesson Failure': props<{ error: string }>(),
-
+    
     'Update Lesson': props<{ id: string, lesson: Partial<Lesson> }>(),
     'Update Lesson Success': props<{ lesson: Lesson }>(),
     'Update Lesson Failure': props<{ error: string }>(),

@@ -16,7 +16,9 @@ describe('AuthSelectors', () => {
   });
 
   it('should select isAuthenticated', () => {
-    const result = Selectors.selectIsAuthenticated.projector('token');
+    const payload = btoa(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + 3600 }));
+    const validJwt = `header.${payload}.signature`;
+    const result = Selectors.selectIsAuthenticated.projector(validJwt);
     expect(result).toBeTrue();
   });
 

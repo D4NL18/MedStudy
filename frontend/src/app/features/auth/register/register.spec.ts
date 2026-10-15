@@ -3,6 +3,9 @@ import { RegisterComponent } from './register';
 import { provideRouter } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from '@core/services/auth.service';
+import { provideMockStore } from '@ngrx/store/testing';
+import { importProvidersFrom } from '@angular/core';
+import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
 import { of } from 'rxjs';
 
 describe('RegisterComponent', () => {
@@ -18,7 +21,9 @@ describe('RegisterComponent', () => {
       imports: [RegisterComponent, HttpClientTestingModule],
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: authServiceSpy }
+        provideMockStore({ initialState: { auth: { user: null, token: null, loading: false, error: null } } }),
+        { provide: AuthService, useValue: authServiceSpy },
+        importProvidersFrom(LucideAngularModule.pick({ Eye, EyeOff }))
       ]
     })
     .compileComponents();
@@ -32,5 +37,3 @@ describe('RegisterComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-

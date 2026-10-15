@@ -4,6 +4,8 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
 import { SentinelComponent } from '@shared/components/sentinel/sentinel.component';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('BancoListComponent', () => {
   MockInstance.scope();
@@ -12,6 +14,12 @@ describe('BancoListComponent', () => {
     return MockBuilder(BancoListComponent)
       .mock(MatDialog)
       .mock(SentinelComponent)
+      .provide({
+        provide: ActivatedRoute,
+        useValue: {
+          queryParams: of({})
+        }
+      })
       .provide(provideMockStore({
         initialState: {
           banco: {
@@ -43,7 +51,7 @@ describe('BancoListComponent', () => {
   it('should open create modal', () => {
     const fixture = MockRender(BancoListComponent, null, { reset: true });
     const dialog = fixture.point.injector.get(MatDialog);
-    const openSpy = spyOn(dialog, 'open').and.stub();
+    const openSpy = spyOn(dialog, 'open').and.callThrough();
     
     fixture.point.componentInstance.openCreateModal();
     
