@@ -112,6 +112,16 @@
 
   <!-- Celebration State / Fim de Sessão -->
   <div class="session-celebration-overlay" *ngIf="!(isReadOnly$ | async) && (isSessionOver$ | async)">
+    <div class="confetti-container">
+      <div 
+        *ngFor="let piece of confettiPieces" 
+        class="confetti-piece"
+        [style.left.%]="piece.left"
+        [style.animationDelay.s]="piece.animDelay"
+        [style.backgroundColor]="piece.color"
+      ></div>
+    </div>
+
     <div class="celebration-card animate-scale-up" (click)="$event.stopPropagation()">
       <div class="medal-icon-wrap">
         <svg viewBox="0 0 24 24" class="medal-svg" width="56" height="56" fill="none" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -120,7 +130,7 @@
         </svg>
       </div>
 
-      <h2>Plantão Concluído! 🎉</h2>
+      <h2>Sessão Concluída!</h2>
       <p class="celebration-subtitle">Você esvaziou sua fila diária e consolidou sua retenção neural.</p>
 
       <!-- Grade de Estatísticas da Sessão -->
@@ -159,7 +169,7 @@
       <!-- Ações do Modal -->
       <div class="celebration-actions">
         <button class="btn-primary" (click)="close()">
-          <lucide-icon name="home" [size]="18"></lucide-icon>
+          <lucide-icon name="layout-dashboard" [size]="18"></lucide-icon>
           Voltar ao Dashboard
         </button>
       </div>

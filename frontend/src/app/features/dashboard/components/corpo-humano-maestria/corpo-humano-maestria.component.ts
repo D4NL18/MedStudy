@@ -347,7 +347,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
             <div class="metrics-grid">
               <div class="metric-item">
-                <lucide-icon name="help-circle" [size]="16" class="m-icon"></lucide-icon>
+                <lucide-icon name="clipboard-list" [size]="16" class="m-icon"></lucide-icon>
                 <div class="m-data">
                   <span class="m-val">{{ area.questoesFeitas }}</span>
                   <span class="m-lbl">Questões Resolvidas</span>
@@ -355,12 +355,30 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
               </div>
 
               <div class="metric-item">
-                <lucide-icon name="check-check" [size]="16" class="m-icon"></lucide-icon>
+                <lucide-icon name="check-circle" [size]="16" class="m-icon"></lucide-icon>
                 <div class="m-data">
                   <span class="m-val">{{ area.taxaAcertoQuestoes }}%</span>
-                  <span class="m-lbl">Taxa de Acerto</span>
+                  <span class="m-lbl">Taxa de Acerto (Banco)</span>
                 </div>
               </div>
+
+              <ng-container *ngIf="(area.questoesSimulados ?? 0) > 0">
+                <div class="metric-item">
+                  <lucide-icon name="file-text" [size]="16" class="m-icon"></lucide-icon>
+                  <div class="m-data">
+                    <span class="m-val">{{ area.questoesSimulados }}</span>
+                    <span class="m-lbl">Questões em Simulados</span>
+                  </div>
+                </div>
+
+                <div class="metric-item">
+                  <lucide-icon name="award" [size]="16" class="m-icon"></lucide-icon>
+                  <div class="m-data">
+                    <span class="m-val">{{ area.taxaAcertoSimulados }}%</span>
+                    <span class="m-lbl">Taxa em Simulados</span>
+                  </div>
+                </div>
+              </ng-container>
 
               <div class="metric-item">
                 <lucide-icon name="layers" [size]="16" class="m-icon"></lucide-icon>
@@ -870,13 +888,13 @@ export class EstrelaVidaMaestriaComponent implements OnInit {
   selectedArea = signal<AreaMastery | null>(null);
 
   readonly tierLevels = [
-    { name: 'Bronze', range: '15-29%', color: '#CD7F32' },
-    { name: 'Prata', range: '30-44%', color: '#CBD5E1' },
-    { name: 'Ouro', range: '45-59%', color: '#EAB308' },
-    { name: 'Platina', range: '60-74%', color: '#7DD3FC' },
-    { name: 'Rubi', range: '75-84%', color: '#E11D48' },
-    { name: 'Esmeralda', range: '85-94%', color: '#10B981' },
-    { name: 'Diamante', range: '95-100%', color: '#38BDF8' }
+    { name: 'Bronze', range: '10-24%', color: '#CD7F32' },
+    { name: 'Prata', range: '25-39%', color: '#CBD5E1' },
+    { name: 'Ouro', range: '40-54%', color: '#EAB308' },
+    { name: 'Platina', range: '55-67%', color: '#7DD3FC' },
+    { name: 'Rubi', range: '68-75%', color: '#E11D48' },
+    { name: 'Esmeralda', range: '76-84%', color: '#10B981' },
+    { name: 'Diamante', range: '85-100%', color: '#38BDF8' }
   ];
 
   ngOnInit() {
@@ -943,7 +961,12 @@ export class EstrelaVidaMaestriaComponent implements OnInit {
   }
 
   getNextTierGap(percentage: number): number {
-    const nextGap = Math.max(0, 100 - percentage);
+    const nextThresholds = [10.0, 25.0, 40.0, 55.0, 68.0, 76.0, 85.0];
+    const target = nextThresholds.find(t => t > percentage);
+    if (!target) {
+      return 0.0;
+    }
+    const nextGap = Math.max(0, target - percentage);
     return Math.round(nextGap * 10) / 10;
   }
 }

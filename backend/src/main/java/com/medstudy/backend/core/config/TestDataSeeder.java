@@ -50,7 +50,6 @@ public class TestDataSeeder implements CommandLineRunner {
     public void run(String... args) {
         userRepository.findByEmail("user@test.com").ifPresent(this::seedForUser);
         userRepository.findByEmail("admin@test.com").ifPresent(this::seedForUser);
-        userRepository.findByEmail("admin@medstudy.com").ifPresent(this::seedForUser);
     }
 
     private void seedForUser(User user) {

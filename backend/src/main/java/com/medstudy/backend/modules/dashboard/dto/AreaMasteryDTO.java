@@ -48,4 +48,10 @@ public class AreaMasteryDTO {
 
     @Schema(description = "Total de aulas cadastradas na área", example = "18")
     private long totalAulas;
+
+    @Schema(description = "Total de questões de simulados resolvidas na área", example = "45")
+    private long questoesSimulados;
+
+    @Schema(description = "Taxa de acerto em simulados (%)", example = "75.0")
+    private double taxaAcertoSimulados;
 }

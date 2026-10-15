@@ -28,6 +28,8 @@ export interface AreaMastery {
   taxaRetencaoCards: number;
   aulasAssistidas: number;
   totalAulas: number;
+  questoesSimulados?: number;
+  taxaAcertoSimulados?: number;
 }
 
 export interface ClinicalMasteryResponse {

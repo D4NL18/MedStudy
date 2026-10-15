@@ -48,7 +48,7 @@ import { ToastService } from '@core/services/toast.service';
         <div class="action-buttons">
           <button 
             *ngIf="canExecuteRepair()" 
-            class="btn-repair glow-btn"
+            class="btn-repair"
             [disabled]="isRepairing()"
             (click)="triggerRepair()">
             <lucide-icon name="check-circle" [size]="18"></lucide-icon>
@@ -57,7 +57,7 @@ import { ToastService } from '@core/services/toast.service';
 
           <button 
             *ngIf="!canExecuteRepair()" 
-            class="btn-action pulse-cta"
+            class="btn-action"
             (click)="goToStudy()">
             <lucide-icon name="play" [size]="18"></lucide-icon>
             Continuar Missão
@@ -173,10 +173,9 @@ import { ToastService } from '@core/services/toast.service';
 
         .progress-bar-fill {
           height: 100%;
-          background: linear-gradient(90deg, #F59E0B, #10B981);
+          background: var(--color-primary, #10B981);
           border-radius: 999px;
           transition: width 0.4s ease-out;
-          box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
       }
     }
@@ -209,22 +208,22 @@ import { ToastService } from '@core/services/toast.service';
         .btn-action {
           background: linear-gradient(135deg, #F59E0B, #D97706);
           color: #ffffff;
-          box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+          box-shadow: none;
 
           &:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45);
+            box-shadow: none;
           }
         }
 
         .btn-repair {
           background: linear-gradient(135deg, #10B981, #059669);
           color: #ffffff;
-          box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+          box-shadow: none;
 
           &:hover {
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
+            box-shadow: none;
           }
         }
       }

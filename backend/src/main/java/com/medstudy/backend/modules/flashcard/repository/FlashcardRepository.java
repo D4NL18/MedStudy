@@ -127,6 +127,6 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, UUID>, Jpa
      * @param grandeArea the subject area to filter by, or null for all
      */
     @org.springframework.data.jpa.repository.Modifying(clearAutomatically = true)
-    @org.springframework.data.jpa.repository.Query("UPDATE Flashcard f SET f.intervaloAtual = 0, f.easeFactor = 2.5, f.proximaRevisao = CURRENT_DATE, f.consecutiveHardCount = 0 WHERE f.user.id = :userId AND (:grandeArea IS NULL OR f.grandeArea = :grandeArea)")
+    @org.springframework.data.jpa.repository.Query("UPDATE Flashcard f SET f.intervaloAtual = 0, f.proximaRevisao = CURRENT_DATE WHERE f.user.id = :userId AND (:grandeArea IS NULL OR f.grandeArea = :grandeArea)")
     void resetProgress(@org.springframework.data.repository.query.Param("userId") UUID userId, @org.springframework.data.repository.query.Param("grandeArea") String grandeArea);
 }
