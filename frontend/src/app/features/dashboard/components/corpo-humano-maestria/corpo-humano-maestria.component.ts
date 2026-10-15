@@ -391,18 +391,6 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
               <span>Próximo Tier em <strong>{{ getNextTierGap(area.masteryPercentage) }}%</strong> de evolução</span>
             </div>
           </div>
-
-          <!-- Mini Lista de Seleção Rápida de Áreas -->
-          <div class="quick-nav">
-            <button *ngFor="let a of data()?.areas" 
-                    class="nav-chip"
-                    [class.active]="selectedArea()?.grandeArea === a.grandeArea"
-                    (click)="selectedArea.set(a)">
-              <span class="chip-dot" [style.background-color]="getTierColor(a.tier)"></span>
-              <span class="chip-name">{{ a.displayName }}</span>
-              <span class="chip-tier">{{ a.masteryPercentage }}%</span>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -816,45 +804,6 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
         strong {
           color: var(--color-text, #ffffff);
-        }
-      }
-
-      .quick-nav {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-
-        .nav-chip {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 14px;
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
-          color: var(--color-text-muted, #94A3B8);
-          cursor: pointer;
-          font-size: 0.8rem;
-          font-weight: 600;
-          transition: all 0.2s;
-
-          .chip-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-          }
-
-          .chip-tier {
-            color: var(--color-text, #ffffff);
-            font-weight: 700;
-          }
-
-          &:hover, &.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--color-text, #ffffff);
-            border-color: var(--color-border, rgba(255, 255, 255, 0.2));
-            transform: translateY(-1px);
-          }
         }
       }
     }
