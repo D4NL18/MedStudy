@@ -21,7 +21,7 @@ import { ExportButtonComponent } from '@shared/components/export-button/export-b
 import { ModalLayoutComponent } from '@shared/components/modal-layout/modal-layout.component';
 import { Router } from '@angular/router';
 
-import { CorpoHumanoMaestriaComponent } from './components/corpo-humano-maestria/corpo-humano-maestria.component';
+import { EstrelaVidaMaestriaComponent } from './components/corpo-humano-maestria/corpo-humano-maestria.component';
 import { StreakRepairBannerComponent } from './components/streak-repair-banner/streak-repair-banner.component';
 
 @Component({
@@ -38,7 +38,7 @@ import { StreakRepairBannerComponent } from './components/streak-repair-banner/s
     ExportButtonComponent,
     RouterLink,
     ModalLayoutComponent,
-    CorpoHumanoMaestriaComponent,
+    EstrelaVidaMaestriaComponent,
     StreakRepairBannerComponent
   ],
   templateUrl: './dashboard.component.html',

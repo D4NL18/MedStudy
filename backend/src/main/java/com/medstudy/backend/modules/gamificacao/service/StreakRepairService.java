@@ -130,11 +130,17 @@ public class StreakRepairService {
         UUID userId = user.getId();
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
+        LocalDate dayBeforeYesterday = today.minusDays(2);
 
         int currentStreak = calculateEffectiveStreak(userId);
 
         boolean hadActivityYesterday = hasActivityOnDate(userId, yesterday);
-        boolean streakAtRisk = !hadActivityYesterday;
+        boolean hadActivityDayBefore = hasActivityOnDate(userId, dayBeforeYesterday);
+        boolean streakAtRisk = !hadActivityYesterday && hadActivityDayBefore;
+
+        if (streakAtRisk && currentStreak == 0) {
+            currentStreak = calculateStreakEndingOn(userId, dayBeforeYesterday);
+        }
 
         Optional<StreakRepair> lastRepairOpt = streakRepairRepository.findTopByUserIdOrderByCreatedAtDesc(userId);
         LocalDateTime lastRepairedAt = lastRepairOpt.map(StreakRepair::getCreatedAt).orElse(null);
@@ -160,6 +166,33 @@ public class StreakRepairService {
                 .currentRepairedCount((int) cardsStudiedToday)
                 .lastRepairedAt(lastRepairedAt)
                 .build();
+    }
+
+    private int calculateStreakEndingOn(UUID userId, LocalDate endDate) {
+        List<LocalDate> sessionDates = studySessionRepository.findDistinctSessionDatesByUserId(userId);
+        List<LocalDate> repairedDates = streakRepairRepository.findRepairedDatesByUserId(userId);
+
+        Set<LocalDate> allDatesSet = new HashSet<>(sessionDates);
+        allDatesSet.addAll(repairedDates);
+
+        if (!allDatesSet.contains(endDate)) {
+            return 0;
+        }
+
+        List<LocalDate> sortedDates = allDatesSet.stream()
+                .filter(d -> !d.isAfter(endDate))
+                .sorted(Comparator.reverseOrder())
+                .toList();
+
+        int streak = 1;
+        for (int i = 0; i < sortedDates.size() - 1; i++) {
+            if (ChronoUnit.DAYS.between(sortedDates.get(i + 1), sortedDates.get(i)) == 1) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+        return streak;
     }
 
     /**

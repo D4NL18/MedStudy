@@ -51,6 +51,7 @@ public class StudySessionService {
 
     private final org.springframework.context.ApplicationEventPublisher eventPublisher;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public StudySessionService(StudySessionRepository repository, 
                                UserRepository userRepository, 
                                StudySessionMapper mapper,

@@ -5,7 +5,7 @@ import { ClinicalMasteryService } from '@core/services/clinical-mastery.service'
 import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/clinical-mastery.model';
 
 @Component({
-  selector: 'app-corpo-humano-maestria',
+  selector: 'app-estrela-maestria, app-corpo-humano-maestria',
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
   template: `
@@ -14,11 +14,11 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       <div class="maestria-header">
         <div class="title-wrap">
           <div class="icon-avatar">
-            <lucide-icon name="activity" [size]="22"></lucide-icon>
+            <lucide-icon name="sparkles" [size]="22"></lucide-icon>
           </div>
           <div>
-            <h3>Mapa de Maestria Clínica Anatômica</h3>
-            <p>Evolução integrada do conhecimento médico distribuído por sistemas do corpo humano</p>
+            <h3>Estrela da Vida — Maestria Clínica</h3>
+            <p>Os 5 pilares fundamentais da formação médica integrados na clássica mandala de excelência</p>
           </div>
         </div>
 
@@ -31,14 +31,14 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
         </div>
       </div>
 
-      <!-- Área de Visualização Principal: SVG Anatômico + Detalhes / Legenda -->
+      <!-- Área de Visualização Principal: Estrela da Vida SVG + Detalhes / Legenda -->
       <div class="maestria-body">
-        <!-- SVG Anatômico Interativo -->
+        <!-- Estrela da Vida SVG Interativa -->
         <div class="svg-stage">
-          <svg viewBox="0 0 400 680" class="human-body-svg" preserveAspectRatio="xMidYMid meet">
+          <svg viewBox="0 0 560 560" class="estrela-vida-svg" preserveAspectRatio="xMidYMid meet">
             <defs>
-              <!-- Filtro de Glow -->
-              <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <!-- Filtro de Glow Neon -->
+              <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
                 <feGaussianBlur stdDeviation="6" result="blur" />
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
@@ -46,13 +46,13 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
               <!-- Filtro de Brilho Estelar Diamante -->
               <filter id="diamondShine" x="-30%" y="-30%" width="160%" height="160%">
                 <feGaussianBlur stdDeviation="9" result="blur" />
-                <feSpecularLighting result="specOut" in="blur" specularConstant="1.2" specularExponent="20" lighting-color="#ffffff">
-                  <fePointLight x="200" y="200" z="200" />
+                <feSpecularLighting result="specOut" in="blur" specularConstant="1.4" specularExponent="22" lighting-color="#ffffff">
+                  <fePointLight x="280" y="280" z="220" />
                 </feSpecularLighting>
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
 
-              <!-- Gradientes de Tiers -->
+              <!-- Gradientes dos 7 Tiers -->
               <!-- Bronze -->
               <linearGradient id="grad-BRONZE" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#CD7F32" />
@@ -102,92 +102,222 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
                 <stop offset="70%" stop-color="#A78BFA" />
                 <stop offset="100%" stop-color="#38BDF8" />
               </linearGradient>
+
+              <!-- Gradiente Dourado para o Bastão de Asclépio -->
+              <linearGradient id="grad-asclepius" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FEF08A" />
+                <stop offset="50%" stop-color="#F59E0B" />
+                <stop offset="100%" stop-color="#B45309" />
+              </linearGradient>
+
+              <!-- Definição da Ponta Master (Apontando para cima, 0 deg) -->
+              <g id="star-arm-master">
+                <!-- Faceta Esquerda (Reflexo de Luz Primário) -->
+                <path class="arm-facet arm-facet-left"
+                      d="M 280,36 L 252,58 L 256,185 L 263,217 L 280,215 Z" />
+                <!-- Faceta Direita (Sombra/Profundidade Chanfrada 3D) -->
+                <path class="arm-facet arm-facet-right"
+                      d="M 280,36 L 308,58 L 304,185 L 297,217 L 280,215 Z" />
+                <!-- Ranhuras Geométricas de Nível (Marcadores de 33% e 66%) -->
+                <path class="arm-groove" d="M 255,145 L 280,135 L 305,145" />
+                <path class="arm-groove" d="M 253,95 L 280,85 L 307,95" />
+                <!-- Contorno de Borda Chanfrada com Glow -->
+                <path class="arm-outline"
+                      d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
+              </g>
             </defs>
 
-            <!-- 5. Silhueta de Fundo / Aura Sistêmica (Medicina Preventiva & Social) -->
-            <g class="anatomical-region prevent-aura"
-               [class.active]="selectedArea()?.grandeArea === 'MEDICINA_PREVENTIVA'"
-               (mouseenter)="onHoverArea('MEDICINA_PREVENTIVA')"
-               (click)="onSelectArea('MEDICINA_PREVENTIVA')">
-              <!-- Aura Exterior & Sistema Circulatório Periférico -->
-              <path class="organ-fill aura-path"
-                    d="M 200,20 C 235,20 250,45 250,75 C 250,95 240,110 230,120 C 275,135 320,165 330,220 C 342,280 345,360 340,430 C 335,465 320,470 310,440 C 300,380 295,290 280,225 C 270,250 268,340 268,430 C 268,520 270,610 265,650 C 260,665 240,665 235,640 C 225,580 220,490 215,445 C 210,440 205,440 200,440 C 195,440 190,440 185,445 C 180,490 175,580 165,640 C 160,665 140,665 135,650 C 130,610 132,520 132,430 C 132,340 130,250 120,225 C 105,290 100,380 90,440 C 80,470 65,465 60,430 C 55,360 58,280 70,220 C 80,165 125,135 170,120 C 160,110 150,95 150,75 C 150,45 165,20 200,20 Z"
-                    [attr.fill]="getAreaFill('MEDICINA_PREVENTIVA')"
-                    [attr.filter]="getTierFilter('MEDICINA_PREVENTIVA')">
-              </path>
-              <!-- Linha de Contorno Dourado -->
-              <path class="organ-stroke stroke-preventiva"
-                    d="M 200,20 C 235,20 250,45 250,75 C 250,95 240,110 230,120 C 275,135 320,165 330,220 C 342,280 345,360 340,430 C 335,465 320,470 310,440 C 300,380 295,290 280,225 C 270,250 268,340 268,430 C 268,520 270,610 265,650 C 260,665 240,665 235,640 C 225,580 220,490 215,445 C 210,440 205,440 200,440 C 195,440 190,440 185,445 C 180,490 175,580 165,640 C 160,665 140,665 135,650 C 130,610 132,520 132,430 C 132,340 130,250 120,225 C 105,290 100,380 90,440 C 80,470 65,465 60,430 C 55,360 58,280 70,220 C 80,165 125,135 170,120 C 160,110 150,95 150,75 C 150,45 165,20 200,20 Z">
-              </path>
-            </g>
+            <!-- Círculos de Fundo Geométricos (Aura Astronômica/Médica) -->
+            <circle cx="280" cy="280" r="255" class="bg-orbit-ring ring-outer" />
+            <circle cx="280" cy="280" r="235" class="bg-orbit-ring ring-dashed" />
+            <circle cx="280" cy="280" r="150" class="bg-orbit-ring ring-mid" />
 
-            <!-- 3. Pediatria: Cabeça & Vias Aéreas Superiores / Tronco Cervical -->
-            <g class="anatomical-region pediatria-region"
-               [class.active]="selectedArea()?.grandeArea === 'PEDIATRIA'"
-               (mouseenter)="onHoverArea('PEDIATRIA')"
-               (click)="onSelectArea('PEDIATRIA')">
-              <path class="organ-fill"
-                    d="M 200,30 C 225,30 240,48 240,75 C 240,105 224,124 212,130 L 212,142 L 188,142 L 188,130 C 176,124 160,105 160,75 C 160,48 175,30 200,30 Z"
-                    [attr.fill]="getAreaFill('PEDIATRIA')"
-                    [attr.filter]="getTierFilter('PEDIATRIA')">
-              </path>
-              <path class="organ-stroke stroke-pediatria"
-                    d="M 200,30 C 225,30 240,48 240,75 C 240,105 224,124 212,130 L 212,142 L 188,142 L 188,130 C 176,124 160,105 160,75 C 160,48 175,30 200,30 Z">
-              </path>
-            </g>
-
-            <!-- 1. Clínica Médica: Tórax, Coração e Pulmões -->
-            <g class="anatomical-region clinica-region"
+            <!-- ========================================== -->
+            <!-- 1. CLÍNICA MÉDICA (Ponta Superior - 0°) -->
+            <!-- ========================================== -->
+            <g class="star-arm-group"
                [class.active]="selectedArea()?.grandeArea === 'CLINICA_MEDICA'"
                (mouseenter)="onHoverArea('CLINICA_MEDICA')"
                (click)="onSelectArea('CLINICA_MEDICA')">
-              <path class="organ-fill"
-                    d="M 188,142 L 212,142 C 245,146 265,160 270,185 C 275,215 260,250 250,265 C 230,270 205,270 200,270 C 195,270 170,270 150,265 C 140,250 125,215 130,185 C 135,160 155,146 188,142 Z"
-                    [attr.fill]="getAreaFill('CLINICA_MEDICA')"
-                    [attr.filter]="getTierFilter('CLINICA_MEDICA')">
-              </path>
-              <path class="organ-stroke stroke-clinica"
-                    d="M 188,142 L 212,142 C 245,146 265,160 270,185 C 275,215 260,250 250,265 C 230,270 205,270 200,270 C 195,270 170,270 150,265 C 140,250 125,215 130,185 C 135,160 155,146 188,142 Z">
-              </path>
-              <!-- Ícone Simbólico do Coração Clínico -->
-              <circle cx="215" cy="205" r="7" fill="#60A5FA" opacity="0.8" class="pulse-point" />
+              <g transform="rotate(0 280 280)">
+                <g [attr.fill]="getAreaFill('CLINICA_MEDICA')"
+                   [attr.filter]="getTierFilter('CLINICA_MEDICA')">
+                  <use href="#star-arm-master" />
+                </g>
+                <!-- Contorno da área -->
+                <path class="arm-stroke stroke-clinica"
+                      d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
+                <!-- Ícone da Especialidade (ECG / Pulso Cardíaco Clínico) -->
+                <g transform="translate(280, 115) rotate(0)">
+                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <path d="M -13,0 L -7,0 L -3,-9 L 1,11 L 5,-6 L 8,3 L 13,0"
+                        fill="none" stroke="#93C5FD" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                </g>
+              </g>
+              <!-- Tag de Identificação Superior -->
+              <g class="arm-tag tag-top" (click)="onSelectArea('CLINICA_MEDICA')">
+                <rect x="200" y="6" width="160" height="26" rx="13" class="tag-bg" />
+                <circle cx="214" cy="19" r="4.5" fill="#3B82F6" />
+                <text x="226" y="23" class="tag-text">Clínica Médica</text>
+                <text x="345" y="23" text-anchor="end" class="tag-percent">{{ getAreaPercent('CLINICA_MEDICA') }}%</text>
+              </g>
             </g>
 
-            <!-- 2. Cirurgia Geral: Abdome, Fígado e TGI -->
-            <g class="anatomical-region cirurgia-region"
+            <!-- ========================================== -->
+            <!-- 2. CIRURGIA GERAL (Ponta Superior Direita - 72°) -->
+            <!-- ========================================== -->
+            <g class="star-arm-group"
                [class.active]="selectedArea()?.grandeArea === 'CIRURGIA_GERAL'"
                (mouseenter)="onHoverArea('CIRURGIA_GERAL')"
                (click)="onSelectArea('CIRURGIA_GERAL')">
-              <path class="organ-fill"
-                    d="M 150,265 C 170,270 195,270 200,270 C 205,270 230,270 250,265 C 255,290 255,325 248,350 C 235,360 215,365 200,365 C 185,365 165,360 152,350 C 145,325 145,290 150,265 Z"
-                    [attr.fill]="getAreaFill('CIRURGIA_GERAL')"
-                    [attr.filter]="getTierFilter('CIRURGIA_GERAL')">
-              </path>
-              <path class="organ-stroke stroke-cirurgia"
-                    d="M 150,265 C 170,270 195,270 200,270 C 205,270 230,270 250,265 C 255,290 255,325 248,350 C 235,360 215,365 200,365 C 185,365 165,360 152,350 C 145,325 145,290 150,265 Z">
-              </path>
+              <g transform="rotate(72 280 280)">
+                <g [attr.fill]="getAreaFill('CIRURGIA_GERAL')"
+                   [attr.filter]="getTierFilter('CIRURGIA_GERAL')">
+                  <use href="#star-arm-master" />
+                </g>
+                <path class="arm-stroke stroke-cirurgia"
+                      d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
+                <!-- Ícone da Especialidade (Bisturi de Precisão Cirúrgica) -->
+                <g transform="translate(280, 115) rotate(-72)">
+                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <path d="M -9,9 L 3,-3 C 7,-7 12,-9 12,-9 C 12,-9 9,-4 5,0 L -7,12 Z"
+                        fill="none" stroke="#FDBA74" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <line x1="-3" y1="3" x2="-6" y2="6" stroke="#FDBA74" stroke-width="1.8" />
+                </g>
+              </g>
+              <!-- Tag de Identificação Superior Direita -->
+              <g class="arm-tag tag-tr" (click)="onSelectArea('CIRURGIA_GERAL')">
+                <rect x="390" y="110" width="155" height="26" rx="13" class="tag-bg" />
+                <circle cx="404" cy="123" r="4.5" fill="#F97316" />
+                <text x="416" y="127" class="tag-text">Cirurgia Geral</text>
+                <text x="532" y="127" text-anchor="end" class="tag-percent">{{ getAreaPercent('CIRURGIA_GERAL') }}%</text>
+              </g>
             </g>
 
-            <!-- 4. Ginecologia e Obstetrícia: Pelve & Urogenital -->
-            <g class="anatomical-region go-region"
+            <!-- ========================================== -->
+            <!-- 3. GINECOLOGIA E OBSTETRÍCIA (Ponta Inferior Direita - 144°) -->
+            <!-- ========================================== -->
+            <g class="star-arm-group"
                [class.active]="selectedArea()?.grandeArea === 'GINECOLOGIA_OBSTETRICIA'"
                (mouseenter)="onHoverArea('GINECOLOGIA_OBSTETRICIA')"
                (click)="onSelectArea('GINECOLOGIA_OBSTETRICIA')">
-              <path class="organ-fill"
-                    d="M 152,350 C 165,360 185,365 200,365 C 215,365 235,360 248,350 C 255,375 250,405 240,430 C 225,442 210,445 200,445 C 190,445 175,442 160,430 C 150,405 145,375 152,350 Z"
-                    [attr.fill]="getAreaFill('GINECOLOGIA_OBSTETRICIA')"
-                    [attr.filter]="getTierFilter('GINECOLOGIA_OBSTETRICIA')">
-              </path>
-              <path class="organ-stroke stroke-go"
-                    d="M 152,350 C 165,360 185,365 200,365 C 215,365 235,360 248,350 C 255,375 250,405 240,430 C 225,442 210,445 200,445 C 190,445 175,442 160,430 C 150,405 145,375 152,350 Z">
-              </path>
+              <g transform="rotate(144 280 280)">
+                <g [attr.fill]="getAreaFill('GINECOLOGIA_OBSTETRICIA')"
+                   [attr.filter]="getTierFilter('GINECOLOGIA_OBSTETRICIA')">
+                  <use href="#star-arm-master" />
+                </g>
+                <path class="arm-stroke stroke-go"
+                      d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
+                <!-- Ícone da Especialidade (Símbolo de Vênus & Ciclo da Vida) -->
+                <g transform="translate(280, 115) rotate(-144)">
+                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <circle cx="0" cy="-3" r="7" fill="none" stroke="#F472B6" stroke-width="2.2" />
+                  <line x1="0" y1="4" x2="0" y2="12" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round" />
+                  <line x1="-4" y1="8" x2="4" y2="8" stroke="#F472B6" stroke-width="2.2" stroke-linecap="round" />
+                </g>
+              </g>
+              <!-- Tag de Identificação Inferior Direita -->
+              <g class="arm-tag tag-br" (click)="onSelectArea('GINECOLOGIA_OBSTETRICIA')">
+                <rect x="375" y="490" width="168" height="26" rx="13" class="tag-bg" />
+                <circle cx="389" cy="503" r="4.5" fill="#EC4899" />
+                <text x="401" y="507" class="tag-text">Gineco & Obstetrícia</text>
+                <text x="532" y="507" text-anchor="end" class="tag-percent">{{ getAreaPercent('GINECOLOGIA_OBSTETRICIA') }}%</text>
+              </g>
             </g>
 
-            <!-- Pontos de Conexão Estilizados -->
-            <circle cx="200" cy="75" r="3" fill="#10B981" />
-            <circle cx="200" cy="205" r="3" fill="#3B82F6" />
-            <circle cx="200" cy="310" r="3" fill="#F97316" />
-            <circle cx="200" cy="395" r="3" fill="#EC4899" />
+            <!-- ========================================== -->
+            <!-- 4. MEDICINA PREVENTIVA (Ponta Inferior Esquerda - 216°) -->
+            <!-- ========================================== -->
+            <g class="star-arm-group"
+               [class.active]="selectedArea()?.grandeArea === 'MEDICINA_PREVENTIVA'"
+               (mouseenter)="onHoverArea('MEDICINA_PREVENTIVA')"
+               (click)="onSelectArea('MEDICINA_PREVENTIVA')">
+              <g transform="rotate(216 280 280)">
+                <g [attr.fill]="getAreaFill('MEDICINA_PREVENTIVA')"
+                   [attr.filter]="getTierFilter('MEDICINA_PREVENTIVA')">
+                  <use href="#star-arm-master" />
+                </g>
+                <path class="arm-stroke stroke-preventiva"
+                      d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
+                <!-- Ícone da Especialidade (Escudo Protetor & Saúde Pública) -->
+                <g transform="translate(280, 115) rotate(-216)">
+                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <path d="M 0,-11 L 9,-6 C 9,4 0,11 0,11 C 0,11 -9,4 -9,-6 Z"
+                        fill="none" stroke="#FACC15" stroke-width="2" stroke-linejoin="round" />
+                  <path d="M 0,-5 L 0,3 M -4,-1 L 4,-1" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" />
+                </g>
+              </g>
+              <!-- Tag de Identificação Inferior Esquerda -->
+              <g class="arm-tag tag-bl" (click)="onSelectArea('MEDICINA_PREVENTIVA')">
+                <rect x="18" y="490" width="168" height="26" rx="13" class="tag-bg" />
+                <circle cx="32" cy="503" r="4.5" fill="#EAB308" />
+                <text x="44" y="507" class="tag-text">Medicina Preventiva</text>
+                <text x="175" y="507" text-anchor="end" class="tag-percent">{{ getAreaPercent('MEDICINA_PREVENTIVA') }}%</text>
+              </g>
+            </g>
+
+            <!-- ========================================== -->
+            <!-- 5. PEDIATRIA (Ponta Superior Esquerda - 288°) -->
+            <!-- ========================================== -->
+            <g class="star-arm-group"
+               [class.active]="selectedArea()?.grandeArea === 'PEDIATRIA'"
+               (mouseenter)="onHoverArea('PEDIATRIA')"
+               (click)="onSelectArea('PEDIATRIA')">
+              <g transform="rotate(288 280 280)">
+                <g [attr.fill]="getAreaFill('PEDIATRIA')"
+                   [attr.filter]="getTierFilter('PEDIATRIA')">
+                  <use href="#star-arm-master" />
+                </g>
+                <path class="arm-stroke stroke-pediatria"
+                      d="M 280,36 L 308,58 L 304,185 L 297,217 A 65 65 0 0 1 263,217 L 256,185 L 252,58 Z" />
+                <!-- Ícone da Especialidade (Pegada Neonatal / Cuidados da Infância) -->
+                <g transform="translate(280, 115) rotate(-288)">
+                  <circle cx="0" cy="0" r="18" class="icon-backing" />
+                  <ellipse cx="-1" cy="2" rx="5.5" ry="8" transform="rotate(-10 -1 2)" fill="#34D399" opacity="0.9" />
+                  <circle cx="-5" cy="-8" r="1.6" fill="#34D399" />
+                  <circle cx="-1.5" cy="-9.5" r="1.6" fill="#34D399" />
+                  <circle cx="2" cy="-9" r="1.5" fill="#34D399" />
+                  <circle cx="5" cy="-7" r="1.3" fill="#34D399" />
+                  <circle cx="7" cy="-4" r="1.1" fill="#34D399" />
+                </g>
+              </g>
+              <!-- Tag de Identificação Superior Esquerda -->
+              <g class="arm-tag tag-tl" (click)="onSelectArea('PEDIATRIA')">
+                <rect x="20" y="110" width="145" height="26" rx="13" class="tag-bg" />
+                <circle cx="34" cy="123" r="4.5" fill="#10B981" />
+                <text x="46" y="127" class="tag-text">Pediatria</text>
+                <text x="154" y="127" text-anchor="end" class="tag-percent">{{ getAreaPercent('PEDIATRIA') }}%</text>
+              </g>
+            </g>
+
+            <!-- ========================================== -->
+            <!-- MEDALHÃO CENTRAL: BASTÃO DE ASCLÉPIO -->
+            <!-- ========================================== -->
+            <g class="center-medallion">
+              <!-- Halo de Luz do Núcleo -->
+              <circle cx="280" cy="280" r="62" class="medallion-halo" />
+              <!-- Anel com Ticks / Cronômetro Radial -->
+              <circle cx="280" cy="280" r="58" class="medallion-ring" />
+              <!-- Fundo Escuro Metalizado do Núcleo -->
+              <circle cx="280" cy="280" r="50" class="medallion-core" />
+
+              <!-- Bastão de Asclépio Dourado Central -->
+              <!-- Bastão Rígido -->
+              <line x1="280" y1="244" x2="280" y2="314"
+                    stroke="url(#grad-asclepius)" stroke-width="3.5" stroke-linecap="round" />
+              <!-- Pomo Superior -->
+              <circle cx="280" cy="242" r="3.5" fill="#FEF08A" />
+
+              <!-- Serpente Sagrada Enrolada (3 Voltas Sinusoidais) -->
+              <path class="asclepius-snake"
+                    d="M 276,246 C 273,248 274,253 283,256 C 291,259 290,266 277,269 C 270,271 270,277 283,281 C 291,284 290,291 278,294 C 274,295 273,300 277,303 C 281,306 283,310 280,314"
+                    fill="none" stroke="url(#grad-asclepius)" stroke-width="3" stroke-linecap="round" />
+              <!-- Olho Brilhante da Serpente -->
+              <circle cx="275" cy="246" r="0.9" fill="#FFFFFF" />
+
+              <!-- Brilho no Centro -->
+              <circle cx="280" cy="280" r="4" fill="#FEF08A" opacity="0.6" class="center-pulse" />
+            </g>
           </svg>
         </div>
 
@@ -258,7 +388,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
             <div class="tier-hint">
               <lucide-icon name="sparkles" [size]="14"></lucide-icon>
-              <span>Próximo Tier em <strong>{{ 100 - area.masteryPercentage }}%</strong> de evolução</span>
+              <span>Próximo Tier em <strong>{{ getNextTierGap(area.masteryPercentage) }}%</strong> de evolução</span>
             </div>
           </div>
 
@@ -305,12 +435,13 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           width: 44px;
           height: 44px;
           border-radius: 12px;
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2));
-          border: 1px solid rgba(59, 130, 246, 0.3);
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(234, 179, 8, 0.25));
+          border: 1px solid rgba(59, 130, 246, 0.35);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #38BDF8;
+          color: #FACC15;
+          box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
         }
 
         h3 {
@@ -318,6 +449,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
           font-size: 1.25rem;
           font-weight: 800;
           color: var(--color-text, #ffffff);
+          letter-spacing: -0.01em;
         }
 
         p {
@@ -365,11 +497,11 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
 
     .maestria-body {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 460px 1fr;
       gap: 32px;
       align-items: center;
 
-      @media (max-width: 900px) {
+      @media (max-width: 1080px) {
         grid-template-columns: 1fr;
       }
     }
@@ -378,64 +510,194 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle, rgba(30, 41, 59, 0.4) 0%, transparent 75%);
+      background: radial-gradient(circle, rgba(30, 41, 59, 0.45) 0%, transparent 75%);
       border-radius: 20px;
-      padding: 12px;
+      padding: 10px;
 
-      .human-body-svg {
+      .estrela-vida-svg {
         width: 100%;
-        max-width: 320px;
+        max-width: 440px;
         height: auto;
-        max-height: 520px;
-        filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6));
+        filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
       }
     }
 
-    .anatomical-region {
-      cursor: pointer;
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Elementos Geométricos de Fundo */
+    .bg-orbit-ring {
+      fill: none;
+      pointer-events: none;
 
-      .organ-fill {
-        transition: all 0.35s ease;
+      &.ring-outer {
+        stroke: rgba(255, 255, 255, 0.04);
+        stroke-width: 1;
       }
 
-      .organ-stroke {
+      &.ring-dashed {
+        stroke: rgba(255, 255, 255, 0.07);
+        stroke-width: 1.2;
+        stroke-dasharray: 4 8;
+        animation: rotateOrbits 60s infinite linear;
+        transform-origin: 280px 280px;
+      }
+
+      &.ring-mid {
+        stroke: rgba(255, 255, 255, 0.05);
+        stroke-width: 1;
+      }
+    }
+
+    @keyframes rotateOrbits {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Grupos das Pontas da Estrela */
+    .star-arm-group {
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      .arm-facet {
+        transition: all 0.3s ease;
+      }
+
+      .arm-facet-left {
+        fill-opacity: 0.95;
+      }
+
+      .arm-facet-right {
+        fill-opacity: 0.72;
+      }
+
+      .arm-groove {
         fill: none;
-        stroke-width: 3.5px;
+        stroke: rgba(255, 255, 255, 0.25);
+        stroke-width: 1.2;
+        stroke-linecap: round;
+      }
+
+      .arm-outline {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.15);
+        stroke-width: 1.2;
+      }
+
+      .arm-stroke {
+        fill: none;
+        stroke-width: 2.8px;
         stroke-linecap: round;
         stroke-linejoin: round;
-        transition: stroke-width 0.3s, filter 0.3s;
+        transition: all 0.3s ease;
       }
 
       .stroke-clinica { stroke: #3B82F6; }
       .stroke-cirurgia { stroke: #F97316; }
       .stroke-pediatria { stroke: #10B981; }
       .stroke-go { stroke: #EC4899; }
-      .stroke-preventiva { stroke: #EAB308; stroke-dasharray: 6 3; stroke-width: 2.5px; opacity: 0.75; }
+      .stroke-preventiva { stroke: #EAB308; }
 
+      .icon-backing {
+        fill: rgba(15, 23, 42, 0.85);
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 1;
+        transition: all 0.3s ease;
+      }
+
+      /* Hover & Ativo */
       &:hover, &.active {
-        .organ-fill {
-          opacity: 1 !important;
-          transform: scale(1.02);
-          transform-origin: center;
+        transform: scale(1.025);
+        transform-origin: 280px 280px;
+
+        .arm-stroke {
+          stroke-width: 4.5px;
+          filter: drop-shadow(0 0 12px currentColor);
         }
 
-        .organ-stroke {
-          stroke-width: 5px;
-          filter: drop-shadow(0 0 10px currentColor);
+        .icon-backing {
+          fill: rgba(15, 23, 42, 0.95);
+          stroke: #ffffff;
+          stroke-width: 1.5;
+        }
+
+        .arm-tag .tag-bg {
+          fill: rgba(30, 41, 59, 0.95);
+          stroke: rgba(255, 255, 255, 0.35);
         }
       }
     }
 
-    .pulse-point {
-      animation: heartBeat 1.8s infinite ease-in-out;
+    /* Tags Interativas em volta da Estrela */
+    .arm-tag {
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      .tag-bg {
+        fill: rgba(15, 23, 42, 0.78);
+        stroke: rgba(255, 255, 255, 0.15);
+        stroke-width: 1;
+        backdrop-filter: blur(8px);
+        transition: all 0.2s ease;
+      }
+
+      .tag-text {
+        font-size: 0.76rem;
+        font-weight: 700;
+        fill: #E2E8F0;
+        letter-spacing: -0.01em;
+      }
+
+      .tag-percent {
+        font-size: 0.76rem;
+        font-weight: 800;
+        fill: #38BDF8;
+      }
+
+      &:hover {
+        .tag-bg {
+          fill: rgba(30, 41, 59, 0.95);
+          stroke: rgba(255, 255, 255, 0.4);
+        }
+      }
     }
 
-    @keyframes heartBeat {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.4); opacity: 1; }
+    /* Medalhão Central & Bastão de Asclépio */
+    .center-medallion {
+      pointer-events: none;
+
+      .medallion-halo {
+        fill: none;
+        stroke: rgba(234, 179, 8, 0.25);
+        stroke-width: 2;
+        filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.4));
+      }
+
+      .medallion-ring {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.18);
+        stroke-width: 1.5;
+        stroke-dasharray: 2 4;
+      }
+
+      .medallion-core {
+        fill: #0B1329;
+        stroke: rgba(245, 158, 11, 0.4);
+        stroke-width: 2;
+      }
+
+      .asclepius-snake {
+        filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.5));
+      }
+
+      .center-pulse {
+        animation: centerPulse 2.5s infinite ease-in-out;
+      }
     }
 
+    @keyframes centerPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.6); }
+    }
+
+    /* Painel de Detalhes à Direita */
     .details-panel {
       display: flex;
       flex-direction: column;
@@ -444,9 +706,9 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
       .panel-card {
         padding: 24px;
         border-radius: 20px;
-        background: rgba(30, 41, 59, 0.5);
+        background: rgba(30, 41, 59, 0.55);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(14px);
       }
 
       .panel-header {
@@ -627,7 +889,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
     }
   `]
 })
-export class CorpoHumanoMaestriaComponent implements OnInit {
+export class EstrelaVidaMaestriaComponent implements OnInit {
   private masteryService = inject(ClinicalMasteryService);
 
   data = signal<ClinicalMasteryResponse | null>(null);
@@ -658,10 +920,15 @@ export class CorpoHumanoMaestriaComponent implements OnInit {
     }
   }
 
+  getAreaPercent(grandeAreaKey: string): number {
+    const area = this.data()?.areas.find(a => a.grandeArea === grandeAreaKey);
+    return area ? Math.round(area.masteryPercentage) : 0;
+  }
+
   getAreaFill(grandeAreaKey: string): string {
     const area = this.data()?.areas.find(a => a.grandeArea === grandeAreaKey);
     if (!area) return '#1E293B';
-    if (area.tier === 'INICIANTE') return 'rgba(30, 41, 59, 0.35)';
+    if (area.tier === 'INICIANTE') return 'rgba(30, 41, 59, 0.4)';
     return `url(#grad-${area.tier})`;
   }
 
@@ -672,4 +939,12 @@ export class CorpoHumanoMaestriaComponent implements OnInit {
     if (area.tier === 'ESMERALDA' || area.tier === 'RUBI' || area.tier === 'OURO') return 'url(#neonGlow)';
     return 'none';
   }
+
+  getNextTierGap(percentage: number): number {
+    const nextGap = Math.max(0, 100 - percentage);
+    return Math.round(nextGap * 10) / 10;
+  }
 }
+
+// Alias para manter compatibilidade com importações anteriores
+export { EstrelaVidaMaestriaComponent as CorpoHumanoMaestriaComponent };
