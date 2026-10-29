@@ -34,7 +34,7 @@ export class ReorganizeModalComponent implements OnInit, OnDestroy {
   draft$: Observable<RedistributionDraftResponse | null> = this.store.select(selectRedistributionDraft);
   isRedistributing$: Observable<boolean> = this.store.select(selectIsRedistributing);
   
-  maxDate: string = '';
+  maxDate = '';
   minDate: string = new Date().toISOString().split('T')[0];
   CheckCircle = CheckCircle;
 

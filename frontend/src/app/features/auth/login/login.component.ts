@@ -40,7 +40,7 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const { email, senha } = this.loginForm.value;
       this.store.dispatch(AuthActions.login({ 
-        email: email!, 
+        email: (email || '').trim().toLowerCase(), 
         senha: senha! 
       }));
     }

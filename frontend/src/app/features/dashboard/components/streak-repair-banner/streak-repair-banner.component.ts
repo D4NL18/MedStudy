@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, computed, signal, inject, OnInit } from '@angular/core';
+import { Component, computed, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { Router } from '@angular/router';
