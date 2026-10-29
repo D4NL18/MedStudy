@@ -1,0 +1,152 @@
+:host {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .clinic-item-svg {
+        overflow: visible;
+        transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: visiblePainted;
+      }
+
+      .clinic-item-svg.is-rotated:not(.has-custom-rotation) {
+        transform: scaleX(-1);
+      }
+
+      .clinic-item-svg.is-pulsing {
+        animation: itemBounce 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .dino-eye {
+        transform-origin: 98px 23px;
+        animation: dinoBlinkLoop 4.2s infinite;
+      }
+
+      .ambient-steam {
+        animation: steamRise 2.6s ease-in-out infinite;
+      }
+
+      .ambient-bob {
+        animation: gentleBob 2.4s ease-in-out infinite;
+      }
+
+      .ambient-wag {
+        transform-origin: 74px 64px;
+        animation: tailWag 0.9s ease-in-out infinite alternate;
+      }
+
+      .ambient-wave {
+        transform-origin: 70px 42px;
+        animation: armWave 1.6s ease-in-out infinite alternate;
+      }
+
+      .ambient-sparkle {
+        animation: sparklePulse 1.8s ease-in-out infinite alternate;
+      }
+
+      .ecg-trace-line {
+        stroke-dasharray: 90;
+        stroke-dashoffset: 0;
+        animation: ecgSweep 2.2s linear infinite;
+      }
+
+      .clinic-item-svg.is-paused * {
+        animation-play-state: paused !important;
+      }
+
+      @keyframes dinoBlinkLoop {
+        0%,
+        92%,
+        100% {
+          transform: scaleY(1);
+        }
+        95% {
+          transform: scaleY(0.1);
+        }
+      }
+
+      @keyframes steamRise {
+        0%,
+        100% {
+          opacity: 0.35;
+          transform: translateY(0);
+        }
+        50% {
+          opacity: 0.9;
+          transform: translateY(-4px);
+        }
+      }
+
+      @keyframes gentleBob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-3px);
+        }
+      }
+
+      @keyframes tailWag {
+        from {
+          transform: rotate(-10deg);
+        }
+        to {
+          transform: rotate(14deg);
+        }
+      }
+
+      @keyframes armWave {
+        from {
+          transform: rotate(-8deg);
+        }
+        to {
+          transform: rotate(12deg);
+        }
+      }
+
+      @keyframes sparklePulse {
+        from {
+          opacity: 0.45;
+          transform: translateY(1px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(-3px);
+        }
+      }
+
+      @keyframes ecgSweep {
+        0% {
+          stroke-dashoffset: 90;
+        }
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      :host {
+        display: block;
+        pointer-events: none;
+      }
+      .clinic-item-svg {
+        display: block;
+        pointer-events: none;
+      }
+      .shadow-polygon {
+        pointer-events: none !important;
+      }
+
+      @keyframes itemBounce {
+        0% {
+          transform: scale(1);
+        }
+        45% {
+          transform: translateY(-6px) scale(1.08);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }

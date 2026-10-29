@@ -185,9 +185,12 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
         service.isPositionValid(0, 1, 1, 1, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
       ).toBeTrue();
 
-      // 5. Wall item (0x0 footprint) on NW wall (gridX = 0) is valid and does not collide with floor items
+      // 5. Wall item (0x0 footprint) cannot overlap floor item at (0, 0), but is valid at free tile (0, 1)
       expect(
         service.isPositionValid(0, 0, 0, 0, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
+      ).toBeFalse();
+      expect(
+        service.isPositionValid(0, 1, 0, 0, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
       ).toBeTrue();
 
       // 6. Wall item placed in middle of room (gridX != 0 and gridY != 0) is invalid

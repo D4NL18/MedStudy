@@ -173,18 +173,18 @@ export class ClinicService {
             return false;
           }
         } else {
-          // Se for estadiômetro/régua de piso (altura 0), não pode colidir com item do chão no mesmo tile
-          const isFloorRuler = ignorePlacedId === 'ped_regua_girafa' || ignorePlacedId === 'estadiometro_compacto';
-          if (isFloorRuler) {
-            const { width: oW, height: oH } = this.getEffectiveFootprint(
-              otherCat ?? { footprintX: 1, footprintY: 1 },
-              other.rotation ?? 0
-            );
-            const ogx = other.gridX ?? 0;
-            const ogy = other.gridY ?? 0;
-            if (gridX >= ogx && gridX < ogx + oW && gridY >= ogy && gridY < ogy + oH) {
-              return false;
-            }
+          // Prevenção de sobreposição visual: itens de parede não podem ser fixados
+          // em um quadrado que já possua um móvel de chão posicionado.
+          const { width: oW, height: oH } = this.getEffectiveFootprint(
+            otherCat ?? { footprintX: 1, footprintY: 1 },
+            other.rotation ?? 0
+          );
+          const ogx = other.gridX ?? 0;
+          const ogy = other.gridY ?? 0;
+          const checkX = targetSide === 'NW' ? 0 : targetIdx;
+          const checkY = targetSide === 'NW' ? targetIdx : 0;
+          if (checkX >= ogx && checkX < ogx + oW && checkY >= ogy && checkY < ogy + oH) {
+            return false;
           }
         }
       }
@@ -221,8 +221,18 @@ export class ClinicService {
         otherCatalog.placementType === 'WALL' ||
         (otherCatalog.footprintX === 0 && otherCatalog.footprintY === 0);
 
-      // Itens de parede não bloqueiam o piso
+      // Prevenção de sobreposição: se houver um item de parede afixado na linha adjacente
+      // coberta por este móvel de chão, bloqueia para evitar sobreposição visual.
       if (otherIsWall) {
+        const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
+        const otherIdx =
+          other.wallTileIndex ??
+          (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
+        const wallX = otherSide === 'NW' ? 0 : otherIdx;
+        const wallY = otherSide === 'NW' ? otherIdx : 0;
+        if (wallX >= gridX && wallX < gridX + effW && wallY >= gridY && wallY < gridY + effH) {
+          return false;
+        }
         continue;
       }
 

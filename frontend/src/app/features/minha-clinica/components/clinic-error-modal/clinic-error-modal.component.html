@@ -1,0 +1,32 @@
+@if (errorMessage(); as msg) {
+  <div
+    class="clinic-basic-error-backdrop"
+    (click)="onDismiss()"
+    role="presentation"
+    data-testid="clinic-error-modal-backdrop"
+  >
+    <div
+      class="clinic-basic-error-card"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="basic-error-title"
+      aria-describedby="basic-error-desc"
+      (click)="$event.stopPropagation()"
+      data-testid="clinic-error-modal"
+    >
+      <div class="error-modal-icon-badge">
+        <span class="error-modal-icon" aria-hidden="true">⚠️</span>
+      </div>
+      <h3 id="basic-error-title" class="error-modal-title">Atenção</h3>
+      <p id="basic-error-desc" class="error-modal-desc">{{ msg }}</p>
+      <button
+        type="button"
+        class="btn-error-modal-dismiss"
+        (click)="onDismiss()"
+        data-testid="clinic-error-modal-dismiss-btn"
+      >
+        Entendi
+      </button>
+    </div>
+  </div>
+}

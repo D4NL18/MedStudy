@@ -1,0 +1,194 @@
+@if (isOpen()) {
+  <div class="lootbox-fullscreen-theater" [class.unboxing-active]="isUnboxing()" data-testid="lootbox-fullscreen-theater">
+    <div class="lootbox-theater-container" (click)="$event.stopPropagation()">
+      <!-- FASE 1 & FASE 2: ANIMAÇÃO DE UNBOXING (1.35s) -->
+      @if (isUnboxing()) {
+        <div class="unboxing-stage" [style.--ray-color]="openingRayColor()">
+          <div class="unboxing-ray-burst" [class.burst-active]="unboxingPhase() === 'open'"></div>
+          <div
+            class="unboxing-chest-container"
+            [class.chest-shake]="unboxingPhase() === 'shake'"
+            [class.chest-open]="unboxingPhase() === 'open'"
+          >
+            <app-clinic-item-svg [itemKey]="openingTierAssetSvgKey()" [width]="160" [height]="140" />
+          </div>
+          <div class="unboxing-text">
+            <span class="unboxing-title">📦 Deslacrando Suprimentos Médicos...</span>
+            <span class="unboxing-subtitle">Verificando esterilização e instrumentos hospitalares</span>
+          </div>
+        </div>
+      }
+
+      <!-- FASE 3: REVELAÇÃO DO ITEM (REWARD SCREEN) -->
+      @else if (revealResult(); as res) {
+        <div class="reveal-stage" [style.--rarity-glow-color]="getRarityColor(res.droppedItem)">
+          <header class="reveal-header">
+            <span
+              class="reveal-rarity-badge"
+              [style.background-color]="getRarityColor(res.droppedItem)"
+            >
+              ★ ITEM {{ getRarityLabel(res.droppedItem).toUpperCase() }}
+            </span>
+            @if (res.droppedItem.isLootboxExclusive) {
+              <span class="exclusive-seal">✦ Relíquia Exclusiva de Caixa</span>
+            }
+          </header>
+
+          <div class="reveal-podium" [style.box-shadow]="getRarityGlow(res.droppedItem.rarity)">
+            <div class="reveal-item-svg">
+              <app-clinic-item-svg [itemKey]="res.droppedItem.assetSvgKey" [width]="130" [height]="130" />
+            </div>
+          </div>
+
+          <div class="reveal-details">
+            <h3 class="reveal-item-name">{{ res.droppedItem.name }}</h3>
+            <div class="reveal-meta">
+              <span class="reveal-cat">{{ res.droppedItem.category | titlecase }}</span>
+              <span class="reveal-dim">{{ res.droppedItem.footprintX }}×{{ res.droppedItem.footprintY }} tiles</span>
+            </div>
+
+            @if (res.isDuplicate) {
+              <div class="duplicate-cashback-notice" data-testid="duplicate-cashback-notice">
+                <span class="cashback-icon">♻️</span>
+                <div class="cashback-text">
+                  <strong>Item Já Adquirido!</strong>
+                  <p>
+                    Você já possui este item na sua clínica. Duplicata reciclada com compensação justa:
+                    <strong class="cashback-amount mono-num">+{{ res.cashbackXpAwarded }} XP</strong> creditados de volta!
+                  </p>
+                </div>
+              </div>
+            } @else {
+              <div class="new-item-notice" data-testid="new-item-notice">
+                <span class="new-icon">✨</span>
+                <span>Novo item exclusivo desbloqueado e adicionado ao seu inventário!</span>
+              </div>
+            }
+          </div>
+
+          <footer class="reveal-actions">
+            @if (!res.isDuplicate) {
+              <button
+                type="button"
+                class="btn-reveal-equip"
+                (click)="onEquip(res.droppedItem)"
+                data-testid="lootbox-equip-now-btn"
+              >
+                📐 Posicionar Agora
+              </button>
+            }
+            <button
+              type="button"
+              class="btn-reveal-stash"
+              (click)="onClose()"
+              data-testid="lootbox-stash-btn"
+            >
+              🎒 Guardar no Inventário
+            </button>
+            <button
+              type="button"
+              class="btn-reveal-again"
+              (click)="onReset()"
+              data-testid="lootbox-open-again-btn"
+            >
+              🎁 Abrir Outra Caixa
+            </button>
+          </footer>
+        </div>
+      }
+
+      <!-- TELA PRINCIPAL: LOJA DE CAIXAS (TIERS + CAIXA DIÁRIA) -->
+      @else {
+        <header class="theater-header">
+          <div class="theater-header-title">
+            <h2>🎁 Caixas de Suprimentos Médicos</h2>
+            <p class="theater-subtitle">
+              Adquira maletas clínicas com itens decorativos especiais e relíquias exclusivas para seu consultório.
+            </p>
+          </div>
+          <div class="theater-header-balance">
+            <span class="balance-label">Saldo Disponível:</span>
+            <span class="balance-xp mono-num">⚡ {{ currentXp() }} XP</span>
+          </div>
+          <button
+            type="button"
+            class="btn-theater-close"
+            (click)="onClose()"
+            aria-label="Fechar"
+            data-testid="close-lootbox-modal-btn"
+          >
+            ✕
+          </button>
+        </header>
+
+        <!-- BANNER DE CAIXA DIÁRIA GRATUITA (0 XP) -->
+        @if (isDailyFreeAvailable()) {
+          <div class="daily-free-lootbox-card" data-testid="daily-free-lootbox-card">
+            <div class="daily-free-badge">🌟 PRESENTE DIÁRIO DISPONÍVEL</div>
+            <div class="daily-free-body">
+              <div class="daily-free-icon">
+                <app-clinic-item-svg [itemKey]="'lootbox_tier1_resident'" [width]="80" [height]="72" />
+              </div>
+              <div class="daily-free-info">
+                <h3>🎁 Caixa da Sorte Diária Gratuita</h3>
+                <p>Você ganhou 1 Caixa de Boas-Vindas pelo seu login diário! A raridade é sorteada aleatoriamente (não acumula — abra agora!).</p>
+                <span class="daily-free-price mono-num">Custo: 0 XP (Grátis)</span>
+              </div>
+              <button
+                type="button"
+                class="btn-open-daily-free"
+                (click)="onOpenDailyFree()"
+                [disabled]="isUnboxing() || isLoading()"
+                data-testid="open-daily-free-btn"
+              >
+                🎁 Resgatar Caixa Diária (0 XP)
+              </button>
+            </div>
+          </div>
+        }
+
+        <div class="lootbox-tiers-grid">
+          @for (t of lootboxTiers(); track t.tier) {
+            <div class="lootbox-tier-card" [attr.data-testid]="'lootbox-tier-card-' + t.tier">
+              <div class="tier-card-badge" [style.background-color]="t.badgeColor">
+                {{ t.name }}
+              </div>
+
+              <div class="tier-card-svg">
+                <app-clinic-item-svg [itemKey]="t.assetSvgKey" [width]="90" [height]="80" />
+              </div>
+
+              <h4 class="tier-card-title">{{ t.name }}</h4>
+              <p class="tier-card-desc">{{ t.description }}</p>
+
+              <div class="tier-prob-pills">
+                @if (t.probabilities.common > 0) {
+                  <span class="prob-pill pill-common">{{ t.probabilities.common }}% Comum</span>
+                } @else {
+                  <span class="prob-pill pill-zero">✦ Zero Comuns</span>
+                }
+                @if (t.probabilities.legendary > 0) {
+                  <span class="prob-pill pill-legendary">👑 {{ t.probabilities.legendary }}% Lendário</span>
+                }
+              </div>
+
+              <button
+                type="button"
+                class="btn-open-box"
+                [disabled]="currentXp() < t.costXp || isUnboxing() || isLoading()"
+                (click)="onOpenTier(t.tier)"
+                [attr.data-testid]="'open-lootbox-btn-' + t.tier"
+              >
+                @if (currentXp() < t.costXp) {
+                  <span>🔒 XP Insuficiente ({{ t.costXp }} XP)</span>
+                } @else {
+                  <span>⚡ Abrir Caixa por {{ t.costXp }} XP</span>
+                }
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

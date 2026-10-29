@@ -1,0 +1,313 @@
+<section class="clinic-bottom-dock" aria-label="Loja e Inventário da Clínica">
+  <div class="dock-header">
+    <div class="dock-tabs" role="tablist" aria-label="Categorias de itens da clínica">
+      @for (tab of categoryTabs; track tab.id) {
+        <button
+          type="button"
+          role="tab"
+          class="dock-tab-btn"
+          [class.is-active]="activeCategory === tab.id"
+          [attr.aria-selected]="activeCategory === tab.id"
+          (click)="categorySelected.emit(tab.id)"
+          [attr.data-testid]="'tab-' + tab.id"
+        >
+          <span>{{ tab.badge }} {{ tab.label }}</span>
+          <span class="tab-count mono-num">{{ tab.count }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="dock-controls">
+      <div class="filter-switch" role="group" aria-label="Filtro de catálogo">
+        <button
+          type="button"
+          class="filter-btn"
+          [class.active]="inventoryFilter === 'all'"
+          (click)="inventoryFilterChanged.emit('all')"
+          data-testid="filter-all-btn"
+        >
+          Catálogo ({{ totalCatalogCount }})
+        </button>
+        <button
+          type="button"
+          class="filter-btn"
+          [class.active]="inventoryFilter === 'owned'"
+          (click)="inventoryFilterChanged.emit('owned')"
+          data-testid="filter-owned-btn"
+        >
+          Meus Itens ({{ state.ownedItemIds.length }})
+        </button>
+      </div>
+
+      @if (editMode && selectedCatalogItem) {
+        <button
+          type="button"
+          class="btn-dock-tool"
+          (click)="rotateRequested.emit()"
+          data-testid="dock-rotate-btn"
+        >
+          ↻ Girar ({{ getRotationLabel(selectedRotation) }}) [R]
+        </button>
+      }
+
+      @if (editMode && movingPlacedId) {
+        <button
+          type="button"
+          class="btn-dock-tool danger"
+          (click)="storeSelectedRequested.emit()"
+          data-testid="store-item-btn"
+        >
+          📦 Guardar no Inventário
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ABA REVESTIMENTOS: Papéis de Parede e Pisos Isométricos (P-087) -->
+  @if (activeCategory === 'revestimentos') {
+    <div class="dock-cards-grid dock-surfaces-grid" data-testid="dock-surfaces-grid">
+      @for (wall of wallpaperOptions; track wall.id) {
+        <article
+          class="catalog-item-card surface-card"
+          [class.is-placed]="state.wallTheme === wall.id"
+          [class.is-owned]="isSurfaceOwned(wall.id)"
+          [attr.data-testid]="'surface-wall-card-' + wall.id"
+        >
+          <div class="card-top-badges">
+            <span class="rarity-badge" style="background-color: #0D9488;">Parede</span>
+            @if (state.wallTheme === wall.id) {
+              <span class="placed-badge">✓ Em Uso</span>
+            } @else if (isSurfaceOwned(wall.id)) {
+              <span class="owned-badge">Adquirido</span>
+            }
+          </div>
+
+          <div class="card-surface-swatch" [style.background]="wall.previewColor">
+            @if (wall.id === 'ped_papel_safari') {
+              <span class="swatch-emoji">🦒🌿</span>
+            } @else if (wall.id === 'wallpaper_geometric_teal') {
+              <span class="swatch-emoji">📐</span>
+            } @else if (wall.id === 'wallpaper_brick_white') {
+              <span class="swatch-emoji">🧱</span>
+            } @else {
+              <span class="swatch-emoji">🏛️</span>
+            }
+          </div>
+
+          <div class="card-info">
+            <h4>{{ wall.name }}</h4>
+            <p>Papel de Parede NW/NE</p>
+          </div>
+
+          <div class="card-footer">
+            @if (state.wallTheme === wall.id) {
+              <button type="button" class="btn-card-action place active" disabled>
+                ✓ Aplicado
+              </button>
+            } @else if (isSurfaceOwned(wall.id)) {
+              <button
+                type="button"
+                class="btn-card-action place"
+                (click)="applyWallpaper.emit(wall.id)"
+                [attr.data-testid]="'apply-wall-' + wall.id"
+              >
+                Aplicar na Sala
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn-card-action buy"
+                [disabled]="state.currentXp < wall.costXp || isLoading"
+                (click)="buyWallpaper.emit(wall)"
+                [attr.data-testid]="'buy-wall-' + wall.id"
+              >
+                <span>Comprar</span>
+                <strong class="mono-num">{{ wall.costXp }} XP</strong>
+              </button>
+            }
+          </div>
+        </article>
+      }
+
+      @for (fl of floorOptions; track fl.id) {
+        <article
+          class="catalog-item-card surface-card"
+          [class.is-placed]="state.floorTheme === fl.id"
+          [class.is-owned]="isSurfaceOwned(fl.id)"
+          [attr.data-testid]="'surface-floor-card-' + fl.id"
+        >
+          <div class="card-top-badges">
+            <span class="rarity-badge" style="background-color: #0284C7;">Piso</span>
+            @if (state.floorTheme === fl.id) {
+              <span class="placed-badge">✓ Em Uso</span>
+            } @else if (isSurfaceOwned(fl.id)) {
+              <span class="owned-badge">Adquirido</span>
+            }
+          </div>
+
+          <div class="card-surface-swatch" [style.background]="fl.previewColor">
+            @if (fl.id === 'tatame_eva') {
+              <span class="swatch-emoji">🧸</span>
+            } @else if (fl.id === 'marble_carrara') {
+              <span class="swatch-emoji">🏛️</span>
+            } @else {
+              <span class="swatch-emoji">🪵</span>
+            }
+          </div>
+
+          <div class="card-info">
+            <h4>{{ fl.name }}</h4>
+            <p>Piso Isométrico 2.5D</p>
+          </div>
+
+          <div class="card-footer">
+            @if (state.floorTheme === fl.id) {
+              <button type="button" class="btn-card-action place active" disabled>
+                ✓ Aplicado
+              </button>
+            } @else if (isSurfaceOwned(fl.id)) {
+              <button
+                type="button"
+                class="btn-card-action place"
+                (click)="applyFloor.emit(fl.id)"
+                [attr.data-testid]="'apply-floor-' + fl.id"
+              >
+                Aplicar na Sala
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn-card-action buy"
+                [disabled]="state.currentXp < fl.costXp || isLoading"
+                (click)="buyFloor.emit(fl)"
+                [attr.data-testid]="'buy-floor-' + fl.id"
+              >
+                <span>Comprar</span>
+                <strong class="mono-num">{{ fl.costXp }} XP</strong>
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  } @else if (filteredCatalogItems.length === 0) {
+    <div class="clinic-empty-state" data-testid="clinic-empty-state">
+      <div class="empty-illustration" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="52" height="52" fill="none">
+          <rect x="10" y="20" width="44" height="32" rx="6" fill="#F1F5F9" stroke="#0D9488" stroke-width="2.5" />
+          <path d="M24,20 V14 C24,11.8 25.8,10 28,10 H36 C38.2,10 40,11.8 40,14 V20" stroke="#0D9488" stroke-width="2.5" />
+          <path d="M32,28 V44 M24,36 H40" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="empty-copy">
+        <h3>Nenhum item guardado nesta ala ainda</h3>
+        <p>
+          Resolva questões, revise flashcards ou explore o catálogo para adquirir novos equipamentos para sua clínica.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="btn-empty-cta"
+        (click)="inventoryFilterChanged.emit('all')"
+      >
+        Explorar Catálogo Completo
+      </button>
+    </div>
+  } @else {
+    <!-- Grade de Cards dos Itens da Categoria Ativa -->
+    <div class="dock-cards-grid" data-testid="dock-cards-grid">
+      @for (item of filteredCatalogItems; track item.id) {
+        <article
+          class="catalog-item-card"
+          [class.is-owned]="isItemOwned(item.id)"
+          [class.is-placed]="isItemPlaced(item.id)"
+          [class.is-selected]="selectedCatalogItem?.id === item.id"
+          [class.is-locked]="item.minExpansionLevel > state.expansionLevel"
+          [attr.data-testid]="'catalog-card-' + item.id"
+        >
+          <div class="card-top-badges">
+            <span class="rarity-badge" [style.background-color]="getRarityColor(item)">
+              {{ getRarityLabel(item) }}
+            </span>
+            @if (item.isLootboxExclusive) {
+              <span class="exclusive-pill" title="Item exclusivo obtido apenas via Caixas da Sorte">
+                🎁 Exclusivo
+              </span>
+            }
+            <span class="footprint-badge mono-num">
+              {{ item.footprintX }}×{{ item.footprintY }}
+            </span>
+            @if (isItemPlaced(item.id)) {
+              <span class="placed-badge">No Consultório</span>
+            } @else if (isItemOwned(item.id)) {
+              <span class="owned-badge">Adquirido</span>
+            }
+          </div>
+
+          <div class="card-svg-preview" (click)="cardPreviewClicked.emit(item)">
+            <app-clinic-item-svg
+              [itemKey]="item.assetSvgKey"
+              [width]="76"
+              [height]="70"
+            />
+          </div>
+
+          <div class="card-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.description }}</p>
+          </div>
+
+          <div class="card-footer">
+            <!-- ESTADO 8: DISABLED / LOCKED POR NÍVEL -->
+            @if (item.minExpansionLevel > state.expansionLevel) {
+              <button
+                type="button"
+                class="btn-card-action locked"
+                disabled
+                [attr.data-testid]="'locked-btn-' + item.id"
+              >
+                🔒 Requer Nível {{ item.minExpansionLevel }}
+              </button>
+            } @else if (isItemOwned(item.id)) {
+              <button
+                type="button"
+                class="btn-card-action place"
+                [class.active]="selectedCatalogItem?.id === item.id"
+                (click)="selectForPlacement.emit(item)"
+                [attr.data-testid]="'place-btn-' + item.id"
+              >
+                {{
+                  selectedCatalogItem?.id === item.id
+                    ? '✓ Clique no Piso'
+                    : isItemPlaced(item.id)
+                      ? 'Mover no Piso'
+                      : 'Posicionar no Piso'
+                }}
+              </button>
+            } @else if (item.isLootboxExclusive) {
+              <button
+                type="button"
+                class="btn-card-action lootbox"
+                (click)="openLootboxModalRequested.emit()"
+                [attr.data-testid]="'lootbox-btn-' + item.id"
+              >
+                <span>🎁 Caixa da Sorte</span>
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn-card-action buy"
+                [disabled]="state.currentXp < item.costXp || isLoading"
+                (click)="buyItem.emit(item)"
+                [attr.data-testid]="'buy-btn-' + item.id"
+              >
+                <span>Comprar</span>
+                <strong class="mono-num">{{ item.costXp }} XP</strong>
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
