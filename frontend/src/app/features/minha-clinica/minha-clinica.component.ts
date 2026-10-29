@@ -2986,15 +2986,15 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   getRotationLabel(rotation: number): string {
-    switch (rotation) {
+    switch (rotation % 4) {
       case 1:
-        return 'Mesa Direita · SE';
+        return 'Aresta SW (Frente-Esquerda)';
       case 2:
-        return 'Fundo · NE';
+        return 'Aresta NW (Fundo-Esquerda)';
       case 3:
-        return 'Mesa Esquerda · SW';
+        return 'Aresta NE (Fundo-Direita)';
       default:
-        return 'Frente · Sul';
+        return 'Aresta SE (Frente-Direita)';
     }
   }
 

@@ -95,7 +95,7 @@ export interface GhostPreviewRender {
               Posicionando: <strong>{{ sel.name }}</strong>
               <span class="mono-coord">
                 ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }}) ·
-                {{ selectedRotationSignal() === 1 ? 'Mesa Direita (SE)' : selectedRotationSignal() === 2 ? 'Fundo (NE)' : selectedRotationSignal() === 3 ? 'Mesa Esquerda (SW)' : 'Frente' }}
+                {{ selectedRotationSignal() % 4 === 1 ? 'Aresta SW' : selectedRotationSignal() % 4 === 2 ? 'Aresta NW' : selectedRotationSignal() % 4 === 3 ? 'Aresta NE' : 'Aresta SE' }}
               </span>
             } @else {
               Modo Edição Ativo · Clique em um móvel ou no(a) Doutor(a) para mover
@@ -119,7 +119,7 @@ export interface GhostPreviewRender {
               title="Rotacionar item (Tecla R)"
               data-testid="viewport-rotate-btn"
             >
-              ↻ Girar ({{ selectedRotationSignal() === 1 ? 'SW' : 'SE' }})
+              ↻ Girar ({{ selectedRotationSignal() % 4 === 1 ? 'Aresta SW' : selectedRotationSignal() % 4 === 2 ? 'Aresta NW' : selectedRotationSignal() % 4 === 3 ? 'Aresta NE' : 'Aresta SE' }})
             </button>
           }
         </div>
