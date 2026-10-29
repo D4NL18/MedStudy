@@ -21,7 +21,6 @@ import { ClinicService } from '@core/services/clinic.service';
 import { ClinicAudioService } from '@core/services/clinic-audio.service';
 import { ClinicItemSvgComponent } from '../clinic-item-svg/clinic-item-svg.component';
 import { DoctorAvatarSvgComponent } from '../doctor-avatar-svg/doctor-avatar-svg.component';
-import { DoctorSpeechBubbleComponent } from '../doctor-speech-bubble/doctor-speech-bubble.component';
 
 export interface IsometricTileRender {
   gridX: number;
@@ -40,6 +39,7 @@ export interface SortedRenderItem {
   depth: number;
   effWidth: number;
   effHeight: number;
+  wallSide?: 'NW' | 'NE';
 }
 
 export interface GhostPreviewRender {
@@ -53,6 +53,7 @@ export interface GhostPreviewRender {
   valid: boolean;
   catalogItem: ClinicCatalogItem;
   rotation: number;
+  wallSide?: 'NW' | 'NE';
 }
 
 /**
@@ -65,8 +66,7 @@ export interface GhostPreviewRender {
   imports: [
     CommonModule,
     ClinicItemSvgComponent,
-    DoctorAvatarSvgComponent,
-    DoctorSpeechBubbleComponent
+    DoctorAvatarSvgComponent
   ],
   template: `
     <div
@@ -86,17 +86,32 @@ export interface GhostPreviewRender {
         <div class="viewport-edit-pill" data-testid="viewport-edit-pill">
           <span class="pill-dot" [class.invalid]="ghostPreview() && !ghostPreview()!.valid"></span>
           <span class="pill-label">
-            @if (selectedCatalogItemSignal(); as sel) {
+            @if (isMovingDoctorSignal()) {
+              Posicionando: <strong>{{ (avatarSignal()?.gender === 'MALE' ? 'Dr. ' : 'Dra. ') + 'Residente' }}</strong>
+              <span class="mono-coord">
+                ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }})
+              </span>
+            } @else if (selectedCatalogItemSignal(); as sel) {
               Posicionando: <strong>{{ sel.name }}</strong>
               <span class="mono-coord">
                 ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }}) ·
                 {{ selectedRotationSignal() === 1 ? 'SW' : 'SE' }}
               </span>
             } @else {
-              Modo Edição Ativo · Clique em um móvel no chão para mover ou escolha um item abaixo
+              Modo Edição Ativo · Clique em um móvel ou no(a) Doutor(a) para mover
             }
           </span>
-          @if (selectedCatalogItemSignal()) {
+          @if (isMovingDoctorSignal()) {
+            <button
+              type="button"
+              class="btn-rotate-inline btn-cancel-inline"
+              (click)="cancelMovingDoctor.emit(); $event.stopPropagation()"
+              title="Cancelar movimentação do doutor"
+              data-testid="viewport-cancel-doc-btn"
+            >
+              ✕ Cancelar
+            </button>
+          } @else if (selectedCatalogItemSignal()) {
             <button
               type="button"
               class="btn-rotate-inline"
@@ -247,6 +262,28 @@ export interface GhostPreviewRender {
             stroke-width="1.5"
           />
 
+          <!-- Segmentos Interativos da Parede NW (Linha Y, X=0) -->
+          @for (wallSlice of nwWallSlices(); track 'nw-' + wallSlice.index) {
+            <polygon
+              class="iso-wall-slice"
+              [class.edit-grid]="editModeSignal()"
+              [attr.points]="wallSlice.points"
+              (mouseenter)="onWallSliceHover('NW', wallSlice.index)"
+              (click)="onWallSliceClick('NW', wallSlice.index, $event)"
+            />
+          }
+
+          <!-- Segmentos Interativos da Parede NE (Linha X, Y=0) -->
+          @for (wallSlice of neWallSlices(); track 'ne-' + wallSlice.index) {
+            <polygon
+              class="iso-wall-slice"
+              [class.edit-grid]="editModeSignal()"
+              [attr.points]="wallSlice.points"
+              (mouseenter)="onWallSliceHover('NE', wallSlice.index)"
+              (click)="onWallSliceClick('NE', wallSlice.index, $event)"
+            />
+          }
+
           <!-- Malha de Tiles Isométricos 2:1 (64x32px) com Estilo de Piso Customizável -->
           @for (tile of tiles(); track tile.gridX + '-' + tile.gridY) {
             <polygon
@@ -302,6 +339,8 @@ export interface GhostPreviewRender {
             <div
               class="placed-item-anchor"
               [class.is-wall-item]="entry.placed.placementType === 'WALL'"
+              [class.is-wall-nw]="entry.placed.placementType === 'WALL' && entry.wallSide === 'NW'"
+              [class.is-wall-ne]="entry.placed.placementType === 'WALL' && entry.wallSide === 'NE'"
               [class.is-wall-ruler]="entry.catalogItem.id === 'ped_regua_girafa' || entry.catalogItem.id === 'estadiometro_compacto'"
               [class.is-interactable]="entry.catalogItem.interactable"
               [class.is-edit-selectable]="editModeSignal()"
@@ -330,19 +369,14 @@ export interface GhostPreviewRender {
           @if (avatarSignal(); as doc) {
             <div
               class="doctor-avatar-anchor"
+              [class.is-selected-moving]="isMovingDoctorSignal()"
               [style.left.px]="doctorScreenCoords().x"
               [style.top.px]="doctorScreenCoords().y"
               [style.zIndex]="doctorDepth()"
               (click)="onDoctorAvatarClick($event)"
-              title="Clique para conversar com o(a) Doutor(a)"
+              [title]="editModeSignal() ? 'Clique para mover o(a) Doutor(a) de lugar' : 'Clique para personalizar o(a) Doutor(a)'"
               data-testid="doctor-avatar-diorama"
             >
-              @if (activeDoctorSpeech()) {
-                <app-doctor-speech-bubble
-                  [message]="activeDoctorSpeech()!"
-                  (closed)="closeDoctorSpeech()"
-                />
-              }
               <app-doctor-avatar-svg
                 [gender]="doc.gender"
                 [skinCoat]="doc.skinCoat"
@@ -356,11 +390,40 @@ export interface GhostPreviewRender {
             </div>
           }
 
+          <!-- Ghost Doctor Avatar flutuante no Modo Edição ao mover Doutor(a) -->
+          @if (isMovingDoctorSignal() && hoveredTile(); as hover) {
+            <div
+              class="ghost-avatar-anchor"
+              [class.is-valid]="isDoctorHoverValid()"
+              [class.is-invalid]="!isDoctorHoverValid()"
+              [style.left.px]="doctorHoverScreenCoords().x"
+              [style.top.px]="doctorHoverScreenCoords().y"
+              [style.zIndex]="99999"
+            >
+              @if (avatarSignal(); as doc) {
+                <app-doctor-avatar-svg
+                  [gender]="doc.gender"
+                  [skinCoat]="doc.skinCoat"
+                  [skinStethoscope]="doc.skinStethoscope"
+                  [skinAccessory]="doc.skinAccessory"
+                  [width]="66"
+                  [height]="90"
+                  [paused]="isPaused()"
+                />
+              }
+              <span class="ghost-status-tag" [class.invalid]="!isDoctorHoverValid()">
+                {{ isDoctorHoverValid() ? '✓ Mover para cá' : '✕ Ocupado por móvel' }}
+              </span>
+            </div>
+          }
+
           <!-- Ghost Item Visual Flutuante no Modo Edição -->
-          @if (ghostPreview(); as ghost) {
+          @if (!isMovingDoctorSignal() && ghostPreview(); as ghost) {
             <div
               class="ghost-item-anchor"
               [class.is-wall-item]="ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)"
+              [class.is-wall-nw]="(ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)) && ghost.wallSide === 'NW'"
+              [class.is-wall-ne]="(ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)) && ghost.wallSide === 'NE'"
               [class.is-wall-ruler]="ghost.catalogItem.id === 'ped_regua_girafa' || ghost.catalogItem.id === 'estadiometro_compacto'"
               [class.is-valid]="ghost.valid"
               [class.is-invalid]="!ghost.valid"
@@ -575,6 +638,23 @@ export interface GhostPreviewRender {
         pointer-events: none !important;
       }
 
+      .iso-wall-slice {
+        fill: transparent;
+        pointer-events: none;
+      }
+
+      .clinic-viewport-shell.is-edit-mode .iso-wall-slice {
+        pointer-events: visiblePainted !important;
+        cursor: pointer;
+      }
+
+      .clinic-viewport-shell.is-edit-mode .iso-wall-slice:hover {
+        fill: rgba(13, 148, 136, 0.12);
+        stroke: #0d9488;
+        stroke-width: 1.5;
+        stroke-dasharray: 4 2;
+      }
+
       .placed-items-layer {
         position: absolute;
         inset: 0;
@@ -583,34 +663,49 @@ export interface GhostPreviewRender {
 
       .placed-item-anchor {
         position: absolute;
-        transform: translate(-50%, -76%);
-        pointer-events: none;
+        transform: translate(-50%, -75%);
+        pointer-events: none !important;
         transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), filter 150ms ease;
       }
 
-      .placed-item-anchor.is-wall-item {
-        transform: translate(-50%, -50%);
-        filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.16));
+      app-clinic-item-svg,
+      .clinic-item-svg {
+        pointer-events: none !important;
       }
 
-      .placed-item-anchor.is-wall-ruler {
-        transform: translate(-50%, -88%);
-        filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.18));
+      .shadow-polygon {
+        pointer-events: none !important;
       }
 
-      /* Permite interação estrita apenas sobre traçados gráficos visíveis dos móveis */
-      .placed-item-anchor.is-interactable svg path,
-      .placed-item-anchor.is-interactable svg circle,
-      .placed-item-anchor.is-interactable svg rect,
-      .placed-item-anchor.is-interactable svg polyline,
-      .placed-item-anchor.is-interactable svg polygon:not(.shadow-polygon),
-      .placed-item-anchor.is-interactable svg ellipse,
-      .placed-item-anchor.is-edit-selectable svg path,
-      .placed-item-anchor.is-edit-selectable svg circle,
-      .placed-item-anchor.is-edit-selectable svg rect,
-      .placed-item-anchor.is-edit-selectable svg polyline,
-      .placed-item-anchor.is-edit-selectable svg polygon:not(.shadow-polygon),
-      .placed-item-anchor.is-edit-selectable svg ellipse {
+      /* Parede NW (Esquerda): Skew -26.565deg para grudar perfeitamente na parede isométrica */
+      .placed-item-anchor.is-wall-item.is-wall-nw {
+        transform: translate(-50%, -50%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+        filter: drop-shadow(3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      /* Parede NE (Direita): Skew +26.565deg para grudar perfeitamente na parede isométrica */
+      .placed-item-anchor.is-wall-item.is-wall-ne {
+        transform: translate(-50%, -50%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+        filter: drop-shadow(-3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-nw {
+        transform: translate(-50%, -86%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+        filter: drop-shadow(3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-ne {
+        transform: translate(-50%, -86%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+        filter: drop-shadow(-3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      /* Hitbox estrita: apenas o contorno e traços desenhados do SVG interceptam cliques, nunca a caixa vazia */
+      .placed-item-anchor.is-interactable svg :is(path, circle, rect, polyline, polygon:not(.shadow-polygon), ellipse, text),
+      .placed-item-anchor.is-edit-selectable svg :is(path, circle, rect, polyline, polygon:not(.shadow-polygon), ellipse, text) {
         pointer-events: visiblePainted !important;
         cursor: pointer;
       }
@@ -618,19 +713,29 @@ export interface GhostPreviewRender {
       .doctor-avatar-anchor {
         position: absolute;
         transform: translate(-50%, -84%);
-        pointer-events: auto;
+        pointer-events: none !important;
         cursor: pointer;
         z-index: 2000;
         transition: transform 150ms ease;
       }
 
-      .doctor-avatar-anchor:hover {
-        transform: translate(-50%, -88%) scale(1.04);
+      app-doctor-avatar-svg,
+      .doctor-avatar-svg {
+        pointer-events: none !important;
       }
 
-      .placed-item-anchor.is-interactable,
-      .placed-item-anchor.is-edit-selectable {
+      .doctor-avatar-anchor svg :is(path, circle, rect, polyline, polygon, ellipse, text) {
+        pointer-events: visiblePainted !important;
         cursor: pointer;
+      }
+
+      .doctor-avatar-anchor:hover svg :is(path, circle, rect, polyline, polygon, ellipse, text) {
+        filter: drop-shadow(0 4px 8px rgba(13, 148, 136, 0.35));
+      }
+
+      .doctor-avatar-anchor.is-selected-moving {
+        opacity: 0.45;
+        filter: saturate(0.5);
       }
 
       .placed-item-anchor.is-interactable:hover,
@@ -639,12 +744,20 @@ export interface GhostPreviewRender {
         filter: drop-shadow(0 6px 10px rgba(13, 148, 136, 0.22));
       }
 
-      .placed-item-anchor.is-wall-item:hover {
-        transform: translate(-50%, -54%) scale(1.04);
+      .placed-item-anchor.is-wall-item.is-wall-nw:hover {
+        transform: translate(-50%, -54%) skewY(-26.565deg) scaleX(0.92) scaleY(1.03);
       }
 
-      .placed-item-anchor.is-wall-ruler:hover {
-        transform: translate(-50%, -92%) scale(1.04);
+      .placed-item-anchor.is-wall-item.is-wall-ne:hover {
+        transform: translate(-50%, -54%) skewY(26.565deg) scaleX(0.92) scaleY(1.03);
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-nw:hover {
+        transform: translate(-50%, -90%) skewY(-26.565deg) scaleX(0.92) scaleY(1.03);
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-ne:hover {
+        transform: translate(-50%, -90%) skewY(26.565deg) scaleX(0.92) scaleY(1.03);
       }
 
       .placed-item-anchor.is-selected-moving {
@@ -654,7 +767,7 @@ export interface GhostPreviewRender {
 
       .ghost-item-anchor {
         position: absolute;
-        transform: translate(-50%, -78%);
+        transform: translate(-50%, -75%);
         pointer-events: none !important;
         opacity: 0.88;
         display: flex;
@@ -662,8 +775,48 @@ export interface GhostPreviewRender {
         align-items: center;
       }
 
-      .ghost-item-anchor.is-wall-item {
-        transform: translate(-50%, -50%);
+      .ghost-item-anchor.is-wall-item.is-wall-nw {
+        transform: translate(-50%, -50%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+      }
+
+      .ghost-item-anchor.is-wall-item.is-wall-ne {
+        transform: translate(-50%, -50%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+      }
+
+      .ghost-item-anchor.is-wall-ruler.is-wall-nw {
+        transform: translate(-50%, -86%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+      }
+
+      .ghost-item-anchor.is-wall-ruler.is-wall-ne {
+        transform: translate(-50%, -86%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+      }
+
+      .ghost-avatar-anchor {
+        position: absolute;
+        transform: translate(-50%, -84%);
+        pointer-events: none !important;
+        opacity: 0.88;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 99999;
+      }
+
+      .ghost-avatar-anchor.is-valid {
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.55));
+      }
+
+      .ghost-avatar-anchor.is-invalid {
+        filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.65));
+      }
+
+      .btn-cancel-inline {
+        background: #ef4444 !important;
+        color: #ffffff;
       }
 
       .ghost-item-anchor.is-wall-ruler {
@@ -783,9 +936,24 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   readonly selectedCatalogItemSignal = signal<ClinicCatalogItem | null>(null);
   readonly selectedRotationSignal = signal<number>(0);
   readonly movingPlacedIdSignal = signal<string | undefined>(undefined);
+  readonly isMovingDoctorSignal = signal<boolean>(false);
+
   readonly isPlacingItem = computed<boolean>(() => {
-    return Boolean(this.selectedCatalogItemSignal() || this.movingPlacedIdSignal());
+    return Boolean(
+      this.selectedCatalogItemSignal() ||
+      this.movingPlacedIdSignal() ||
+      this.isMovingDoctorSignal()
+    );
   });
+
+  @Input() set isMovingDoctor(val: boolean) {
+    this.isMovingDoctorSignal.set(Boolean(val));
+  }
+  get isMovingDoctor(): boolean {
+    return this.isMovingDoctorSignal();
+  }
+
+  @Output() readonly cancelMovingDoctor = new EventEmitter<void>();
 
   @Input() set gridWidth(val: number) {
     this.gridWidthSignal.set(Math.max(4, val || 4));
@@ -881,16 +1049,6 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   @Output() readonly avatarClicked = new EventEmitter<void>();
 
   readonly doctorGreetingActive = signal<boolean>(false);
-  readonly activeDoctorSpeech = signal<string | null>(null);
-
-  private readonly doctorQuotes = [
-    'Mantenha o streak diário! A repetição espaçada consolida a memória de longo prazo.',
-    'Pediatria com afeto: um ambiente lúdico acalma qualquer pequeno paciente!',
-    'Excelente dedicação aos estudos! Sua clínica médica está crescendo a cada questão.',
-    'A semiologia é a arte de ouvir com atenção antes de solicitar os exames.',
-    'Pronto para mais uma rodada de flashcards? A consistência faz o especialista!'
-  ];
-  private speechTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly zoom = signal<number>(1);
   readonly panX = signal<number>(0);
@@ -910,6 +1068,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   private pointerStartX = 0;
   private pointerStartY = 0;
   private isPointerActive = false;
+  private hasDragged = false;
   private bubbleTimer: ReturnType<typeof setTimeout> | null = null;
 
   private readonly visibilityHandler = (): void => {
@@ -940,6 +1099,86 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   });
 
   readonly originY = computed(() => 105);
+
+  readonly doctorHoverScreenCoords = computed(() => {
+    const hover = this.hoveredTile();
+    const ox = this.originX();
+    const oy = this.originY();
+    const gx = hover?.gridX ?? 1;
+    const gy = hover?.gridY ?? 1;
+    return this.clinicService.gridToScreen(gx + 0.5, gy + 0.5, ox, oy);
+  });
+
+  readonly isDoctorHoverValid = computed<boolean>(() => {
+    const hover = this.hoveredTile();
+    if (!hover) return false;
+    const w = this.gridWidthSignal();
+    const h = this.gridHeightSignal();
+    if (hover.gridX < 0 || hover.gridX >= w || hover.gridY < 0 || hover.gridY >= h) {
+      return false;
+    }
+    // Não pode ficar sobreposto em piso ocupado por móvel
+    const placed = this.placedItemsSignal();
+    const catMap = new Map(this.catalogSignal().map(c => [c.id, c]));
+    for (const item of placed) {
+      if (!item.placed) continue;
+      const cat = catMap.get(item.catalogItemId);
+      const isWall =
+        item.placementType === 'WALL' ||
+        cat?.placementType === 'WALL' ||
+        (cat?.footprintX === 0 && cat?.footprintY === 0);
+      if (isWall) continue;
+      const { width: effW, height: effH } = this.clinicService.getEffectiveFootprint(
+        cat ?? CLINIC_CATALOG_FALLBACK[0],
+        item.rotation ?? 0
+      );
+      const ix = item.gridX ?? 0;
+      const iy = item.gridY ?? 0;
+      if (
+        hover.gridX >= ix &&
+        hover.gridX < ix + effW &&
+        hover.gridY >= iy &&
+        hover.gridY < iy + effH
+      ) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  readonly nwWallSlices = computed(() => {
+    const h = this.gridHeightSignal();
+    const ox = this.originX();
+    const oy = this.originY();
+    const wallH = 68;
+    const list: { index: number; points: string }[] = [];
+    for (let gy = 0; gy < h; gy++) {
+      const b0 = this.clinicService.gridToScreen(0, gy, ox, oy);
+      const b1 = this.clinicService.gridToScreen(0, gy + 1, ox, oy);
+      list.push({
+        index: gy,
+        points: `${b1.x},${b1.y} ${b0.x},${b0.y} ${b0.x},${b0.y - wallH} ${b1.x},${b1.y - wallH}`
+      });
+    }
+    return list;
+  });
+
+  readonly neWallSlices = computed(() => {
+    const w = this.gridWidthSignal();
+    const ox = this.originX();
+    const oy = this.originY();
+    const wallH = 68;
+    const list: { index: number; points: string }[] = [];
+    for (let gx = 0; gx < w; gx++) {
+      const b0 = this.clinicService.gridToScreen(gx, 0, ox, oy);
+      const b1 = this.clinicService.gridToScreen(gx + 1, 0, ox, oy);
+      list.push({
+        index: gx,
+        points: `${b0.x},${b0.y} ${b1.x},${b1.y} ${b1.x},${b1.y - wallH} ${b0.x},${b0.y - wallH}`
+      });
+    }
+    return list;
+  });
 
   readonly doctorScreenCoords = computed(() => {
     const doc = this.avatarSignal();
@@ -1115,7 +1354,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
           }
 
           return {
-            placed: { ...placed, placementType: 'WALL' as PlacementType },
+            placed: { ...placed, placementType: 'WALL' as PlacementType, wallSide: wallSide as any },
             catalogItem,
             screenX: wallBaseScreen.x,
             screenY: wallBaseScreen.y - elev,
@@ -1125,7 +1364,8 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
               5
             ),
             effWidth: 1,
-            effHeight: 1
+            effHeight: 1,
+            wallSide
           };
         }
 
@@ -1167,6 +1407,32 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     if (!this.editModeSignal()) {
       return null;
     }
+
+    if (this.isMovingDoctorSignal()) {
+      const hover = this.hoveredTile();
+      if (!hover) return null;
+      const valid = this.isDoctorHoverValid();
+      const ox = this.originX();
+      const oy = this.originY();
+      const top = this.clinicService.gridToScreen(hover.gridX, hover.gridY, ox, oy);
+      const right = this.clinicService.gridToScreen(hover.gridX + 1, hover.gridY, ox, oy);
+      const bottom = this.clinicService.gridToScreen(hover.gridX + 1, hover.gridY + 1, ox, oy);
+      const left = this.clinicService.gridToScreen(hover.gridX, hover.gridY + 1, ox, oy);
+      const center = this.clinicService.gridToScreen(hover.gridX + 0.5, hover.gridY + 0.5, ox, oy);
+      return {
+        gridX: hover.gridX,
+        gridY: hover.gridY,
+        effWidth: 1,
+        effHeight: 1,
+        screenX: center.x,
+        screenY: center.y,
+        points: `${top.x},${top.y} ${right.x},${right.y} ${bottom.x},${bottom.y} ${left.x},${left.y}`,
+        valid,
+        catalogItem: CLINIC_CATALOG_FALLBACK[0],
+        rotation: 0
+      };
+    }
+
     const sel = this.selectedCatalogItemSignal();
     const hover = this.hoveredTile();
     if (!sel || !hover) {
@@ -1244,7 +1510,8 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
         points: `${pBottomLeft.x},${pBottomLeft.y} ${pBottomRight.x},${pBottomRight.y} ${pTopRight.x},${pTopRight.y} ${pTopLeft.x},${pTopLeft.y}`,
         valid,
         catalogItem: sel,
-        rotation: rot
+        rotation: rot,
+        wallSide
       };
     }
 
@@ -1310,9 +1577,6 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     if (this.bubbleTimer) {
       clearTimeout(this.bubbleTimer);
     }
-    if (this.speechTimer) {
-      clearTimeout(this.speechTimer);
-    }
   }
 
   startAnimationLoop(): void {
@@ -1349,14 +1613,46 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
 
   onTileClick(gridX: number, gridY: number, event?: MouseEvent): void {
     event?.stopPropagation();
+    if (this.hasDragged || this.isDragging()) {
+      return;
+    }
     this.hoveredTile.set({ gridX, gridY });
     if (this.editModeSignal()) {
       this.tileClicked.emit({ gridX, gridY });
     }
   }
 
+  onWallSliceHover(side: 'NW' | 'NE', index: number): void {
+    if (side === 'NW') {
+      this.hoveredTile.set({ gridX: 0, gridY: index });
+    } else {
+      this.hoveredTile.set({ gridX: index, gridY: 0 });
+    }
+  }
+
+  onWallSliceClick(side: 'NW' | 'NE', index: number, event?: MouseEvent): void {
+    event?.stopPropagation();
+    if (this.hasDragged || this.isDragging()) {
+      return;
+    }
+    if (side === 'NW') {
+      this.hoveredTile.set({ gridX: 0, gridY: index });
+      if (this.editModeSignal()) {
+        this.tileClicked.emit({ gridX: 0, gridY: index });
+      }
+    } else {
+      this.hoveredTile.set({ gridX: index, gridY: 0 });
+      if (this.editModeSignal()) {
+        this.tileClicked.emit({ gridX: index, gridY: 0 });
+      }
+    }
+  }
+
   onPlacedItemClick(entry: SortedRenderItem, event: MouseEvent): void {
     event.stopPropagation();
+    if (this.hasDragged || this.isDragging()) {
+      return;
+    }
     if (this.editModeSignal()) {
       this.placedItemClicked.emit(entry.placed);
       return;
@@ -1408,6 +1704,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
       return;
     }
     this.isPointerActive = true;
+    this.hasDragged = false;
     this.pointerStartX = event.clientX;
     this.pointerStartY = event.clientY;
     this.dragStartX = event.clientX - this.panX();
@@ -1423,6 +1720,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
       event.clientY - this.pointerStartY
     );
     if (!this.isDragging() && dist > 5) {
+      this.hasDragged = true;
       this.isDragging.set(true);
     }
     if (this.isDragging()) {
@@ -1434,6 +1732,9 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   onPointerUp(): void {
     this.isPointerActive = false;
     this.isDragging.set(false);
+    setTimeout(() => {
+      this.hasDragged = false;
+    }, 80);
   }
 
   onDoctorAvatarClick(event: MouseEvent): void {
@@ -1442,20 +1743,8 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     this.audioService.playClick();
     this.doctorGreetingActive.set(true);
 
-    // Sorteia frase clínica motivacional
-    const randomIdx = Math.floor(Math.random() * this.doctorQuotes.length);
-    this.activeDoctorSpeech.set(this.doctorQuotes[randomIdx]);
-
-    if (this.speechTimer) {
-      clearTimeout(this.speechTimer);
-    }
-
-    this.speechTimer = setTimeout(() => {
+    setTimeout(() => {
       this.doctorGreetingActive.set(false);
     }, 650);
-  }
-
-  closeDoctorSpeech(): void {
-    this.activeDoctorSpeech.set(null);
   }
 }

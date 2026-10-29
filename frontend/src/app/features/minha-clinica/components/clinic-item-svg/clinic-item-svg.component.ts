@@ -23,20 +23,30 @@ import { CommonModule } from '@angular/common';
     >
       <!-- Sombra Isométrica Base (Apenas para móveis de chão) -->
       @if (!isWallItem) {
-        <polygon
-          class="shadow-polygon"
-          points="60,98 102,77 60,56 18,77"
-          fill="rgba(15, 23, 42, 0.14)"
-        />
+        @if (isTwoTile) {
+          <polygon
+            class="shadow-polygon"
+            points="46,54 94,78 70,90 22,67"
+            fill="rgba(15, 23, 42, 0.14)"
+          />
+        } @else {
+          <polygon
+            class="shadow-polygon"
+            points="60,98 102,77 60,56 18,77"
+            fill="rgba(15, 23, 42, 0.14)"
+          />
+        }
       }
 
       @switch (itemKey) {
         <!-- 1. ped_maca_dino: Maca Dinossauro Safari (Braquiossauro verde pastel que pisca) -->
         @case ('ped_maca_dino') {
           <g class="dino-stretcher">
-            <!-- Pernas da maca -->
-            <rect x="34" y="68" width="6" height="18" rx="3" fill="#6EE7B7" />
-            <rect x="78" y="68" width="6" height="18" rx="3" fill="#6EE7B7" />
+            <!-- 4 Pernas isométricas da maca -->
+            <line x1="64" y1="48" x2="64" y2="64" stroke="#059669" stroke-width="4" stroke-linecap="round" />
+            <line x1="26" y1="67" x2="26" y2="82" stroke="#059669" stroke-width="4" stroke-linecap="round" />
+            <line x1="96" y1="64" x2="96" y2="80" stroke="#10B981" stroke-width="4" stroke-linecap="round" />
+            <line x1="58" y1="84" x2="58" y2="98" stroke="#10B981" stroke-width="4" stroke-linecap="round" />
             <!-- Corpo acolchoado isométrico verde pastel -->
             <polygon points="24,66 64,46 98,63 58,83" fill="#34D399" stroke="#059669" stroke-width="2" />
             <polygon points="28,64 64,46 92,60 56,78" fill="#A7F3D0" />
@@ -55,19 +65,62 @@ import { CommonModule } from '@angular/common';
           </g>
         }
 
-        <!-- 2. ped_maca_baleia: Maca Baleia Azul -->
+        <!-- 2. ped_maca_baleia: Maca Baleia Azul (2.5D Isométrica Verdadeira) -->
         @case ('ped_maca_baleia') {
-          <g>
-            <rect x="36" y="70" width="6" height="16" rx="2" fill="#94A3B8" />
-            <rect x="76" y="70" width="6" height="16" rx="2" fill="#94A3B8" />
-            <!-- Corpo de baleia azul -->
-            <path d="M26,66 Q58,38 94,60 Q64,84 26,66 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="2" />
-            <path d="M32,64 Q58,44 86,58 Q60,76 32,64 Z" fill="#BAE6FD" />
-            <!-- Cauda da baleia -->
-            <path d="M26,66 L12,54 L16,66 L10,74 Z" fill="#0284C7" />
-            <!-- Esguicho d'água lúdico -->
-            <path class="ambient-bob" d="M78,44 Q82,30 90,34 M78,44 Q74,30 66,34" stroke="#7DD3FC" stroke-width="2" fill="none" stroke-linecap="round" />
-            <circle cx="84" cy="56" r="2.5" fill="#0F172A" />
+          <g class="whale-stretcher-iso">
+            <!-- 4 Pernas de aço cirúrgico alinhadas aos 4 vértices isométricos 2:1 -->
+            <line x1="46" y1="40" x2="46" y2="54" stroke="#64748B" stroke-width="4" stroke-linecap="round" />
+            <line x1="22" y1="52" x2="22" y2="67" stroke="#64748B" stroke-width="4" stroke-linecap="round" />
+            <line x1="94" y1="64" x2="94" y2="78" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" />
+            <line x1="70" y1="76" x2="70" y2="90" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" />
+
+            <!-- Travessas de reforço tubulares inferiores -->
+            <line x1="46" y1="48" x2="94" y2="72" stroke="#CBD5E1" stroke-width="2" />
+            <line x1="22" y1="60" x2="70" y2="84" stroke="#CBD5E1" stroke-width="2" />
+            <line x1="22" y1="60" x2="46" y2="48" stroke="#94A3B8" stroke-width="2" />
+            <line x1="70" y1="84" x2="94" y2="72" stroke="#94A3B8" stroke-width="2" />
+
+            <!-- Cauda de baleia na ponta esquerda posterior (curvatura isométrica) -->
+            <path d="M22,46 Q10,38 12,28 Q18,34 24,42 Z" fill="#0284C7" stroke="#0369A1" stroke-width="1.5" />
+            <path d="M22,48 Q12,58 14,66 Q20,58 24,48 Z" fill="#0369A1" stroke="#075985" stroke-width="1.5" />
+
+            <!-- Espessura / Borda lateral 3D do corpo de baleia (extrusão vertical) -->
+            <path
+              d="M22,46 Q44,68 70,82 Q96,70 106,58 L106,64 Q96,76 70,88 Q44,74 22,52 Z"
+              fill="#0284C7"
+              stroke="#0369A1"
+              stroke-width="1.5"
+            />
+
+            <!-- Tampo estofado isométrico em formato aerodinâmico de baleia azul -->
+            <path
+              d="M22,46 Q46,32 94,52 Q108,58 102,62 Q94,68 70,82 Q44,68 22,46 Z"
+              fill="#38BDF8"
+              stroke="#0284C7"
+              stroke-width="2"
+            />
+            <!-- Almofada acolchoada central pastel com reflexo acetinado -->
+            <path
+              d="M28,47 Q48,37 88,54 Q96,58 92,61 Q84,66 68,76 Q46,65 28,47 Z"
+              fill="#BAE6FD"
+              opacity="0.92"
+            />
+
+            <!-- Costuras ergonômicas transversais do colchão -->
+            <line x1="44" y1="45" x2="58" y2="58" stroke="#7DD3FC" stroke-width="1.5" stroke-dasharray="3 2" />
+            <line x1="62" y1="53" x2="76" y2="67" stroke="#7DD3FC" stroke-width="1.5" stroke-dasharray="3 2" />
+
+            <!-- Cabeça da baleia (extremidade frontal direita) -->
+            <circle cx="94" cy="57" r="3" fill="#0F172A" />
+            <circle cx="95" cy="56" r="1.1" fill="#FFFFFF" />
+            <path d="M96,62 Q100,64 103,61" stroke="#0C4A6E" stroke-width="1.5" fill="none" stroke-linecap="round" />
+
+            <!-- Esguicho d'água lúdico animado saindo do topo da cabeça -->
+            <g class="ambient-bob">
+              <path d="M88,48 Q91,32 100,36 M88,48 Q83,30 75,34" stroke="#38BDF8" stroke-width="2" fill="none" stroke-linecap="round" />
+              <circle cx="100" cy="35" r="1.8" fill="#7DD3FC" />
+              <circle cx="75" cy="33" r="1.8" fill="#7DD3FC" />
+            </g>
           </g>
         }
 
@@ -1525,4 +1578,19 @@ export class ClinicItemSvgComponent {
   @Input() isWallItem = false;
   @Input() activePulse = false;
   @Input() paused = false;
+
+  get isTwoTile(): boolean {
+    return (
+      this.itemKey === 'ped_maca_baleia' ||
+      this.itemKey === 'ped_maca_dino' ||
+      this.itemKey === 'ped_maca_f1' ||
+      this.itemKey === 'mesa_scandi' ||
+      this.itemKey === 'mesa_mogno_cafe' ||
+      this.itemKey === 'mesa_carrara' ||
+      this.itemKey === 'balcao_recepcao_madeira' ||
+      this.itemKey === 'sofa_chesterfield_couro' ||
+      this.itemKey === 'longarina_espera_confort' ||
+      this.width > 90
+    );
+  }
 }

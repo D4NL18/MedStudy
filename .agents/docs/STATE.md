@@ -3,19 +3,26 @@
 Este documento é mantido exclusivamente pelo **Orquestrador**. Ele serve como uma memória persistente do estado exato onde a conversa e a funcionalidade se encontram, prevenindo que as diretrizes se percam em contextos (prompts) longos.
 
 ## Tarefa Atual em Foco
-- **Feature/Entidade:** Minha Clínica Médica: Desbloqueio de Skins do Médico e Provador em Tempo Real (Preview Before Buy)
-- **Branch Atual:** `feature/P-093-lootboxes-and-50-rare-items`
+- **Feature/Entidade:** Minha Clínica Médica: Itens de Parede Isométricos, Maca 2.5D, Eliminação de Hitbox e Movimentação da Dra./Dr.
+- **Branch Atual:** `feature/gamificacao-flashcards-maestria`
 - **Etapa Atual do Fluxo:** Ajustes Concluídos e Testados com Sucesso (100% dos testes verdes)
 - **Última Ação Realizada:**
-  1. **Provador em Tempo Real (Live Preview Before Buy):**
-     - O usuário agora pode clicar em qualquer item cosmético (jaleco, estetoscópio, acessório), mesmo que bloqueado, e o avatar no palco esquerdo veste a peça imediatamente em tempo real.
-     - Indicador visual no card: badge dourado `👀 Provando` e destaque `.is-previewing`.
-     - Trava amigável no botão `💾 Salvar e Equipar`: caso o usuário tente salvar com um item não desbloqueado, o sistema alerta para desbloquear primeiro com seu XP.
-  2. **Correção do Desbloqueio de Skins (Botão Desbloquear):**
-     - Registrados todos os identificadores canônicos e aliases no catálogo do backend (`OFFICIAL_SKINS_CATALOG`), incluindo `coat_default`, `coat_pediatric`, `coat_gold`, `steth_standard`, `steth_elephant`, `steth_gold`, `acc_red_bowtie`, `acc_scrub_cap`.
-     - Atualizado `ClinicService.buySkin` para retornar o mapa com `unlockedSkins` e saldo atualizado.
-     - Atualizado `ClinicService.buyDoctorSkin` no frontend para manter a reatividade das skins desbloqueadas sem corromper o estado global do avatar.
-     - Auto-equipa a peça desbloqueada na hora e toca feedback sonoro de compra.
+  1. **Itens de Parede Fixados na Perspectiva Isométrica (Wall Shear):**
+     - Aplicado `transform: skewY(-26.565deg) scaleX(0.8944)` na parede NW (esquerda) e `skewY(26.565deg) scaleX(0.8944)` na parede NE (direita), com sombras projetadas realistas.
+     - Régua girafinha (`ped_regua_girafa`), tabela optométrica, negatoscópio e diplomas agora parecem verdadeiramente grudados na parede ao invés de flutuarem voltados para a tela.
+     - Slices interativos de parede (`nwWallSlices` e `neWallSlices`) para posicionamento direto na parede com alta precisão.
+  2. **Eliminação de Hitbox Excessiva nos Quadrados do Piso (Clicks da Parte Superior):**
+     - Removido `pointer-events: auto` dos contêineres retangulares (`.placed-item-anchor`, `.doctor-avatar-anchor`, `svg`).
+     - Agora `pointer-events: visiblePainted !important` opera estritamente sobre os traços e preenchimentos visuais do SVG (`path, circle, rect, polygon:not(.shadow-polygon), etc.`), ignorando áreas transparentes e sombras.
+     - Cada centímetro do quadrado do piso (`iso-tile`) agora responde a cliques perfeitamente, sem que caixas transparentes bloqueiem os quadrados superiores.
+  3. **Maca Infantil 2.5D Isométrica Verdadeira:**
+     - Redesenhada a `ped_maca_baleia` e refinada a `ped_maca_dino` com 4 pernas de aço cirúrgico alinhadas aos 4 vértices isométricos 2:1 do grid.
+     - Superfície estofada e corpo volumétrico em ângulo 2:1 com espessura 3D lateral, rabo curvado e esguicho animado no topo, estendendo-se harmoniosamente sobre os 2 quadrados ocupados.
+     - Sombra isométrica proporcional para móveis de 2 ladrilhos (`points="46,54 94,78 70,90 22,67"`).
+  4. **Movimentação do Personagem Médico (Dra./Dr.):**
+     - No modo de edição (`🛠️ Decorar / Mover`), clicar no(a) Doutor(a) no diorama ou no novo botão `📍 Mover Dra./Dr.` ativa o modo de reposicionamento.
+     - O avatar entra em estado translúcido (`.is-selected-moving`), o ghost avatar flutua seguindo o cursor sobre o ladrilho hovered, com indicador verde (válido) ou vermelho (ocupado por móvel).
+     - Clicar em qualquer ladrilho livre posiciona o(a) Doutor(a) imediatamente e persiste via `clinicService.updateDoctorAvatar({ avatarX, avatarY })`.
 - **Próximo Passo Imediato:** Pronto para validação pelo usuário na interface.
 
 ## Progresso do Workflow (Esteira Consolidada de 5 Macro-Etapas)

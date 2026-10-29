@@ -333,4 +333,72 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     component.closeLootboxModal();
     expect(component.isLootboxModalOpen()).toBeFalse();
   }));
+
+  it('should compute doctorDisplayName, display daily free lootbox, and open daily free box at 0 XP', fakeAsync(() => {
+    fixture.detectChanges();
+    httpMock.expectOne('/api/v1/clinic').flush({
+      data: {
+        ...mockLevel1Clinic,
+        userName: 'Lari Meirelles',
+        userFirstName: 'Lari',
+        dailyFreeLootboxAvailable: true,
+        avatar: {
+          avatarId: 'av-1',
+          gender: 'FEMALE',
+          skinCoat: 'coat_default',
+          skinStethoscope: 'steth_standard',
+          skinAccessory: 'acc_none',
+          avatarX: 1,
+          avatarY: 1
+        }
+      }
+    });
+    fixture.detectChanges();
+
+    // 1. Verify doctorDisplayName formatting: "Dra. Lari"
+    expect(component.doctorDisplayName()).toBe('Dra. Lari');
+    expect(component.isDailyFreeAvailable()).toBeTrue();
+
+    // 2. Open Daily Free Lootbox
+    component.openLootboxModal();
+    expect(component.isLootboxModalOpen()).toBeTrue();
+
+    component.triggerOpenDailyFreeLootbox();
+    expect(component.isUnboxing()).toBeTrue();
+
+    const freeReq = httpMock.expectOne('/api/v1/clinic/lootboxes/daily-free/open');
+    expect(freeReq.request.method).toBe('POST');
+    freeReq.flush({
+      data: {
+        tier: 'TIER_1_RESIDENT',
+        tierName: 'Caixa do Residente',
+        costXp: 0,
+        droppedItem: {
+          id: 'ped_maca_dino',
+          name: 'Maca Dinossauro Safari',
+          category: 'pediatria',
+          costXp: 3500,
+          minExpansionLevel: 1,
+          footprintX: 2,
+          footprintY: 1,
+          interactable: true,
+          soundFxUrl: 'dino_blink',
+          assetSvgKey: 'ped_maca_dino',
+          rarity: 'LEGENDARY',
+          isLootboxExclusive: true
+        },
+        isDuplicate: false,
+        cashbackXpAwarded: 0,
+        currentXpAfter: 2000,
+        lifetimeXp: 1800,
+        openedAt: '2026-10-28T20:00:00Z',
+        isDailyFree: true
+      }
+    });
+
+    tick(1400);
+    expect(component.isUnboxing()).toBeFalse();
+    expect(component.lootboxRevealResult()?.isDailyFree).toBeTrue();
+    expect(component.lootboxRevealResult()?.droppedItem.id).toBe('ped_maca_dino');
+  }));
 });

@@ -179,6 +179,19 @@ interface CategoryTabMeta {
               {{ editMode() ? '✓ Concluir Edição' : '🛠️ Decorar / Mover' }}
             </button>
 
+            @if (editMode()) {
+              <button
+                type="button"
+                class="btn-avatar-modal"
+                [class.is-active]="isMovingDoctor()"
+                (click)="toggleMovingDoctor()"
+                [title]="'Mover ' + doctorDisplayName() + ' pela sala'"
+                data-testid="move-doctor-btn"
+              >
+                📍 Mover {{ currentAvatar()?.gender === 'FEMALE' ? 'Dra.' : 'Dr.' }}
+              </button>
+            }
+
             @if (isLayoutDirty()) {
               <button
                 type="button"
@@ -229,10 +242,12 @@ interface CategoryTabMeta {
             [selectedCatalogItem]="selectedCatalogItem()"
             [selectedRotation]="selectedRotation()"
             [movingPlacedId]="movingPlacedId()"
+            [isMovingDoctor]="isMovingDoctor()"
             (tileClicked)="onViewportTileClicked($event)"
             (placedItemClicked)="onViewportPlacedItemClicked($event)"
             (rotateRequested)="toggleRotation()"
-            (avatarClicked)="openAvatarCustomizer()"
+            (avatarClicked)="onAvatarViewportClick()"
+            (cancelMovingDoctor)="cancelMovingDoctor()"
           />
         </div>
 
@@ -2732,6 +2747,7 @@ export class MinhaClinicaComponent implements OnInit {
   readonly selectedCatalogItem = signal<ClinicCatalogItem | null>(null);
   readonly selectedRotation = signal<number>(0);
   readonly movingPlacedId = signal<string | undefined>(undefined);
+  readonly isMovingDoctor = signal<boolean>(false);
   readonly workingPlacedItems = signal<ClinicPlacedItem[]>([]);
   readonly isLayoutDirty = signal<boolean>(false);
   readonly localError = signal<string | null>(null);
@@ -2929,8 +2945,37 @@ export class MinhaClinicaComponent implements OnInit {
     if (!next) {
       this.selectedCatalogItem.set(null);
       this.movingPlacedId.set(undefined);
+      this.isMovingDoctor.set(false);
     }
     this.audioService.playClick();
+  }
+
+  onAvatarViewportClick(): void {
+    if (this.editMode()) {
+      this.startMovingDoctor();
+    } else {
+      this.openAvatarCustomizer();
+    }
+  }
+
+  startMovingDoctor(): void {
+    this.isMovingDoctor.set(true);
+    this.selectedCatalogItem.set(null);
+    this.movingPlacedId.set(undefined);
+    this.localError.set(null);
+    this.audioService.playClick();
+  }
+
+  toggleMovingDoctor(): void {
+    if (this.isMovingDoctor()) {
+      this.isMovingDoctor.set(false);
+    } else {
+      this.startMovingDoctor();
+    }
+  }
+
+  cancelMovingDoctor(): void {
+    this.isMovingDoctor.set(false);
   }
 
   toggleRotation(): void {
@@ -2994,8 +3039,65 @@ export class MinhaClinicaComponent implements OnInit {
       return;
     }
 
+    // Caso A: Doutor(a) selecionado(a) para mover de lugar
+    if (this.isMovingDoctor()) {
+      const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY);
+      if (itemOnTile) {
+        this.localError.set(
+          `Posição (${coords.gridX}, ${coords.gridY}) já ocupada por um móvel. Escolha um piso livre para o(a) Doutor(a).`
+        );
+        this.audioService.playErrorShake();
+        return;
+      }
+
+      this.localError.set(null);
+      this.isMovingDoctor.set(false);
+      this.audioService.playPlaceItem();
+
+      const current = this.currentAvatar();
+      const updatedAvatar: DoctorAvatar = {
+        gender: current?.gender ?? 'FEMALE',
+        skinCoat: current?.skinCoat ?? 'coat_intern_white',
+        skinStethoscope: current?.skinStethoscope ?? 'steth_classic_black',
+        skinAccessory: current?.skinAccessory ?? 'acc_none',
+        avatarX: coords.gridX,
+        avatarY: coords.gridY
+      };
+
+      // Atualização otimista imediata no viewport
+      this.clinicService.clinicState.set({
+        ...state,
+        avatar: updatedAvatar
+      });
+
+      // Persiste no backend
+      this.clinicService.updateDoctorAvatar({
+        avatarX: coords.gridX,
+        avatarY: coords.gridY
+      }).subscribe({
+        next: resp => {
+          const s = this.clinic();
+          if (s) {
+            this.clinicService.clinicState.set({
+              ...s,
+              avatar: {
+                ...updatedAvatar,
+                avatarId: resp.avatarId ?? updatedAvatar.avatarId,
+                avatarX: resp.avatarX,
+                avatarY: resp.avatarY
+              }
+            });
+          }
+        },
+        error: () => {
+          // Mantém fallback otimista
+        }
+      });
+      return;
+    }
+
     const sel = this.selectedCatalogItem();
-    // Caso 1: Item selecionado para posicionar ou mover
+    // Caso B: Item selecionado para posicionar ou mover
     if (sel) {
       const isWall =
         sel.placementType === 'WALL' ||
@@ -3082,7 +3184,14 @@ export class MinhaClinicaComponent implements OnInit {
       return;
     }
 
-    // Caso 2: Nenhum item em mãos — se clicou em um tile que possui um móvel, seleciona-o para mover!
+    // Caso C: Nenhum item em mãos — se clicou no piso onde o(a) Doutor(a) está, seleciona para mover!
+    const currentDoc = this.currentAvatar();
+    if (currentDoc && currentDoc.avatarX === coords.gridX && currentDoc.avatarY === coords.gridY) {
+      this.startMovingDoctor();
+      return;
+    }
+
+    // Caso D: Nenhum item em mãos — se clicou em um tile que possui um móvel, seleciona-o para mover!
     const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY);
     if (itemOnTile) {
       this.onViewportPlacedItemClicked(itemOnTile);
