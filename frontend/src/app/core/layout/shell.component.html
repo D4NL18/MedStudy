@@ -18,6 +18,7 @@
       <a routerLink="/aulas" routerLinkActive="active">Aulas</a>
       <a routerLink="/revisoes" routerLinkActive="active">Revisão Intervalada</a>
       <a routerLink="/flashcards" routerLinkActive="active">Flashcards</a>
+      <a routerLink="/minha-clinica" routerLinkActive="active">Minha Clínica</a>
       <a routerLink="/social" routerLinkActive="active">Social</a>
       <a routerLink="/competicoes" routerLinkActive="active">Competições</a>
       <a routerLink="/analytics/area" routerLinkActive="active">Análise Área</a>
@@ -124,6 +125,9 @@
           <a routerLink="/flashcards" routerLinkActive="active" (click)="toggleDrawer()">
             <lucide-icon name="layers"></lucide-icon> Flashcards
           </a>
+          <a routerLink="/minha-clinica" routerLinkActive="active" (click)="toggleDrawer()">
+            <lucide-icon name="stethoscope"></lucide-icon> Minha Clínica
+          </a>
           <a routerLink="/social" routerLinkActive="active" (click)="toggleDrawer()">
             <lucide-icon name="users"></lucide-icon> Social
           </a>
@@ -169,4 +173,5 @@
 
   <app-flashcards-study></app-flashcards-study>
   <app-onboarding></app-onboarding>
+  <app-xp-reward-toast></app-xp-reward-toast>
 </div>
