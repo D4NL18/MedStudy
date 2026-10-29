@@ -230,6 +230,84 @@ Cenário 4: Respeito à Acessibilidade e Redução de Movimento (prefers-reduced
 
 ---
 
+
+
+---
+
+### ?? US-14 [PARALLEL]: Revis?o Integral, Corre??o de Quebras e Reformula??o Est?tica de Skins de Consult?rio e Avatar
+- **Classifica??o:** Categoria A (Engenharia Fullstack: DB Flyway + Backend API Surfaces + Frontend Wardrobe & SVG Renderers)
+- **Rastreabilidade de Neg?cio:** `[P-096]`
+- **Framework de Prioriza??o:**
+  - **RICE Score:** **840** (Reach: 1.000 estudantes ativos ? Impact: 3.5 [Elimina bugs de persist?ncia e desbloqueia todo o acervo cosm?tico] ? Confidence: 95% / Effort: 4.0)
+  - **MoSCoW:** MUST HAVE (Sem a corre??o, superf?cies n?o debitam XP nem persistem no banco, e mais de 10 op??es homologadas do avatar permanecem inacess?veis).
+- **Valida??o INVEST:**
+  - **I (Independente):** Sub-tarefas de Backend/DB (sincroniza??o de superf?cies e compras) e Frontend (modal do avatar e artes vetoriais SVG) podem ser desenvolvidas de forma paralela via mocks de contrato.
+  - **N (Negoci?vel):** Custos em XP de cada superf?cie, detalhes de ornamenta??o visual das estampas e paletas exatas dos revestimentos.
+  - **V (Valiosa):** Garante persist?ncia ?ntegra de layout da cl?nica e do guarda-roupa m?dico, al?m de uma experi?ncia est?tica premium digna de um *Cozy Medical Tycoon*.
+  - **E (Estim?vel):** 8 Story Points (3 Backend/DB + 5 Frontend).
+  - **S (Pequena):** Focada na sincroniza??o do cat?logo de skins/revestimentos e enriquecimento das artes SVG do consult?rio e do avatar.
+  - **T (Test?vel):** Crit?rios BDD detalhados para persist?ncia no banco, d?bito de XP, exibi??o de todas as skins no modal e renderiza??o dos SVGs sem cruz gen?rica.
+
+#### Sub-Tarefas Fatiadas com Paralelismo (`[PARALLEL]`):
+1. **Sub-task 1 [PARALLEL] (DB & Backend): Sincroniza??o do Cat?logo de Superf?cies de Parede e Piso:**
+   - Atualiza??o do cat?logo de superf?cies e constantes `OFFICIAL_SURFACES` no backend com os IDs oficiais vigentes no frontend (`wallpaper_geometric_teal`, `wallpaper_brick_white`, `wood_dark_herringbone`, `tatame_eva`, `marble_carrara`, `wood_light`, etc.).
+   - Migration Flyway garantindo inser??o dos novos registros na tabela `clinic_items_catalog` com categoria `WALL_SURFACE` e `FLOOR_SURFACE` e custos balanceados em XP.
+   - Valida??o dos endpoints `POST /api/v1/clinic/items/buy` e `PUT /api/v1/clinic/surfaces` para debitar XP no ledger e persistir o layout de piso e parede.
+
+2. **Sub-task 2 [PARALLEL] (Frontend - Guarda-Roupa): Integra??o Integral de Skins no Modal do Avatar M?dico:**
+   - Expandir `doctor-wardrobe-modal.component` e `minha-clinica.component` para exibir todas as op??es homologadas:
+     - Jalecos/Roupas: `coat_default`, `coat_intern_white`, `coat_scrubs_navy`, `coat_scrubs_green`, `coat_pediatric`, `coat_pediatric_dino`, `coat_executive_doc`, `coat_gold`.
+     - Estetosc?pios: `steth_standard`, `steth_classic_black`, `steth_elephant`, `steth_cardio_burgundy`, `steth_gold`, `steth_gold_master`, `steth_none`.
+     - Acess?rios: `acc_none`, `acc_red_bowtie`, `acc_scrub_cap`, `acc_glasses_classic`, `acc_prontuario_clipboard`, `acc_ped_gorro_colorido`.
+   - Mecanismo de pr?-visualiza??o reativa instant?nea (Signal State) antes do salvamento (`PUT /api/v1/clinic/avatar`).
+
+3. **Sub-task 3 [PARALLEL] (Frontend - Arte Vetorial SVG): Reformula??o Est?tica de Skins Espec?ficas do Avatar:**
+   - `coat_pediatric_dino`: Estampa m?dica infantil exclusiva e l?dica com silhuetas de dinossauros fofinhos (estilo T-Rex e Triceratops) e pequenas pegadas em tons pastel.
+   - `coat_executive_doc`: Jaleco executivo de alta alfaiataria m?dica com corte italiano refinado, lapela chanfrada, len?o de bolso e caimento nobre.
+   - `acc_ped_gorro_colorido`: Gorro cir?rgico estampado tem?tico safari/pedi?trico cobrindo a cabe?a do avatar de forma harmoniosa com o ?ngulo 2.5D.
+
+4. **Sub-task 4 [PARALLEL] (Frontend - Arte Vetorial de Itens & Revestimentos): Renderiza??o Especializada no `clinic-item-svg`:**
+   - Implementar blocos `@case` em `clinic-item-svg.component.html` para todos os temas de revestimento (piso e parede), apresentando mini-amostras texturizadas ricas de cada acabamento no cat?logo e em caixas, eliminando o fallback de caixa com cruz gen?rica.
+   - Refinar detalhes de textura de piso e parede, mantendo a harmonia isom?trica.
+
+#### Crit?rios de Aceite BDD (US-14):
+```gherkin
+Cen?rio 1: Sincroniza??o do Cat?logo de Superf?cies e Compra Bem-Sucedida com D?bito de XP
+  Dado que o estudante autenticado deseja adquirir a superf?cie de parede "wallpaper_geometric_teal" de custo 950 XP
+  E seu saldo atual de XP em `user_xp_accounts` ? de 3.000 XP
+  Quando ele envia uma requisi??o `POST /api/v1/clinic/items/buy` com `catalogItemId = 'wallpaper_geometric_teal'`
+  Ent?o o backend deve responder com status HTTP 200 OK
+  E o saldo de `current_xp` deve ser debitado de forma at?mica para 2.050 XP
+  E um registro imut?vel deve ser gerado em `user_xp_transactions` com `source = 'ITEM_PURCHASE'`
+  E a superf?cie deve ser desbloqueada em `user_unlocked_skins`.
+
+Cen?rio 2: Persist?ncia do Layout da Cl?nica com Novas Superf?cies
+  Dado que o estudante possui as superf?cies "wallpaper_brick_white" e "wood_dark_herringbone"
+  Quando ele personaliza a cl?nica e envia `PUT /api/v1/clinic/surfaces` com `wallTheme = 'wallpaper_brick_white'` e `floorTheme = 'wood_dark_herringbone'`
+  Ent?o a resposta deve retornar HTTP 200 OK com o layout atualizado
+  E ao recarregar a cl?nica via `GET /api/v1/clinic/state`, as novas superf?cies devem permanecer persistidas no banco e no estado do frontend.
+
+Cen?rio 3: Exibi??o Completa de Todas as Op??es no Modal de Guarda-Roupa do Avatar
+  Dado que o estudante abre o modal `doctor-wardrobe-modal`
+  Quando as abas "Jaleco M?dico", "Estetosc?pio" e "Acess?rios" forem navegadas
+  Ent?o devem ser listadas todas as op??es homologadas no backend
+  E cada item deve apresentar seu estado visual correto (equipado, em teste, bloqueado ou desbloqueado).
+
+Cen?rio 4: Arte e Renderiza??o Exclusiva de `coat_pediatric_dino`, `coat_executive_doc` e `acc_ped_gorro_colorido`
+  Dado que o avatar m?dico est? equipado com `coat_pediatric_dino` e `acc_ped_gorro_colorido`
+  Quando o componente `doctor-avatar-svg` ? renderizado na cl?nica isom?trica
+  Ent?o o jaleco deve exibir silhuetas n?tidas de dinossauros infantis e pequenas pegadas em vetor
+  E a cabe?a do m?dico deve exibir o gorro cir?rgico com padronagem tem?tica safari
+  E se o jaleco for alterado para `coat_executive_doc`, a arte deve exibir corte alfaiataria executiva com lapela nobre e len?o.
+
+Cen?rio 5: Elimina??o de Fallback Gen?rico em `clinic-item-svg` para Revestimentos de Parede e Piso
+  Dado que qualquer superf?cie de parede ou piso catalogada ? renderizada pelo componente `clinic-item-svg`
+  Quando o template avalia o `itemKey`
+  Ent?o o componente deve entrar no `@case` espec?fico do revestimento correspondente
+  E renderizar a amostra isom?trica texturizada fiel do piso ou parede
+  E em nenhuma circunst?ncia exibir o fallback gen?rico de caixa com cruz verde.
+```
+
 ## 3. Matriz de Riscos & Plano de Mitigação (PMBOK 7 / Pre-Mortem)
 
 | Risco Identificado | Severidade / Probabilidade | Estratégia | Ação Proativa do Time |
