@@ -121,7 +121,7 @@ class ClinicServiceTest {
         assertEquals(4, state.getGridHeight());
         assertEquals(3, state.getPlacedItems().size());
         assertTrue(state.getOwnedItemIds().containsAll(List.of("mesa_scandi", "cadeira_ergonomica", "ped_maca_baleia")));
-        assertEquals(104, state.getCatalog().size());
+        assertEquals(ClinicService.OFFICIAL_CATALOG_ITEMS.size(), state.getCatalog().size());
         assertNotNull(state.getData());
         assertNotNull(state.getMeta());
     }
@@ -476,5 +476,53 @@ class ClinicServiceTest {
         assertEquals(HttpStatus.FORBIDDEN, ex.getStatusCode());
         assertTrue(ex.getReason().contains("relíquia exclusiva de Lootbox"));
         verify(userXpAccountRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("P-096.1 & P-096.2: Should buy canonical wallpaper geometric teal, debit XP and apply wall theme")
+    void shouldBuyCanonicalWallpaperGeometricTeal() {
+        UUID clinicId = UUID.randomUUID();
+        UserClinic clinic = new UserClinic();
+        clinic.setId(clinicId);
+        clinic.setUserId(userId);
+        clinic.setExpansionLevel(1);
+        clinic.setWallTheme("clean_white");
+
+        UserXpAccount account = new UserXpAccount(userId, 3000L, 5000L, 0, null);
+
+        when(userClinicRepository.findByUserId(userId)).thenReturn(Optional.of(clinic));
+        when(userXpAccountRepository.findById(userId)).thenReturn(Optional.of(account));
+        when(userUnlockedSkinRepository.findByUserId(userId)).thenReturn(List.of());
+
+        BuyClinicItemRequest request = new BuyClinicItemRequest("wallpaper_geometric_teal", 0, 0, 0);
+        BuyClinicItemResponse res = clinicService.buyItem(userId, request);
+
+        assertEquals("wallpaper_geometric_teal", clinic.getWallTheme());
+        assertEquals(4050L, res.getCurrentXp()); // 5000 - 950 = 4050
+        verify(userUnlockedSkinRepository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("P-096.1 & P-096.2: Should allow free default surfaces in updateSurfaces without prior purchase")
+    void shouldAllowFreeSurfacesInUpdateSurfaces() {
+        UUID clinicId = UUID.randomUUID();
+        UserClinic clinic = new UserClinic();
+        clinic.setId(clinicId);
+        clinic.setUserId(userId);
+        clinic.setExpansionLevel(1);
+        clinic.setWallTheme("wallpaper_geometric_teal");
+        clinic.setFloorTheme("wood_dark_herringbone");
+
+        UserXpAccount account = new UserXpAccount(userId, 1000L, 1000L, 0, null);
+
+        when(userClinicRepository.findByUserId(userId)).thenReturn(Optional.of(clinic));
+        when(userXpAccountRepository.findById(userId)).thenReturn(Optional.of(account));
+        when(userUnlockedSkinRepository.findByUserId(userId)).thenReturn(List.of());
+
+        ClinicSurfacesUpdateRequest request = new ClinicSurfacesUpdateRequest("clean_white", "wood_light");
+        ClinicStateResponse res = clinicService.updateSurfaces(userId, request);
+
+        assertEquals("clean_white", res.getWallTheme());
+        assertEquals("wood_light", res.getFloorTheme());
     }
 }

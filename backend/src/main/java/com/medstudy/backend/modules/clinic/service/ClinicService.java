@@ -12,6 +12,7 @@ import com.medstudy.backend.modules.clinic.dto.OwnedSurfaceDto;
 import com.medstudy.backend.modules.clinic.dto.PlacedItemDto;
 import com.medstudy.backend.modules.clinic.dto.UpdateClinicLayoutRequest;
 import com.medstudy.backend.modules.clinic.entity.ClinicCatalogItem;
+import com.medstudy.backend.modules.clinic.entity.ItemRarity;
 import com.medstudy.backend.modules.clinic.entity.ClinicExpansionLevel;
 import com.medstudy.backend.modules.clinic.entity.ClinicPlacedItem;
 import com.medstudy.backend.modules.clinic.entity.StudyActionType;
@@ -157,7 +158,15 @@ public class ClinicService {
             new ClinicCatalogItem("lareira_ecologica_etanol", "Lareira Ecológica a Bioetanol", "recepcao", 4200, 4, 2, 1, "FLOOR", true, "/assets/audio/clinic/fire_crackle.mp3", "lareira_ecologica_etanol"),
             new ClinicCatalogItem("poltrona_massagem_zero_g", "Poltrona de Massagem Gravidade Zero", "recepcao", 6500, 4, 1, 1, "FLOOR", true, "/assets/audio/clinic/massage_hum.mp3", "poltrona_massagem_zero_g"),
             new ClinicCatalogItem("piano_cauda_lounge", "Piano de Meia-Cauda Laqueado Preto", "recepcao", 9800, 5, 2, 2, "FLOOR", true, "/assets/audio/clinic/piano_chord.mp3", "piano_cauda_lounge"),
-            new ClinicCatalogItem("mascote_coruja_atena", "Coruja Buraqueira Atena", "recepcao", 8500, 6, 1, 1, "FLOOR", true, "/assets/audio/clinic/owl_hoot.mp3", "mascote_coruja_atena")
+            new ClinicCatalogItem("mascote_coruja_atena", "Coruja Buraqueira Atena", "recepcao", 8500, 6, 1, 1, "FLOOR", true, "/assets/audio/clinic/owl_hoot.mp3", "mascote_coruja_atena"),
+            // 8 Canonical Surfaces (P-096.1)
+            new ClinicCatalogItem("clean_white", "Branco Clínico Minimalista", "WALL_SURFACE", 0, 1, 0, 0, "SURFACE_WALL", false, null, "clean_white", ItemRarity.COMMON, false),
+            new ClinicCatalogItem("wallpaper_geometric_teal", "Geométrico Nórdico Teal", "WALL_SURFACE", 950, 1, 0, 0, "SURFACE_WALL", false, null, "wallpaper_geometric_teal", ItemRarity.COMMON, false),
+            new ClinicCatalogItem("wallpaper_brick_white", "Tijolinho Branco Moderno", "WALL_SURFACE", 750, 1, 0, 0, "SURFACE_WALL", false, null, "wallpaper_brick_white", ItemRarity.COMMON, false),
+            new ClinicCatalogItem("wood_light", "Carvalho Claro Escandinavo", "FLOOR_SURFACE", 0, 1, 0, 0, "SURFACE_FLOOR", false, null, "wood_light", ItemRarity.COMMON, false),
+            new ClinicCatalogItem("wood_dark_herringbone", "Madeira Nobre Espinha de Peixe", "FLOOR_SURFACE", 1100, 1, 0, 0, "SURFACE_FLOOR", false, null, "wood_dark_herringbone", ItemRarity.COMMON, false),
+            new ClinicCatalogItem("marble_carrara", "Mármore Carrara Luxo", "FLOOR_SURFACE", 2200, 1, 0, 0, "SURFACE_FLOOR", false, null, "marble_carrara", ItemRarity.RARE, false),
+            new ClinicCatalogItem("tatame_eva", "Tatame EVA Pastel Candy Color", "FLOOR_SURFACE", 800, 1, 0, 0, "SURFACE_FLOOR", false, null, "tatame_eva", ItemRarity.COMMON, false)
     );
     /**
      * Official cosmetic skins catalog for Doctor Avatar (P-089).
@@ -196,15 +205,14 @@ public class ClinicService {
      * Official surface options (P-087).
      */
     public static final List<OwnedSurfaceDto> OFFICIAL_SURFACES = List.of(
-            new OwnedSurfaceDto("wall_clean_white", "WALL", "Paredes Brancas Internato", 0),
-            new OwnedSurfaceDto("ped_papel_safari", "WALL", "Papel de Parede Safari Aquarela", 850),
-            new OwnedSurfaceDto("wall_azul_clinico", "WALL", "Azulejo Cirúrgico Azul Suave", 1200),
-            new OwnedSurfaceDto("wall_tijolo_loft", "WALL", "Tijolinho Aparente Acolhedor", 1600),
-            new OwnedSurfaceDto("floor_porcelanato_cinza", "FLOOR", "Porcelanato Acetinado Neutro", 0),
-            new OwnedSurfaceDto("floor_madeira_escandi", "FLOOR", "Madeira Clara Escandinava", 900),
-            new OwnedSurfaceDto("floor_vinilico_cirurgico", "FLOOR", "Piso Vinílico Hospitalar Verde", 1100),
-            new OwnedSurfaceDto("floor_marmore_carrara", "FLOOR", "Mármore Carrara & Dourado", 2400)
-    );
+            new OwnedSurfaceDto("clean_white", "WALL", "Branco Clínico Minimalista", 0),
+            new OwnedSurfaceDto("ped_papel_safari", "WALL", "Safari Aquarela Savana", 850),
+            new OwnedSurfaceDto("wallpaper_geometric_teal", "WALL", "Geométrico Nórdico Teal", 950),
+            new OwnedSurfaceDto("wallpaper_brick_white", "WALL", "Tijolinho Branco Moderno", 750),
+            new OwnedSurfaceDto("wood_light", "FLOOR", "Carvalho Claro Escandinavo", 0),
+            new OwnedSurfaceDto("wood_dark_herringbone", "FLOOR", "Madeira Nobre Espinha de Peixe", 1100),
+            new OwnedSurfaceDto("marble_carrara", "FLOOR", "Mármore Carrara Luxo", 2200),
+            new OwnedSurfaceDto("tatame_eva", "FLOOR", "Tatame EVA Pastel Candy Color", 800));
 
     private final UserClinicRepository userClinicRepository;
     private final UserXpAccountRepository userXpAccountRepository;
@@ -289,7 +297,8 @@ public class ClinicService {
         if (request.getWallTheme() != null && !request.getWallTheme().isBlank()) {
             String wallTheme = request.getWallTheme().trim();
             // Free default or must be unlocked
-            if (!"wall_clean_white".equals(wallTheme) && !unlockedSkins.contains(wallTheme)) {
+            boolean isFreeWall = "clean_white".equalsIgnoreCase(wallTheme) || "wall_clean_white".equalsIgnoreCase(wallTheme);
+            if (!isFreeWall && !unlockedSkins.contains(wallTheme)) {
                 throw new ResponseStatusException(
                         HttpStatus.FORBIDDEN,
                         "Você ainda não desbloqueou este revestimento."
@@ -301,7 +310,8 @@ public class ClinicService {
         if (request.getFloorTheme() != null && !request.getFloorTheme().isBlank()) {
             String floorTheme = request.getFloorTheme().trim();
             // Free default or must be unlocked
-            if (!"floor_porcelanato_cinza".equals(floorTheme) && !unlockedSkins.contains(floorTheme)) {
+            boolean isFreeFloor = "wood_light".equalsIgnoreCase(floorTheme) || "floor_porcelanato_cinza".equalsIgnoreCase(floorTheme);
+            if (!isFreeFloor && !unlockedSkins.contains(floorTheme)) {
                 throw new ResponseStatusException(
                         HttpStatus.FORBIDDEN,
                         "Você ainda não desbloqueou este revestimento."
@@ -414,28 +424,32 @@ public class ClinicService {
             );
         }
 
-        if (account.getCurrentXp() < item.getCostXp()) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Saldo de XP insuficiente para realizar esta operação."
-            );
-        }
-
-        account.debitCurrentXp(item.getCostXp());
-        userXpAccountRepository.save(account);
-
-        UserXpTransaction tx = new UserXpTransaction(
-                userId,
-                -item.getCostXp(),
-                account.getCurrentXp(),
-                StudyActionType.ITEM_PURCHASE.name(),
-                "Compra de item da clínica: " + item.getName() + " (" + item.getId() + ")"
-        );
-        userXpTransactionRepository.save(tx);
-
-        // Surface themes handling (P-087)
+        // Surface themes handling (P-087 & P-096.1, P-096.2: Idempotent purchase)
         if ("SURFACE_WALL".equalsIgnoreCase(item.getPlacementType()) || "SURFACE_FLOOR".equalsIgnoreCase(item.getPlacementType())) {
-            unlockSkinForUser(userId, item.getPlacementType().toLowerCase(), item.getId());
+            Set<String> unlockedSkins = getUnlockedSkinIds(userId);
+            boolean alreadyOwned = unlockedSkins.contains(item.getId());
+
+            if (!alreadyOwned) {
+                if (account.getCurrentXp() < item.getCostXp()) {
+                    throw new ResponseStatusException(
+                            HttpStatus.UNPROCESSABLE_ENTITY,
+                            "Saldo de XP insuficiente para realizar esta operação."
+                    );
+                }
+                account.debitCurrentXp(item.getCostXp());
+                userXpAccountRepository.save(account);
+
+                UserXpTransaction tx = new UserXpTransaction(
+                        userId,
+                        -item.getCostXp(),
+                        account.getCurrentXp(),
+                        StudyActionType.ITEM_PURCHASE.name(),
+                        "Compra de revestimento: " + item.getName() + " (" + item.getId() + ")"
+                );
+                userXpTransactionRepository.save(tx);
+                unlockSkinForUser(userId, item.getPlacementType().toLowerCase(), item.getId());
+            }
+
             if ("SURFACE_WALL".equalsIgnoreCase(item.getPlacementType())) {
                 clinic.setWallTheme(item.getId());
             } else {
@@ -454,6 +468,25 @@ public class ClinicService {
                     "Revestimento '" + item.getName() + "' aplicado com sucesso à clínica!"
             );
         }
+
+        if (account.getCurrentXp() < item.getCostXp()) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Saldo de XP insuficiente para realizar esta operação."
+            );
+        }
+
+        account.debitCurrentXp(item.getCostXp());
+        userXpAccountRepository.save(account);
+
+        UserXpTransaction tx = new UserXpTransaction(
+                userId,
+                -item.getCostXp(),
+                account.getCurrentXp(),
+                StudyActionType.ITEM_PURCHASE.name(),
+                "Compra de item da clínica: " + item.getName() + " (" + item.getId() + ")"
+        );
+        userXpTransactionRepository.save(tx);
 
         List<ClinicPlacedItem> existingEntities = new ArrayList<>(
                 clinicPlacedItemRepository.findByClinicIdOrderByPlacedAtAsc(clinic.getId())
