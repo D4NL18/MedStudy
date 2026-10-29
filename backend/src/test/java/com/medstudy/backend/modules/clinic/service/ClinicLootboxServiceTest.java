@@ -37,6 +37,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -134,11 +135,11 @@ class ClinicLootboxServiceTest {
         when(userXpAccountRepository.findByUserIdForUpdate(userId)).thenReturn(Optional.of(account));
         when(userClinicRepository.findByUserId(userId)).thenReturn(Optional.of(clinic));
         when(clinicPlacedItemRepository.findByClinicIdOrderByPlacedAtAsc(clinicId)).thenReturn(new ArrayList<>());
-        when(clinicCatalogItemRepository.findByRarity(ItemRarity.RARE)).thenReturn(List.of(rareItem));
+        when(clinicCatalogItemRepository.findAll()).thenReturn(List.of(rareItem));
 
         // Mock roll: 0.70 * 100 = 70.0 -> For TIER_1_RESIDENT (60-90) is RARE
         when(mockRandom.nextDouble()).thenReturn(0.70);
-        when(mockRandom.nextInt(1)).thenReturn(0);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
 
         LootboxOpenResponseDto response = lootboxService.openLootbox(userId, LootboxTier.TIER_1_RESIDENT);
 
@@ -208,12 +209,12 @@ class ClinicLootboxServiceTest {
         when(userXpAccountRepository.findByUserIdForUpdate(userId)).thenReturn(Optional.of(account));
         when(userClinicRepository.findByUserId(userId)).thenReturn(Optional.of(clinic));
         when(clinicPlacedItemRepository.findByClinicIdOrderByPlacedAtAsc(clinicId)).thenReturn(List.of(alreadyOwned));
-        when(clinicCatalogItemRepository.findByRarity(ItemRarity.EPIC)).thenReturn(List.of(epicItem));
+        when(clinicCatalogItemRepository.findAll()).thenReturn(List.of(epicItem));
 
         // For TIER_2_SPECIALIST (cost 1500 XP):
         // roll 0.70 * 100 = 70.0 -> in range [65, 93) -> EPIC!
         when(mockRandom.nextDouble()).thenReturn(0.70);
-        when(mockRandom.nextInt(1)).thenReturn(0);
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
 
         LootboxOpenResponseDto response = lootboxService.openLootbox(userId, LootboxTier.TIER_2_SPECIALIST);
 
@@ -251,5 +252,41 @@ class ClinicLootboxServiceTest {
         // Tier 3 with roll 0.80 -> must be LEGENDARY (>= 75%)
         when(mockRandom.nextDouble()).thenReturn(0.80);
         assertEquals(ItemRarity.LEGENDARY, lootboxService.drawRarityForTier(LootboxTier.TIER_3_CHIEF_OF_STAFF));
+    }
+
+    @Test
+    @DisplayName("P-094: Daily free lootbox opens for 0 XP and prevents double claim on the same day")
+    void shouldOpenDailyFreeLootboxOncePerDay() {
+        UserXpAccount account = new UserXpAccount(userId, 5000L, 2000L, 3, LocalDate.now());
+        UserClinic clinic = new UserClinic(userId, "Clínica Teste", 1, 4, 4, "clean_modern");
+        clinic.setId(clinicId);
+
+        ClinicCatalogItem commonItem = new ClinicCatalogItem(
+                "item_livro_harrison", "Tratado Harrison", "clinica",
+                300, 1, 1, 1, "FLOOR", true, null, "item_livro_harrison",
+                ItemRarity.COMMON, false
+        );
+
+        when(userXpAccountRepository.findByUserIdForUpdate(userId)).thenReturn(Optional.of(account));
+        when(userClinicRepository.findByUserId(userId)).thenReturn(Optional.of(clinic));
+        when(clinicPlacedItemRepository.findByClinicIdOrderByPlacedAtAsc(clinicId)).thenReturn(new ArrayList<>());
+        when(clinicCatalogItemRepository.findAll()).thenReturn(List.of(commonItem));
+
+        when(mockRandom.nextDouble()).thenReturn(0.10); // 10% -> TIER_1_RESIDENT
+        when(mockRandom.nextInt(anyInt())).thenReturn(0);
+
+        LootboxOpenResponseDto response = lootboxService.openDailyFreeLootbox(userId);
+
+        assertNotNull(response);
+        assertEquals(0, response.getCostXp()); // Custo 0 XP
+        assertTrue(response.isDailyFree());
+        assertEquals(2000L, response.getCurrentXpAfter()); // Nenhum XP debitado
+        assertEquals(LocalDate.now(), clinic.getLastFreeLootboxDate());
+
+        // Segunda tentativa no mesmo dia deve lançar 409 CONFLICT
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class, () ->
+                lootboxService.openDailyFreeLootbox(userId)
+        );
+        assertEquals(HttpStatus.CONFLICT, ex.getStatusCode());
     }
 }

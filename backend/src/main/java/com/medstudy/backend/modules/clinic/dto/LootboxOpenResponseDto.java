@@ -20,6 +20,7 @@ public class LootboxOpenResponseDto {
     private int cashbackXpAwarded;
     private long currentXpAfter;
     private long lifetimeXp;
+    private boolean isDailyFree = false;
     private Instant openedAt;
 
     public LootboxOpenResponseDto() {
@@ -37,6 +38,21 @@ public class LootboxOpenResponseDto {
             long lifetimeXp,
             Instant openedAt
     ) {
+        this(tier, tierName, costXp, droppedItem, isDuplicate, cashbackXpAwarded, currentXpAfter, lifetimeXp, false, openedAt);
+    }
+
+    public LootboxOpenResponseDto(
+            String tier,
+            String tierName,
+            int costXp,
+            ClinicCatalogItem droppedItem,
+            boolean isDuplicate,
+            int cashbackXpAwarded,
+            long currentXpAfter,
+            long lifetimeXp,
+            boolean isDailyFree,
+            Instant openedAt
+    ) {
         this.tier = tier;
         this.tierName = tierName;
         this.costXp = costXp;
@@ -45,6 +61,7 @@ public class LootboxOpenResponseDto {
         this.cashbackXpAwarded = cashbackXpAwarded;
         this.currentXpAfter = currentXpAfter;
         this.lifetimeXp = lifetimeXp;
+        this.isDailyFree = isDailyFree;
         this.openedAt = openedAt != null ? openedAt : Instant.now();
     }
 
@@ -52,12 +69,15 @@ public class LootboxOpenResponseDto {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("tier", tier);
         data.put("tierName", tierName);
+        data.put("tierDisplayName", tierName);
         data.put("costXp", costXp);
         data.put("droppedItem", droppedItem);
         data.put("isDuplicate", isDuplicate);
         data.put("cashbackXpAwarded", cashbackXpAwarded);
+        data.put("currentXp", currentXpAfter);
         data.put("currentXpAfter", currentXpAfter);
         data.put("lifetimeXp", lifetimeXp);
+        data.put("isDailyFree", isDailyFree);
         data.put("openedAt", openedAt);
         return data;
     }
@@ -121,8 +141,20 @@ public class LootboxOpenResponseDto {
         return currentXpAfter;
     }
 
+    public long getCurrentXp() {
+        return currentXpAfter;
+    }
+
     public void setCurrentXpAfter(long currentXpAfter) {
         this.currentXpAfter = currentXpAfter;
+    }
+
+    public boolean isDailyFree() {
+        return isDailyFree;
+    }
+
+    public void setDailyFree(boolean dailyFree) {
+        isDailyFree = dailyFree;
     }
 
     public long getLifetimeXp() {

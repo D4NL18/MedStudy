@@ -45,6 +45,9 @@ public class UserClinic {
     @Column(name = "floor_theme", nullable = false, length = 50)
     private String floorTheme = "floor_porcelanato_cinza";
 
+    @Column(name = "last_free_lootbox_date")
+    private java.time.LocalDate lastFreeLootboxDate;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -135,6 +138,14 @@ public class UserClinic {
 
     public void setFloorTheme(String floorTheme) {
         this.floorTheme = floorTheme;
+    }
+
+    public java.time.LocalDate getLastFreeLootboxDate() {
+        return lastFreeLootboxDate;
+    }
+
+    public void setLastFreeLootboxDate(java.time.LocalDate lastFreeLootboxDate) {
+        this.lastFreeLootboxDate = lastFreeLootboxDate;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -2,7 +2,7 @@
  * Modelos, contratos e constantes da feature "Minha Clínica Médica" (P-080 a P-086).
  */
 
-export type ClinicCategory = 'pediatria' | 'mobiliario' | 'clinica' | 'recepcao';
+export type ClinicCategory = 'pediatria' | 'mobiliario' | 'clinica' | 'recepcao' | 'revestimentos';
 export type PlacementType = 'FLOOR' | 'WALL' | 'SURFACE_WALL' | 'SURFACE_FLOOR';
 export type WallSide = 'NW' | 'NE';
 export type DoctorGender = 'MALE' | 'FEMALE';
@@ -30,13 +30,16 @@ export interface LootboxTierInfo {
 
 export interface LootboxOpenResult {
   tier: LootboxTier;
-  tierName: string;
+  tierName?: string;
+  tierDisplayName?: string;
   costXp: number;
   droppedItem: ClinicCatalogItem;
   isDuplicate: boolean;
   cashbackXpAwarded: number;
-  currentXpAfter: number;
+  currentXp: number;
+  currentXpAfter?: number;
   lifetimeXp: number;
+  isDailyFree?: boolean;
   openedAt: string;
 }
 
@@ -146,6 +149,9 @@ export interface ClinicState {
   floorTheme: string;
   avatar?: DoctorAvatar;
   ownedSurfaces?: OwnedSurface[];
+  userName?: string;
+  userFirstName?: string;
+  dailyFreeLootboxAvailable?: boolean;
   lifetimeXp: number;
   currentXp: number;
   currentStreakDays: number;

@@ -42,21 +42,44 @@ public class ClinicLootboxController {
 
     @Operation(
             summary = "Listar tiers de caixas da sorte médicas disponíveis",
-            description = "Retorna os 3 tiers oficiais (Residente, Especialista, Chefe de Ala) com custos em XP e probabilidades públicas."
+            description = "Retorna os 3 tiers oficiais (Residente, Especialista, Chefe de Ala) com custos em XP, probabilidades públicas e status de caixa diária gratuita."
     )
     @ApiResponse(responseCode = "200", description = "Lista de tiers retornada com sucesso")
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getLootboxes() {
+    public ResponseEntity<Map<String, Object>> getLootboxes(@AuthenticationPrincipal User user) {
+        UUID userId = null;
+        try {
+            userId = ClinicController.resolveAuthenticatedUserId(user);
+        } catch (Exception ignored) {
+        }
+
         List<LootboxTierResponseDto> tiers = clinicLootboxService.getAvailableTiers();
+        boolean dailyFreeAvailable = userId != null && clinicLootboxService.isDailyFreeAvailable(userId);
+
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("data", tiers);
+        response.put("dailyFreeAvailable", dailyFreeAvailable);
 
         Map<String, Object> meta = new LinkedHashMap<>();
         meta.put("timestamp", Instant.now());
         meta.put("totalTiers", tiers.size());
+        meta.put("dailyFreeAvailable", dailyFreeAvailable);
         response.put("meta", meta);
 
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Abrir caixa da sorte médica diária gratuita (1 por dia no login)",
+            description = "Resgata a caixa da sorte de boas-vindas do dia sem custo de XP (0 XP), sorteando um tier aleatório e item garantidamente não repetido."
+    )
+    @ApiResponse(responseCode = "200", description = "Caixa diária gratuita aberta com sucesso")
+    @ApiResponse(responseCode = "409", description = "Caixa diária já resgatada hoje")
+    @PostMapping("/daily-free/open")
+    public ResponseEntity<LootboxOpenResponseDto> openDailyFreeLootbox(@AuthenticationPrincipal User user) {
+        UUID userId = ClinicController.resolveAuthenticatedUserId(user);
+        LootboxOpenResponseDto result = clinicLootboxService.openDailyFreeLootbox(userId);
+        return ResponseEntity.ok(result);
     }
 
     @Operation(

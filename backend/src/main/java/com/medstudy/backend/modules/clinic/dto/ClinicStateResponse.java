@@ -41,6 +41,9 @@ public class ClinicStateResponse {
     private List<PlacedItemDto> placedItems = new ArrayList<>();
     private List<PlacedItemDto> inventory = new ArrayList<>();
     private List<ClinicCatalogItem> catalog = new ArrayList<>();
+    private String userName = "Lari";
+    private String userFirstName = "Lari";
+    private boolean dailyFreeLootboxAvailable = true;
 
     public ClinicStateResponse() {
     }
@@ -49,6 +52,9 @@ public class ClinicStateResponse {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("clinicId", clinicId);
         data.put("clinicName", clinicName);
+        data.put("userName", userName);
+        data.put("userFirstName", userFirstName);
+        data.put("dailyFreeLootboxAvailable", dailyFreeLootboxAvailable);
         data.put("expansionLevel", expansionLevel);
         data.put("expansionName", expansionName);
         data.put("gridWidth", gridWidth);
@@ -289,5 +295,29 @@ public class ClinicStateResponse {
 
     public void setCatalog(List<ClinicCatalogItem> catalog) {
         this.catalog = catalog;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserFirstName() {
+        return userFirstName;
+    }
+
+    public void setUserFirstName(String userFirstName) {
+        this.userFirstName = userFirstName;
+    }
+
+    public boolean isDailyFreeLootboxAvailable() {
+        return dailyFreeLootboxAvailable;
+    }
+
+    public void setDailyFreeLootboxAvailable(boolean dailyFreeLootboxAvailable) {
+        this.dailyFreeLootboxAvailable = dailyFreeLootboxAvailable;
     }
 }

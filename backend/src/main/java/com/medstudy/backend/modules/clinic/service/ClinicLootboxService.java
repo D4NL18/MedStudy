@@ -28,10 +28,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -155,9 +158,68 @@ public class ClinicLootboxService {
         );
     }
 
+    public boolean isDailyFreeAvailable(UUID userId) {
+        if (userId == null) return false;
+        UserClinic clinic = userClinicRepository.findByUserId(userId).orElse(null);
+        if (clinic == null) return true;
+        LocalDate lastDate = clinic.getLastFreeLootboxDate();
+        return lastDate == null || lastDate.isBefore(LocalDate.now());
+    }
+
     /**
-     * Opens a lootbox atomically under pessimistic lock, executes CSPRNG drop, handles duplicates
-     * with cashback, and logs both financial transaction and drop audit record (P-080, P-093, P-094, P-095).
+     * Opens daily free welcome lootbox (P-094), non-accumulating, 1 roll per day on login.
+     * Randomly rolls a tier for free (0 XP debit).
+     */
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public LootboxOpenResponseDto openDailyFreeLootbox(UUID userId) {
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário não autenticado.");
+        }
+
+        UserClinic clinic = userClinicRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    UserClinic newClinic = new UserClinic(userId, "Minha Clínica", 1, 4, 4, "clean_modern");
+                    return userClinicRepository.save(newClinic);
+                });
+
+        LocalDate today = LocalDate.now();
+        if (clinic.getLastFreeLootboxDate() != null && !clinic.getLastFreeLootboxDate().isBefore(today)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "A Caixa da Sorte diária gratuita de hoje já foi resgatada! Volte amanhã para abrir outra."
+            );
+        }
+
+        clinic.setLastFreeLootboxDate(today);
+        userClinicRepository.save(clinic);
+
+        // Sorteia tier aleatório da caixa diária gratuita:
+        // 60% TIER_1_RESIDENT, 30% TIER_2_SPECIALIST, 10% TIER_3_CHIEF_OF_STAFF
+        double roll = random.nextDouble() * 100.0;
+        LootboxTier tier;
+        if (roll < 60.0) {
+            tier = LootboxTier.TIER_1_RESIDENT;
+        } else if (roll < 90.0) {
+            tier = LootboxTier.TIER_2_SPECIALIST;
+        } else {
+            tier = LootboxTier.TIER_3_CHIEF_OF_STAFF;
+        }
+
+        UserXpAccount account = userXpAccountRepository.findByUserIdForUpdate(userId)
+                .orElseGet(() -> userXpAccountRepository.findByIdForUpdate(userId)
+                        .orElseGet(() -> {
+                            UserXpAccount created = new UserXpAccount(userId, 0L, 0L, 0, null);
+                            return userXpAccountRepository.save(created);
+                        }));
+
+        // Caixa diária gratuita (custo 0 XP) não insere transação de XP (constraint chk_user_xp_transactions_amount_non_zero)
+        // O registro oficial é auditado em LootboxOpeningLog com costXp=0 e isDailyFree=true
+        return processLootboxOpening(userId, clinic, account, tier, 0, true);
+    }
+
+    /**
+     * Opens a lootbox atomically under pessimistic lock, executes CSPRNG drop, guarantees anti-duplicate
+     * selection when unowned items exist, and logs audit record (P-080, P-093, P-094, P-095).
      */
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public LootboxOpenResponseDto openLootbox(UUID userId, LootboxTier tier) {
@@ -196,22 +258,33 @@ public class ClinicLootboxService {
         );
         userXpTransactionRepository.save(openTx);
 
-        // 3. Sorteio de Raridade via CDF
-        ItemRarity targetRarity = drawRarityForTier(tier);
-
-        // 4. Seleção Uniforme de Item dentro do pool da raridade
-        ClinicCatalogItem droppedItem = drawItemFromPool(targetRarity);
-
-        // 5. Verificação de Posse / Duplicata
         UserClinic clinic = userClinicRepository.findByUserId(userId)
                 .orElseGet(() -> {
                     UserClinic newClinic = new UserClinic(userId, "Minha Clínica", 1, 4, 4, "clean_modern");
                     return userClinicRepository.save(newClinic);
                 });
 
+        return processLootboxOpening(userId, clinic, account, tier, tier.getCostXp(), false);
+    }
+
+    private LootboxOpenResponseDto processLootboxOpening(
+            UUID userId,
+            UserClinic clinic,
+            UserXpAccount account,
+            LootboxTier tier,
+            int costXp,
+            boolean isDailyFree
+    ) {
+        // 3. Sorteio de Raridade via CDF
+        ItemRarity targetRarity = drawRarityForTier(tier);
+
+        // 4. Seleção Anti-Duplicata Estrita (Não pode vir item repetido se houver itens não possuídos)
+        ClinicCatalogItem droppedItem = drawAntiDuplicateItem(userId, clinic, targetRarity, tier);
+
+        // 5. Verificação de Posse (só pode ser duplicata caso o usuário já possua 100% de todo o catálogo)
         List<ClinicPlacedItem> existingItems = clinicPlacedItemRepository.findByClinicIdOrderByPlacedAtAsc(clinic.getId());
-        boolean isDuplicate = existingItems.stream()
-                .anyMatch(p -> p.getCatalogItemId().equalsIgnoreCase(droppedItem.getId()));
+        boolean isDuplicate = existingItems != null && existingItems.stream()
+                .anyMatch(p -> p.getCatalogItemId() != null && p.getCatalogItemId().equalsIgnoreCase(droppedItem.getId()));
 
         if (!isDuplicate && userUnlockedSkinRepository != null) {
             if (userUnlockedSkinRepository.existsByUserIdAndSkinId(userId, droppedItem.getId())) {
@@ -250,7 +323,7 @@ public class ClinicLootboxService {
         LootboxOpeningLog auditLog = new LootboxOpeningLog(
                 userId,
                 tier.name(),
-                tier.getCostXp(),
+                costXp,
                 droppedItem.getId(),
                 droppedItem.getRarity().name(),
                 isDuplicate,
@@ -262,14 +335,85 @@ public class ClinicLootboxService {
         return new LootboxOpenResponseDto(
                 tier.name(),
                 tier.getDisplayName(),
-                tier.getCostXp(),
+                costXp,
                 droppedItem,
                 isDuplicate,
                 cashbackXpAwarded,
                 account.getCurrentXp(),
                 account.getLifetimeXp(),
+                isDailyFree,
                 Instant.now()
         );
+    }
+
+    private ClinicCatalogItem drawAntiDuplicateItem(
+            UUID userId,
+            UserClinic clinic,
+            ItemRarity targetRarity,
+            LootboxTier tier
+    ) {
+        Set<String> ownedIds = new HashSet<>();
+        List<ClinicPlacedItem> existingItems = clinicPlacedItemRepository.findByClinicIdOrderByPlacedAtAsc(clinic.getId());
+        if (existingItems != null) {
+            for (ClinicPlacedItem item : existingItems) {
+                if (item.getCatalogItemId() != null) {
+                    ownedIds.add(item.getCatalogItemId().toLowerCase());
+                }
+            }
+        }
+        if (userUnlockedSkinRepository != null) {
+            List<UserUnlockedSkin> unlockedSkins = userUnlockedSkinRepository.findByUserId(userId);
+            if (unlockedSkins != null) {
+                for (UserUnlockedSkin skin : unlockedSkins) {
+                    if (skin.getSkinId() != null) {
+                        ownedIds.add(skin.getSkinId().toLowerCase());
+                    }
+                }
+            }
+        }
+
+        List<ClinicCatalogItem> allCatalog = clinicCatalogItemRepository.findAll();
+        if (allCatalog == null || allCatalog.isEmpty()) {
+            allCatalog = ClinicService.OFFICIAL_CATALOG_ITEMS;
+        }
+
+        // 1. Tenta item não possuído que corresponda estritamente à raridade sorteada
+        List<ClinicCatalogItem> unownedMatchingRarity = allCatalog.stream()
+                .filter(i -> i.getRarity() == targetRarity)
+                .filter(i -> !ownedIds.contains(i.getId().toLowerCase()))
+                .toList();
+
+        if (!unownedMatchingRarity.isEmpty()) {
+            return unownedMatchingRarity.get(random.nextInt(unownedMatchingRarity.size()));
+        }
+
+        // 2. Se a raridade sorteada já estiver 100% coletada, busca raridades adjacentes válidas para o tier
+        List<ItemRarity> fallbackRarities = switch (tier) {
+            case TIER_1_RESIDENT -> List.of(ItemRarity.RARE, ItemRarity.EPIC, ItemRarity.LEGENDARY, ItemRarity.COMMON);
+            case TIER_2_SPECIALIST -> List.of(ItemRarity.EPIC, ItemRarity.LEGENDARY, ItemRarity.RARE);
+            case TIER_3_CHIEF_OF_STAFF -> List.of(ItemRarity.LEGENDARY, ItemRarity.EPIC, ItemRarity.RARE);
+        };
+
+        for (ItemRarity fallbackRarity : fallbackRarities) {
+            List<ClinicCatalogItem> unownedFallback = allCatalog.stream()
+                    .filter(i -> i.getRarity() == fallbackRarity)
+                    .filter(i -> !ownedIds.contains(i.getId().toLowerCase()))
+                    .toList();
+            if (!unownedFallback.isEmpty()) {
+                return unownedFallback.get(random.nextInt(unownedFallback.size()));
+            }
+        }
+
+        // 3. Qualquer item não possuído em todo o catálogo
+        List<ClinicCatalogItem> anyUnowned = allCatalog.stream()
+                .filter(i -> !ownedIds.contains(i.getId().toLowerCase()))
+                .toList();
+        if (!anyUnowned.isEmpty()) {
+            return anyUnowned.get(random.nextInt(anyUnowned.size()));
+        }
+
+        // 4. Caso raro de completude 100% de todo o jogo: fallback para sorteio padrão
+        return drawItemFromPool(targetRarity);
     }
 
     /**

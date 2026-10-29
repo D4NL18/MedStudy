@@ -3,6 +3,7 @@ import {
   HostListener,
   OnInit,
   computed,
+  effect,
   inject,
   signal
 } from '@angular/core';
@@ -204,16 +205,6 @@ interface CategoryTabMeta {
             </button>
           </div>
         </header>
-
-        <!-- ESTADO 7: ERROR STATE BANNER (Quando há falha de validação ou saldo insuficiente) -->
-        @if (clinicService.error() || localError()) {
-          <div class="clinic-error-banner" role="alert" data-testid="clinic-error-banner">
-            <span>⚠️ {{ localError() || clinicService.error() }}</span>
-            <button type="button" class="btn-dismiss-error" (click)="clearErrors()">
-              Entendi
-            </button>
-          </div>
-        }
 
         <!-- VIEWPORT ISOMÉTRICO 2.5D CENTRAL (P-084, P-085, P-087) -->
         <div class="clinic-stage-wrapper">
@@ -879,12 +870,6 @@ interface CategoryTabMeta {
                 </button>
               </header>
 
-              @if (lootboxErrorMessage()) {
-                <div class="lootbox-error-banner" data-testid="lootbox-error-banner">
-                  ⚠️ {{ lootboxErrorMessage() }}
-                </div>
-              }
-
               <!-- BANNER DE CAIXA DIÁRIA GRATUITA (0 XP) -->
               @if (isDailyFreeAvailable()) {
                 <div class="daily-free-lootbox-card" data-testid="daily-free-lootbox-card">
@@ -996,6 +981,40 @@ interface CategoryTabMeta {
                 </button>
               </footer>
             }
+          </div>
+        </div>
+      }
+
+      <!-- MODAL DE ERRO BÁSICO (P-080: Diálogo limpo com backdrop, ícone amigável e botão Entendi) -->
+      @if (activeErrorModalMessage(); as errMessage) {
+        <div
+          class="clinic-basic-error-backdrop"
+          (click)="closeErrorModal()"
+          role="presentation"
+          data-testid="clinic-error-modal-backdrop"
+        >
+          <div
+            class="clinic-basic-error-card"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="basic-error-title"
+            aria-describedby="basic-error-desc"
+            (click)="$event.stopPropagation()"
+            data-testid="clinic-error-modal"
+          >
+            <div class="error-modal-icon-badge">
+              <span class="error-modal-icon" aria-hidden="true">⚠️</span>
+            </div>
+            <h3 id="basic-error-title" class="error-modal-title">Atenção</h3>
+            <p id="basic-error-desc" class="error-modal-desc">{{ errMessage }}</p>
+            <button
+              type="button"
+              class="btn-error-modal-dismiss"
+              (click)="closeErrorModal()"
+              data-testid="error-modal-dismiss-btn"
+            >
+              Entendi
+            </button>
           </div>
         </div>
       }
@@ -1626,6 +1645,90 @@ interface CategoryTabMeta {
         align-items: center;
         justify-content: center;
         padding: 16px;
+      }
+
+      /* Modal de Erro Básico */
+      .clinic-basic-error-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        animation: basic-error-fade-in 0.2s ease-out;
+      }
+
+      .clinic-basic-error-card {
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(226, 232, 240, 0.8);
+        padding: 28px 24px 22px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        animation: basic-error-scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .error-modal-icon-badge {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: #fef2f2;
+        border: 2px solid #fee2e2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        margin: 0 auto 16px;
+      }
+
+      .error-modal-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 8px 0;
+      }
+
+      .error-modal-desc {
+        font-size: 0.95rem;
+        color: #475569;
+        line-height: 1.5;
+        margin: 0 0 22px 0;
+        word-break: break-word;
+      }
+
+      .btn-error-modal-dismiss {
+        width: 100%;
+        padding: 12px 20px;
+        background: #0d9488;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.18s ease, transform 0.1s ease;
+      }
+
+      .btn-error-modal-dismiss:hover {
+        background: #0f766e;
+      }
+
+      .btn-error-modal-dismiss:active {
+        transform: scale(0.98);
+      }
+
+      @keyframes basic-error-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes basic-error-scale-in {
+        from { opacity: 0; transform: scale(0.92) translateY(8px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
       }
 
       .clinic-modal-card {
@@ -2739,6 +2842,16 @@ export class MinhaClinicaComponent implements OnInit {
   readonly workingPlacedItems = signal<ClinicPlacedItem[]>([]);
   readonly isLayoutDirty = signal<boolean>(false);
   readonly localError = signal<string | null>(null);
+  readonly activeErrorModalMessage = signal<string | null>(null);
+
+  constructor() {
+    effect(() => {
+      const srvErr = this.clinicService.error();
+      if (srvErr && !this.activeErrorModalMessage()) {
+        this.showErrorModal(srvErr);
+      }
+    });
+  }
 
   // Avatar e Revestimentos (P-087, P-088)
   readonly isAvatarModalOpen = signal<boolean>(false);
@@ -3058,10 +3171,9 @@ export class MinhaClinicaComponent implements OnInit {
     if (this.isMovingDoctor()) {
       const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
       if (itemOnTile) {
-        this.localError.set(
+        this.showErrorModal(
           `Posição (${coords.gridX}, ${coords.gridY}) já ocupada por um móvel. Escolha um piso livre para o(a) Doutor(a).`
         );
-        this.audioService.playErrorShake();
         return;
       }
 
@@ -3121,10 +3233,9 @@ export class MinhaClinicaComponent implements OnInit {
         sel.id === 'negatoscopio_led';
 
       if (isWall && coords.gridX !== 0 && coords.gridY !== 0) {
-        this.localError.set(
+        this.showErrorModal(
           'Itens de parede devem ser fixados em segmentos de parede (linha superior ou lateral esquerda).'
         );
-        this.audioService.playErrorShake();
         return;
       }
 
@@ -3143,10 +3254,9 @@ export class MinhaClinicaComponent implements OnInit {
       );
 
       if (!valid) {
-        this.localError.set(
+        this.showErrorModal(
           `Posição (${coords.gridX}, ${coords.gridY}) inválida: há colisão com outro móvel ou extrapola o limite ${state.gridWidth}×${state.gridHeight}.`
         );
-        this.audioService.playErrorShake();
         return;
       }
 
@@ -3339,8 +3449,7 @@ export class MinhaClinicaComponent implements OnInit {
       return;
     }
     if (state.currentXp < item.costXp) {
-      this.localError.set('Saldo de XP insuficiente para realizar esta operação.');
-      this.audioService.playErrorShake();
+      this.showErrorModal('Saldo de XP insuficiente para realizar esta operação.');
       return;
     }
 
@@ -3461,8 +3570,41 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   clearErrors(): void {
+    this.closeErrorModal();
+  }
+
+  showErrorModal(rawMessage: string | null): void {
+    if (!rawMessage) return;
+    const cleanMsg = this.sanitizeErrorMessage(rawMessage);
+    this.activeErrorModalMessage.set(cleanMsg);
+    this.localError.set(cleanMsg);
+    this.audioService.playErrorShake();
+  }
+
+  closeErrorModal(): void {
+    this.activeErrorModalMessage.set(null);
     this.localError.set(null);
+    this.lootboxErrorMessage.set(null);
     this.clinicService.error.set(null);
+    this.audioService.playClick();
+  }
+
+  sanitizeErrorMessage(raw: string): string {
+    if (!raw) return 'Ocorreu um erro inesperado. Tente novamente.';
+    const lower = raw.toLowerCase();
+    if (
+      lower.includes('could not execute statement') ||
+      lower.includes('check constraint') ||
+      lower.includes('failing row') ||
+      lower.includes('insert into') ||
+      lower.includes('violates') ||
+      lower.includes('sql') ||
+      lower.includes('nullpointer') ||
+      lower.includes('exception')
+    ) {
+      return 'Ocorreu uma instabilidade temporária ao processar a requisição no servidor. Por favor, tente novamente em instantes.';
+    }
+    return raw;
   }
 
   // MÉTODOS DO AVATAR MÉDICO (P-087, P-088)
@@ -3526,8 +3668,7 @@ export class MinhaClinicaComponent implements OnInit {
     if (!target) return;
 
     if (currentXp < target.costXp) {
-      this.localError.set(`Saldo de XP insuficiente (${currentXp}/${target.costXp} XP).`);
-      this.audioService.playErrorShake();
+      this.showErrorModal(`Saldo de XP insuficiente (${currentXp}/${target.costXp} XP).`);
       return;
     }
 
@@ -3574,8 +3715,7 @@ export class MinhaClinicaComponent implements OnInit {
           }
           this.audioService.playBuySuccess();
         } else {
-          this.localError.set('Não foi possível desbloquear o item cosmético.');
-          this.audioService.playErrorShake();
+          this.showErrorModal('Não foi possível desbloquear o item cosmético.');
         }
       }
     });
@@ -3597,8 +3737,7 @@ export class MinhaClinicaComponent implements OnInit {
     }
 
     if (lockedNames.length > 0) {
-      this.localError.set(`Você está provando "${lockedNames.join(', ')}", que ainda não foi desbloqueado. Clique no botão Desbloquear para adquiri-lo com seu XP antes de salvar.`);
-      this.audioService.playErrorShake();
+      this.showErrorModal(`Você está provando "${lockedNames.join(', ')}", que ainda não foi desbloqueado. Clique no botão Desbloquear para adquiri-lo com seu XP antes de salvar.`);
       return;
     }
 
@@ -3740,8 +3879,7 @@ export class MinhaClinicaComponent implements OnInit {
     const state = this.clinic();
     if (!state) return;
     if (state.currentXp < wall.costXp) {
-      this.localError.set(`Saldo de XP insuficiente (${state.currentXp}/${wall.costXp} XP).`);
-      this.audioService.playErrorShake();
+      this.showErrorModal(`Saldo de XP insuficiente (${state.currentXp}/${wall.costXp} XP).`);
       return;
     }
     this.clinicService
@@ -3760,8 +3898,7 @@ export class MinhaClinicaComponent implements OnInit {
     const state = this.clinic();
     if (!state) return;
     if (state.currentXp < floor.costXp) {
-      this.localError.set(`Saldo de XP insuficiente (${state.currentXp}/${floor.costXp} XP).`);
-      this.audioService.playErrorShake();
+      this.showErrorModal(`Saldo de XP insuficiente (${state.currentXp}/${floor.costXp} XP).`);
       return;
     }
     this.clinicService
@@ -3871,11 +4008,10 @@ export class MinhaClinicaComponent implements OnInit {
       },
       error: err => {
         this.isUnboxing.set(false);
-        this.lootboxErrorMessage.set(
+        this.showErrorModal(
           err?.error?.message ||
             'Não foi possível resgatar a caixa diária gratuita. Tente novamente mais tarde.'
         );
-        this.audioService.playErrorShake();
       }
     });
   }
@@ -3889,8 +4025,7 @@ export class MinhaClinicaComponent implements OnInit {
     const cost = tierMeta?.costXp ?? 500;
 
     if ((state?.currentXp ?? 0) < cost) {
-      this.localError.set(`Saldo de XP insuficiente. Você precisa de ${cost} XP.`);
-      this.audioService.playErrorShake();
+      this.showErrorModal(`Saldo de XP insuficiente. Você precisa de ${cost} XP.`);
       return;
     }
 
@@ -3925,11 +4060,10 @@ export class MinhaClinicaComponent implements OnInit {
       },
       error: err => {
         this.isUnboxing.set(false);
-        this.lootboxErrorMessage.set(
+        this.showErrorModal(
           err?.error?.message ||
             'Não foi possível abrir a caixa agora. Nenhum XP foi debitado. Tente novamente.'
         );
-        this.audioService.playErrorShake();
       }
     });
   }
