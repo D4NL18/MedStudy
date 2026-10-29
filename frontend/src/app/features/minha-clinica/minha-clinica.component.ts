@@ -29,13 +29,10 @@ import {
 import { ClinicService } from '@core/services/clinic.service';
 import { ClinicAudioService } from '@core/services/clinic-audio.service';
 import { ClinicViewportComponent } from './components/clinic-viewport/clinic-viewport.component';
-import { ClinicItemSvgComponent } from './components/clinic-item-svg/clinic-item-svg.component';
-import { DoctorAvatarSvgComponent } from './components/doctor-avatar-svg/doctor-avatar-svg.component';
 import { DoctorWardrobeModalComponent } from './components/doctor-wardrobe-modal/doctor-wardrobe-modal.component';
 import { ClinicLootboxModalComponent } from './components/clinic-lootbox-modal/clinic-lootbox-modal.component';
 import { ClinicCatalogDrawerComponent } from './components/clinic-catalog-drawer/clinic-catalog-drawer.component';
 import { ClinicErrorModalComponent } from './components/clinic-error-modal/clinic-error-modal.component';
-import { XpRewardToastComponent } from '@shared/components/xp-reward-toast/xp-reward-toast.component';
 
 interface CategoryTabMeta {
   id: ClinicCategory;
@@ -58,9 +55,6 @@ interface CategoryTabMeta {
     ClinicCatalogDrawerComponent,
     ClinicErrorModalComponent,
     ClinicViewportComponent,
-    ClinicItemSvgComponent,
-    DoctorAvatarSvgComponent,
-    XpRewardToastComponent
   ],
   templateUrl: './minha-clinica.component.html',
   styleUrl: './minha-clinica.component.scss'
@@ -145,6 +139,12 @@ export class MinhaClinicaComponent implements OnInit {
     { id: 'marble_carrara', name: 'Mármore Carrara Luxo', costXp: 2200, previewColor: '#F8FAFC' },
     { id: 'tatame_eva', name: 'Tatame EVA Pastel Candy Color', costXp: 800, previewColor: '#FEFCE8' }
   ];
+
+  readonly placedItemCatalogIds = computed<string[]>(() =>
+    this.workingPlacedItems()
+      .filter(p => p.placed)
+      .map(p => p.catalogItemId)
+  );
 
   readonly currentAvatar = computed<DoctorAvatar | undefined>(() => {
     return this.clinic()?.avatar;
