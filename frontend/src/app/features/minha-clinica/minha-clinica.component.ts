@@ -150,30 +150,23 @@ interface CategoryTabMeta {
               type="button"
               class="btn-avatar-modal"
               (click)="openAvatarCustomizer()"
-              title="Personalizar médico virtual residente"
+              [title]="'Personalizar visual de ' + doctorDisplayName()"
               data-testid="open-avatar-modal-btn"
             >
-              {{ currentAvatar()?.gender === 'FEMALE' ? '👩‍⚕️ Dra.' : '👨‍⚕️ Dr.' }} Estilo
-            </button>
-
-            <button
-              type="button"
-              class="btn-surfaces-modal"
-              (click)="openSurfacesModal()"
-              title="Trocar papel de parede e revestimento de piso"
-              data-testid="open-surfaces-modal-btn"
-            >
-              🎨 Revestimentos
+              {{ currentAvatar()?.gender === 'FEMALE' ? '👩‍⚕️' : '👨‍⚕️' }} {{ doctorDisplayName() }}
             </button>
 
             <button
               type="button"
               class="btn-lootbox-modal"
               (click)="openLootboxModal()"
-              title="Abrir Caixas da Sorte Médicas com 50 itens exclusivos"
+              title="Abrir Caixas da Sorte Médicas e resgatar caixa diária gratuita"
               data-testid="open-lootbox-modal-btn"
             >
               🎁 Caixas da Sorte
+              @if (isDailyFreeAvailable()) {
+                <span class="free-daily-dot" title="Caixa gratuita disponível hoje!">★ Grátis</span>
+              }
             </button>
 
             <button
@@ -309,8 +302,134 @@ interface CategoryTabMeta {
             </div>
           </div>
 
-          <!-- ESTADO 6: EMPTY STATE ILUSTRADO (Quando "Meus Itens" não possui itens na aba) -->
-          @if (filteredCatalogItems().length === 0) {
+          <!-- ABA REVESTIMENTOS: Papéis de Parede e Pisos Isométricos (P-087) -->
+          @if (activeCategory() === 'revestimentos') {
+            <div class="dock-cards-grid dock-surfaces-grid" data-testid="dock-surfaces-grid">
+              @for (wall of wallpaperOptions; track wall.id) {
+                <article
+                  class="catalog-item-card surface-card"
+                  [class.is-placed]="state.wallTheme === wall.id"
+                  [class.is-owned]="isSurfaceOwned(wall.id)"
+                  [attr.data-testid]="'surface-wall-card-' + wall.id"
+                >
+                  <div class="card-top-badges">
+                    <span class="rarity-badge" style="background-color: #0D9488;">Parede</span>
+                    @if (state.wallTheme === wall.id) {
+                      <span class="placed-badge">✓ Em Uso</span>
+                    } @else if (isSurfaceOwned(wall.id)) {
+                      <span class="owned-badge">Adquirido</span>
+                    }
+                  </div>
+
+                  <div class="card-surface-swatch" [style.background]="wall.previewColor">
+                    @if (wall.id === 'ped_papel_safari') {
+                      <span class="swatch-emoji">🦒🌿</span>
+                    } @else if (wall.id === 'wallpaper_geometric_teal') {
+                      <span class="swatch-emoji">📐</span>
+                    } @else if (wall.id === 'wallpaper_brick_white') {
+                      <span class="swatch-emoji">🧱</span>
+                    } @else {
+                      <span class="swatch-emoji">🏛️</span>
+                    }
+                  </div>
+
+                  <div class="card-info">
+                    <h4>{{ wall.name }}</h4>
+                    <p>Papel de Parede NW/NE</p>
+                  </div>
+
+                  <div class="card-footer">
+                    @if (state.wallTheme === wall.id) {
+                      <button type="button" class="btn-card-action place active" disabled>
+                        ✓ Aplicado
+                      </button>
+                    } @else if (isSurfaceOwned(wall.id)) {
+                      <button
+                        type="button"
+                        class="btn-card-action place"
+                        (click)="applyWallpaperDirectly(wall.id)"
+                        [attr.data-testid]="'apply-wall-' + wall.id"
+                      >
+                        Aplicar na Sala
+                      </button>
+                    } @else {
+                      <button
+                        type="button"
+                        class="btn-card-action buy"
+                        [disabled]="state.currentXp < wall.costXp || clinicService.loading()"
+                        (click)="buyAndApplyWallpaper(wall)"
+                        [attr.data-testid]="'buy-wall-' + wall.id"
+                      >
+                        <span>Comprar</span>
+                        <strong class="mono-num">{{ wall.costXp }} XP</strong>
+                      </button>
+                    }
+                  </div>
+                </article>
+              }
+
+              @for (fl of floorOptions; track fl.id) {
+                <article
+                  class="catalog-item-card surface-card"
+                  [class.is-placed]="state.floorTheme === fl.id"
+                  [class.is-owned]="isSurfaceOwned(fl.id)"
+                  [attr.data-testid]="'surface-floor-card-' + fl.id"
+                >
+                  <div class="card-top-badges">
+                    <span class="rarity-badge" style="background-color: #0284C7;">Piso</span>
+                    @if (state.floorTheme === fl.id) {
+                      <span class="placed-badge">✓ Em Uso</span>
+                    } @else if (isSurfaceOwned(fl.id)) {
+                      <span class="owned-badge">Adquirido</span>
+                    }
+                  </div>
+
+                  <div class="card-surface-swatch" [style.background]="fl.previewColor">
+                    @if (fl.id === 'tatame_eva') {
+                      <span class="swatch-emoji">🧸</span>
+                    } @else if (fl.id === 'marble_carrara') {
+                      <span class="swatch-emoji">🏛️</span>
+                    } @else {
+                      <span class="swatch-emoji">🪵</span>
+                    }
+                  </div>
+
+                  <div class="card-info">
+                    <h4>{{ fl.name }}</h4>
+                    <p>Piso Isométrico 2.5D</p>
+                  </div>
+
+                  <div class="card-footer">
+                    @if (state.floorTheme === fl.id) {
+                      <button type="button" class="btn-card-action place active" disabled>
+                        ✓ Aplicado
+                      </button>
+                    } @else if (isSurfaceOwned(fl.id)) {
+                      <button
+                        type="button"
+                        class="btn-card-action place"
+                        (click)="applyFloorDirectly(fl.id)"
+                        [attr.data-testid]="'apply-floor-' + fl.id"
+                      >
+                        Aplicar na Sala
+                      </button>
+                    } @else {
+                      <button
+                        type="button"
+                        class="btn-card-action buy"
+                        [disabled]="state.currentXp < fl.costXp || clinicService.loading()"
+                        (click)="buyAndApplyFloor(fl)"
+                        [attr.data-testid]="'buy-floor-' + fl.id"
+                      >
+                        <span>Comprar</span>
+                        <strong class="mono-num">{{ fl.costXp }} XP</strong>
+                      </button>
+                    }
+                  </div>
+                </article>
+              }
+            </div>
+          } @else if (filteredCatalogItems().length === 0) {
             <div class="clinic-empty-state" data-testid="clinic-empty-state">
               <div class="empty-illustration" aria-hidden="true">
                 <svg viewBox="0 0 64 64" width="52" height="52" fill="none">
@@ -357,11 +476,6 @@ interface CategoryTabMeta {
                     <span class="footprint-badge mono-num">
                       {{ item.footprintX }}×{{ item.footprintY }}
                     </span>
-                    @if (item.interactable) {
-                      <span class="interactive-badge" title="Possui animação e áudio ao clicar">
-                        ✨
-                      </span>
-                    }
                     @if (isItemPlaced(item.id)) {
                       <span class="placed-badge">No Consultório</span>
                     } @else if (isItemOwned(item.id)) {
@@ -444,8 +558,8 @@ interface CategoryTabMeta {
           <div class="clinic-modal-card avatar-modal" (click)="$event.stopPropagation()" data-testid="avatar-customizer-modal">
             <header class="modal-header">
               <div class="modal-title-group">
-                <h3>👨‍⚕️ Guarda-Roupa do Doutor(a)</h3>
-                <p>Personalize o gênero gratuito e desbloqueie skins com seu XP de estudo.</p>
+                <h3>{{ tempAvatarGender() === 'FEMALE' ? '👩‍⚕️' : '👨‍⚕️' }} Estilo de {{ doctorDisplayName() }}</h3>
+                <p>Personalize o gênero e equipe as skins cosméticas de {{ doctorDisplayName() }}.</p>
               </div>
               <button type="button" class="btn-modal-close" (click)="closeAvatarCustomizer()" aria-label="Fechar modal">✕</button>
             </header>
@@ -463,7 +577,7 @@ interface CategoryTabMeta {
                   [activeAnimation]="true"
                 />
                 <div class="avatar-stage-tag">
-                  {{ tempAvatarGender() === 'FEMALE' ? 'Dra. Residente' : 'Dr. Residente' }}
+                  {{ doctorDisplayName() }}
                 </div>
               </div>
 
@@ -501,7 +615,8 @@ interface CategoryTabMeta {
                     @for (coat of coatOptions; track coat.id) {
                       <div
                         class="skin-option-card"
-                        [class.is-equipped]="tempAvatarCoat() === coat.id"
+                        [class.is-equipped]="tempAvatarCoat() === coat.id && isSkinUnlocked(coat.id)"
+                        [class.is-previewing]="tempAvatarCoat() === coat.id && !isSkinUnlocked(coat.id)"
                         (click)="selectCoatSkin(coat.id)"
                         [attr.data-testid]="'skin-coat-' + coat.id"
                       >
@@ -512,14 +627,19 @@ interface CategoryTabMeta {
                           </span>
                         </div>
                         @if (!isSkinUnlocked(coat.id) && coat.costXp > 0) {
-                          <button
-                            type="button"
-                            class="btn-unlock-skin"
-                            [disabled]="(clinic()?.currentXp ?? 0) < coat.costXp"
-                            (click)="buySkinPrompt(coat.id, $event)"
-                          >
-                            🔓 Desbloquear
-                          </button>
+                          <div class="skin-action-group">
+                            @if (tempAvatarCoat() === coat.id) {
+                              <span class="preview-badge">👀 Provando</span>
+                            }
+                            <button
+                              type="button"
+                              class="btn-unlock-skin"
+                              [disabled]="(clinic()?.currentXp ?? 0) < coat.costXp"
+                              (click)="buySkinPrompt(coat.id, $event)"
+                            >
+                              🔓 Desbloquear
+                            </button>
+                          </div>
                         } @else {
                           <span class="equip-indicator">
                             {{ tempAvatarCoat() === coat.id ? '✓ Equipado' : 'Equipar' }}
@@ -537,7 +657,8 @@ interface CategoryTabMeta {
                     @for (steth of stethOptions; track steth.id) {
                       <div
                         class="skin-option-card"
-                        [class.is-equipped]="tempAvatarSteth() === steth.id"
+                        [class.is-equipped]="tempAvatarSteth() === steth.id && isSkinUnlocked(steth.id)"
+                        [class.is-previewing]="tempAvatarSteth() === steth.id && !isSkinUnlocked(steth.id)"
                         (click)="selectStethSkin(steth.id)"
                         [attr.data-testid]="'skin-steth-' + steth.id"
                       >
@@ -548,14 +669,19 @@ interface CategoryTabMeta {
                           </span>
                         </div>
                         @if (!isSkinUnlocked(steth.id) && steth.costXp > 0) {
-                          <button
-                            type="button"
-                            class="btn-unlock-skin"
-                            [disabled]="(clinic()?.currentXp ?? 0) < steth.costXp"
-                            (click)="buySkinPrompt(steth.id, $event)"
-                          >
-                            🔓 Desbloquear
-                          </button>
+                          <div class="skin-action-group">
+                            @if (tempAvatarSteth() === steth.id) {
+                              <span class="preview-badge">👀 Provando</span>
+                            }
+                            <button
+                              type="button"
+                              class="btn-unlock-skin"
+                              [disabled]="(clinic()?.currentXp ?? 0) < steth.costXp"
+                              (click)="buySkinPrompt(steth.id, $event)"
+                            >
+                              🔓 Desbloquear
+                            </button>
+                          </div>
                         } @else {
                           <span class="equip-indicator">
                             {{ tempAvatarSteth() === steth.id ? '✓ Equipado' : 'Equipar' }}
@@ -573,7 +699,8 @@ interface CategoryTabMeta {
                     @for (acc of accessoryOptions; track acc.id) {
                       <div
                         class="skin-option-card"
-                        [class.is-equipped]="tempAvatarAccessory() === acc.id"
+                        [class.is-equipped]="tempAvatarAccessory() === acc.id && isSkinUnlocked(acc.id)"
+                        [class.is-previewing]="tempAvatarAccessory() === acc.id && !isSkinUnlocked(acc.id)"
                         (click)="selectAccessorySkin(acc.id)"
                         [attr.data-testid]="'skin-acc-' + acc.id"
                       >
@@ -584,14 +711,19 @@ interface CategoryTabMeta {
                           </span>
                         </div>
                         @if (!isSkinUnlocked(acc.id) && acc.costXp > 0) {
-                          <button
-                            type="button"
-                            class="btn-unlock-skin"
-                            [disabled]="(clinic()?.currentXp ?? 0) < acc.costXp"
-                            (click)="buySkinPrompt(acc.id, $event)"
-                          >
-                            🔓 Desbloquear
-                          </button>
+                          <div class="skin-action-group">
+                            @if (tempAvatarAccessory() === acc.id) {
+                              <span class="preview-badge">👀 Provando</span>
+                            }
+                            <button
+                              type="button"
+                              class="btn-unlock-skin"
+                              [disabled]="(clinic()?.currentXp ?? 0) < acc.costXp"
+                              (click)="buySkinPrompt(acc.id, $event)"
+                            >
+                              🔓 Desbloquear
+                            </button>
+                          </div>
                         } @else {
                           <span class="equip-indicator">
                             {{ tempAvatarAccessory() === acc.id ? '✓ Equipado' : 'Equipar' }}
@@ -620,105 +752,10 @@ interface CategoryTabMeta {
         </div>
       }
 
-      <!-- MODAL: REVESTIMENTOS (PAREDES & PISOS) (P-087) -->
-      @if (isSurfacesModalOpen()) {
-        <div class="clinic-modal-backdrop" (click)="closeSurfacesModal()" data-testid="surfaces-modal-backdrop">
-          <div class="clinic-modal-card surfaces-modal" (click)="$event.stopPropagation()" data-testid="surfaces-customizer-modal">
-            <header class="modal-header">
-              <div class="modal-title-group">
-                <h3>🎨 Revestimentos da Clínica</h3>
-                <p>Mude o papel de parede e o revestimento do piso sem ocupar o chão da sala.</p>
-              </div>
-              <button type="button" class="btn-modal-close" (click)="closeSurfacesModal()" aria-label="Fechar modal">✕</button>
-            </header>
-
-            <div class="modal-body">
-              <!-- Papel de Parede -->
-              <div class="customizer-section">
-                <label class="section-label">Papel de Parede (Paredes Traseiras NW / NE)</label>
-                <div class="surface-cards-grid">
-                  @for (wall of wallpaperOptions; track wall.id) {
-                    <div
-                      class="surface-option-card"
-                      [class.is-active]="tempWallTheme() === wall.id"
-                      (click)="tempWallTheme.set(wall.id)"
-                      [attr.data-testid]="'surface-wall-' + wall.id"
-                    >
-                      <div class="surface-swatch" [style.background]="wall.previewColor">
-                        @if (wall.id === 'ped_papel_safari') {
-                          <span class="swatch-emoji">🦒🌿</span>
-                        } @else if (wall.id === 'wallpaper_geometric_teal') {
-                          <span class="swatch-emoji">📐</span>
-                        } @else if (wall.id === 'wallpaper_brick_white') {
-                          <span class="swatch-emoji">🧱</span>
-                        } @else {
-                          <span class="swatch-emoji">✨</span>
-                        }
-                      </div>
-                      <div class="surface-info">
-                        <strong>{{ wall.name }}</strong>
-                        <span class="surface-cost mono-num">{{ wall.costXp === 0 ? 'Grátis' : isSurfaceOwned(wall.id) ? 'Adquirido' : wall.costXp + ' XP' }}</span>
-                      </div>
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <!-- Revestimento do Piso -->
-              <div class="customizer-section">
-                <label class="section-label">Revestimento do Piso (Laje Isométrica 2.5D)</label>
-                <div class="surface-cards-grid">
-                  @for (fl of floorOptions; track fl.id) {
-                    <div
-                      class="surface-option-card"
-                      [class.is-active]="tempFloorTheme() === fl.id"
-                      (click)="tempFloorTheme.set(fl.id)"
-                      [attr.data-testid]="'surface-floor-' + fl.id"
-                    >
-                      <div class="surface-swatch" [style.background]="fl.previewColor">
-                        @if (fl.id === 'tatame_eva') {
-                          <span class="swatch-emoji">🧸</span>
-                        } @else if (fl.id === 'marble_carrara') {
-                          <span class="swatch-emoji">🏛️</span>
-                        } @else {
-                          <span class="swatch-emoji">🪵</span>
-                        }
-                      </div>
-                      <div class="surface-info">
-                        <strong>{{ fl.name }}</strong>
-                        <span class="surface-cost mono-num">{{ fl.costXp === 0 ? 'Grátis' : isSurfaceOwned(fl.id) ? 'Adquirido' : fl.costXp + ' XP' }}</span>
-                      </div>
-                    </div>
-                  }
-                </div>
-              </div>
-            </div>
-
-            <footer class="modal-footer">
-              <button type="button" class="btn-modal-cancel" (click)="closeSurfacesModal()">Cancelar</button>
-              <button
-                type="button"
-                class="btn-modal-save"
-                [disabled]="clinicService.loading()"
-                (click)="saveSurfacesCustomization()"
-                data-testid="save-surfaces-btn"
-              >
-                💾 Aplicar Revestimentos
-              </button>
-            </footer>
-          </div>
-        </div>
-      }
-
-      <!-- MODAL DE LOOTBOXES (P-093, P-094, P-095) -->
+      <!-- MODAL DE LOOTBOXES: TEATRO TELA CHEIA (P-093, P-094, P-095) -->
       @if (isLootboxModalOpen()) {
-        <div class="modal-backdrop" (click)="closeLootboxModal()" data-testid="lootbox-modal-backdrop">
-          <div
-            class="lootbox-modal-content"
-            [class.unboxing-active]="isUnboxing()"
-            (click)="$event.stopPropagation()"
-            data-testid="lootbox-modal"
-          >
+        <div class="lootbox-fullscreen-theater" [class.unboxing-active]="isUnboxing()" data-testid="lootbox-fullscreen-theater">
+          <div class="lootbox-theater-container" (click)="$event.stopPropagation()">
             <!-- FASE 1 & FASE 2: ANIMAÇÃO DE UNBOXING (1.35s) -->
             @if (isUnboxing()) {
               <div class="unboxing-stage" [style.--ray-color]="openingRayColor()">
@@ -728,11 +765,11 @@ interface CategoryTabMeta {
                   [class.chest-shake]="unboxingPhase() === 'shake'"
                   [class.chest-open]="unboxingPhase() === 'open'"
                 >
-                  <app-clinic-item-svg [itemKey]="openingTierAssetSvgKey()" />
+                  <app-clinic-item-svg [itemKey]="openingTierAssetSvgKey()" [width]="160" [height]="140" />
                 </div>
                 <div class="unboxing-text">
                   <span class="unboxing-title">📦 Deslacrando Suprimentos Médicos...</span>
-                  <span class="unboxing-subtitle">Verificando esterilização e instrumentos</span>
+                  <span class="unboxing-subtitle">Verificando esterilização e instrumentos hospitalares</span>
                 </div>
               </div>
             }
@@ -754,7 +791,7 @@ interface CategoryTabMeta {
 
                 <div class="reveal-podium" [style.box-shadow]="getRarityGlow(res.droppedItem.rarity)">
                   <div class="reveal-item-svg">
-                    <app-clinic-item-svg [itemKey]="res.droppedItem.assetSvgKey" />
+                    <app-clinic-item-svg [itemKey]="res.droppedItem.assetSvgKey" [width]="130" [height]="130" />
                   </div>
                 </div>
 
@@ -779,7 +816,7 @@ interface CategoryTabMeta {
                   } @else {
                     <div class="new-item-notice" data-testid="new-item-notice">
                       <span class="new-icon">✨</span>
-                      <span>Novo item desbloqueado e adicionado ao seu inventário!</span>
+                      <span>Novo item exclusivo desbloqueado e adicionado ao seu inventário!</span>
                     </div>
                   }
                 </div>
@@ -815,22 +852,22 @@ interface CategoryTabMeta {
               </div>
             }
 
-            <!-- TELA PRINCIPAL: LOJA DE CAIXAS (TIERS) -->
+            <!-- TELA PRINCIPAL: LOJA DE CAIXAS (TIERS + CAIXA DIÁRIA) -->
             @else {
-              <header class="modal-header">
-                <div class="lootbox-header-title">
+              <header class="theater-header">
+                <div class="theater-header-title">
                   <h2>🎁 Caixas de Suprimentos Médicos</h2>
-                  <p class="lootbox-subtitle">
+                  <p class="theater-subtitle">
                     Adquira maletas clínicas com itens decorativos especiais e relíquias exclusivas para seu consultório.
                   </p>
                 </div>
-                <div class="lootbox-header-balance">
+                <div class="theater-header-balance">
                   <span class="balance-label">Saldo Disponível:</span>
                   <span class="balance-xp mono-num">⚡ {{ clinic()?.currentXp ?? 0 }} XP</span>
                 </div>
                 <button
                   type="button"
-                  class="btn-modal-close"
+                  class="btn-theater-close"
                   (click)="closeLootboxModal()"
                   aria-label="Fechar"
                   data-testid="close-lootbox-modal-btn"
@@ -842,6 +879,32 @@ interface CategoryTabMeta {
               @if (lootboxErrorMessage()) {
                 <div class="lootbox-error-banner" data-testid="lootbox-error-banner">
                   ⚠️ {{ lootboxErrorMessage() }}
+                </div>
+              }
+
+              <!-- BANNER DE CAIXA DIÁRIA GRATUITA (0 XP) -->
+              @if (isDailyFreeAvailable()) {
+                <div class="daily-free-lootbox-card" data-testid="daily-free-lootbox-card">
+                  <div class="daily-free-badge">🌟 PRESENTE DIÁRIO DISPONÍVEL</div>
+                  <div class="daily-free-body">
+                    <div class="daily-free-icon">
+                      <app-clinic-item-svg [itemKey]="'lootbox_tier1_resident'" [width]="80" [height]="72" />
+                    </div>
+                    <div class="daily-free-info">
+                      <h3>🎁 Caixa da Sorte Diária Gratuita</h3>
+                      <p>Você ganhou 1 Caixa de Boas-Vindas pelo seu login diário! A raridade é sorteada aleatoriamente (não acumula — abra agora!).</p>
+                      <span class="daily-free-price mono-num">Custo: 0 XP (Grátis)</span>
+                    </div>
+                    <button
+                      type="button"
+                      class="btn-open-daily-free"
+                      (click)="triggerOpenDailyFreeLootbox()"
+                      [disabled]="isUnboxing() || clinicService.loading()"
+                      data-testid="open-daily-free-btn"
+                    >
+                      🎁 Resgatar Caixa Diária (0 XP)
+                    </button>
+                  </div>
                 </div>
               }
 
@@ -860,7 +923,7 @@ interface CategoryTabMeta {
                     </div>
 
                     <div class="tier-briefcase-preview">
-                      <app-clinic-item-svg [itemKey]="t.assetSvgKey" />
+                      <app-clinic-item-svg [itemKey]="t.assetSvgKey" [width]="90" [height]="80" />
                     </div>
 
                     <div class="tier-info">
@@ -923,7 +986,7 @@ interface CategoryTabMeta {
                 </span>
                 <button
                   type="button"
-                  class="btn-modal-cancel"
+                  class="btn-theater-back"
                   (click)="closeLootboxModal()"
                 >
                   Fechar
@@ -1740,6 +1803,28 @@ interface CategoryTabMeta {
         background: #f0fdfa;
       }
 
+      .skin-option-card.is-previewing {
+        border-color: #f59e0b;
+        background: #fffbeb;
+        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.22);
+      }
+
+      .skin-action-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .preview-badge {
+        font-size: 0.70rem;
+        font-weight: 700;
+        color: #b45309;
+        background: #fef3c7;
+        padding: 4px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+      }
+
       .skin-info {
         display: flex;
         flex-direction: column;
@@ -1772,6 +1857,17 @@ interface CategoryTabMeta {
         font-size: 0.76rem;
         font-weight: 700;
         cursor: pointer;
+        transition: transform 100ms ease, background 100ms ease;
+      }
+
+      .btn-unlock-skin:hover:not(:disabled) {
+        background: #d97706;
+        color: #ffffff;
+        transform: translateY(-1px);
+      }
+
+      .btn-unlock-skin:active:not(:disabled) {
+        transform: translateY(0);
       }
 
       .btn-unlock-skin:disabled {
@@ -1940,60 +2036,180 @@ interface CategoryTabMeta {
         box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
       }
 
-      /* Modal de Lootboxes */
-      .lootbox-modal-content {
+      /* Teatro Tela Cheia de Lootboxes (Fullscreen Unboxing Theater) */
+      .lootbox-fullscreen-theater {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 99999;
+        background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 100%);
+        backdrop-filter: blur(16px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 40px 20px 60px;
+        box-sizing: border-box;
+      }
+
+      .lootbox-theater-container {
         background: #ffffff;
-        border-radius: 16px;
-        max-width: 960px;
-        width: 92%;
-        box-shadow: 0 20px 48px rgba(15, 23, 42, 0.2);
+        border-radius: 20px;
+        max-width: 1040px;
+        width: 100%;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        border: 1px solid var(--color-neutral-200);
+        border: 1px solid rgba(255, 255, 255, 0.18);
         transition: all 0.3s ease;
       }
 
-      .lootbox-modal-content.unboxing-active {
-        background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      .lootbox-fullscreen-theater.unboxing-active .lootbox-theater-container {
+        background: transparent;
+        box-shadow: none;
+        border: none;
         color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.12);
-        pointer-events: none;
       }
 
-      .lootbox-header-title h2 {
-        font-size: 1.25rem;
+      .theater-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 28px;
+        background: #ffffff;
+        border-bottom: 1px solid var(--color-neutral-200);
+      }
+
+      .theater-header-title h2 {
+        font-size: 1.35rem;
         font-weight: 800;
         color: var(--color-neutral-900);
         margin: 0 0 4px;
       }
 
-      .lootbox-subtitle {
-        font-size: 0.82rem;
+      .theater-subtitle {
+        font-size: 0.84rem;
         color: var(--color-neutral-600);
         margin: 0;
       }
 
-      .lootbox-header-balance {
+      .theater-header-balance {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 6px 14px;
+        padding: 8px 18px;
         background: #fef3c7;
         border: 1px solid #fde68a;
         border-radius: 999px;
       }
 
-      .balance-label {
-        font-size: 0.76rem;
-        font-weight: 600;
-        color: #92400e;
+      .btn-theater-close,
+      .btn-theater-back {
+        background: transparent;
+        border: 1px solid var(--color-neutral-300);
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        color: var(--color-neutral-700);
+        transition: background 0.15s ease;
       }
 
-      .balance-xp {
-        font-size: 0.9rem;
+      .btn-theater-close:hover,
+      .btn-theater-back:hover {
+        background: var(--color-neutral-100);
+      }
+
+      /* Card de Caixa Diária Gratuita */
+      .daily-free-lootbox-card {
+        margin: 20px 24px 8px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 35%, #fef9c3 100%);
+        border: 2px solid #f59e0b;
+        box-shadow: 0 8px 24px rgba(245, 158, 11, 0.22);
+        padding: 16px 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .daily-free-badge {
+        display: inline-block;
+        background: #b45309;
+        color: #ffffff;
+        font-size: 0.72rem;
         font-weight: 800;
-        color: #b45309;
+        padding: 3px 10px;
+        border-radius: 999px;
+        letter-spacing: 0.04em;
+        margin-bottom: 10px;
+      }
+
+      .daily-free-body {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      .daily-free-icon {
+        flex-shrink: 0;
+        animation: chest-shake-anim 3s ease-in-out infinite;
+      }
+
+      .daily-free-info {
+        flex: 1;
+        min-width: 240px;
+      }
+
+      .daily-free-info h3 {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #78350f;
+        margin: 0 0 4px;
+      }
+
+      .daily-free-info p {
+        font-size: 0.82rem;
+        color: #92400e;
+        margin: 0 0 6px;
+        line-height: 1.35;
+      }
+
+      .daily-free-price {
+        font-weight: 800;
+        font-size: 0.84rem;
+        color: #047857;
+        background: #d1fae5;
+        padding: 2px 8px;
+        border-radius: 6px;
+        display: inline-block;
+      }
+
+      .btn-open-daily-free {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #ffffff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 0.94rem;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+
+      .btn-open-daily-free:hover:not(:disabled) {
+        filter: brightness(1.08);
+        transform: translateY(-2px);
+      }
+
+      .btn-open-daily-free:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
 
       .lootbox-error-banner {
@@ -2578,6 +2794,18 @@ export class MinhaClinicaComponent implements OnInit {
     return this.clinic()?.avatar;
   });
 
+  readonly doctorDisplayName = computed<string>(() => {
+    const clinic = this.clinic();
+    const fullName = clinic?.userName || 'Lari';
+    const firstName = clinic?.userFirstName || fullName.trim().split(/\s+/)[0];
+    const prefix = this.currentAvatar()?.gender === 'FEMALE' ? 'Dra.' : 'Dr.';
+    return `${prefix} ${firstName}`;
+  });
+
+  readonly isDailyFreeAvailable = computed<boolean>(() => {
+    return Boolean(this.clinic()?.dailyFreeLootboxAvailable);
+  });
+
   readonly totalCatalogCount = computed<number>(() => {
     return this.clinic()?.catalog?.length || CLINIC_CATALOG_FALLBACK.length;
   });
@@ -2585,11 +2813,13 @@ export class MinhaClinicaComponent implements OnInit {
   readonly categoryTabs = computed<CategoryTabMeta[]>(() => {
     const catalog = this.clinic()?.catalog?.length ? this.clinic()!.catalog : CLINIC_CATALOG_FALLBACK;
     const countByCat = (c: ClinicCategory) => catalog.filter(i => i.category === c).length;
+    const surfacesCount = this.wallpaperOptions.length + this.floorOptions.length;
     return [
       { id: 'pediatria', label: 'Pediatria', count: countByCat('pediatria'), badge: '🧸' },
       { id: 'mobiliario', label: 'Móveis', count: countByCat('mobiliario'), badge: '🪑' },
       { id: 'clinica', label: 'Equipamentos', count: countByCat('clinica'), badge: '🩺' },
-      { id: 'recepcao', label: 'Conforto', count: countByCat('recepcao'), badge: '☕' }
+      { id: 'recepcao', label: 'Conforto', count: countByCat('recepcao'), badge: '☕' },
+      { id: 'revestimentos', label: 'Revestimentos', count: surfacesCount, badge: '🎨' }
     ];
   });
 
@@ -2864,6 +3094,33 @@ export class MinhaClinicaComponent implements OnInit {
     const catMap = new Map(catalog.map(c => [c.id, c]));
     const items = this.workingPlacedItems();
 
+    // 1ª Prioridade: Itens de Chão (Floor items ocupam os tiles físicos da sala)
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
+      if (!item.placed) continue;
+      const cat = catMap.get(item.catalogItemId);
+      const isWall =
+        item.placementType === 'WALL' ||
+        cat?.placementType === 'WALL' ||
+        (cat?.footprintX === 0 && cat?.footprintY === 0) ||
+        item.catalogItemId === 'ped_regua_girafa' ||
+        item.catalogItemId === 'negatoscopio_led';
+
+      if (!isWall) {
+        const rot = item.rotation ?? 0;
+        const { width: w, height: h } = this.clinicService.getEffectiveFootprint(
+          cat ?? { footprintX: 1, footprintY: 1 },
+          rot
+        );
+        const gx = item.gridX ?? 0;
+        const gy = item.gridY ?? 0;
+        if (gridX >= gx && gridX < gx + w && gridY >= gy && gridY < gy + h) {
+          return item;
+        }
+      }
+    }
+
+    // 2ª Prioridade: Itens de Parede (Se o clique ocorreu nos slots de borda NW gridX=0 ou NE gridY=0)
     for (let i = items.length - 1; i >= 0; i--) {
       const item = items[i];
       if (!item.placed) continue;
@@ -2882,17 +3139,6 @@ export class MinhaClinicaComponent implements OnInit {
           return item;
         }
         if (wallSide === 'NE' && gridY === 0 && gridX === tileIdx) {
-          return item;
-        }
-      } else {
-        const rot = item.rotation ?? 0;
-        const { width: w, height: h } = this.clinicService.getEffectiveFootprint(
-          cat ?? { footprintX: 1, footprintY: 1 },
-          rot
-        );
-        const gx = item.gridX ?? 0;
-        const gy = item.gridY ?? 0;
-        if (gridX >= gx && gridX < gx + w && gridY >= gy && gridY < gy + h) {
           return item;
         }
       }
@@ -3101,30 +3347,27 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   selectCoatSkin(skinId: string): void {
-    if (this.isSkinUnlocked(skinId)) {
-      this.tempAvatarCoat.set(skinId);
-      this.audioService.playClick();
-    }
+    this.tempAvatarCoat.set(skinId);
+    this.audioService.playClick();
   }
 
   selectStethSkin(skinId: string): void {
-    if (this.isSkinUnlocked(skinId)) {
-      this.tempAvatarSteth.set(skinId);
-      this.audioService.playClick();
-    }
+    this.tempAvatarSteth.set(skinId);
+    this.audioService.playClick();
   }
 
   selectAccessorySkin(skinId: string): void {
-    if (this.isSkinUnlocked(skinId)) {
-      this.tempAvatarAccessory.set(skinId);
-      this.audioService.playClick();
-    }
+    this.tempAvatarAccessory.set(skinId);
+    this.audioService.playClick();
   }
 
   isSkinUnlocked(skinId: string): boolean {
     if (
       skinId === 'coat_default' ||
+      skinId === 'coat_intern_white' ||
       skinId === 'steth_standard' ||
+      skinId === 'steth_classic_black' ||
+      skinId === 'steth_none' ||
       skinId === 'acc_none'
     ) {
       return true;
@@ -3152,6 +3395,13 @@ export class MinhaClinicaComponent implements OnInit {
     this.clinicService.buyDoctorSkin(skinId).subscribe({
       next: () => {
         this.audioService.playBuySuccess();
+        const curr = this.clinicService.doctorAvatarResponse();
+        if (curr && !curr.unlockedSkins.includes(skinId)) {
+          this.clinicService.doctorAvatarResponse.set({
+            ...curr,
+            unlockedSkins: [...curr.unlockedSkins, skinId]
+          });
+        }
         // Equipa automaticamente ao desbloquear
         if (this.coatOptions.some(c => c.id === skinId)) {
           this.tempAvatarCoat.set(skinId);
@@ -3176,13 +3426,43 @@ export class MinhaClinicaComponent implements OnInit {
               unlockedSkins: [...curr.unlockedSkins, skinId]
             });
           }
+          if (this.coatOptions.some(c => c.id === skinId)) {
+            this.tempAvatarCoat.set(skinId);
+          } else if (this.stethOptions.some(s => s.id === skinId)) {
+            this.tempAvatarSteth.set(skinId);
+          } else if (this.accessoryOptions.some(a => a.id === skinId)) {
+            this.tempAvatarAccessory.set(skinId);
+          }
           this.audioService.playBuySuccess();
+        } else {
+          this.localError.set('Não foi possível desbloquear o item cosmético.');
+          this.audioService.playErrorShake();
         }
       }
     });
   }
 
   saveAvatarCustomization(): void {
+    const lockedNames: string[] = [];
+    if (!this.isSkinUnlocked(this.tempAvatarCoat())) {
+      const c = this.coatOptions.find(o => o.id === this.tempAvatarCoat());
+      if (c) lockedNames.push(c.name);
+    }
+    if (!this.isSkinUnlocked(this.tempAvatarSteth())) {
+      const s = this.stethOptions.find(o => o.id === this.tempAvatarSteth());
+      if (s) lockedNames.push(s.name);
+    }
+    if (!this.isSkinUnlocked(this.tempAvatarAccessory())) {
+      const a = this.accessoryOptions.find(o => o.id === this.tempAvatarAccessory());
+      if (a) lockedNames.push(a.name);
+    }
+
+    if (lockedNames.length > 0) {
+      this.localError.set(`Você está provando "${lockedNames.join(', ')}", que ainda não foi desbloqueado. Clique no botão Desbloquear para adquiri-lo com seu XP antes de salvar.`);
+      this.audioService.playErrorShake();
+      return;
+    }
+
     const payload = {
       gender: this.tempAvatarGender(),
       skinCoat: this.tempAvatarCoat(),
@@ -3231,7 +3511,7 @@ export class MinhaClinicaComponent implements OnInit {
     });
   }
 
-  // MÉTODOS DE SUPERFÍCIES (PAREDES & PISOS) (P-087)
+  // MÉTODOS DE SUPERFÍCIES (PAREDES & PISOS NO DOCK INFERIOR) (P-087)
   openSurfacesModal(): void {
     const state = this.clinic();
     this.tempWallTheme.set(state?.wallTheme ?? 'clean_white');
@@ -3242,21 +3522,6 @@ export class MinhaClinicaComponent implements OnInit {
 
   closeSurfacesModal(): void {
     this.isSurfacesModalOpen.set(false);
-  }
-
-  isSurfaceOwned(surfaceId: string): boolean {
-    if (surfaceId === 'clean_white' || surfaceId === 'wood_light') {
-      return true;
-    }
-    const state = this.clinic();
-    // Se o usuário comprou o item ped_papel_safari no catálogo, ele possui a superfície!
-    if (state?.ownedItemIds?.includes(surfaceId)) {
-      return true;
-    }
-    if (state?.ownedSurfaces?.some(s => s.id === surfaceId)) {
-      return true;
-    }
-    return false;
   }
 
   saveSurfacesCustomization(): void {
@@ -3270,7 +3535,6 @@ export class MinhaClinicaComponent implements OnInit {
         this.audioService.playBuySuccess();
       },
       error: () => {
-        // Fallback local
         const state = this.clinic();
         if (state) {
           this.clinicService.clinicState.set({
@@ -3283,6 +3547,94 @@ export class MinhaClinicaComponent implements OnInit {
         this.audioService.playBuySuccess();
       }
     });
+  }
+
+  isSurfaceOwned(surfaceId: string): boolean {
+    if (surfaceId === 'clean_white' || surfaceId === 'wood_light') {
+      return true;
+    }
+    const state = this.clinic();
+    if (state?.ownedItemIds?.includes(surfaceId)) {
+      return true;
+    }
+    if (state?.ownedSurfaces?.some(s => s.id === surfaceId)) {
+      return true;
+    }
+    return false;
+  }
+
+  applyWallpaperDirectly(wallId: string): void {
+    const currentFloor = this.clinic()?.floorTheme ?? 'wood_light';
+    this.clinicService.updateSurfaces({ wallTheme: wallId, floorTheme: currentFloor }).subscribe({
+      next: state => {
+        this.clinicService.clinicState.set(state);
+        this.audioService.playBuySuccess();
+      },
+      error: () => {
+        const curr = this.clinic();
+        if (curr) {
+          this.clinicService.clinicState.set({ ...curr, wallTheme: wallId });
+        }
+        this.audioService.playBuySuccess();
+      }
+    });
+  }
+
+  applyFloorDirectly(floorId: string): void {
+    const currentWall = this.clinic()?.wallTheme ?? 'clean_white';
+    this.clinicService.updateSurfaces({ wallTheme: currentWall, floorTheme: floorId }).subscribe({
+      next: state => {
+        this.clinicService.clinicState.set(state);
+        this.audioService.playBuySuccess();
+      },
+      error: () => {
+        const curr = this.clinic();
+        if (curr) {
+          this.clinicService.clinicState.set({ ...curr, floorTheme: floorId });
+        }
+        this.audioService.playBuySuccess();
+      }
+    });
+  }
+
+  buyAndApplyWallpaper(wall: { id: string; name: string; costXp: number }): void {
+    const state = this.clinic();
+    if (!state) return;
+    if (state.currentXp < wall.costXp) {
+      this.localError.set(`Saldo de XP insuficiente (${state.currentXp}/${wall.costXp} XP).`);
+      this.audioService.playErrorShake();
+      return;
+    }
+    this.clinicService
+      .buyItem({ catalogItemId: wall.id, gridX: null, gridY: null, rotation: 0 })
+      .subscribe({
+        next: () => {
+          this.applyWallpaperDirectly(wall.id);
+        },
+        error: () => {
+          this.applyWallpaperDirectly(wall.id);
+        }
+      });
+  }
+
+  buyAndApplyFloor(floor: { id: string; name: string; costXp: number }): void {
+    const state = this.clinic();
+    if (!state) return;
+    if (state.currentXp < floor.costXp) {
+      this.localError.set(`Saldo de XP insuficiente (${state.currentXp}/${floor.costXp} XP).`);
+      this.audioService.playErrorShake();
+      return;
+    }
+    this.clinicService
+      .buyItem({ catalogItemId: floor.id, gridX: null, gridY: null, rotation: 0 })
+      .subscribe({
+        next: () => {
+          this.applyFloorDirectly(floor.id);
+        },
+        error: () => {
+          this.applyFloorDirectly(floor.id);
+        }
+      });
   }
 
   // ============================================================
@@ -3342,6 +3694,51 @@ export class MinhaClinicaComponent implements OnInit {
     if (!this.editMode()) {
       this.toggleEditMode();
     }
+  }
+
+  triggerOpenDailyFreeLootbox(): void {
+    if (this.isUnboxing()) {
+      return;
+    }
+    this.lootboxErrorMessage.set(null);
+    this.isUnboxing.set(true);
+    this.unboxingPhase.set('shake');
+    this.openingTierAssetSvgKey.set('lootbox_tier1_resident');
+    this.audioService.playLootboxUnbox();
+
+    this.clinicService.openDailyFreeLootbox().subscribe({
+      next: result => {
+        const rarity: ItemRarity = result.droppedItem.rarity ?? 'COMMON';
+        this.openingRayColor.set(RARITY_CONFIG[rarity]?.color ?? '#94A3B8');
+
+        if (result.tierName === 'TIER_3_CHIEF_OF_STAFF' || result.tier === 'TIER_3_CHIEF_OF_STAFF') {
+          this.openingTierAssetSvgKey.set('lootbox_tier3_chief');
+        } else if (result.tierName === 'TIER_2_SPECIALIST' || result.tier === 'TIER_2_SPECIALIST') {
+          this.openingTierAssetSvgKey.set('lootbox_tier2_specialist');
+        } else {
+          this.openingTierAssetSvgKey.set('lootbox_tier1_resident');
+        }
+
+        setTimeout(() => {
+          this.unboxingPhase.set('open');
+          this.audioService.playLootboxRarityFanfare(rarity);
+        }, 550);
+
+        setTimeout(() => {
+          this.unboxingPhase.set('reveal');
+          this.isUnboxing.set(false);
+          this.lootboxRevealResult.set(result);
+        }, 1350);
+      },
+      error: err => {
+        this.isUnboxing.set(false);
+        this.lootboxErrorMessage.set(
+          err?.error?.message ||
+            'Não foi possível resgatar a caixa diária gratuita. Tente novamente mais tarde.'
+        );
+        this.audioService.playErrorShake();
+      }
+    });
   }
 
   triggerOpenLootbox(tier: LootboxTier): void {

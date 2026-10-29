@@ -419,10 +419,11 @@ export class ClinicService {
                   }
                 ];
 
+            const nextCurrentXp = result.currentXpAfter ?? result.currentXp ?? current.currentXp;
             this.clinicState.set({
               ...current,
-              currentXp: result.currentXpAfter,
-              lifetimeXp: result.lifetimeXp,
+              currentXp: nextCurrentXp,
+              lifetimeXp: result.lifetimeXp ?? current.lifetimeXp,
               ownedItemIds: updatedOwned,
               inventory: updatedInventory
             });
@@ -433,6 +434,66 @@ export class ClinicService {
           const msg = this.extractErrorMessage(
             err,
             'Saldo de XP insuficiente para abrir esta Caixa da Sorte.'
+          );
+          this.error.set(msg);
+          return throwError(() => err);
+        })
+      );
+  }
+
+  /**
+   * P-094: Abre a Caixa da Sorte Diária Gratuita do estudante (1 por dia no login, 0 XP).
+   */
+  openDailyFreeLootbox(): Observable<LootboxOpenResult> {
+    this.loading.set(true);
+    this.error.set(null);
+
+    return this.http
+      .post<ApiEnvelope<LootboxOpenResult> | LootboxOpenResult>(
+        `${this.clinicApiUrl}/lootboxes/daily-free/open`,
+        {}
+      )
+      .pipe(
+        map(res => this.unwrapEnvelope(res) as LootboxOpenResult),
+        tap(result => {
+          this.loading.set(false);
+          const current = this.clinicState();
+          if (current) {
+            const updatedOwned = current.ownedItemIds.includes(result.droppedItem.id)
+              ? current.ownedItemIds
+              : [...current.ownedItemIds, result.droppedItem.id];
+
+            const updatedInventory = result.isDuplicate
+              ? current.inventory
+              : [
+                  ...current.inventory,
+                  {
+                    id: 'loot_' + Date.now(),
+                    catalogItemId: result.droppedItem.id,
+                    placementType: result.droppedItem.placementType || 'FLOOR',
+                    gridX: null,
+                    gridY: null,
+                    rotation: 0,
+                    placed: false
+                  }
+                ];
+
+            const nextCurrentXp = result.currentXpAfter ?? result.currentXp ?? current.currentXp;
+            this.clinicState.set({
+              ...current,
+              currentXp: nextCurrentXp,
+              lifetimeXp: result.lifetimeXp ?? current.lifetimeXp,
+              dailyFreeLootboxAvailable: false,
+              ownedItemIds: updatedOwned,
+              inventory: updatedInventory
+            });
+          }
+        }),
+        catchError((err: HttpErrorResponse) => {
+          this.loading.set(false);
+          const msg = this.extractErrorMessage(
+            err,
+            'A Caixa da Sorte diária gratuita de hoje já foi aberta. Volte amanhã!'
           );
           this.error.set(msg);
           return throwError(() => err);
@@ -618,21 +679,41 @@ export class ClinicService {
   /**
    * Compra atômica de skin cosmética para o avatar (POST /api/v1/clinic/avatar/skins/buy).
    */
-  buyDoctorSkin(skinId: string): Observable<DoctorAvatarResponse> {
+  buyDoctorSkin(skinId: string): Observable<any> {
     this.loading.set(true);
     this.error.set(null);
 
     const payload: SkinBuyRequest = { skinId };
 
     return this.http
-      .post<ApiEnvelope<DoctorAvatarResponse> | DoctorAvatarResponse>(
+      .post<ApiEnvelope<any> | any>(
         `${this.clinicApiUrl}/avatar/skins/buy`,
         payload
       )
       .pipe(
         map(res => this.unwrapEnvelope(res)),
-        tap(avatarResp => {
-          this.doctorAvatarResponse.set(avatarResp);
+        tap(buyRes => {
+          const curr = this.doctorAvatarResponse();
+          if (curr) {
+            const rawUnlocked = (buyRes && buyRes.unlockedSkins) as string[] | undefined;
+            const updatedUnlocked = rawUnlocked && Array.isArray(rawUnlocked)
+              ? rawUnlocked
+              : curr.unlockedSkins.includes(skinId)
+                ? curr.unlockedSkins
+                : [...curr.unlockedSkins, skinId];
+
+            this.doctorAvatarResponse.set({
+              ...curr,
+              unlockedSkins: updatedUnlocked
+            });
+          }
+          const clinic = this.clinicState();
+          if (clinic && buyRes && typeof buyRes.remainingCurrentXp === 'number') {
+            this.clinicState.set({
+              ...clinic,
+              currentXp: buyRes.remainingCurrentXp
+            });
+          }
           // Atualiza saldo investível recarregando o estado da clínica
           this.loadClinic().subscribe();
           this.loading.set(false);
@@ -849,6 +930,9 @@ export class ClinicService {
         avatarY: 1
       },
       ownedSurfaces: raw.ownedSurfaces ?? [],
+      userName: raw.userName ?? 'Lari',
+      userFirstName: raw.userFirstName ?? (raw.userName ? raw.userName.trim().split(/\s+/)[0] : 'Lari'),
+      dailyFreeLootboxAvailable: raw.dailyFreeLootboxAvailable !== undefined ? raw.dailyFreeLootboxAvailable : true,
       lifetimeXp,
       currentXp,
       currentStreakDays: streakDays,

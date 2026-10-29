@@ -3,11 +3,20 @@
 Este documento é mantido exclusivamente pelo **Orquestrador**. Ele serve como uma memória persistente do estado exato onde a conversa e a funcionalidade se encontram, prevenindo que as diretrizes se percam em contextos (prompts) longos.
 
 ## Tarefa Atual em Foco
-- **Feature/Entidade:** Minha Clínica Médica: Sistema de Lootboxes em 3 Tiers, Níveis de Raridade e Catálogo de 50 Itens Especiais Exclusivos
+- **Feature/Entidade:** Minha Clínica Médica: Desbloqueio de Skins do Médico e Provador em Tempo Real (Preview Before Buy)
 - **Branch Atual:** `feature/P-093-lootboxes-and-50-rare-items`
-- **Etapa Atual do Fluxo:** Etapa 5 (Release) Concluída com Sucesso! 🚀
-- **Última Ação Realizada:** Finalização dos commits atômicos padronizados (Conventional Commits), validação de FinOps (< 300 KB gzipped atendido com 35.73 kB), atualização da memória em KNOWLEDGE_GRAPH.md e limpeza do repositório.
-- **Próximo Passo Imediato:** Funcionalidade 100% pronta para merge / homologação do usuário.
+- **Etapa Atual do Fluxo:** Ajustes Concluídos e Testados com Sucesso (100% dos testes verdes)
+- **Última Ação Realizada:**
+  1. **Provador em Tempo Real (Live Preview Before Buy):**
+     - O usuário agora pode clicar em qualquer item cosmético (jaleco, estetoscópio, acessório), mesmo que bloqueado, e o avatar no palco esquerdo veste a peça imediatamente em tempo real.
+     - Indicador visual no card: badge dourado `👀 Provando` e destaque `.is-previewing`.
+     - Trava amigável no botão `💾 Salvar e Equipar`: caso o usuário tente salvar com um item não desbloqueado, o sistema alerta para desbloquear primeiro com seu XP.
+  2. **Correção do Desbloqueio de Skins (Botão Desbloquear):**
+     - Registrados todos os identificadores canônicos e aliases no catálogo do backend (`OFFICIAL_SKINS_CATALOG`), incluindo `coat_default`, `coat_pediatric`, `coat_gold`, `steth_standard`, `steth_elephant`, `steth_gold`, `acc_red_bowtie`, `acc_scrub_cap`.
+     - Atualizado `ClinicService.buySkin` para retornar o mapa com `unlockedSkins` e saldo atualizado.
+     - Atualizado `ClinicService.buyDoctorSkin` no frontend para manter a reatividade das skins desbloqueadas sem corromper o estado global do avatar.
+     - Auto-equipa a peça desbloqueada na hora e toca feedback sonoro de compra.
+- **Próximo Passo Imediato:** Pronto para validação pelo usuário na interface.
 
 ## Progresso do Workflow (Esteira Consolidada de 5 Macro-Etapas)
 - [x] **Etapa 1 — Descoberta, Escopo e Especificação** (US-11, US-12, US-13; P-093..P-095)

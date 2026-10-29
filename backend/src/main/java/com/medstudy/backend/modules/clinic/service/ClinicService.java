@@ -163,6 +163,9 @@ public class ClinicService {
      */
     public static final List<DoctorSkinCatalogDto> OFFICIAL_SKINS_CATALOG = List.of(
             // COAT (Jaleco / Roupa)
+            new DoctorSkinCatalogDto("coat_default", "COAT", "Jaleco Branco Clássico", 0, "skin_coat_default", true),
+            new DoctorSkinCatalogDto("coat_pediatric", "COAT", "Jaleco Pediátrico Bichinhos", 500, "skin_coat_pediatric", false),
+            new DoctorSkinCatalogDto("coat_gold", "COAT", "Jaleco Mestre Ouro & Caduceu", 2500, "skin_coat_gold", false),
             new DoctorSkinCatalogDto("coat_intern_white", "COAT", "Jaleco Tradicional Internato", 0, "skin_coat_intern_white", true),
             new DoctorSkinCatalogDto("coat_scrubs_navy", "COAT", "Scrub Azul Marinho Plantão", 500, "skin_coat_scrubs_navy", false),
             new DoctorSkinCatalogDto("coat_scrubs_green", "COAT", "Scrub Verde Cirúrgico", 800, "skin_coat_scrubs_green", false),
@@ -170,6 +173,9 @@ public class ClinicService {
             new DoctorSkinCatalogDto("coat_executive_doc", "COAT", "Jaleco Sob Medida Premium", 2500, "skin_coat_executive_doc", false),
 
             // STETHOSCOPE (Estetoscópio)
+            new DoctorSkinCatalogDto("steth_standard", "STETHOSCOPE", "Estetoscópio Preto Clássico", 0, "skin_steth_standard", true),
+            new DoctorSkinCatalogDto("steth_elephant", "STETHOSCOPE", "Protetor Elefantinho Pediátrico", 350, "skin_steth_elephant", false),
+            new DoctorSkinCatalogDto("steth_gold", "STETHOSCOPE", "Estetoscópio Master Ouro Maciço", 1800, "skin_steth_gold", false),
             new DoctorSkinCatalogDto("steth_none", "STETHOSCOPE", "Sem Estetoscópio", 0, "skin_steth_none", true),
             new DoctorSkinCatalogDto("steth_classic_black", "STETHOSCOPE", "Estetoscópio Preto Básico", 0, "skin_steth_classic_black", true),
             new DoctorSkinCatalogDto("steth_cardio_burgundy", "STETHOSCOPE", "Esteto Cardiológico Vinho", 700, "skin_steth_cardio_burgundy", false),
@@ -178,6 +184,8 @@ public class ClinicService {
 
             // ACCESSORY (Acessórios)
             new DoctorSkinCatalogDto("acc_none", "ACCESSORY", "Nenhum", 0, "skin_acc_none", true),
+            new DoctorSkinCatalogDto("acc_red_bowtie", "ACCESSORY", "Gravata Borboleta Vermelha", 400, "skin_acc_red_bowtie", false),
+            new DoctorSkinCatalogDto("acc_scrub_cap", "ACCESSORY", "Touca Cirúrgica Teal Nórdica", 600, "skin_acc_scrub_cap", false),
             new DoctorSkinCatalogDto("acc_glasses_classic", "ACCESSORY", "Óculos de Armação Redonda", 400, "skin_acc_glasses_classic", false),
             new DoctorSkinCatalogDto("acc_ped_gorro_colorido", "ACCESSORY", "Gorro Cirúrgico Safari", 600, "skin_acc_ped_gorro_colorido", false),
             new DoctorSkinCatalogDto("acc_prontuario_clipboard", "ACCESSORY", "Prancheta Médica na Mão", 850, "skin_acc_prontuario_clipboard", false)
@@ -205,6 +213,9 @@ public class ClinicService {
     private final ClinicLayoutValidator clinicLayoutValidator;
     private final UserDoctorAvatarRepository userDoctorAvatarRepository;
     private final UserUnlockedSkinRepository userUnlockedSkinRepository;
+
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private com.medstudy.backend.modules.user.repository.UserRepository userRepository;
 
     public ClinicService(
             UserClinicRepository userClinicRepository,
@@ -737,6 +748,7 @@ public class ClinicService {
         res.put("costXp", catalogSkin.getCostXp());
         res.put("remainingCurrentXp", account.getCurrentXp());
         res.put("purchasedAt", LocalDateTime.now().toString());
+        res.put("unlockedSkins", new ArrayList<>(getUnlockedSkinIds(userId)));
         return res;
     }
 
@@ -758,21 +770,25 @@ public class ClinicService {
     }
 
     private Set<String> getUnlockedSkinIds(UUID userId) {
-        Set<String> defaultSkins = Set.of(
+        Set<String> defaultSkins = new java.util.HashSet<>(Set.of(
                 "wall_clean_white",
+                "clean_white",
                 "floor_porcelanato_cinza",
+                "wood_light",
                 "coat_intern_white",
+                "coat_default",
                 "steth_none",
                 "steth_classic_black",
+                "steth_standard",
                 "acc_none"
-        );
+        ));
         if (userUnlockedSkinRepository != null) {
             List<UserUnlockedSkin> list = userUnlockedSkinRepository.findByUserId(userId);
             Set<String> fromDb = list.stream().map(UserUnlockedSkin::getSkinId).collect(Collectors.toSet());
             fromDb.addAll(defaultSkins);
             return fromDb;
         }
-        return new java.util.HashSet<>(defaultSkins);
+        return defaultSkins;
     }
 
     private void unlockSkinForUser(UUID userId, String slot, String skinId) {
@@ -938,6 +954,22 @@ public class ClinicService {
                 .filter(s -> unlockedIds.contains(s.getId()))
                 .toList();
         response.setOwnedSurfaces(ownedSurfaces);
+
+        // Populate user name and daily free lootbox status
+        String fullName = "Lari";
+        if (userRepository != null) {
+            var userOpt = userRepository.findById(clinic.getUserId());
+            if (userOpt.isPresent() && userOpt.get().getName() != null && !userOpt.get().getName().isBlank()) {
+                fullName = userOpt.get().getName();
+            }
+        }
+        response.setUserName(fullName);
+        String firstName = fullName.trim().split("\\s+")[0];
+        response.setUserFirstName(firstName);
+
+        java.time.LocalDate lastFreeDate = clinic.getLastFreeLootboxDate();
+        boolean dailyFreeAvailable = (lastFreeDate == null || lastFreeDate.isBefore(java.time.LocalDate.now()));
+        response.setDailyFreeLootboxAvailable(dailyFreeAvailable);
 
         if (nextLevelOpt.isPresent()) {
             ClinicExpansionLevel next = nextLevelOpt.get();
