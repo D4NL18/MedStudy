@@ -58,6 +58,8 @@ export class ClinicCatalogDrawerComponent {
   @Input() ownedItemIds: string[] = [];
   @Input() placedItemCatalogIds: string[] = [];
   @Input() unlockedSkinIds: string[] = [];
+  @Input() previewWallTheme: string | null = null;
+  @Input() previewFloorTheme: string | null = null;
   @Input() isLoading: boolean = false;
 
   @Output() readonly categorySelected = new EventEmitter<ClinicCategory>();
@@ -68,6 +70,8 @@ export class ClinicCatalogDrawerComponent {
   @Output() readonly buyWallpaper = new EventEmitter<SurfaceOption>();
   @Output() readonly applyFloor = new EventEmitter<string>();
   @Output() readonly buyFloor = new EventEmitter<SurfaceOption>();
+  @Output() readonly previewSurfaceRequested = new EventEmitter<{ type: 'wall' | 'floor'; id: string }>();
+  @Output() readonly cancelPreviewRequested = new EventEmitter<void>();
   @Output() readonly selectForPlacement = new EventEmitter<ClinicCatalogItem>();
   @Output() readonly buyItem = new EventEmitter<ClinicCatalogItem>();
   @Output() readonly cardPreviewClicked = new EventEmitter<ClinicCatalogItem>();

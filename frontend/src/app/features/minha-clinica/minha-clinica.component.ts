@@ -106,6 +106,8 @@ export class MinhaClinicaComponent implements OnInit {
   readonly tempAvatarAccessory = signal<string>('acc_none');
 
   readonly tempWallTheme = signal<string>('clean_white');
+  readonly previewWallTheme = signal<string | null>(null);
+  readonly previewFloorTheme = signal<string | null>(null);
   readonly tempFloorTheme = signal<string>('wood_light');
 
   readonly coatOptions = [
@@ -1109,7 +1111,22 @@ export class MinhaClinicaComponent implements OnInit {
     return false;
   }
 
+  previewSurface(event: { type: 'wall' | 'floor'; id: string }): void {
+    if (event.type === 'wall') {
+      this.previewWallTheme.set(this.previewWallTheme() === event.id ? null : event.id);
+    } else {
+      this.previewFloorTheme.set(this.previewFloorTheme() === event.id ? null : event.id);
+    }
+    this.audioService.playClick();
+  }
+
+  cancelSurfacePreview(): void {
+    this.previewWallTheme.set(null);
+    this.previewFloorTheme.set(null);
+  }
+
   applyWallpaperDirectly(wallId: string): void {
+    this.previewWallTheme.set(null);
     const currentFloor = this.clinic()?.floorTheme ?? 'wood_light';
     this.clinicService.updateSurfaces({ wallTheme: wallId, floorTheme: currentFloor }).subscribe({
       next: state => {
@@ -1127,6 +1144,7 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   applyFloorDirectly(floorId: string): void {
+    this.previewFloorTheme.set(null);
     const currentWall = this.clinic()?.wallTheme ?? 'clean_white';
     this.clinicService.updateSurfaces({ wallTheme: currentWall, floorTheme: floorId }).subscribe({
       next: state => {
