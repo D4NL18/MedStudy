@@ -37,10 +37,13 @@ export class DoctorAvatarSvgComponent {
 
   get normalizedCoat(): string {
     const c = this.skinCoat;
-    if (c === 'coat_pediatric' || c === 'coat_pediatric_dino') return 'coat_pediatric';
-    if (c === 'coat_gold' || c === 'coat_executive_doc') return 'coat_gold';
+    if (c === 'coat_pediatric') return 'coat_pediatric';
+    if (c === 'coat_pediatric_dino') return 'coat_pediatric_dino';
+    if (c === 'coat_executive_doc') return 'coat_executive_doc';
+    if (c === 'coat_gold') return 'coat_gold';
     if (c === 'coat_scrubs_navy') return 'coat_scrubs_navy';
     if (c === 'coat_scrubs_green') return 'coat_scrubs_green';
+    if (c === 'coat_intern_white') return 'coat_intern_white';
     return 'coat_default';
   }
 
@@ -50,13 +53,15 @@ export class DoctorAvatarSvgComponent {
     if (s === 'steth_elephant' || s === 'ped_steth_elefante') return 'steth_elephant';
     if (s === 'steth_gold' || s === 'steth_gold_master') return 'steth_gold';
     if (s === 'steth_cardio_burgundy') return 'steth_cardio_burgundy';
+    if (s === 'steth_classic_black') return 'steth_classic_black';
     return 'steth_standard';
   }
 
   get normalizedAccessory(): string {
     const a = this.skinAccessory;
     if (a === 'acc_red_bowtie') return 'acc_red_bowtie';
-    if (a === 'acc_scrub_cap' || a === 'acc_ped_gorro_colorido') return 'acc_scrub_cap';
+    if (a === 'acc_scrub_cap') return 'acc_scrub_cap';
+    if (a === 'acc_ped_gorro_colorido') return 'acc_ped_gorro_colorido';
     if (a === 'acc_glasses_classic') return 'acc_glasses_classic';
     if (a === 'acc_prontuario_clipboard') return 'acc_prontuario_clipboard';
     return 'acc_none';

@@ -124,7 +124,29 @@
           <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
             <feDropShadow dx="0" dy="1" stdDeviation="0.6" flood-color="#0F172A" flood-opacity="0.2" />
           </filter>
-        </defs>
+              <!-- Gradientes Especializados US-14 (Dino, Executivo e Gorro Safari) -->
+      <linearGradient id="coatDinoGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#E6F7F2" />
+        <stop offset="60%" stop-color="#D1FAE5" />
+        <stop offset="100%" stop-color="#A7F3D0" />
+      </linearGradient>
+
+      <linearGradient id="coatExecutiveGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FFFFFF" />
+        <stop offset="70%" stop-color="#F8FAFC" />
+        <stop offset="100%" stop-color="#E2E8F0" />
+      </linearGradient>
+
+      <linearGradient id="gorroSafariGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FEF3C7" />
+        <stop offset="100%" stop-color="#FDE68A" />
+      </linearGradient>
+
+      <linearGradient id="pocketSquareGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1E3A8A" />
+        <stop offset="100%" stop-color="#0F172A" />
+      </linearGradient>
+    </defs>
 
         <!-- SOMBRA NO CHÃO -->
         <ellipse cx="36" cy="95" rx="20" ry="4.5" fill="url(#avatarFloorShadow)" />
@@ -267,6 +289,135 @@
               <circle cx="53.7" cy="46.7" r="0.45" fill="#10B981" />
 
               <path d="M56 57 Q53.5 60 51 59" stroke="#059669" stroke-width="1.2" fill="none" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @case ('coat_pediatric_dino') {
+              <!-- Jaleco Pediátrico Dinossauro (US-14 / P-096.3) -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatDinoGrad)" stroke="#059669" stroke-width="1.2" />
+              <line x1="36" y1="50" x2="36" y2="70" stroke="#059669" stroke-width="1" />
+
+              <!-- Botões Estilo Fóssil/Patinha -->
+              <circle cx="36" cy="54" r="1.5" fill="#10B981" stroke="#047857" stroke-width="0.4" />
+              <circle cx="36" cy="60" r="1.5" fill="#F59E0B" stroke="#B45309" stroke-width="0.4" />
+              <circle cx="36" cy="66" r="1.5" fill="#10B981" stroke="#047857" stroke-width="0.4" />
+
+              <!-- Lapelas Menta com Pesponto Cirúrgico -->
+              <path d="M27 37 L36 50 L32 50 L24 41 Z" fill="#F0FDF4" stroke="#059669" stroke-width="1" />
+              <path d="M45 37 L36 50 L40 50 L48 41 Z" fill="#F0FDF4" stroke="#059669" stroke-width="1" />
+
+              <!-- 🦖 MINI T-REX PEDIÁTRICO NO PEITO DIREITO (Coords 24, 45) -->
+              <g class="mini-trex" transform="translate(23.5, 43.5)">
+                <!-- Corpo e Cauda do T-Rex -->
+                <path d="M5.5 3 C4.2 1.8 2 1.5 1 2.8 C0.5 3.5 0.6 5 1.8 5.6 L1.5 7.5 L2.5 7.5 L2.8 6 L4.2 6.2 L4.5 7.5 L5.5 7.5 L5.2 5.5 C6.5 5.5 8 6.5 9 8 L9.4 7.2 C8 5 6.8 4 5.5 3 Z" fill="#047857" stroke="#064E3B" stroke-width="0.3" />
+                <!-- Cabeça e Focinho -->
+                <path d="M1 2.8 Q0.2 2.5 0 3.2 Q0.3 4 1.2 3.8 Z" fill="#047857" />
+                <!-- Olho brilhante -->
+                <circle cx="0.8" cy="2.8" r="0.4" fill="#FFFFFF" />
+                <circle cx="0.7" cy="2.8" r="0.2" fill="#0F172A" />
+                <!-- Bracinho curto amigável -->
+                <path d="M2.5 4.5 Q1.8 4.7 1.6 5.2" stroke="#A7F3D0" stroke-width="0.5" stroke-linecap="round" fill="none" />
+                <!-- Cristas dorsais amarelas -->
+                <polygon points="3.5,1.8 4,1 4.5,2" fill="#F59E0B" />
+                <polygon points="4.8,2.2 5.3,1.4 5.8,2.5" fill="#F59E0B" />
+              </g>
+
+              <!-- 🦕 MINI TRICERATOPS PASTEL NA BARRA (Coords 40.5, 59) -->
+              <g class="mini-triceratops" transform="translate(40.5, 58)">
+                <ellipse cx="4.5" cy="4.5" rx="3.5" ry="2.5" fill="#FDE68A" stroke="#B45309" stroke-width="0.4" />
+                <!-- Gola/Escudo do Triceratops -->
+                <path d="M2 2.5 C1.5 1.5 3.5 1 4 2 Z" fill="#F59E0B" stroke="#B45309" stroke-width="0.3" />
+                <!-- Cabeça e Chifrinhos -->
+                <circle cx="2.2" cy="3.8" r="1.8" fill="#FDE68A" stroke="#B45309" stroke-width="0.3" />
+                <polygon points="1.2,2.8 0.4,1.8 1.8,2.4" fill="#FEF3C7" stroke="#B45309" stroke-width="0.25" />
+                <polygon points="2.8,2.6 3.2,1.6 3.4,2.6" fill="#FEF3C7" stroke="#B45309" stroke-width="0.25" />
+                <circle cx="1.6" cy="3.6" r="0.35" fill="#0F172A" />
+                <!-- Patinhas curtas -->
+                <rect x="2.5" y="6.5" width="1.2" height="1.6" rx="0.5" fill="#B45309" />
+                <rect x="5.5" y="6.5" width="1.2" height="1.6" rx="0.5" fill="#B45309" />
+              </g>
+
+              <!-- 🐾 PEGADAS TRI-DÁCTILAS NAS MANGAS -->
+              <!-- Manga Direita -->
+              <g transform="translate(18, 47)">
+                <ellipse cx="2" cy="1.6" rx="1.4" ry="1" fill="#047857" opacity="0.85" />
+                <circle cx="0.9" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+                <circle cx="2" cy="-0.2" r="0.48" fill="#047857" opacity="0.85" />
+                <circle cx="3.1" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+              </g>
+              <g transform="translate(19.5, 53)">
+                <ellipse cx="2" cy="1.6" rx="1.2" ry="0.9" fill="#D97706" opacity="0.85" />
+                <circle cx="1" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+                <circle cx="2" cy="0" r="0.42" fill="#D97706" opacity="0.85" />
+                <circle cx="3" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+              </g>
+              <!-- Manga Esquerda -->
+              <g transform="translate(50.5, 47)">
+                <ellipse cx="2" cy="1.6" rx="1.4" ry="1" fill="#047857" opacity="0.85" />
+                <circle cx="0.9" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+                <circle cx="2" cy="-0.2" r="0.48" fill="#047857" opacity="0.85" />
+                <circle cx="3.1" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+              </g>
+              <g transform="translate(49, 53)">
+                <ellipse cx="2" cy="1.6" rx="1.2" ry="0.9" fill="#D97706" opacity="0.85" />
+                <circle cx="1" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+                <circle cx="2" cy="0" r="0.42" fill="#D97706" opacity="0.85" />
+                <circle cx="3" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+              </g>
+
+              <!-- Mãozinhas -->
+              <path d="M16 57 Q18.5 60 21 59" stroke="#059669" stroke-width="1.2" fill="none" />
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+              <path d="M56 57 Q53.5 60 51 59" stroke="#059669" stroke-width="1.2" fill="none" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @case ('coat_executive_doc') {
+              <!-- Jaleco Executivo de Alta Alfaiataria Nobre (US-14 / P-096.3) -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatExecutiveGrad)" stroke="#64748B" stroke-width="1.2" />
+              <!-- Costura Central Transpassada (Double-Breasted) -->
+              <line x1="37.5" y1="50" x2="37.5" y2="70" stroke="#94A3B8" stroke-width="0.9" />
+
+              <!-- Botões Duplos em Madrepérola com Aro Metálico -->
+              <circle cx="34.5" cy="53" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="38.5" cy="53" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="34.5" cy="59" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="38.5" cy="59" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="34.5" cy="65" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="38.5" cy="65" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+
+              <!-- Lapelas Peaked Chanfradas Italianas de 45 Graus -->
+              <path d="M26 37 L36 50 L31 50 L23 43 L27 41 L23 37 Z" fill="#FFFFFF" stroke="#475569" stroke-width="1.1" />
+              <path d="M46 37 L36 50 L41 50 L49 43 L45 41 L49 37 Z" fill="#FFFFFF" stroke="#475569" stroke-width="1.1" />
+              <!-- Pesponto Fino de Alfaiate (Pick Stitching) -->
+              <path d="M27 38 L35 49 M45 38 L37 49" stroke="#94A3B8" stroke-width="0.5" stroke-dasharray="1.5 1.5" fill="none" />
+
+              <!-- 🎩 BOLSO SUPERIOR COM POCKET SQUARE DE SEDA NOBRE AZUL E OURO -->
+              <g class="pocket-square" transform="translate(24, 46)">
+                <!-- Bolso em Debrum Fino -->
+                <rect x="0" y="3" width="7.5" height="1.4" rx="0.4" fill="#FFFFFF" stroke="#64748B" stroke-width="0.7" />
+                <!-- Lenço de Seda com Duas Pontas Proeminentes -->
+                <polygon points="1.5,3 3,0 4.5,3" fill="url(#pocketSquareGrad)" stroke="#F59E0B" stroke-width="0.4" />
+                <polygon points="3.5,3 5,-1.2 6.5,3" fill="url(#pocketSquareGrad)" stroke="#F59E0B" stroke-width="0.4" />
+              </g>
+
+              <!-- Bolsos Inferiores Embutidos com Portinhola -->
+              <rect x="22.5" y="61" width="7" height="1.6" rx="0.5" fill="#F8FAFC" stroke="#64748B" stroke-width="0.6" />
+              <rect x="42.5" y="61" width="7" height="1.6" rx="0.5" fill="#F8FAFC" stroke="#64748B" stroke-width="0.6" />
+
+              <!-- Mangas Estruturadas com Ombreira e Punhos com 3 Botões -->
+              <path d="M21 38 L16 57 Q18.5 60 21 59 L23 47 Z" fill="url(#coatExecutiveGrad)" stroke="#64748B" stroke-width="1.1" />
+              <circle cx="17.5" cy="54" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="18.5" cy="55.5" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="19.5" cy="57" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+
+              <path d="M51 38 L56 57 Q53.5 60 51 59 L49 47 Z" fill="url(#coatExecutiveGrad)" stroke="#64748B" stroke-width="1.1" />
+              <circle cx="54.5" cy="54" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="53.5" cy="55.5" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="52.5" cy="57" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+
+              <!-- Mãozinhas -->
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
               <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
             }
 
@@ -577,6 +728,40 @@
                 <path d="M47 19 Q51 21 50 24" stroke="#115E59" stroke-width="1.2" stroke-linecap="round" fill="none" />
                 <path d="M46 20 Q49 23 47 25" stroke="#0D9488" stroke-width="1.2" stroke-linecap="round" fill="none" />
                 <path d="M36 12 L36 16 M34 14 L38 14" stroke="#CCFBF1" stroke-width="1.1" stroke-linecap="round" />
+              </g>
+            }
+
+            @case ('acc_ped_gorro_colorido') {
+              <!-- Gorro Cirúrgico Safari Pediátrico (US-14 / P-096.3) -->
+              <g class="acc-ped-gorro-safari">
+                <!-- Domo Anatômico do Gorro Amarelo Savana -->
+                <path
+                  d="M23.5 18 C23 8.5 49 8.5 48.5 18 C49 20.5 23 20.5 23.5 18 Z"
+                  fill="url(#gorroSafariGrad)"
+                  stroke="#B45309"
+                  stroke-width="0.9"
+                />
+                <!-- Borda Rebatida em Terracota -->
+                <path d="M23.5 18 Q36 20.2 48.5 18" stroke="#D97706" stroke-width="1.4" fill="none" />
+
+                <!-- Folhagens Tropicais Verdes Cirúrgicas -->
+                <!-- Folha 1 -->
+                <path d="M27 13 C26 11 28 10 29 12 C28.5 13.5 27.5 13.5 27 13 Z" fill="#059669" />
+                <line x1="27" y1="13" x2="28.5" y2="11.5" stroke="#A7F3D0" stroke-width="0.3" />
+                <!-- Folha 2 -->
+                <path d="M43 13 C44 11 42 10 41 12 C41.5 13.5 42.5 13.5 43 13 Z" fill="#059669" />
+                <line x1="43" y1="13" x2="41.5" y2="11.5" stroke="#A7F3D0" stroke-width="0.3" />
+
+                <!-- Silhueta Delicada de Girafinha no Centro Superior -->
+                <path d="M35 15 L35 11 Q35 10 36 10 L37 10 L37 11 L36 11 L36 15 Z" fill="#B45309" />
+                <circle cx="36" cy="9.8" r="0.4" fill="#B45309" />
+                <!-- Patinhas da Savana -->
+                <circle cx="31" cy="15.5" r="0.6" fill="#D97706" />
+                <circle cx="39" cy="15.5" r="0.6" fill="#D97706" />
+
+                <!-- Tiras Cirúrgicas Rebatidas caindo na nuca -->
+                <path d="M47.5 19 Q51.5 21.5 50.5 25" stroke="#B45309" stroke-width="1.3" stroke-linecap="round" fill="none" />
+                <path d="M46.5 20 Q49.5 23.5 47.5 26" stroke="#D97706" stroke-width="1.3" stroke-linecap="round" fill="none" />
               </g>
             }
 

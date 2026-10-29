@@ -112,20 +112,33 @@ export class MinhaClinicaComponent implements OnInit {
 
   readonly coatOptions = [
     { id: 'coat_default', name: 'Jaleco Branco Clássico', costXp: 0 },
+    { id: 'coat_intern_white', name: 'Jaleco Tradicional Internato', costXp: 0 },
+    { id: 'coat_scrubs_navy', name: 'Scrub Azul Marinho Plantão', costXp: 500 },
+    { id: 'coat_scrubs_green', name: 'Scrub Verde Cirúrgico', costXp: 800 },
     { id: 'coat_pediatric', name: 'Jaleco Pediátrico Bichinhos', costXp: 500 },
+    { id: 'coat_pediatric_dino', name: 'Jaleco Estampado Dinossauro', costXp: 1200 },
+    { id: 'coat_executive_doc', name: 'Jaleco Executivo Alfaiataria Nobre', costXp: 2500 },
     { id: 'coat_gold', name: 'Jaleco Mestre Ouro & Caduceu', costXp: 2500 }
   ];
 
   readonly stethOptions = [
     { id: 'steth_standard', name: 'Estetoscópio Preto Clássico', costXp: 0 },
+    { id: 'steth_classic_black', name: 'Estetoscópio Preto Básico', costXp: 0 },
+    { id: 'steth_none', name: 'Sem Estetoscópio', costXp: 0 },
     { id: 'steth_elephant', name: 'Protetor Elefantinho Pediátrico', costXp: 350 },
-    { id: 'steth_gold', name: 'Estetoscópio Master Ouro Maciço', costXp: 1800 }
+    { id: 'steth_cardio_burgundy', name: 'Esteto Cardiológico Vinho', costXp: 700 },
+    { id: 'ped_steth_elefante', name: 'Esteto Pediátrico Elefante', costXp: 950 },
+    { id: 'steth_gold', name: 'Estetoscópio Master Ouro Maciço', costXp: 1800 },
+    { id: 'steth_gold_master', name: 'Esteto Master Ouro 24k', costXp: 3000 }
   ];
 
   readonly accessoryOptions = [
     { id: 'acc_none', name: 'Nenhum Acessório', costXp: 0 },
     { id: 'acc_red_bowtie', name: 'Gravata Borboleta Vermelha', costXp: 400 },
-    { id: 'acc_scrub_cap', name: 'Touca Cirúrgica Teal Nórdica', costXp: 600 }
+    { id: 'acc_glasses_classic', name: 'Óculos de Armação Redonda', costXp: 400 },
+    { id: 'acc_scrub_cap', name: 'Touca Cirúrgica Teal Nórdica', costXp: 600 },
+    { id: 'acc_ped_gorro_colorido', name: 'Gorro Cirúrgico Safari', costXp: 600 },
+    { id: 'acc_prontuario_clipboard', name: 'Prancheta Médica na Mão', costXp: 850 }
   ];
 
   readonly wallpaperOptions = [
