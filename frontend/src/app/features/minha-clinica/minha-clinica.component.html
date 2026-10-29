@@ -151,12 +151,28 @@
 
         <!-- VIEWPORT ISOMÉTRICO 2.5D CENTRAL (P-084, P-085, P-087) -->
         <div class="clinic-stage-wrapper">
+          @if (previewWallTheme() || previewFloorTheme()) {
+            <div class="surface-preview-floating-bar" data-testid="surface-preview-floating-bar">
+              <span class="preview-bar-text">
+                👁️ Testando revestimento:
+                <strong>{{ previewWallTheme() ? 'Papel de Parede' : 'Piso Isométrico' }}</strong>
+              </span>
+              <button
+                type="button"
+                class="btn-cancel-preview"
+                (click)="cancelSurfacePreview()"
+                data-testid="btn-cancel-surface-preview"
+              >
+                ✕ Desfazer Teste
+              </button>
+            </div>
+          }
           <app-clinic-viewport
             [gridWidth]="state.gridWidth"
             [gridHeight]="state.gridHeight"
             [expansionLevel]="state.expansionLevel"
-            [wallTheme]="state.wallTheme"
-            [floorTheme]="state.floorTheme"
+            [wallTheme]="previewWallTheme() || state.wallTheme"
+            [floorTheme]="previewFloorTheme() || state.floorTheme"
             [avatar]="currentAvatar()"
             [placedItems]="workingPlacedItems()"
             [catalog]="state.catalog"
@@ -188,6 +204,8 @@
           [totalCatalogCount]="totalCatalogCount()"
           [wallpaperOptions]="wallpaperOptions"
           [floorOptions]="floorOptions"
+          [previewWallTheme]="previewWallTheme()"
+          [previewFloorTheme]="previewFloorTheme()"
           [ownedItemIds]="state.ownedItemIds"
           [placedItemCatalogIds]="placedItemCatalogIds()"
           [unlockedSkinIds]="unlockedSkinIds()"
@@ -196,6 +214,8 @@
           (inventoryFilterChanged)="setInventoryFilter($event)"
           (rotateRequested)="toggleRotation()"
           (storeSelectedRequested)="storeSelectedPlacedItem()"
+          (previewSurfaceRequested)="previewSurface($event)"
+          (cancelPreviewRequested)="cancelSurfacePreview()"
           (applyWallpaper)="applyWallpaperDirectly($event)"
           (buyWallpaper)="buyAndApplyWallpaper($event)"
           (applyFloor)="applyFloorDirectly($event)"
