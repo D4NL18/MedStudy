@@ -438,7 +438,7 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     expect(foundItem).toBeTruthy();
     expect(foundItem?.id).toBe('wall-item-1');
 
-    // 2. Rotate placed item in-place
+    // 2. Rotate placed item in-place across all 4 isometric orientations
     component.toggleEditMode();
     component.movingPlacedId.set('floor-item-1');
     component.selectedRotation.set(0);
@@ -446,6 +446,14 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     expect(component.selectedRotation()).toBe(1);
     expect(component.workingPlacedItems().find(i => i.id === 'floor-item-1')?.rotation).toBe(1);
     expect(component.isLayoutDirty()).toBeTrue();
+
+    // Verify 4-state cycling (0 -> 1 -> 2 -> 3 -> 0)
+    component.toggleRotation();
+    expect(component.selectedRotation()).toBe(2);
+    component.toggleRotation();
+    expect(component.selectedRotation()).toBe(3);
+    component.toggleRotation();
+    expect(component.selectedRotation()).toBe(0);
 
     // 3. Storing an item removes it from workingPlacedItems and marks layout dirty
     component.movingPlacedId.set('floor-item-1');

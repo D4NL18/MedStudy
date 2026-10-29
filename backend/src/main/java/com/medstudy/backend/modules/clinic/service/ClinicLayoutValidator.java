@@ -106,15 +106,15 @@ public class ClinicLayoutValidator {
 
             // Floor items validation (P-084)
             int rotation = item.getRotation();
-            if (rotation != 0 && rotation != 1) {
+            if (rotation < 0 || rotation > 3) {
                 throw new ResponseStatusException(
                         HttpStatus.UNPROCESSABLE_ENTITY,
-                        "Rotação inválida para o item " + item.getCatalogItemId() + ": permitido apenas 0 ou 1."
+                        "Rotação inválida para o item " + item.getCatalogItemId() + ": permitido apenas entre 0 e 3."
                 );
             }
 
-            int effW = (rotation == 1) ? catalogItem.getFootprintY() : catalogItem.getFootprintX();
-            int effH = (rotation == 1) ? catalogItem.getFootprintX() : catalogItem.getFootprintY();
+            int effW = (rotation % 2 == 1) ? catalogItem.getFootprintY() : catalogItem.getFootprintX();
+            int effH = (rotation % 2 == 1) ? catalogItem.getFootprintX() : catalogItem.getFootprintY();
 
             int gx = item.getGridX() != null ? item.getGridX() : 0;
             int gy = item.getGridY() != null ? item.getGridY() : 0;

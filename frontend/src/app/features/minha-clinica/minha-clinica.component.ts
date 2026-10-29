@@ -288,7 +288,7 @@ interface CategoryTabMeta {
                   (click)="toggleRotation()"
                   data-testid="dock-rotate-btn"
                 >
-                  ↻ Girar ({{ selectedRotation() === 1 ? 'SW' : 'SE' }}) [R]
+                  ↻ Girar ({{ getRotationLabel(selectedRotation()) }}) [R]
                 </button>
               }
 
@@ -2973,7 +2973,7 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   toggleRotation(): void {
-    const nextRot = this.selectedRotation() === 1 ? 0 : 1;
+    const nextRot = (this.selectedRotation() + 1) % 4;
     this.selectedRotation.set(nextRot);
     const targetId = this.movingPlacedId();
     if (targetId) {
@@ -2983,6 +2983,19 @@ export class MinhaClinicaComponent implements OnInit {
       this.isLayoutDirty.set(true);
     }
     this.audioService.playClick();
+  }
+
+  getRotationLabel(rotation: number): string {
+    switch (rotation) {
+      case 1:
+        return 'Mesa Direita · SE';
+      case 2:
+        return 'Fundo · NE';
+      case 3:
+        return 'Mesa Esquerda · SW';
+      default:
+        return 'Frente · Sul';
+    }
   }
 
   toggleAudioMute(): void {

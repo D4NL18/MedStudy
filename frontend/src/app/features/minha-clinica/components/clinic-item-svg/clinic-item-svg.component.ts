@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <svg
       class="clinic-item-svg"
-      [class.is-rotated]="rotation === 1"
+      [class.is-rotated]="!hasCustomRotation && rotation % 2 === 1"
       [class.has-custom-rotation]="hasCustomRotation"
       [class.is-pulsing]="activePulse"
       [class.is-paused]="paused"
@@ -293,104 +293,207 @@ import { CommonModule } from '@angular/common';
           </g>
         }
 
-        <!-- 14. cadeira_ergonomica: Cadeira Operacional Mesh -->
+        <!-- 14. cadeira_ergonomica: Cadeira Operacional Mesh (4 rotações ortogonais 2.5D) -->
         @case ('cadeira_ergonomica') {
-          @if (rotation === 1) {
-            <!-- ROTAÇÃO 1: VISTA LATERAL / ISOMÉTRICA DE PERFIL (Voltada para a mesa/NE) -->
-            <g class="chair-side-view">
-              <!-- Base com rodízios em perspectiva lateral -->
-              <ellipse cx="58" cy="88" rx="18" ry="6" fill="#1E293B" opacity="0.25" />
-              <line x1="58" y1="84" x2="40" y2="88" stroke="#334155" stroke-width="3" stroke-linecap="round" />
-              <line x1="58" y1="84" x2="76" y2="87" stroke="#334155" stroke-width="3" stroke-linecap="round" />
-              <line x1="58" y1="84" x2="58" y2="92" stroke="#1E293B" stroke-width="3.5" stroke-linecap="round" />
-              <!-- Pistão a gás -->
-              <line x1="58" y1="68" x2="58" y2="84" stroke="#475569" stroke-width="5" />
-              <polygon points="46,67 68,67 66,73 48,73" fill="#1E293B" />
+          @switch (rotation) {
+            @case (1) {
+              <!-- ROTAÇÃO 1: MESA À DIREITA (SE - Down-Right) -->
+              <!-- Cadeira voltada para a mesa à direita (+X). Encosto no canto superior-esquerdo (NW), assento estendido para baixo-direita! -->
+              <g class="chair-se-view">
+                <!-- Base com rodízios no piso -->
+                <ellipse cx="56" cy="88" rx="18" ry="6" fill="#1E293B" opacity="0.25" />
+                <line x1="56" y1="84" x2="38" y2="88" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                <line x1="56" y1="84" x2="74" y2="86" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                <line x1="56" y1="84" x2="56" y2="92" stroke="#1E293B" stroke-width="3.5" stroke-linecap="round" />
+                <line x1="56" y1="68" x2="56" y2="84" stroke="#475569" stroke-width="4.5" />
+                <polygon points="44,65 66,65 64,71 46,71" fill="#1E293B" />
 
-              <!-- Suporte lombar / Estrutura traseira de perfil (à esquerda) -->
-              <path d="M48,70 Q42,54 45,36 L51,36 Q48,54 54,70 Z" fill="#1E293B" stroke="#0F172A" stroke-width="1.5" />
-              <!-- Encosto Mesh em ângulo lateral ergonômico -->
-              <path d="M46,35 C44,46 43,58 48,67 L54,66 C50,58 51,46 53,35 Z" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
-              <path d="M47,34 Q50,28 55,30 Q58,32 56,37 L50,37 Z" fill="#1E293B" />
+                <!-- Encosto Mesh ergonômico no canto superior-esquerdo (NW) -->
+                <path d="M36,32 Q32,48 35,64 L44,62 Q41,46 43,30 Z" fill="#1E293B" stroke="#0F172A" stroke-width="1.5" />
+                <path d="M38,32 C36,44 36,54 40,62 L46,60 C44,52 44,42 45,30 Z" fill="#0D9488" stroke="#0F766E" stroke-width="1.5" />
+                <ellipse cx="41" cy="27" rx="7" ry="4" fill="#1E293B" />
 
-              <!-- Assento em projeção isométrica lateral estendido para a direita/mesa -->
-              <polygon points="46,67 72,54 84,60 58,73" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
-              <polygon points="46,67 58,73 58,78 46,72" fill="#0F766E" />
-              <polygon points="58,73 84,60 84,65 58,78" fill="#115E59" />
+                <!-- Braço traseiro/distante -->
+                <line x1="54" y1="42" x2="68" y2="49" stroke="#334155" stroke-width="3" stroke-linecap="round" />
 
-              <!-- Braço da cadeira em perfil -->
-              <path d="M52,66 L52,55 L68,47" stroke="#334155" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-              <line x1="50" y1="54" x2="71" y2="44" stroke="#1E293B" stroke-width="5" stroke-linecap="round" />
-            </g>
-          } @else {
-            <!-- ROTAÇÃO 0: VISTA FRONTAL -->
-            <g>
-              <!-- Base giratória -->
-              <line x1="60" y1="72" x2="60" y2="88" stroke="#334155" stroke-width="4" />
-              <line x1="46" y1="88" x2="74" y2="88" stroke="#334155" stroke-width="3" stroke-linecap="round" />
-              <line x1="53" y1="88" x2="43" y2="92" stroke="#334155" stroke-width="2.5" stroke-linecap="round" />
-              <line x1="67" y1="88" x2="77" y2="92" stroke="#334155" stroke-width="2.5" stroke-linecap="round" />
-              <!-- Assento -->
-              <polygon points="42,68 60,59 78,68 60,77" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
-              <polygon points="42,68 60,77 60,81 42,72" fill="#0F766E" />
-              <polygon points="60,77 78,68 78,72 60,81" fill="#115E59" />
-              <!-- Encosto Mesh -->
-              <rect x="48" y="34" width="24" height="28" rx="6" fill="#1E293B" stroke="#0D9488" stroke-width="2" />
-              <!-- Braços -->
-              <path d="M42,62 L38,62 L38,52 L44,52" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
-              <path d="M78,62 L82,62 L82,52 L76,52" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
-            </g>
+                <!-- Assento estendido para BAIXO-DIREITA (SE - Em direção à mesa!) -->
+                <polygon points="40,58 66,46 80,55 54,67" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
+                <!-- Bordas da espuma -->
+                <polygon points="40,58 54,67 54,72 40,63" fill="#0F766E" />
+                <polygon points="54,67 80,55 80,60 54,72" fill="#115E59" />
+
+                <!-- Braço dianteiro em primeiro plano correndo para baixo-direita -->
+                <path d="M46,63 L46,55 L64,63" stroke="#334155" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <line x1="46" y1="55" x2="66" y2="64" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" />
+              </g>
+            }
+            @case (2) {
+              <!-- ROTAÇÃO 2: FUNDO / MESA NE (Up-Right) -->
+              <!-- Costas da cadeira voltada para a câmera, assento virado para cima-direita -->
+              <g class="chair-ne-view">
+                <ellipse cx="58" cy="88" rx="18" ry="6" fill="#1E293B" opacity="0.25" />
+                <line x1="58" y1="84" x2="40" y2="88" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                <line x1="58" y1="84" x2="76" y2="87" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                <line x1="58" y1="84" x2="58" y2="92" stroke="#1E293B" stroke-width="3.5" stroke-linecap="round" />
+                <line x1="58" y1="68" x2="58" y2="84" stroke="#475569" stroke-width="5" />
+                <polygon points="46,67 72,54 84,60 58,73" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
+                <polygon points="46,67 58,73 58,78 46,72" fill="#0F766E" />
+                <polygon points="58,73 84,60 84,65 58,78" fill="#115E59" />
+                <path d="M48,70 Q42,54 45,36 L51,36 Q48,54 54,70 Z" fill="#1E293B" stroke="#0F172A" stroke-width="1.5" />
+                <path d="M46,35 C44,46 43,58 48,67 L54,66 C50,58 51,46 53,35 Z" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
+                <path d="M47,34 Q50,28 55,30 Q58,32 56,37 L50,37 Z" fill="#1E293B" />
+                <path d="M52,66 L52,55 L68,47" stroke="#334155" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <line x1="50" y1="54" x2="71" y2="44" stroke="#1E293B" stroke-width="5" stroke-linecap="round" />
+              </g>
+            }
+            @case (3) {
+              <!-- ROTAÇÃO 3: MESA À ESQUERDA (SW - Down-Left) -->
+              <!-- Cadeira voltada para a mesa à esquerda (+Y). Encosto no canto superior-direito (NE), assento estendido para baixo-esquerda! -->
+              <g class="chair-sw-view">
+                <ellipse cx="64" cy="88" rx="18" ry="6" fill="#1E293B" opacity="0.25" />
+                <line x1="64" y1="84" x2="46" y2="86" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                <line x1="64" y1="84" x2="82" y2="88" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                <line x1="64" y1="84" x2="64" y2="92" stroke="#1E293B" stroke-width="3.5" stroke-linecap="round" />
+                <line x1="64" y1="68" x2="64" y2="84" stroke="#475569" stroke-width="4.5" />
+                <polygon points="56,65 76,65 74,71 54,71" fill="#1E293B" />
+
+                <!-- Encosto Mesh ergonômico no canto superior-direito (NE) -->
+                <path d="M84,32 Q88,48 85,64 L76,62 Q79,46 77,30 Z" fill="#1E293B" stroke="#0F172A" stroke-width="1.5" />
+                <path d="M82,32 C84,44 84,54 80,62 L74,60 C76,52 76,42 75,30 Z" fill="#0D9488" stroke="#0F766E" stroke-width="1.5" />
+                <ellipse cx="79" cy="27" rx="7" ry="4" fill="#1E293B" />
+
+                <!-- Braço traseiro/distante -->
+                <line x1="66" y1="42" x2="52" y2="49" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+
+                <!-- Assento estendido para BAIXO-ESQUERDA (SW - Em direção à mesa!) -->
+                <polygon points="80,58 54,46 40,55 66,67" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
+                <polygon points="80,58 66,67 66,72 80,63" fill="#0F766E" />
+                <polygon points="66,67 40,55 40,60 66,72" fill="#115E59" />
+
+                <!-- Braço dianteiro em primeiro plano correndo para baixo-esquerda -->
+                <path d="M74,63 L74,55 L56,63" stroke="#334155" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <line x1="74" y1="55" x2="54" y2="64" stroke="#1E293B" stroke-width="4.5" stroke-linecap="round" />
+              </g>
+            }
+            @default {
+              <!-- ROTAÇÃO 0: VISTA FRONTAL / SALA (South) -->
+              <g>
+                <line x1="60" y1="72" x2="60" y2="88" stroke="#334155" stroke-width="4" />
+                <line x1="46" y1="88" x2="74" y2="88" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                <line x1="53" y1="88" x2="43" y2="92" stroke="#334155" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="67" y1="88" x2="77" y2="92" stroke="#334155" stroke-width="2.5" stroke-linecap="round" />
+                <polygon points="42,68 60,59 78,68 60,77" fill="#0D9488" stroke="#0F766E" stroke-width="2" />
+                <polygon points="42,68 60,77 60,81 42,72" fill="#0F766E" />
+                <polygon points="60,77 78,68 78,72 60,81" fill="#115E59" />
+                <rect x="48" y="34" width="24" height="28" rx="6" fill="#1E293B" stroke="#0D9488" stroke-width="2" />
+                <path d="M42,62 L38,62 L38,52 L44,52" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                <path d="M78,62 L82,62 L82,52 L76,52" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
+              </g>
+            }
           }
         }
 
         <!-- 15. cadeira_presidente_couro: Cadeira Presidente Couro Caramelo Capitonê -->
         @case ('cadeira_presidente_couro') {
-          @if (rotation === 1) {
-            <!-- ROTAÇÃO 1: VISTA LATERAL / ISOMÉTRICA DE PERFIL (Voltada para a mesa/NE) -->
-            <g class="chair-side-view">
-              <ellipse cx="58" cy="88" rx="18" ry="6" fill="#78350F" opacity="0.25" />
-              <line x1="58" y1="84" x2="40" y2="88" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
-              <line x1="58" y1="84" x2="76" y2="87" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
-              <line x1="58" y1="84" x2="58" y2="92" stroke="#92400E" stroke-width="3.5" stroke-linecap="round" />
-              <!-- Pistão central -->
-              <line x1="58" y1="68" x2="58" y2="84" stroke="#78350F" stroke-width="5" />
-              <polygon points="46,67 68,67 66,73 48,73" fill="#451A03" />
+          @switch (rotation) {
+            @case (1) {
+              <!-- ROTAÇÃO 1: MESA À DIREITA (SE - Down-Right) -->
+              <g class="chair-se-view">
+                <ellipse cx="56" cy="88" rx="18" ry="6" fill="#78350F" opacity="0.25" />
+                <line x1="56" y1="84" x2="38" y2="88" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
+                <line x1="56" y1="84" x2="74" y2="86" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
+                <line x1="56" y1="84" x2="56" y2="92" stroke="#92400E" stroke-width="3.5" stroke-linecap="round" />
+                <line x1="56" y1="68" x2="56" y2="84" stroke="#78350F" stroke-width="5" />
+                <polygon points="44,65 66,65 64,71 46,71" fill="#451A03" />
 
-              <!-- Encosto Alto Couro com capitonê em perfil lateral -->
-              <path d="M43,26 C41,40 41,56 46,68 L53,67 C49,56 49,40 51,26 Z" fill="#B45309" stroke="#78350F" stroke-width="2" />
-              <path d="M43,26 Q47,20 54,22 Q58,24 56,29 L48,29 Z" fill="#92400E" stroke="#78350F" stroke-width="1.5" />
-              <!-- Botões capitonê na lateral -->
-              <circle cx="48" cy="36" r="1.8" fill="#FEF3C7" />
-              <circle cx="49" cy="46" r="1.8" fill="#FEF3C7" />
-              <circle cx="50" cy="56" r="1.8" fill="#FEF3C7" />
+                <!-- Encosto Alto Couro no canto superior-esquerdo (NW) -->
+                <path d="M34,24 Q30,44 34,63 L44,61 Q41,43 43,22 Z" fill="#B45309" stroke="#78350F" stroke-width="2" />
+                <ellipse cx="38" cy="21" rx="7" ry="5" fill="#92400E" stroke="#78350F" stroke-width="1.5" />
+                <circle cx="38" cy="32" r="1.8" fill="#FEF3C7" />
+                <circle cx="38" cy="44" r="1.8" fill="#FEF3C7" />
+                <circle cx="39" cy="54" r="1.8" fill="#FEF3C7" />
 
-              <!-- Assento estofado caramelo em perspectiva estendido à direita -->
-              <polygon points="45,67 72,53 84,59 58,73" fill="#D97706" stroke="#92400E" stroke-width="2" />
-              <polygon points="45,67 58,73 58,78 45,72" fill="#B45309" />
-              <polygon points="58,73 84,59 84,64 58,78" fill="#92400E" />
+                <!-- Braço traseiro/distante -->
+                <line x1="54" y1="42" x2="68" y2="48" stroke="#78350F" stroke-width="3.5" stroke-linecap="round" />
 
-              <!-- Braço estofado em couro -->
-              <path d="M50,65 L50,53 L68,44" stroke="#78350F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-              <line x1="48" y1="52" x2="71" y2="41" stroke="#D97706" stroke-width="5.5" stroke-linecap="round" />
-            </g>
-          } @else {
-            <!-- ROTAÇÃO 0: VISTA FRONTAL -->
-            <g>
-              <line x1="60" y1="72" x2="60" y2="88" stroke="#78350F" stroke-width="4" />
-              <line x1="44" y1="88" x2="76" y2="88" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
-              <polygon points="40,68 60,58 80,68 60,78" fill="#D97706" stroke="#92400E" stroke-width="2" />
-              <polygon points="40,68 60,78 60,82 40,72" fill="#B45309" />
-              <polygon points="60,78 80,68 80,72 60,82" fill="#92400E" />
-              <rect x="45" y="28" width="30" height="34" rx="8" fill="#B45309" stroke="#78350F" stroke-width="2" />
-              <!-- Detalhes capitonê -->
-              <circle cx="54" cy="40" r="2" fill="#FEF3C7" />
-              <circle cx="66" cy="40" r="2" fill="#FEF3C7" />
-              <circle cx="54" cy="50" r="2" fill="#FEF3C7" />
-              <circle cx="66" cy="50" r="2" fill="#FEF3C7" />
-              <!-- Braços -->
-              <path d="M40,62 L36,62 L36,50 L42,50" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round" />
-              <path d="M80,62 L84,62 L84,50 L78,50" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round" />
-            </g>
+                <!-- Assento estendido para BAIXO-DIREITA (SE - Em direção à mesa!) -->
+                <polygon points="40,58 66,45 80,54 54,67" fill="#D97706" stroke="#92400E" stroke-width="2" />
+                <polygon points="40,58 54,67 54,72 40,63" fill="#B45309" />
+                <polygon points="54,67 80,54 80,59 54,72" fill="#92400E" />
+
+                <!-- Braço dianteiro estofado em couro correndo para baixo-direita -->
+                <path d="M46,62 L46,53 L66,61" stroke="#78350F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <line x1="44" y1="52" x2="68" y2="62" stroke="#D97706" stroke-width="5.5" stroke-linecap="round" />
+              </g>
+            }
+            @case (2) {
+              <!-- ROTAÇÃO 2: FUNDO / MESA NE (Up-Right) -->
+              <g class="chair-ne-view">
+                <ellipse cx="58" cy="88" rx="18" ry="6" fill="#78350F" opacity="0.25" />
+                <line x1="58" y1="84" x2="40" y2="88" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
+                <line x1="58" y1="84" x2="76" y2="87" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
+                <line x1="58" y1="84" x2="58" y2="92" stroke="#92400E" stroke-width="3.5" stroke-linecap="round" />
+                <line x1="58" y1="68" x2="58" y2="84" stroke="#78350F" stroke-width="5" />
+                <polygon points="46,67 68,67 66,73 48,73" fill="#451A03" />
+                <path d="M43,26 C41,40 41,56 46,68 L53,67 C49,56 49,40 51,26 Z" fill="#B45309" stroke="#78350F" stroke-width="2" />
+                <path d="M43,26 Q47,20 54,22 Q58,24 56,29 L48,29 Z" fill="#92400E" stroke="#78350F" stroke-width="1.5" />
+                <circle cx="48" cy="36" r="1.8" fill="#FEF3C7" />
+                <circle cx="49" cy="46" r="1.8" fill="#FEF3C7" />
+                <circle cx="50" cy="56" r="1.8" fill="#FEF3C7" />
+                <polygon points="45,67 72,53 84,59 58,73" fill="#D97706" stroke="#92400E" stroke-width="2" />
+                <polygon points="45,67 58,73 58,78 45,72" fill="#B45309" />
+                <polygon points="58,73 84,59 84,64 58,78" fill="#92400E" />
+                <path d="M50,65 L50,53 L68,44" stroke="#78350F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <line x1="48" y1="52" x2="71" y2="41" stroke="#D97706" stroke-width="5.5" stroke-linecap="round" />
+              </g>
+            }
+            @case (3) {
+              <!-- ROTAÇÃO 3: MESA À ESQUERDA (SW - Down-Left) -->
+              <g class="chair-sw-view">
+                <ellipse cx="64" cy="88" rx="18" ry="6" fill="#78350F" opacity="0.25" />
+                <line x1="64" y1="84" x2="46" y2="86" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
+                <line x1="64" y1="84" x2="82" y2="88" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
+                <line x1="64" y1="84" x2="64" y2="92" stroke="#92400E" stroke-width="3.5" stroke-linecap="round" />
+                <line x1="64" y1="68" x2="64" y2="84" stroke="#78350F" stroke-width="5" />
+                <polygon points="54,65 76,65 74,71 56,71" fill="#451A03" />
+
+                <!-- Encosto Alto Couro no canto superior-direito (NE) -->
+                <path d="M86,24 Q90,44 86,63 L76,61 Q79,43 77,22 Z" fill="#B45309" stroke="#78350F" stroke-width="2" />
+                <ellipse cx="82" cy="21" rx="7" ry="5" fill="#92400E" stroke="#78350F" stroke-width="1.5" />
+                <circle cx="82" cy="32" r="1.8" fill="#FEF3C7" />
+                <circle cx="82" cy="44" r="1.8" fill="#FEF3C7" />
+                <circle cx="81" cy="54" r="1.8" fill="#FEF3C7" />
+
+                <!-- Braço traseiro/distante -->
+                <line x1="66" y1="42" x2="52" y2="48" stroke="#78350F" stroke-width="3.5" stroke-linecap="round" />
+
+                <!-- Assento estendido para BAIXO-ESQUERDA (SW - Em direção à mesa!) -->
+                <polygon points="80,58 54,45 40,54 66,67" fill="#D97706" stroke="#92400E" stroke-width="2" />
+                <polygon points="80,58 66,67 66,72 80,63" fill="#B45309" />
+                <polygon points="66,67 40,54 40,59 66,72" fill="#92400E" />
+
+                <!-- Braço dianteiro estofado em couro correndo para baixo-esquerda -->
+                <path d="M74,62 L74,53 L54,61" stroke="#78350F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <line x1="76" y1="52" x2="52" y2="62" stroke="#D97706" stroke-width="5.5" stroke-linecap="round" />
+              </g>
+            }
+            @default {
+              <!-- ROTAÇÃO 0: VISTA FRONTAL / SALA (South) -->
+              <g>
+                <line x1="60" y1="72" x2="60" y2="88" stroke="#78350F" stroke-width="4" />
+                <line x1="44" y1="88" x2="76" y2="88" stroke="#D97706" stroke-width="3" stroke-linecap="round" />
+                <polygon points="40,68 60,58 80,68 60,78" fill="#D97706" stroke="#92400E" stroke-width="2" />
+                <polygon points="40,68 60,78 60,82 40,72" fill="#B45309" />
+                <polygon points="60,78 80,68 80,72 60,82" fill="#92400E" />
+                <rect x="45" y="28" width="30" height="34" rx="8" fill="#B45309" stroke="#78350F" stroke-width="2" />
+                <circle cx="54" cy="40" r="2" fill="#FEF3C7" />
+                <circle cx="66" cy="40" r="2" fill="#FEF3C7" />
+                <circle cx="54" cy="50" r="2" fill="#FEF3C7" />
+                <circle cx="66" cy="50" r="2" fill="#FEF3C7" />
+                <path d="M40,62 L36,62 L36,50 L42,50" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round" />
+                <path d="M80,62 L84,62 L84,50 L78,50" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round" />
+              </g>
+            }
           }
         }
 

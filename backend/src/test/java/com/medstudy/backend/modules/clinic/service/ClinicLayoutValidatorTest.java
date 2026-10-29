@@ -73,6 +73,20 @@ class ClinicLayoutValidatorTest {
                 new PlacedItemDto(UUID.randomUUID(), "mesa_scandi", 3, 2, 1, true)
         );
         assertDoesNotThrow(() -> validator.validateLayout(4, 4, validRotation1, catalogMap));
+
+        // Rotations 0, 1, 2, 3 should all be accepted
+        List<PlacedItemDto> validRotation3 = List.of(
+                new PlacedItemDto(UUID.randomUUID(), "cadeira_ergonomica", 0, 0, 3, true)
+        );
+        assertDoesNotThrow(() -> validator.validateLayout(4, 4, validRotation3, catalogMap));
+
+        // Rotation 4 or negative should be rejected (422)
+        List<PlacedItemDto> invalidRotation = List.of(
+                new PlacedItemDto(UUID.randomUUID(), "cadeira_ergonomica", 0, 0, 4, true)
+        );
+        ResponseStatusException exRot = assertThrows(ResponseStatusException.class,
+                () -> validator.validateLayout(4, 4, invalidRotation, catalogMap));
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, exRot.getStatusCode());
     }
 
     @Test

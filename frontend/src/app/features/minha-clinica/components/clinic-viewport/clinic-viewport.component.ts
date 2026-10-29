@@ -95,7 +95,7 @@ export interface GhostPreviewRender {
               Posicionando: <strong>{{ sel.name }}</strong>
               <span class="mono-coord">
                 ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }}) ·
-                {{ selectedRotationSignal() === 1 ? 'SW' : 'SE' }}
+                {{ selectedRotationSignal() === 1 ? 'Mesa Direita (SE)' : selectedRotationSignal() === 2 ? 'Fundo (NE)' : selectedRotationSignal() === 3 ? 'Mesa Esquerda (SW)' : 'Frente' }}
               </span>
             } @else {
               Modo Edição Ativo · Clique em um móvel ou no(a) Doutor(a) para mover

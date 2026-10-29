@@ -103,7 +103,7 @@ export class ClinicService {
     item: { footprintX: number; footprintY: number },
     rotation: number
   ): { width: number; height: number } {
-    if (rotation === 1) {
+    if (rotation % 2 === 1) {
       return { width: item.footprintY, height: item.footprintX };
     }
     return { width: item.footprintX, height: item.footprintY };
