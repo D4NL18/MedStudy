@@ -296,6 +296,58 @@ class ClinicServiceTest {
     }
 
     @Test
+    @DisplayName("P-084 / Bugfix: Should unplace (set isPlaced=false) owned items that are omitted from updateLayout request")
+    void shouldUnplaceOmittedItemsWhenUpdatingLayout() {
+        UUID clinicId = UUID.randomUUID();
+        UserClinic clinic = new UserClinic();
+        clinic.setId(clinicId);
+        clinic.setUserId(userId);
+        clinic.setExpansionLevel(1);
+        clinic.setGridWidth(4);
+        clinic.setGridHeight(4);
+
+        UUID item1Id = UUID.randomUUID();
+        ClinicPlacedItem item1 = new ClinicPlacedItem();
+        item1.setId(item1Id);
+        item1.setClinicId(clinicId);
+        item1.setCatalogItemId("mesa_scandi");
+        item1.setGridX(0);
+        item1.setGridY(0);
+        item1.setPlaced(true);
+
+        UUID item2Id = UUID.randomUUID();
+        ClinicPlacedItem item2 = new ClinicPlacedItem();
+        item2.setId(item2Id);
+        item2.setClinicId(clinicId);
+        item2.setCatalogItemId("cadeira_ergonomica");
+        item2.setGridX(2);
+        item2.setGridY(2);
+        item2.setPlaced(true);
+
+        UserXpAccount account = new UserXpAccount(userId, 5000L, 5000L, 2, LocalDate.now());
+
+        when(userClinicRepository.findByUserId(userId)).thenReturn(Optional.of(clinic));
+        when(userXpAccountRepository.findById(userId)).thenReturn(Optional.of(account));
+        when(clinicPlacedItemRepository.findByClinicIdOrderByPlacedAtAsc(clinicId)).thenReturn(List.of(item1, item2));
+
+        // Request only keeps item1, omitting item2 (user unplaced item2 to stash in inventory)
+        UpdateClinicLayoutRequest req = new UpdateClinicLayoutRequest(
+                List.of(new PlacedItemDto(item1Id, "mesa_scandi", 0, 0, 0, true))
+        );
+
+        ClinicStateResponse response = clinicService.updateLayout(userId, req);
+
+        assertNotNull(response);
+        // item2 should have been marked as placed = false
+        assertFalse(item2.isPlaced());
+        verify(clinicPlacedItemRepository).saveAll(argThat(iterable -> {
+            List<ClinicPlacedItem> saved = new ArrayList<>();
+            iterable.forEach(saved::add);
+            return saved.stream().anyMatch(i -> i.getId().equals(item2Id) && !i.isPlaced());
+        }));
+    }
+
+    @Test
     @DisplayName("P-087 / C-05: Should allow updating unlocked surfaces and reject locked surfaces (403 Forbidden)")
     void shouldUpdateSurfacesWhenUnlockedAndRejectWhenLocked() {
         UUID clinicId = UUID.randomUUID();

@@ -401,4 +401,84 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     expect(component.lootboxRevealResult()?.isDailyFree).toBeTrue();
     expect(component.lootboxRevealResult()?.droppedItem.id).toBe('ped_maca_dino');
   }));
+
+  it('should store item into inventory, auto-save layout on toggleEditMode(), and prioritize wall item over floor item on shared tile coordinate', () => {
+    fixture.detectChanges();
+    httpMock.expectOne('/api/v1/clinic').flush({
+      data: {
+        ...mockLevel1Clinic,
+        placedItems: [
+          {
+            id: 'floor-item-1',
+            catalogItemId: 'mesa_scandi',
+            gridX: 0,
+            gridY: 1,
+            rotation: 0,
+            placed: true,
+            placementType: 'FLOOR'
+          },
+          {
+            id: 'wall-item-1',
+            catalogItemId: 'ped_regua_girafa',
+            gridX: 0,
+            gridY: 1,
+            rotation: 0,
+            placed: true,
+            placementType: 'WALL',
+            wallSide: 'NW',
+            wallTileIndex: 1
+          }
+        ]
+      }
+    });
+    fixture.detectChanges();
+
+    // 1. Prioritize wall item when tile (0, 1) has both a wall item and a floor item
+    const foundItem = component.findPlacedItemAtTile(0, 1);
+    expect(foundItem).toBeTruthy();
+    expect(foundItem?.id).toBe('wall-item-1');
+
+    // 2. Rotate placed item in-place
+    component.toggleEditMode();
+    component.movingPlacedId.set('floor-item-1');
+    component.selectedRotation.set(0);
+    component.toggleRotation();
+    expect(component.selectedRotation()).toBe(1);
+    expect(component.workingPlacedItems().find(i => i.id === 'floor-item-1')?.rotation).toBe(1);
+    expect(component.isLayoutDirty()).toBeTrue();
+
+    // 3. Storing an item removes it from workingPlacedItems and marks layout dirty
+    component.movingPlacedId.set('floor-item-1');
+    component.storeSelectedPlacedItem();
+    expect(component.workingPlacedItems().some(i => i.id === 'floor-item-1')).toBeFalse();
+    expect(component.isLayoutDirty()).toBeTrue();
+
+    // 4. Concluir Edição auto-saves layout when dirty and exits edit mode
+    component.toggleEditMode();
+    const saveReq = httpMock.expectOne('/api/v1/clinic/layout');
+    expect(saveReq.request.method).toBe('PUT');
+    // Payload should only contain wall-item-1 (floor-item-1 unplaced/omitted)
+    expect(saveReq.request.body.items.length).toBe(1);
+    expect(saveReq.request.body.items[0].id).toBe('wall-item-1');
+    saveReq.flush({
+      data: {
+        ...mockLevel1Clinic,
+        placedItems: [
+          {
+            id: 'wall-item-1',
+            catalogItemId: 'ped_regua_girafa',
+            gridX: 0,
+            gridY: 1,
+            rotation: 0,
+            placed: true,
+            placementType: 'WALL'
+          }
+        ]
+      }
+    });
+
+    expect(component.editMode()).toBeFalse();
+    expect(component.isLayoutDirty()).toBeFalse();
+    expect(component.workingPlacedItems().length).toBe(1);
+  });
 });

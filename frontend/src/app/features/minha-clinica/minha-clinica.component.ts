@@ -176,7 +176,7 @@ interface CategoryTabMeta {
               (click)="toggleEditMode()"
               data-testid="toggle-edit-mode-btn"
             >
-              {{ editMode() ? '✓ Concluir Edição' : '🛠️ Decorar / Mover' }}
+              {{ editMode() ? (isLayoutDirty() ? '💾 Salvar & Concluir' : '✓ Concluir Edição') : '🛠️ Decorar / Mover' }}
             </button>
 
             @if (editMode()) {
@@ -189,18 +189,6 @@ interface CategoryTabMeta {
                 data-testid="move-doctor-btn"
               >
                 📍 Mover {{ currentAvatar()?.gender === 'FEMALE' ? 'Dra.' : 'Dr.' }}
-              </button>
-            }
-
-            @if (isLayoutDirty()) {
-              <button
-                type="button"
-                class="btn-save-layout"
-                [disabled]="clinicService.loading()"
-                (click)="saveCurrentLayout()"
-                data-testid="save-layout-btn"
-              >
-                💾 Salvar Layout
               </button>
             }
 
@@ -2940,13 +2928,19 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   toggleEditMode(): void {
-    const next = !this.editMode();
-    this.editMode.set(next);
-    if (!next) {
+    if (this.editMode()) {
+      if (this.isLayoutDirty()) {
+        this.saveCurrentLayout();
+        return;
+      }
+      this.editMode.set(false);
       this.selectedCatalogItem.set(null);
       this.movingPlacedId.set(undefined);
       this.isMovingDoctor.set(false);
+      this.audioService.playClick();
+      return;
     }
+    this.editMode.set(true);
     this.audioService.playClick();
   }
 
@@ -2979,7 +2973,15 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   toggleRotation(): void {
-    this.selectedRotation.update(r => (r === 1 ? 0 : 1));
+    const nextRot = this.selectedRotation() === 1 ? 0 : 1;
+    this.selectedRotation.set(nextRot);
+    const targetId = this.movingPlacedId();
+    if (targetId) {
+      this.workingPlacedItems.update(list =>
+        list.map(item => (item.id === targetId ? { ...item, rotation: nextRot } : item))
+      );
+      this.isLayoutDirty.set(true);
+    }
     this.audioService.playClick();
   }
 
@@ -3033,7 +3035,7 @@ export class MinhaClinicaComponent implements OnInit {
     }
   }
 
-  onViewportTileClicked(coords: { gridX: number; gridY: number }): void {
+  onViewportTileClicked(coords: { gridX: number; gridY: number; fromWall?: boolean }): void {
     const state = this.clinic();
     if (!this.editMode() || !state) {
       return;
@@ -3041,7 +3043,7 @@ export class MinhaClinicaComponent implements OnInit {
 
     // Caso A: Doutor(a) selecionado(a) para mover de lugar
     if (this.isMovingDoctor()) {
-      const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY);
+      const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
       if (itemOnTile) {
         this.localError.set(
           `Posição (${coords.gridX}, ${coords.gridY}) já ocupada por um móvel. Escolha um piso livre para o(a) Doutor(a).`
@@ -3191,68 +3193,83 @@ export class MinhaClinicaComponent implements OnInit {
       return;
     }
 
-    // Caso D: Nenhum item em mãos — se clicou em um tile que possui um móvel, seleciona-o para mover!
-    const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY);
+    // Caso D: Nenhum item em mãos — se clicou em um tile ou fatia de parede que possui um item, seleciona-o para mover!
+    const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
     if (itemOnTile) {
       this.onViewportPlacedItemClicked(itemOnTile);
     }
   }
 
-  findPlacedItemAtTile(gridX: number, gridY: number): ClinicPlacedItem | undefined {
+  findPlacedItemAtTile(
+    gridX: number,
+    gridY: number,
+    preferWall: boolean = false
+  ): ClinicPlacedItem | undefined {
     const catalog = this.clinic()?.catalog ?? CLINIC_CATALOG_FALLBACK;
     const catMap = new Map(catalog.map(c => [c.id, c]));
     const items = this.workingPlacedItems();
 
-    // 1ª Prioridade: Itens de Chão (Floor items ocupam os tiles físicos da sala)
-    for (let i = items.length - 1; i >= 0; i--) {
-      const item = items[i];
-      if (!item.placed) continue;
-      const cat = catMap.get(item.catalogItemId);
-      const isWall =
-        item.placementType === 'WALL' ||
-        cat?.placementType === 'WALL' ||
-        (cat?.footprintX === 0 && cat?.footprintY === 0) ||
-        item.catalogItemId === 'ped_regua_girafa' ||
-        item.catalogItemId === 'negatoscopio_led';
+    const isWallTile = gridX === 0 || gridY === 0;
+    const shouldCheckWallFirst = preferWall || isWallTile;
 
-      if (!isWall) {
-        const rot = item.rotation ?? 0;
-        const { width: w, height: h } = this.clinicService.getEffectiveFootprint(
-          cat ?? { footprintX: 1, footprintY: 1 },
-          rot
-        );
-        const gx = item.gridX ?? 0;
-        const gy = item.gridY ?? 0;
-        if (gridX >= gx && gridX < gx + w && gridY >= gy && gridY < gy + h) {
-          return item;
+    const findWall = (): ClinicPlacedItem | undefined => {
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        if (!item.placed) continue;
+        const cat = catMap.get(item.catalogItemId);
+        const isWall =
+          item.placementType === 'WALL' ||
+          cat?.placementType === 'WALL' ||
+          (cat?.footprintX === 0 && cat?.footprintY === 0) ||
+          item.catalogItemId === 'ped_regua_girafa' ||
+          item.catalogItemId === 'negatoscopio_led';
+
+        if (isWall) {
+          const wallSide = item.wallSide ?? (item.gridX === 0 ? 'NW' : 'NE');
+          const tileIdx = item.wallTileIndex ?? (wallSide === 'NW' ? item.gridY : item.gridX);
+          if (wallSide === 'NW' && gridX === 0 && gridY === tileIdx) {
+            return item;
+          }
+          if (wallSide === 'NE' && gridY === 0 && gridX === tileIdx) {
+            return item;
+          }
         }
       }
-    }
+      return undefined;
+    };
 
-    // 2ª Prioridade: Itens de Parede (Se o clique ocorreu nos slots de borda NW gridX=0 ou NE gridY=0)
-    for (let i = items.length - 1; i >= 0; i--) {
-      const item = items[i];
-      if (!item.placed) continue;
-      const cat = catMap.get(item.catalogItemId);
-      const isWall =
-        item.placementType === 'WALL' ||
-        cat?.placementType === 'WALL' ||
-        (cat?.footprintX === 0 && cat?.footprintY === 0) ||
-        item.catalogItemId === 'ped_regua_girafa' ||
-        item.catalogItemId === 'negatoscopio_led';
+    const findFloor = (): ClinicPlacedItem | undefined => {
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        if (!item.placed) continue;
+        const cat = catMap.get(item.catalogItemId);
+        const isWall =
+          item.placementType === 'WALL' ||
+          cat?.placementType === 'WALL' ||
+          (cat?.footprintX === 0 && cat?.footprintY === 0) ||
+          item.catalogItemId === 'ped_regua_girafa' ||
+          item.catalogItemId === 'negatoscopio_led';
 
-      if (isWall) {
-        const wallSide = item.wallSide ?? (item.gridX === 0 ? 'NW' : 'NE');
-        const tileIdx = item.wallTileIndex ?? (wallSide === 'NW' ? item.gridY : item.gridX);
-        if (wallSide === 'NW' && gridX === 0 && gridY === tileIdx) {
-          return item;
-        }
-        if (wallSide === 'NE' && gridY === 0 && gridX === tileIdx) {
-          return item;
+        if (!isWall) {
+          const rot = item.rotation ?? 0;
+          const { width: w, height: h } = this.clinicService.getEffectiveFootprint(
+            cat ?? { footprintX: 1, footprintY: 1 },
+            rot
+          );
+          const gx = item.gridX ?? 0;
+          const gy = item.gridY ?? 0;
+          if (gridX >= gx && gridX < gx + w && gridY >= gy && gridY < gy + h) {
+            return item;
+          }
         }
       }
+      return undefined;
+    };
+
+    if (shouldCheckWallFirst) {
+      return findWall() ?? findFloor();
     }
-    return undefined;
+    return findFloor() ?? findWall();
   }
 
   storeSelectedPlacedItem(): void {

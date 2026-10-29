@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -569,6 +570,19 @@ public class ClinicService {
 
         // 3. Apply layout changes to owned entities
         List<ClinicPlacedItem> toSave = new ArrayList<>();
+        Set<UUID> sentIds = request.getItems().stream()
+                .map(PlacedItemDto::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        // Any placed item owned by this clinic that is not present in the layout request is unplaced (stored in inventory)
+        for (ClinicPlacedItem owned : ownedEntities) {
+            if (owned.isPlaced() && !sentIds.contains(owned.getId())) {
+                owned.setPlaced(false);
+                toSave.add(owned);
+            }
+        }
+
         for (PlacedItemDto dto : request.getItems()) {
             ClinicPlacedItem target = null;
             if (dto.getId() != null) {

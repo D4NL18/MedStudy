@@ -1043,7 +1043,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     return this.avatarSignal();
   }
 
-  @Output() readonly tileClicked = new EventEmitter<{ gridX: number; gridY: number }>();
+  @Output() readonly tileClicked = new EventEmitter<{ gridX: number; gridY: number; fromWall?: boolean }>();
   @Output() readonly placedItemClicked = new EventEmitter<ClinicPlacedItem>();
   @Output() readonly rotateRequested = new EventEmitter<void>();
   @Output() readonly avatarClicked = new EventEmitter<void>();
@@ -1361,7 +1361,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
             depth: this.clinicService.calculateDepth(
               wallSide === 'NW' ? 0 : tileIdx,
               wallSide === 'NW' ? tileIdx : 0,
-              5
+              25
             ),
             effWidth: 1,
             effHeight: 1,
@@ -1638,12 +1638,12 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     if (side === 'NW') {
       this.hoveredTile.set({ gridX: 0, gridY: index });
       if (this.editModeSignal()) {
-        this.tileClicked.emit({ gridX: 0, gridY: index });
+        this.tileClicked.emit({ gridX: 0, gridY: index, fromWall: true });
       }
     } else {
       this.hoveredTile.set({ gridX: index, gridY: 0 });
       if (this.editModeSignal()) {
-        this.tileClicked.emit({ gridX: index, gridY: 0 });
+        this.tileClicked.emit({ gridX: index, gridY: 0, fromWall: true });
       }
     }
   }
