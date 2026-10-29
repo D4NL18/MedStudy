@@ -84,6 +84,30 @@ public class PlacedItemDto {
         this.id = id;
     }
 
+    @com.fasterxml.jackson.annotation.JsonSetter("id")
+    public void setIdFromJson(Object rawId) {
+        if (rawId == null) {
+            this.id = null;
+            return;
+        }
+        if (rawId instanceof UUID) {
+            this.id = (UUID) rawId;
+            return;
+        }
+        String str = rawId.toString().trim();
+        if (str.isBlank()) {
+            this.id = null;
+            return;
+        }
+        try {
+            this.id = UUID.fromString(str);
+        } catch (IllegalArgumentException e) {
+            // Client temporary ID (e.g. "placed-xxx-12345") is safely mapped to null
+            // allowing ClinicService to resolve the owned entity by catalogItemId
+            this.id = null;
+        }
+    }
+
     public String getCatalogItemId() {
         return catalogItemId;
     }

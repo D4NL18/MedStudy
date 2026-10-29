@@ -1639,6 +1639,992 @@ import { CommonModule } from '@angular/common';
             <path d="M44,46 C44,32 76,32 76,46" stroke="#F59E0B" stroke-width="3.5" fill="none" stroke-linecap="round" />
           </g>
         }
+        <!-- ========================================== -->
+        <!-- ITENS EXPANDIDOS DO CATÁLOGO E LOOTBOXES   -->
+        <!-- ========================================== -->
+
+        <!-- Cama Elástica Sensorial Arco-Íris -->
+        @case ('ped_cama_elastica_arco_iris') {
+          <g>
+            <ellipse cx="60" cy="84" rx="42" ry="16" fill="rgba(0,0,0,0.15)" />
+            <!-- Pernas metálicas com sapatas de borracha -->
+            <line x1="28" y1="74" x2="28" y2="88" stroke="#64748B" stroke-width="4" stroke-linecap="round" />
+            <line x1="92" y1="74" x2="92" y2="88" stroke="#64748B" stroke-width="4" stroke-linecap="round" />
+            <line x1="42" y1="78" x2="42" y2="92" stroke="#475569" stroke-width="3.5" stroke-linecap="round" />
+            <line x1="78" y1="78" x2="78" y2="92" stroke="#475569" stroke-width="3.5" stroke-linecap="round" />
+            <!-- Aro externo com protetor arco-íris acolchoado -->
+            <ellipse cx="60" cy="68" rx="46" ry="18" fill="#EC4899" stroke="#DB2777" stroke-width="2" />
+            <path d="M14 68 C14 56 34 50 60 50 C86 50 106 56 106 68 C106 74 94 80 78 83 C62 86 38 85 24 81 Z" fill="#F59E0B" opacity="0.85" />
+            <path d="M18 67 C20 58 38 52 60 52 C82 52 100 58 102 67 C98 73 84 78 70 80 C56 82 34 81 22 77 Z" fill="#10B981" opacity="0.85" />
+            <path d="M22 66 C24 60 40 54 60 54 C80 54 96 60 98 66 C92 71 80 75 66 77 C52 79 32 78 24 74 Z" fill="#06B6D4" opacity="0.85" />
+            <path d="M26 65 C28 61 42 56 60 56 C78 56 92 61 94 65 C88 69 76 73 64 74 C52 75 34 74 28 71 Z" fill="#8B5CF6" opacity="0.85" />
+            <!-- Lona elástica preta de salto -->
+            <ellipse cx="60" cy="65" rx="30" ry="11" fill="#0F172A" stroke="#38BDF8" stroke-width="1.5" />
+            <!-- Cruz/Estrela sensorial fosforescente central -->
+            <polygon points="60,59 62,63 66,65 62,67 60,71 58,67 54,65 58,63" fill="#FACC15" />
+            <circle cx="48" cy="64" r="1.5" fill="#38BDF8" />
+            <circle cx="72" cy="64" r="1.5" fill="#38BDF8" />
+          </g>
+        }
+
+        <!-- Aquário de Parede com Águas-Vivas -->
+        @case ('rec_aquario_parede_jellyfish') {
+          <g>
+            <!-- Moldura elegante de parede em alumínio escovado e LED neon -->
+            <rect x="22" y="32" width="76" height="52" rx="6" fill="#0F172A" stroke="#38BDF8" stroke-width="2.5" />
+            <!-- Interior aquático com profundidade oceânica -->
+            <rect x="25" y="35" width="70" height="46" rx="4" fill="#0369A1" />
+            <path d="M25 35 L95 35 L95 65 Q60 75 25 65 Z" fill="#0284C7" opacity="0.75" />
+            <path d="M25 55 Q60 65 95 55 L95 81 L25 81 Z" fill="#082F49" opacity="0.6" />
+            <!-- Água-viva 1: Rosa bioluminescente -->
+            <g transform="translate(42, 42)">
+              <ellipse cx="8" cy="6" rx="7" ry="5" fill="#F472B6" opacity="0.9" />
+              <path d="M3 8 Q2 14 5 18 M6 9 Q7 16 8 20 M10 9 Q11 15 11 19 M13 8 Q15 14 13 18" stroke="#F472B6" stroke-width="1.2" fill="none" opacity="0.85" />
+              <ellipse cx="8" cy="6" rx="4" ry="2.5" fill="#FDF2F8" opacity="0.95" />
+            </g>
+            <!-- Água-viva 2: Ciano translúcida menor -->
+            <g transform="translate(66, 50)">
+              <ellipse cx="6" cy="5" rx="5" ry="3.5" fill="#67E8F9" opacity="0.85" />
+              <path d="M3 7 Q2 11 4 15 M6 7 Q6 12 7 16 M9 7 Q10 11 8 15" stroke="#67E8F9" stroke-width="1" fill="none" opacity="0.8" />
+              <ellipse cx="6" cy="5" rx="3" ry="1.8" fill="#FFFFFF" opacity="0.95" />
+            </g>
+            <!-- Bolhas subindo -->
+            <circle cx="34" cy="68" r="1.5" fill="rgba(255,255,255,0.7)" />
+            <circle cx="36" cy="54" r="2" fill="rgba(255,255,255,0.8)" />
+            <circle cx="35" cy="42" r="1.2" fill="rgba(255,255,255,0.6)" />
+            <circle cx="80" cy="72" r="1.8" fill="rgba(255,255,255,0.7)" />
+            <circle cx="82" cy="58" r="1.3" fill="rgba(255,255,255,0.6)" />
+            <!-- Reflexo curvo no vidro do aquário -->
+            <path d="M30 38 L42 38 L32 75 L28 75 Z" fill="rgba(255,255,255,0.22)" />
+          </g>
+        }
+
+        <!-- Projetor Galáctico de Parede -->
+        @case ('ped_projetor_estrelas_teto') {
+          <g>
+            <!-- Base de fixação na parede -->
+            <ellipse cx="60" cy="72" rx="28" ry="10" fill="#334155" stroke="#0284C7" stroke-width="1.5" />
+            <!-- Cúpula esférica do projetor cósmico -->
+            <circle cx="60" cy="52" r="22" fill="#0F172A" stroke="#38BDF8" stroke-width="2" />
+            <!-- Lente holográfica central -->
+            <ellipse cx="60" cy="50" rx="14" ry="11" fill="#4338CA" />
+            <ellipse cx="60" cy="50" rx="9" ry="7" fill="#818CF8" />
+            <circle cx="60" cy="50" r="4.5" fill="#E0E7FF" />
+            <!-- Feixes luminosos estelares -->
+            <path d="M42 42 L18 20 M78 42 L102 20 M60 30 L60 8" stroke="#38BDF8" stroke-width="1.8" stroke-dasharray="3,3" opacity="0.85" />
+            <circle cx="24" cy="18" r="2" fill="#FACC15" />
+            <circle cx="96" cy="18" r="2" fill="#F472B6" />
+            <circle cx="60" cy="6" r="2.5" fill="#38BDF8" />
+            <!-- Constelações gravadas na carcaça -->
+            <line x1="46" y1="60" x2="52" y2="64" stroke="#93C5FD" stroke-width="1" />
+            <circle cx="46" cy="60" r="1.2" fill="#FFFFFF" />
+            <circle cx="52" cy="64" r="1.2" fill="#FFFFFF" />
+            <line x1="68" y1="62" x2="74" y2="58" stroke="#93C5FD" stroke-width="1" />
+            <circle cx="68" cy="62" r="1.2" fill="#FFFFFF" />
+            <circle cx="74" cy="58" r="1.2" fill="#FFFFFF" />
+          </g>
+        }
+
+        <!-- Painel Magnético Árvore da Floresta -->
+        @case ('ped_painel_arvore_amigos') {
+          <g>
+            <!-- Placa magnética com contorno de árvore lúdica -->
+            <rect x="24" y="24" width="72" height="68" rx="8" fill="#FEF3C7" stroke="#15803D" stroke-width="2.5" />
+            <!-- Tronco estilizado -->
+            <path d="M52 92 L52 64 Q60 62 68 64 L68 92 Z" fill="#92400E" />
+            <!-- Copa da árvore com camadas verdes -->
+            <circle cx="60" cy="48" r="24" fill="#22C55E" />
+            <circle cx="44" cy="50" r="16" fill="#16A34A" />
+            <circle cx="76" cy="50" r="16" fill="#16A34A" />
+            <circle cx="60" cy="38" r="18" fill="#4ADE80" />
+            <!-- Corujinha magnética na copa -->
+            <circle cx="52" cy="44" r="4.5" fill="#78350F" />
+            <circle cx="50.5" cy="43" r="1.5" fill="#FFFFFF" />
+            <circle cx="50.5" cy="43" r="0.7" fill="#000000" />
+            <circle cx="53.5" cy="43" r="1.5" fill="#FFFFFF" />
+            <circle cx="53.5" cy="43" r="0.7" fill="#000000" />
+            <polygon points="52,44.5 51,46 53,46" fill="#F59E0B" />
+            <!-- Maçãs e peças magnéticas coloridas -->
+            <circle cx="40" cy="46" r="3" fill="#EF4444" />
+            <circle cx="78" cy="44" r="3" fill="#EF4444" />
+            <circle cx="68" cy="36" r="3" fill="#EF4444" />
+            <!-- Peças magnéticas de números/letras na base -->
+            <rect x="30" y="76" width="8" height="8" rx="2" fill="#3B82F6" />
+            <text x="34" y="83" font-size="6" fill="#FFFFFF" font-weight="bold" text-anchor="middle">A</text>
+            <rect x="42" y="76" width="8" height="8" rx="2" fill="#F59E0B" />
+            <text x="46" y="83" font-size="6" fill="#FFFFFF" font-weight="bold" text-anchor="middle">1</text>
+            <rect x="74" y="76" width="8" height="8" rx="2" fill="#EC4899" />
+            <text x="78" y="83" font-size="6" fill="#FFFFFF" font-weight="bold" text-anchor="middle">★</text>
+          </g>
+        }
+
+        <!-- Maca Foguete Espacial Retrô -->
+        @case ('ped_maca_foguete_retro') {
+          <g>
+            <ellipse cx="60" cy="85" rx="38" ry="12" fill="rgba(0,0,0,0.18)" />
+            <!-- Pernas estilo trem de pouso prateadas -->
+            <line x1="32" y1="72" x2="26" y2="86" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" />
+            <line x1="88" y1="72" x2="94" y2="86" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" />
+            <!-- Corpo cilíndrico do foguete -->
+            <path d="M24 64 L78 40 L96 50 L42 74 Z" fill="#F8FAFC" stroke="#DC2626" stroke-width="2" />
+            <!-- Nariz do foguete (travesseiro vermelho chanfrado) -->
+            <polygon points="78,40 96,30 106,36 96,50" fill="#EF4444" stroke="#DC2626" stroke-width="1.5" />
+            <!-- Aletas traseiras com faixas azuis -->
+            <polygon points="24,64 12,68 18,78 30,72" fill="#2563EB" stroke="#1D4ED8" stroke-width="1.5" />
+            <!-- Janelinhas redondas de escotilha -->
+            <circle cx="58" cy="54" r="3.5" fill="#38BDF8" stroke="#0284C7" stroke-width="1.2" />
+            <circle cx="72" cy="48" r="3.5" fill="#38BDF8" stroke="#0284C7" stroke-width="1.2" />
+            <!-- Estofado acolchoado pediátrico macio -->
+            <path d="M38 68 L78 48 L86 53 L46 73 Z" fill="#E2E8F0" />
+            <line x1="48" y1="63" x2="56" y2="67" stroke="#CBD5E1" stroke-width="1" />
+            <line x1="58" y1="58" x2="66" y2="62" stroke="#CBD5E1" stroke-width="1" />
+            <line x1="68" y1="53" x2="76" y2="57" stroke="#CBD5E1" stroke-width="1" />
+          </g>
+        }
+
+        <!-- Cubo Sensorial Montessori -->
+        @case ('ped_cubo_sensorial_montessori') {
+          <g>
+            <ellipse cx="60" cy="80" rx="24" ry="10" fill="rgba(0,0,0,0.15)" />
+            <!-- Bloco Isométrico de Madeira Maciça Nobre -->
+            <polygon points="36,54 60,40 84,54 60,68" fill="#FDE68A" stroke="#D97706" stroke-width="1.8" />
+            <polygon points="36,54 60,68 60,86 36,72" fill="#F59E0B" stroke="#D97706" stroke-width="1.8" />
+            <polygon points="84,54 60,68 60,86 84,72" fill="#D97706" stroke="#B45309" stroke-width="1.8" />
+            <!-- Engrenagens coloridas no topo -->
+            <circle cx="52" cy="52" r="4.5" fill="#EF4444" />
+            <circle cx="66" cy="50" r="4" fill="#3B82F6" />
+            <circle cx="58" cy="60" r="3.5" fill="#10B981" />
+            <!-- Labirinto de arames com contas coloridas -->
+            <path d="M42 46 Q50 30 56 46" stroke="#DC2626" stroke-width="1.5" fill="none" />
+            <circle cx="48" cy="38" r="1.8" fill="#FBBF24" />
+            <path d="M64 44 Q70 28 78 44" stroke="#2563EB" stroke-width="1.5" fill="none" />
+            <circle cx="72" cy="36" r="1.8" fill="#34D399" />
+          </g>
+        }
+
+        <!-- Mini Laboratório Cientista Júnior -->
+        @case ('ped_bancada_quimica_junior') {
+          <g>
+            <ellipse cx="60" cy="84" rx="34" ry="12" fill="rgba(0,0,0,0.15)" />
+            <!-- Bancada com gaveteiro de madeira clara -->
+            <polygon points="28,54 60,38 92,54 60,70" fill="#E2E8F0" stroke="#0D9488" stroke-width="2" />
+            <polygon points="28,54 60,70 60,84 28,68" fill="#CBD5E1" stroke="#0D9488" stroke-width="1.5" />
+            <polygon points="92,54 60,70 60,84 92,68" fill="#94A3B8" stroke="#0D9488" stroke-width="1.5" />
+            <!-- Erlenmeyer borbulhante verde neon -->
+            <polygon points="40,56 44,56 46,62 38,62" fill="#22C55E" stroke="#15803D" stroke-width="1" />
+            <circle cx="42" cy="52" r="1" fill="#4ADE80" />
+            <!-- Tubos de ensaio coloridos em rack -->
+            <rect x="52" y="44" width="3" height="12" rx="1.5" fill="#EF4444" />
+            <rect x="57" y="42" width="3" height="14" rx="1.5" fill="#3B82F6" />
+            <rect x="62" y="45" width="3" height="11" rx="1.5" fill="#FACC15" />
+            <!-- Microscópio infantil azul -->
+            <path d="M74 58 L78 52 L82 54 L78 60 Z" fill="#6366F1" />
+            <circle cx="76" cy="62" r="3" fill="#4338CA" />
+          </g>
+        }
+
+        <!-- Robô Cuidador Amigável Dr. Pixel -->
+        @case ('ped_robo_pixel_cuidador') {
+          <g class="ambient-bob">
+            <ellipse cx="60" cy="84" rx="18" ry="7" fill="rgba(0,0,0,0.15)" />
+            <!-- Rodinhas orbe central -->
+            <circle cx="60" cy="78" r="7" fill="#475569" stroke="#0F172A" stroke-width="1.5" />
+            <!-- Corpo arredondado branco puro -->
+            <rect x="44" y="48" width="32" height="26" rx="8" fill="#F8FAFC" stroke="#0284C7" stroke-width="2" />
+            <!-- Tela de rosto com olhos digitais felizes -->
+            <rect x="48" y="52" width="24" height="14" rx="4" fill="#0F172A" />
+            <circle cx="54" cy="58" r="2.2" fill="#38BDF8" />
+            <circle cx="66" cy="58" r="2.2" fill="#38BDF8" />
+            <path d="M57 62 Q60 64 63 62" stroke="#38BDF8" stroke-width="1.2" fill="none" />
+            <!-- Antena com esfera pulsante -->
+            <line x1="60" y1="48" x2="60" y2="40" stroke="#0284C7" stroke-width="2" />
+            <circle cx="60" cy="38" r="3.5" fill="#F43F5E" />
+            <!-- Braços articulados amigáveis acenando -->
+            <path d="M44 56 Q36 50 34 44" stroke="#0284C7" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <circle cx="34" cy="43" r="2.5" fill="#38BDF8" />
+            <path d="M76 56 Q82 60 84 66" stroke="#0284C7" stroke-width="2.5" stroke-linecap="round" fill="none" />
+            <circle cx="85" cy="67" r="2.5" fill="#38BDF8" />
+          </g>
+        }
+
+        <!-- Maca Disco Voador com LED Neon -->
+        @case ('ped_maca_disco_voador') {
+          <g class="ambient-bob">
+            <ellipse cx="60" cy="86" rx="36" ry="12" fill="rgba(6,182,212,0.3)" />
+            <!-- Anel externo cromado do disco voador -->
+            <ellipse cx="60" cy="66" rx="46" ry="16" fill="#E2E8F0" stroke="#06B6D4" stroke-width="2" />
+            <!-- Faixa LED Neon Ciano ao redor -->
+            <ellipse cx="60" cy="67" rx="40" ry="13" fill="none" stroke="#22D3EE" stroke-width="2" />
+            <!-- Cúpula de acrílico translúcido violeta -->
+            <path d="M30 63 C30 44 44 38 60 38 C76 38 90 44 90 63 Z" fill="rgba(168,85,247,0.35)" stroke="#A855F7" stroke-width="1.5" />
+            <!-- Colchãozinho ergonômico no interior -->
+            <ellipse cx="60" cy="64" rx="26" ry="8" fill="#F1F5F9" />
+            <circle cx="48" cy="63" r="3" fill="#F472B6" />
+            <circle cx="72" cy="63" r="3" fill="#38BDF8" />
+            <circle cx="60" cy="64" r="3" fill="#FACC15" />
+          </g>
+        }
+
+        <!-- Aquário Cilindro Submarino Lúdico -->
+        @case ('ped_aquario_submarino_kids') {
+          <g>
+            <ellipse cx="60" cy="85" rx="24" ry="10" fill="rgba(0,0,0,0.18)" />
+            <!-- Base de submarino amarelo com rebites -->
+            <ellipse cx="60" cy="78" rx="26" ry="10" fill="#FACC15" stroke="#CA8A04" stroke-width="2" />
+            <!-- Cilindro de água transparente -->
+            <rect x="36" y="38" width="48" height="40" fill="rgba(14,165,233,0.3)" stroke="#0284C7" stroke-width="1.8" />
+            <ellipse cx="60" cy="38" rx="24" ry="9" fill="#38BDF8" stroke="#0284C7" stroke-width="1.8" />
+            <!-- Periscópio no topo -->
+            <rect x="56" y="24" width="8" height="14" fill="#FACC15" stroke="#CA8A04" stroke-width="1.5" />
+            <path d="M64 24 L74 24 L74 30 L64 30 Z" fill="#FACC15" stroke="#CA8A04" stroke-width="1.5" />
+            <circle cx="74" cy="27" r="2.5" fill="#38BDF8" />
+            <!-- Peixinhos nadando dentro -->
+            <polygon points="50,56 44,52 44,60" fill="#F97316" />
+            <circle cx="52" cy="56" r="3" fill="#F97316" />
+            <polygon points="70,48 76,45 76,51" fill="#EC4899" />
+            <circle cx="68" cy="48" r="2.5" fill="#EC4899" />
+            <!-- Bolhas de ar -->
+            <circle cx="58" cy="68" r="1.5" fill="#FFFFFF" opacity="0.8" />
+            <circle cx="60" cy="54" r="2" fill="#FFFFFF" opacity="0.8" />
+            <circle cx="59" cy="44" r="1.2" fill="#FFFFFF" opacity="0.8" />
+          </g>
+        }
+
+        <!-- Tobogã Curvo Nuvem Mágica -->
+        @case ('ped_toboga_nuvem_magica') {
+          <g>
+            <ellipse cx="60" cy="88" rx="42" ry="14" fill="rgba(0,0,0,0.15)" />
+            <!-- Nuvem felpuda como base -->
+            <circle cx="34" cy="80" r="14" fill="#F1F5F9" />
+            <circle cx="50" cy="76" r="18" fill="#FFFFFF" />
+            <circle cx="70" cy="78" r="16" fill="#F8FAFC" />
+            <circle cx="86" cy="82" r="12" fill="#F1F5F9" />
+            <!-- Escada caracol colorida de acesso -->
+            <path d="M30 76 L30 38 L42 38 L42 76" fill="#CBD5E1" stroke="#64748B" stroke-width="1.5" />
+            <line x1="30" y1="46" x2="42" y2="46" stroke="#EF4444" stroke-width="2" />
+            <line x1="30" y1="54" x2="42" y2="54" stroke="#F59E0B" stroke-width="2" />
+            <line x1="30" y1="62" x2="42" y2="62" stroke="#10B981" stroke-width="2" />
+            <line x1="30" y1="70" x2="42" y2="70" stroke="#3B82F6" stroke-width="2" />
+            <!-- Calha espiral do tobogã arco-íris -->
+            <path d="M42 42 C70 40 85 55 78 72 C74 80 60 84 50 84" fill="none" stroke="#EC4899" stroke-width="12" stroke-linecap="round" />
+            <path d="M42 42 C70 40 85 55 78 72 C74 80 60 84 50 84" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round" />
+            <path d="M42 42 C70 40 85 55 78 72 C74 80 60 84 50 84" fill="none" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" />
+          </g>
+        }
+
+        <!-- Cúpula Planetário Imersivo LED -->
+        @case ('ped_planetario_domo') {
+          <g>
+            <ellipse cx="60" cy="86" rx="38" ry="14" fill="rgba(0,0,0,0.2)" />
+            <!-- Domo geodésico escuro com nervuras azuis neon -->
+            <path d="M26 78 C26 44 40 30 60 30 C80 30 94 44 94 78 Z" fill="#090D16" stroke="#38BDF8" stroke-width="2" />
+            <!-- Malha geodésica brilhante -->
+            <line x1="60" y1="30" x2="40" y2="52" stroke="#0284C7" stroke-width="1" />
+            <line x1="60" y1="30" x2="80" y2="52" stroke="#0284C7" stroke-width="1" />
+            <line x1="40" y1="52" x2="80" y2="52" stroke="#0284C7" stroke-width="1" />
+            <line x1="40" y1="52" x2="30" y2="76" stroke="#0284C7" stroke-width="1" />
+            <line x1="80" y1="52" x2="90" y2="76" stroke="#0284C7" stroke-width="1" />
+            <line x1="60" y1="52" x2="60" y2="78" stroke="#0284C7" stroke-width="1" />
+            <!-- Constelações e estrelinhas brilhando no domo -->
+            <circle cx="50" cy="44" r="1.5" fill="#FDE047" />
+            <circle cx="70" cy="42" r="1.8" fill="#F472B6" />
+            <circle cx="60" cy="62" r="1.5" fill="#67E8F9" />
+            <circle cx="45" cy="66" r="1" fill="#FFFFFF" />
+            <circle cx="75" cy="64" r="1" fill="#FFFFFF" />
+            <!-- Porta de entrada em arco iluminada -->
+            <path d="M52 78 L52 66 Q60 62 68 66 L68 78 Z" fill="#38BDF8" opacity="0.85" />
+          </g>
+        }
+
+        <!-- Carrossel Vitoriano Encantado com Música -->
+        @case ('ped_carrossel_musical_reino') {
+          <g class="ambient-bob">
+            <ellipse cx="60" cy="88" rx="40" ry="14" fill="rgba(0,0,0,0.18)" />
+            <!-- Plataforma circular com espelho dourado -->
+            <ellipse cx="60" cy="80" rx="38" ry="12" fill="#FEF3C7" stroke="#D97706" stroke-width="2" />
+            <!-- Eixo central com espelhos -->
+            <rect x="56" y="42" width="8" height="38" fill="#F59E0B" stroke="#B45309" stroke-width="1.2" />
+            <!-- Cavalinhos dourados com crina colorida -->
+            <g transform="translate(34, 52)">
+              <line x1="6" y1="-8" x2="6" y2="28" stroke="#D97706" stroke-width="1.5" />
+              <path d="M0 12 Q4 8 10 10 L12 16 L2 18 Z" fill="#F59E0B" />
+              <circle cx="10" cy="11" r="1" fill="#000000" />
+            </g>
+            <g transform="translate(74, 52)">
+              <line x1="6" y1="-8" x2="6" y2="28" stroke="#D97706" stroke-width="1.5" />
+              <path d="M0 12 Q4 8 10 10 L12 16 L2 18 Z" fill="#EC4899" />
+              <circle cx="10" cy="11" r="1" fill="#000000" />
+            </g>
+            <!-- Cobertura de circo / carrossel listrada -->
+            <polygon points="60,22 22,46 98,46" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5" />
+            <polygon points="60,22 36,46 48,46" fill="#F8FAFC" />
+            <polygon points="60,22 72,46 84,46" fill="#F8FAFC" />
+            <!-- Estrela no topo do mastro -->
+            <polygon points="60,16 62,20 66,20 63,23 64,27 60,24 56,27 57,23 54,20 58,20" fill="#FACC15" />
+          </g>
+        }
+
+        <!-- Cápsula Espacial Simuladora Apollo Kids -->
+        @case ('ped_simulador_foguete_orbital') {
+          <g>
+            <ellipse cx="60" cy="88" rx="46" ry="16" fill="rgba(0,0,0,0.22)" />
+            <!-- Plataforma elevatória com pistões hidráulicos -->
+            <polygon points="20,72 60,54 100,72 60,90" fill="#334155" stroke="#0284C7" stroke-width="2" />
+            <!-- Cockpit da nave futurista com vidro fumê -->
+            <path d="M30 68 L60 42 L90 68 L60 82 Z" fill="#F1F5F9" stroke="#0F172A" stroke-width="2" />
+            <!-- Janela do para-brisa em hexágono ciano brilhante -->
+            <polygon points="46,62 60,48 74,62 60,72" fill="#06B6D4" stroke="#0891B2" stroke-width="1.5" />
+            <line x1="46" y1="62" x2="74" y2="62" stroke="#FFFFFF" stroke-width="1" opacity="0.6" />
+            <!-- Turbinas laterais com fogo azul neon -->
+            <rect x="22" y="66" width="10" height="14" rx="3" fill="#64748B" />
+            <rect x="88" y="66" width="10" height="14" rx="3" fill="#64748B" />
+            <polygon points="24,80 27,88 30,80" fill="#38BDF8" />
+            <polygon points="90,80 93,88 96,80" fill="#38BDF8" />
+          </g>
+        }
+
+        <!-- Mesa Flutuante Vidro & Inox -->
+        @case ('mob_mesa_vidro_flutuante') {
+          <g>
+            <ellipse cx="60" cy="86" rx="36" ry="12" fill="rgba(0,0,0,0.12)" />
+            <!-- Cavaletes tubulares de aço inox escovado -->
+            <polygon points="32,60 36,60 36,84 32,84" fill="#94A3B8" />
+            <polygon points="84,60 88,60 88,84 84,84" fill="#94A3B8" />
+            <!-- Tampo de vidro temperado translúcido esverdeado com chanfro -->
+            <polygon points="22,54 60,36 98,54 60,72" fill="rgba(207,250,254,0.7)" stroke="#0891B2" stroke-width="2" />
+            <polygon points="22,54 60,72 60,76 22,58" fill="rgba(8,145,178,0.5)" stroke="#0891B2" stroke-width="1" />
+            <polygon points="98,54 60,72 60,76 98,58" fill="rgba(8,145,178,0.3)" stroke="#0891B2" stroke-width="1" />
+            <!-- Notebook ultrafino de alumínio na mesa -->
+            <polygon points="52,52 60,48 68,52 60,56" fill="#F1F5F9" stroke="#64748B" stroke-width="1" />
+            <polygon points="52,52 60,40 68,44 60,56" fill="#38BDF8" opacity="0.85" />
+          </g>
+        }
+
+        <!-- Poltrona Biomecânica Atlas Pro -->
+        @case ('mob_poltrona_ergonomica_atlas') {
+          <g>
+            <ellipse cx="60" cy="86" rx="20" ry="8" fill="rgba(0,0,0,0.18)" />
+            <!-- Base estrela 5 pontas de alumínio e rodízios -->
+            <polygon points="60,78 46,84 50,86 60,80" fill="#475569" />
+            <polygon points="60,78 74,84 70,86 60,80" fill="#475569" />
+            <line x1="60" y1="72" x2="60" y2="78" stroke="#1E293B" stroke-width="4" />
+            <!-- Assento em malha mesh grafite ergonômico -->
+            <polygon points="44,62 60,54 76,62 60,70" fill="#1E293B" stroke="#0284C7" stroke-width="1.5" />
+            <!-- Encosto com suporte lombar 3D -->
+            <path d="M48 60 Q60 48 72 60 L70 38 Q60 32 50 38 Z" fill="#0F172A" stroke="#0284C7" stroke-width="1.8" />
+            <!-- Apoio de cabeça regulável -->
+            <ellipse cx="60" cy="30" rx="9" ry="5" fill="#1E293B" stroke="#0284C7" stroke-width="1.5" />
+            <!-- Braços 4D acolchoados -->
+            <rect x="40" y="52" width="5" height="12" rx="2" fill="#334155" />
+            <rect x="75" y="52" width="5" height="12" rx="2" fill="#334155" />
+          </g>
+        }
+
+        <!-- Estante Cilíndrica Giratória Farmácia -->
+        @case ('mob_estante_livros_giratoria') {
+          <g>
+            <ellipse cx="60" cy="86" rx="22" ry="9" fill="rgba(0,0,0,0.18)" />
+            <ellipse cx="60" cy="82" rx="20" ry="8" fill="#78350F" stroke="#451A03" stroke-width="1.5" />
+            <!-- Prateleiras cilíndricas giratórias -->
+            <rect x="42" y="36" width="36" height="46" rx="4" fill="#92400E" stroke="#451A03" stroke-width="1.8" />
+            <ellipse cx="60" cy="36" rx="18" ry="7" fill="#B45309" stroke="#451A03" stroke-width="1.5" />
+            <line x1="42" y1="52" x2="78" y2="52" stroke="#451A03" stroke-width="1.5" />
+            <line x1="42" y1="68" x2="78" y2="68" stroke="#451A03" stroke-width="1.5" />
+            <!-- Livros com lombadas coloridas e detalhes dourados -->
+            <rect x="46" y="38" width="4" height="13" fill="#DC2626" />
+            <rect x="51" y="39" width="5" height="12" fill="#2563EB" />
+            <rect x="57" y="38" width="4" height="13" fill="#16A34A" />
+            <rect x="62" y="40" width="5" height="11" fill="#D97706" />
+            <rect x="68" y="38" width="4" height="13" fill="#9333EA" />
+            <!-- Livros na prateleira do meio -->
+            <rect x="46" y="54" width="5" height="13" fill="#0D9488" />
+            <rect x="52" y="55" width="4" height="12" fill="#EA580C" />
+            <rect x="57" y="54" width="6" height="13" fill="#1E293B" />
+            <rect x="64" y="56" width="4" height="11" fill="#CA8A04" />
+          </g>
+        }
+
+        <!-- Biombo Art Déco Ouro Escovado -->
+        @case ('mob_biombo_art_deco_dourado') {
+          <g>
+            <ellipse cx="60" cy="86" rx="34" ry="10" fill="rgba(0,0,0,0.15)" />
+            <!-- Painel 1 (Esquerdo) com trama dourada Art Déco -->
+            <polygon points="26,42 48,30 48,78 26,90" fill="#1E293B" stroke="#F59E0B" stroke-width="2" />
+            <path d="M28 66 Q37 50 46 66 M30 76 Q37 60 44 76" stroke="#FBBF24" stroke-width="1.2" fill="none" />
+            <!-- Painel 2 (Direito) -->
+            <polygon points="48,30 72,42 72,90 48,78" fill="#0F172A" stroke="#F59E0B" stroke-width="2" />
+            <path d="M50 66 Q60 50 70 66 M52 76 Q60 60 68 76" stroke="#FBBF24" stroke-width="1.2" fill="none" />
+            <!-- Painel 3 (Terceiro segmento) -->
+            <polygon points="72,42 94,30 94,78 72,90" fill="#1E293B" stroke="#F59E0B" stroke-width="2" />
+            <path d="M74 66 Q83 50 92 66" stroke="#FBBF24" stroke-width="1.2" fill="none" />
+          </g>
+        }
+
+        <!-- Poltrona Gravidade Zero Aquecida -->
+        @case ('mob_poltrona_anti_gravidade') {
+          <g>
+            <ellipse cx="60" cy="85" rx="26" ry="10" fill="rgba(0,0,0,0.18)" />
+            <!-- Chassi curvo de fibra de carbono -->
+            <path d="M38 78 Q50 86 78 74 L82 70 Q54 82 42 74 Z" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <!-- Estrutura reclinada em couro legítimo caramelo -->
+            <path d="M36 68 Q52 74 64 64 L80 44 Q76 40 68 44 L56 58 Q48 64 36 64 Z" fill="#D97706" stroke="#B45309" stroke-width="2" />
+            <!-- Gomos estofados acolchoados com linhas de costura -->
+            <line x1="44" y1="66" x2="42" y2="60" stroke="#78350F" stroke-width="1.2" />
+            <line x1="52" y1="65" x2="50" y2="59" stroke="#78350F" stroke-width="1.2" />
+            <line x1="60" y1="60" x2="58" y2="54" stroke="#78350F" stroke-width="1.2" />
+            <line x1="68" y1="52" x2="66" y2="46" stroke="#78350F" stroke-width="1.2" />
+            <!-- Almofada de cabeça anatômica -->
+            <ellipse cx="76" cy="42" rx="7" ry="4.5" fill="#B45309" />
+          </g>
+        }
+
+        <!-- Maca Hidráulica em Couro Pérola -->
+        @case ('mob_maca_podologia_hidraulica') {
+          <g>
+            <ellipse cx="60" cy="86" rx="36" ry="12" fill="rgba(0,0,0,0.18)" />
+            <!-- Coluna telescópica hidráulica redonda em inox -->
+            <ellipse cx="60" cy="78" rx="16" ry="6" fill="#94A3B8" stroke="#475569" stroke-width="1.5" />
+            <rect x="56" y="66" width="8" height="12" fill="#CBD5E1" stroke="#475569" stroke-width="1" />
+            <!-- Corpo tripartido da maca articulada (pernas, assento, encosto) -->
+            <polygon points="26,62 48,50 62,58 40,70" fill="#F8FAFC" stroke="#0D9488" stroke-width="1.8" />
+            <polygon points="48,50 68,38 82,46 62,58" fill="#FFFFFF" stroke="#0D9488" stroke-width="1.8" />
+            <polygon points="68,38 86,28 98,35 80,45" fill="#F8FAFC" stroke="#0D9488" stroke-width="1.8" />
+            <!-- Braços estofados e almofada de cabeça -->
+            <ellipse cx="90" cy="30" rx="5" ry="3" fill="#E2E8F0" />
+            <rect x="50" y="56" width="4" height="10" rx="1.5" fill="#E2E8F0" stroke="#0D9488" stroke-width="0.8" />
+          </g>
+        }
+
+        <!-- Estação de Laudos Tripla Curva 4K -->
+        @case ('mob_estacao_laudos_tripla') {
+          <g>
+            <ellipse cx="60" cy="86" rx="36" ry="12" fill="rgba(0,0,0,0.18)" />
+            <!-- Mesa escura com pés metálicos -->
+            <polygon points="24,58 60,40 96,58 60,76" fill="#1E293B" stroke="#475569" stroke-width="2" />
+            <!-- Monitor Central 4K -->
+            <polygon points="46,42 74,42 74,24 46,24" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <rect x="48" y="26" width="24" height="14" fill="#0369A1" />
+            <!-- Monitor Esquerdo Inclinado -->
+            <polygon points="22,46 44,40 44,22 22,28" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <polygon points="24,44 42,39 42,24 24,29" fill="#075985" />
+            <!-- Monitor Direito Inclinado -->
+            <polygon points="76,40 98,46 98,28 76,22" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <polygon points="78,39 96,44 96,29 78,24" fill="#075985" />
+            <!-- Imagem de raio-x/ressonância na tela central -->
+            <ellipse cx="60" cy="33" rx="5" ry="3.5" fill="#E0F2FE" opacity="0.8" />
+            <!-- Teclado retroiluminado e mousepad de radiologia -->
+            <polygon points="50,60 62,54 70,58 58,64" fill="#334155" />
+          </g>
+        }
+
+        <!-- Vitrine Farmacêutica em Cristal & Latão -->
+        @case ('mob_aparador_cristal_farmacia') {
+          <g>
+            <ellipse cx="60" cy="86" rx="34" ry="11" fill="rgba(0,0,0,0.15)" />
+            <!-- Pés de latão dourado cônico -->
+            <line x1="28" y1="74" x2="26" y2="86" stroke="#D97706" stroke-width="3" />
+            <line x1="92" y1="74" x2="94" y2="86" stroke="#D97706" stroke-width="3" />
+            <!-- Corpo de cristal e latão nobre -->
+            <polygon points="26,50 60,34 94,50 60,66" fill="#FDE68A" stroke="#B45309" stroke-width="2" />
+            <polygon points="26,50 60,66 60,78 26,62" fill="rgba(253,230,138,0.7)" stroke="#B45309" stroke-width="1.5" />
+            <polygon points="94,50 60,66 60,78 94,62" fill="rgba(217,119,6,0.5)" stroke="#B45309" stroke-width="1.5" />
+            <!-- Frascos de poções e extratos medicinais antigos -->
+            <rect x="42" y="42" width="4" height="8" fill="#15803D" />
+            <rect x="50" y="40" width="5" height="10" fill="#9333EA" />
+            <rect x="60" y="43" width="4" height="7" fill="#DC2626" />
+            <rect x="70" y="41" width="5" height="9" fill="#2563EB" />
+          </g>
+        }
+
+        <!-- Arquivo de Psicotrópicos em Titânio -->
+        @case ('mob_gaveteiro_blindado_titanio') {
+          <g>
+            <ellipse cx="60" cy="85" rx="22" ry="9" fill="rgba(0,0,0,0.2)" />
+            <!-- Cofre monolítico de titânio escovado -->
+            <polygon points="38,50 60,38 82,50 60,62" fill="#64748B" stroke="#1E293B" stroke-width="2" />
+            <polygon points="38,50 60,62 60,82 38,70" fill="#475569" stroke="#1E293B" stroke-width="2" />
+            <polygon points="82,50 60,62 60,82 82,70" fill="#334155" stroke="#1E293B" stroke-width="2" />
+            <!-- Gavetas reforçadas com trancas eletrônicas -->
+            <line x1="42" y1="58" x2="56" y2="66" stroke="#1E293B" stroke-width="1.5" />
+            <line x1="42" y1="66" x2="56" y2="74" stroke="#1E293B" stroke-width="1.5" />
+            <!-- Painel biométrico com LED vermelho de segurança máxima -->
+            <rect x="46" y="53" width="5" height="3" fill="#EF4444" />
+            <rect x="46" y="61" width="5" height="3" fill="#10B981" />
+          </g>
+        }
+
+        <!-- Mesa Presidencial Holográfica 3D -->
+        @case ('mob_mesa_holografica_nogueira') {
+          <g>
+            <ellipse cx="60" cy="88" rx="44" ry="16" fill="rgba(0,0,0,0.25)" />
+            <!-- Tampo de nogueira maciça com borda chanfrada -->
+            <polygon points="16,56 60,34 104,56 60,78" fill="#451A03" stroke="#D97706" stroke-width="2.5" />
+            <polygon points="16,56 60,78 60,84 16,62" fill="#290E02" />
+            <polygon points="104,56 60,78 60,84 104,62" fill="#1B0901" />
+            <!-- Emissor holográfico central circular -->
+            <ellipse cx="60" cy="56" rx="20" ry="9" fill="#0369A1" stroke="#38BDF8" stroke-width="1.8" />
+            <!-- Holograma 3D suspenso de um coração humano pulsante -->
+            <g class="ambient-pulse">
+              <path d="M56 42 C52 38 48 42 52 48 L60 54 L68 48 C72 42 68 38 64 42 Z" fill="rgba(56,189,248,0.75)" stroke="#38BDF8" stroke-width="1.2" />
+              <!-- Feixes verticais azuis do projetor -->
+              <line x1="48" y1="56" x2="52" y2="44" stroke="#38BDF8" stroke-width="0.8" stroke-dasharray="2,2" />
+              <line x1="72" y1="56" x2="68" y2="44" stroke="#38BDF8" stroke-width="0.8" stroke-dasharray="2,2" />
+            </g>
+          </g>
+        }
+
+        <!-- Maca de Levitação Magnética MagLev -->
+        @case ('mob_maca_terapeutica_levitacao') {
+          <g class="ambient-bob">
+            <!-- Trilho magnético de piso com bobinas superconductoras -->
+            <polygon points="26,76 60,60 94,76 60,92" fill="#0F172A" stroke="#06B6D4" stroke-width="2" />
+            <ellipse cx="60" cy="76" rx="26" ry="10" fill="#0891B2" opacity="0.6" />
+            <!-- Maca branca flutuando a 15px de altura -->
+            <polygon points="24,54 60,36 96,54 60,72" fill="#F8FAFC" stroke="#06B6D4" stroke-width="2" />
+            <polygon points="24,54 60,72 60,78 24,60" fill="#E2E8F0" stroke="#06B6D4" stroke-width="1.5" />
+            <polygon points="96,54 60,72 60,78 96,60" fill="#CBD5E1" stroke="#06B6D4" stroke-width="1.5" />
+            <!-- Colchão anti-escaras com campo de força ciano neon -->
+            <path d="M34 52 L60 40 L86 52 L60 64 Z" fill="rgba(34,211,238,0.3)" />
+            <ellipse cx="78" cy="48" rx="6" ry="3.5" fill="#E2E8F0" />
+          </g>
+        }
+
+        <!-- Cristaleira Imperial Botânica 1880 -->
+        @case ('mob_cristaleira_seculo_xix') {
+          <g>
+            <ellipse cx="60" cy="86" rx="34" ry="11" fill="rgba(0,0,0,0.18)" />
+            <!-- Cristaleira vitoriana de mogno com frontão entalhado -->
+            <rect x="28" y="24" width="64" height="60" rx="4" fill="#78350F" stroke="#451A03" stroke-width="2.5" />
+            <!-- Portas de vidro com divisões inglesas -->
+            <rect x="32" y="28" width="26" height="42" fill="rgba(224,242,254,0.35)" stroke="#D97706" stroke-width="1.5" />
+            <rect x="62" y="28" width="26" height="42" fill="rgba(224,242,254,0.35)" stroke="#D97706" stroke-width="1.5" />
+            <!-- Plantas medicinais e ervas herborizadas em redomas -->
+            <circle cx="45" cy="46" r="5" fill="#15803D" />
+            <circle cx="75" cy="46" r="5" fill="#16A34A" />
+            <rect x="42" y="58" width="6" height="8" fill="#D97706" />
+            <rect x="72" y="58" width="6" height="8" fill="#B45309" />
+          </g>
+        }
+
+        <!-- Ecógrafo Ultrassom Portátil Wireless -->
+        @case ('cli_ecografo_portatil_tablet') {
+          <g>
+            <ellipse cx="60" cy="85" rx="18" ry="7" fill="rgba(0,0,0,0.15)" />
+            <!-- Pedestal móvel cromado -->
+            <line x1="60" y1="58" x2="60" y2="84" stroke="#94A3B8" stroke-width="4" />
+            <!-- Tablet médico profissional com doppler colorido -->
+            <rect x="42" y="34" width="36" height="26" rx="4" fill="#0F172A" stroke="#0284C7" stroke-width="2" />
+            <rect x="45" y="37" width="30" height="20" rx="2" fill="#0369A1" />
+            <!-- Transdutor / Probe setorial de ultrassom acoplado -->
+            <path d="M48 46 Q54 42 60 48 Q66 52 72 46" stroke="#FACC15" stroke-width="2" fill="none" />
+            <rect x="78" y="44" width="6" height="12" rx="2" fill="#E2E8F0" stroke="#0284C7" stroke-width="1" />
+          </g>
+        }
+
+        <!-- Dermatoscópio Digital Polarizado -->
+        @case ('cli_dermatoscopio_digital') {
+          <g>
+            <ellipse cx="60" cy="84" rx="20" ry="8" fill="rgba(0,0,0,0.15)" />
+            <!-- Base de recarga por indução -->
+            <ellipse cx="60" cy="78" rx="18" ry="7" fill="#1E293B" stroke="#0D9488" stroke-width="1.5" />
+            <!-- Handpiece dermatoscópio ergonômico com anel LED -->
+            <rect x="55" y="42" width="10" height="36" rx="4" fill="#F8FAFC" stroke="#0D9488" stroke-width="1.8" />
+            <!-- Lente óptica com 16 LEDs polarizados -->
+            <circle cx="60" cy="38" r="10" fill="#0F172A" stroke="#0D9488" stroke-width="2" />
+            <circle cx="60" cy="38" r="6" fill="#06B6D4" />
+            <circle cx="56" cy="34" r="1" fill="#FFFFFF" />
+            <circle cx="64" cy="34" r="1" fill="#FFFFFF" />
+            <circle cx="56" cy="42" r="1" fill="#FFFFFF" />
+            <circle cx="64" cy="42" r="1" fill="#FFFFFF" />
+          </g>
+        }
+
+        <!-- Painel de Otoscópio Fibra Óptica 4K -->
+        @case ('cli_otoscopio_fibra_optica') {
+          <g>
+            <!-- Painel de parede com transformador e suportes -->
+            <rect x="28" y="28" width="64" height="48" rx="5" fill="#F1F5F9" stroke="#0284C7" stroke-width="2" />
+            <!-- Cabeça do Otoscópio com cabo espiralado -->
+            <rect x="36" y="36" width="10" height="20" rx="3" fill="#1E293B" stroke="#64748B" stroke-width="1.2" />
+            <polygon points="41,32 38,36 44,36" fill="#0284C7" />
+            <path d="M41 56 Q38 64 41 72" stroke="#0F172A" stroke-width="2" fill="none" />
+            <!-- Cabeça do Oftalmoscópio com anel seletor -->
+            <rect x="54" y="36" width="10" height="20" rx="3" fill="#1E293B" stroke="#64748B" stroke-width="1.2" />
+            <circle cx="59" cy="38" r="2.5" fill="#38BDF8" />
+            <path d="M59 56 Q56 64 59 72" stroke="#0F172A" stroke-width="2" fill="none" />
+            <!-- Termômetro auricular digital com display -->
+            <rect x="72" y="38" width="8" height="18" rx="2" fill="#FFFFFF" stroke="#0D9488" stroke-width="1.2" />
+            <rect x="74" y="42" width="4" height="4" fill="#0D9488" />
+          </g>
+        }
+
+        <!-- Bioimpedância Clínica Octapolar -->
+        @case ('cli_balanca_bioimpedancia_pro') {
+          <g>
+            <ellipse cx="60" cy="86" rx="26" ry="10" fill="rgba(0,0,0,0.18)" />
+            <!-- Plataforma no chão com eletrodos táteis de inox -->
+            <polygon points="36,74 60,64 84,74 60,84" fill="#F8FAFC" stroke="#0284C7" stroke-width="2" />
+            <ellipse cx="48" cy="74" rx="4" ry="2" fill="#94A3B8" />
+            <ellipse cx="72" cy="74" rx="4" ry="2" fill="#94A3B8" />
+            <!-- Coluna de alumínio aeronáutico vertical -->
+            <line x1="60" y1="36" x2="60" y2="70" stroke="#475569" stroke-width="4" />
+            <!-- Barra de manoplas telescópicas para as mãos -->
+            <line x1="42" y1="42" x2="78" y2="42" stroke="#0284C7" stroke-width="3" stroke-linecap="round" />
+            <!-- Console com tela touch colorida -->
+            <rect x="50" y="24" width="20" height="16" rx="3" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <rect x="52" y="26" width="16" height="12" fill="#0369A1" />
+          </g>
+        }
+
+        <!-- Cúpula Dupla Foco Cirúrgico LED -->
+        @case ('cli_foco_cirurgico_teto_led') {
+          <g class="ambient-pulse">
+            <!-- Braço articulado do teto -->
+            <line x1="60" y1="10" x2="60" y2="30" stroke="#94A3B8" stroke-width="4" />
+            <line x1="60" y1="30" x2="42" y2="42" stroke="#64748B" stroke-width="3" />
+            <line x1="60" y1="30" x2="78" y2="42" stroke="#64748B" stroke-width="3" />
+            <!-- Cúpula Maior LED 100.000 Lux -->
+            <ellipse cx="40" cy="46" rx="18" ry="8" fill="#F8FAFC" stroke="#0D9488" stroke-width="2" />
+            <ellipse cx="40" cy="46" rx="14" ry="5.5" fill="#FEF08A" />
+            <circle cx="36" cy="46" r="1.5" fill="#FFFFFF" />
+            <circle cx="44" cy="46" r="1.5" fill="#FFFFFF" />
+            <!-- Cúpula Menor LED Satélite -->
+            <ellipse cx="78" cy="48" rx="14" ry="6" fill="#F8FAFC" stroke="#0D9488" stroke-width="2" />
+            <ellipse cx="78" cy="48" rx="10" ry="4" fill="#FEF08A" />
+            <circle cx="78" cy="48" r="1.5" fill="#FFFFFF" />
+            <!-- Feixes cônicos de iluminação pura cirúrgica -->
+            <polygon points="40,54 20,85 60,85" fill="rgba(254,240,138,0.25)" />
+            <polygon points="78,54 64,85 92,85" fill="rgba(254,240,138,0.25)" />
+          </g>
+        }
+
+        <!-- Mini Espectrômetro de Massa Clínico -->
+        @case ('cli_espectrometro_massa_mini') {
+          <g>
+            <ellipse cx="60" cy="86" rx="34" ry="11" fill="rgba(0,0,0,0.18)" />
+            <polygon points="26,56 60,38 94,56 60,74" fill="#1E293B" stroke="#0284C7" stroke-width="2" />
+            <polygon points="26,56 60,74 60,84 26,66" fill="#0F172A" stroke="#0284C7" stroke-width="1.5" />
+            <polygon points="94,56 60,74 60,84 94,66" fill="#020617" stroke="#0284C7" stroke-width="1.5" />
+            <!-- Câmara de ionização a vácuo com anel cromado -->
+            <circle cx="46" cy="54" r="8" fill="#334155" stroke="#38BDF8" stroke-width="1.5" />
+            <!-- Display de cromatograma e picos moleculares -->
+            <rect x="62" y="44" width="24" height="16" rx="2" fill="#0F172A" stroke="#38BDF8" stroke-width="1" />
+            <path d="M64 56 L68 56 L71 47 L74 56 L78 51 L82 56 L84 56" stroke="#22C55E" stroke-width="1.5" fill="none" />
+          </g>
+        }
+
+        <!-- Ventilador Mecânico Inteligente AI -->
+        @case ('cli_ventilador_pulmonar_ia') {
+          <g class="ambient-pulse">
+            <ellipse cx="60" cy="85" rx="18" ry="7" fill="rgba(0,0,0,0.15)" />
+            <rect x="42" y="44" width="36" height="38" rx="6" fill="#F8FAFC" stroke="#0284C7" stroke-width="2" />
+            <!-- Monitor touch de curvas de pressão/fluxo -->
+            <rect x="45" y="48" width="30" height="18" rx="3" fill="#0F172A" />
+            <path d="M47 56 Q52 50 56 62 T66 56 T72 58" stroke="#38BDF8" stroke-width="1.5" fill="none" />
+            <!-- Traqueias respiratórias duplas (ramo insp/exp) -->
+            <path d="M46 72 Q36 78 40 84" stroke="#0284C7" stroke-width="2.5" fill="none" />
+            <path d="M74 72 Q84 78 80 84" stroke="#06B6D4" stroke-width="2.5" fill="none" />
+          </g>
+        }
+
+        <!-- Centrífuga Bioquímica de Alta Rotação -->
+        @case ('cli_centrifuga_plasma_rico') {
+          <g>
+            <ellipse cx="60" cy="84" rx="22" ry="9" fill="rgba(0,0,0,0.18)" />
+            <!-- Corpo cilíndrico aerodinâmico em inox -->
+            <ellipse cx="60" cy="62" rx="24" ry="12" fill="#F8FAFC" stroke="#64748B" stroke-width="2" />
+            <rect x="36" y="62" width="48" height="18" fill="#E2E8F0" />
+            <ellipse cx="60" cy="80" rx="24" ry="10" fill="#CBD5E1" stroke="#64748B" stroke-width="1.5" />
+            <!-- Tampa circular com visor de acrílico -->
+            <ellipse cx="60" cy="62" rx="16" ry="8" fill="#1E293B" stroke="#0284C7" stroke-width="1.5" />
+            <!-- Tubinhos rodando na centrífuga -->
+            <circle cx="54" cy="60" r="1.5" fill="#EF4444" />
+            <circle cx="66" cy="64" r="1.5" fill="#EF4444" />
+            <circle cx="60" cy="62" r="2" fill="#F59E0B" />
+          </g>
+        }
+
+        <!-- Torre de Vídeo-Endoscopia 4K HDR -->
+        @case ('cli_endoscopio_flexivel_4k') {
+          <g>
+            <ellipse cx="60" cy="86" rx="32" ry="11" fill="rgba(0,0,0,0.18)" />
+            <!-- Carrinho rack vertical com rodas -->
+            <rect x="34" y="40" width="52" height="44" rx="4" fill="#334155" stroke="#0F172A" stroke-width="2" />
+            <!-- Monitor 4K no topo ajustável -->
+            <rect x="32" y="18" width="56" height="26" rx="3" fill="#0F172A" stroke="#0284C7" stroke-width="2" />
+            <rect x="35" y="21" width="50" height="20" fill="#0369A1" />
+            <!-- Tubo endoscópico flexível com fibra óptica pendurado -->
+            <path d="M84 46 Q94 60 86 78" stroke="#1E293B" stroke-width="3" fill="none" />
+            <circle cx="86" cy="78" r="2" fill="#38BDF8" />
+          </g>
+        }
+
+        <!-- Console de Crioablação Dermatológica -->
+        @case ('cli_crioablativo_nitrogenio') {
+          <g>
+            <ellipse cx="60" cy="84" rx="20" ry="8" fill="rgba(0,0,0,0.15)" />
+            <!-- Tanque criogênico de nitrogênio líquido térmico -->
+            <rect x="44" y="44" width="32" height="36" rx="6" fill="#F1F5F9" stroke="#0284C7" stroke-width="2" />
+            <!-- Válvula de pressão manométrica -->
+            <circle cx="60" cy="52" r="5" fill="#E2E8F0" stroke="#0284C7" stroke-width="1.5" />
+            <line x1="60" y1="52" x2="63" y2="50" stroke="#EF4444" stroke-width="1" />
+            <!-- Mangueira flexível com pistola de aplicação ultrafina -->
+            <path d="M72 60 Q84 66 82 74" stroke="#64748B" stroke-width="2.5" fill="none" />
+            <polygon points="82,74 86,76 80,78" fill="#38BDF8" />
+          </g>
+        }
+
+        <!-- Ressonância Magnética 3T com LED RGB -->
+        @case ('cli_ressonancia_3t_compacta') {
+          <g class="ambient-pulse">
+            <ellipse cx="60" cy="88" rx="48" ry="16" fill="rgba(0,0,0,0.25)" />
+            <!-- Túnel magnético gantry com LED circular -->
+            <ellipse cx="60" cy="52" rx="42" ry="24" fill="#F8FAFC" stroke="#0284C7" stroke-width="3" />
+            <ellipse cx="60" cy="52" rx="26" ry="15" fill="#0F172A" stroke="#38BDF8" stroke-width="2.5" />
+            <ellipse cx="60" cy="52" rx="16" ry="9" fill="#0369A1" />
+            <!-- Mesa motorizada que desliza no gantry -->
+            <polygon points="34,74 60,62 86,74 60,86" fill="#E2E8F0" stroke="#0284C7" stroke-width="1.8" />
+          </g>
+        }
+
+        <!-- Console Robótico Telecirúrgico 4-Braços -->
+        @case ('cli_robo_cirurgico_quatro_bracos') {
+          <g>
+            <ellipse cx="60" cy="88" rx="38" ry="14" fill="rgba(0,0,0,0.2)" />
+            <!-- Coluna mestra de titânio -->
+            <rect x="52" y="44" width="16" height="38" rx="4" fill="#334155" stroke="#0284C7" stroke-width="2" />
+            <!-- 4 braços mecânicos multi-articulados com micro-pinças -->
+            <path d="M52 50 Q34 40 30 52 L36 60" stroke="#0284C7" stroke-width="2.5" fill="none" />
+            <path d="M52 64 Q32 60 26 70 L34 76" stroke="#0284C7" stroke-width="2.5" fill="none" />
+            <path d="M68 50 Q86 40 90 52 L84 60" stroke="#0284C7" stroke-width="2.5" fill="none" />
+            <path d="M68 64 Q88 60 94 70 L86 76" stroke="#0284C7" stroke-width="2.5" fill="none" />
+            <!-- Visor 3D estéreo do cirurgião no topo -->
+            <rect x="46" y="28" width="28" height="16" rx="4" fill="#0F172A" stroke="#38BDF8" stroke-width="1.8" />
+            <circle cx="54" cy="36" r="3" fill="#38BDF8" />
+            <circle cx="66" cy="36" r="3" fill="#38BDF8" />
+          </g>
+        }
+
+        <!-- Câmara Hiperbárica Monoplace Dourada -->
+        @case ('cli_camara_hiperbarica_ouro') {
+          <g>
+            <ellipse cx="60" cy="88" rx="44" ry="14" fill="rgba(0,0,0,0.2)" />
+            <!-- Suportes e berço de ouro 24k -->
+            <line x1="26" y1="76" x2="26" y2="86" stroke="#D97706" stroke-width="4" />
+            <line x1="94" y1="76" x2="94" y2="86" stroke="#D97706" stroke-width="4" />
+            <!-- Cilindro de acrílico e anéis de liga aeroespacial dourada -->
+            <polygon points="22,64 60,46 98,64 60,82" fill="rgba(56,189,248,0.4)" stroke="#F59E0B" stroke-width="2.5" />
+            <!-- Maca interna com paciente confortável -->
+            <ellipse cx="60" cy="64" rx="30" ry="9" fill="#FFFFFF" opacity="0.85" />
+            <!-- Console de controle com válvulas e monitor de O2 -->
+            <rect x="88" y="48" width="14" height="20" rx="3" fill="#1E293B" stroke="#F59E0B" stroke-width="1.5" />
+            <circle cx="95" cy="56" r="3" fill="#10B981" />
+          </g>
+        }
+
+        <!-- Poltrona Egg em Veludo Azul Marinho -->
+        @case ('rec_poltrona_egg_veludo_azul') {
+          <g>
+            <ellipse cx="60" cy="85" rx="22" ry="9" fill="rgba(0,0,0,0.18)" />
+            <!-- Base giratória cromada 4 pontas -->
+            <line x1="60" y1="74" x2="60" y2="82" stroke="#CBD5E1" stroke-width="3" />
+            <!-- Concha icônica da Poltrona Egg em veludo nobre -->
+            <path d="M38 52 C34 32 46 22 60 22 C74 22 86 32 82 52 C80 68 74 76 60 76 C46 76 40 68 38 52 Z" fill="#1E3A8A" stroke="#1D4ED8" stroke-width="2" />
+            <!-- Almofada interna fofa e acolhedora -->
+            <ellipse cx="60" cy="62" rx="14" ry="8" fill="#1E40AF" />
+            <path d="M46 50 Q60 40 74 50" stroke="#3B82F6" stroke-width="1.5" fill="none" opacity="0.6" />
+          </g>
+        }
+
+        <!-- Totem de Recepção com Reconhecimento -->
+        @case ('rec_totem_checkin_facial') {
+          <g>
+            <ellipse cx="60" cy="85" rx="18" ry="7" fill="rgba(0,0,0,0.15)" />
+            <!-- Totem fino vertical futurista -->
+            <rect x="52" y="28" width="16" height="54" rx="4" fill="#0F172A" stroke="#0284C7" stroke-width="2" />
+            <!-- Câmera biométrica no topo -->
+            <circle cx="60" cy="34" r="2" fill="#38BDF8" />
+            <!-- Tela touch vertical com interface médica -->
+            <rect x="54" y="38" width="12" height="24" rx="2" fill="#0369A1" />
+            <line x1="56" y1="44" x2="64" y2="44" stroke="#FFFFFF" stroke-width="1" />
+            <line x1="56" y1="48" x2="64" y2="48" stroke="#FFFFFF" stroke-width="1" />
+            <!-- Slot de emissão de crachá e leitor de QR Code -->
+            <line x1="55" y1="68" x2="65" y2="68" stroke="#10B981" stroke-width="1.5" />
+          </g>
+        }
+
+        <!-- Fonte Shishi-Odoshi Bambu Zen -->
+        @case ('rec_fonte_bambu_shishi_odoshi') {
+          <g>
+            <ellipse cx="60" cy="86" rx="26" ry="10" fill="rgba(0,0,0,0.15)" />
+            <!-- Bacia de pedra polida com água límpida -->
+            <ellipse cx="60" cy="78" rx="22" ry="9" fill="#475569" stroke="#334155" stroke-width="2" />
+            <ellipse cx="60" cy="77" rx="18" ry="7" fill="#0284C7" opacity="0.75" />
+            <!-- Tubo de bambu basculante -->
+            <line x1="48" y1="62" x2="66" y2="74" stroke="#15803D" stroke-width="4" stroke-linecap="round" />
+            <line x1="58" y1="56" x2="58" y2="76" stroke="#166534" stroke-width="3" />
+            <!-- Filete de água cristalina caindo -->
+            <line x1="66" y1="74" x2="66" y2="78" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round" />
+          </g>
+        }
+
+        <!-- Vitrola Vinil Acústica Lo-Fi -->
+        @case ('rec_vitrola_vinil_terapia') {
+          <g>
+            <ellipse cx="60" cy="86" rx="24" ry="9" fill="rgba(0,0,0,0.15)" />
+            <!-- Gabinete de madeira nobre envernizada -->
+            <polygon points="36,60 60,48 84,60 60,72" fill="#92400E" stroke="#78350F" stroke-width="2" />
+            <polygon points="36,60 60,72 60,80 36,68" fill="#78350F" />
+            <polygon points="84,60 60,72 60,80 84,68" fill="#451A03" />
+            <!-- Disco de vinil preto girando -->
+            <ellipse cx="58" cy="58" rx="12" ry="6" fill="#0F172A" stroke="#334155" stroke-width="1" />
+            <circle cx="58" cy="58" r="3" fill="#DC2626" />
+            <!-- Corneta acústica de latão brilhante -->
+            <path d="M68 56 Q76 46 84 34" stroke="#F59E0B" stroke-width="3" fill="none" />
+            <ellipse cx="86" cy="32" rx="8" ry="12" fill="#FBBF24" stroke="#D97706" stroke-width="1.5" />
+          </g>
+        }
+
+        <!-- Cafeteira de Pistão Ouro & Cobre -->
+        @case ('rec_cafeteira_pistao_ouro') {
+          <g>
+            <ellipse cx="60" cy="85" rx="22" ry="8" fill="rgba(0,0,0,0.15)" />
+            <!-- Base da máquina de espresso em cobre reluzente -->
+            <rect x="42" y="52" width="36" height="28" rx="4" fill="#B45309" stroke="#78350F" stroke-width="2" />
+            <!-- Caldeira cilíndrica de latão com manômetro -->
+            <rect x="48" y="32" width="24" height="22" rx="4" fill="#FBBF24" stroke="#D97706" stroke-width="1.8" />
+            <circle cx="60" cy="40" r="3" fill="#FFFFFF" stroke="#000000" stroke-width="0.8" />
+            <!-- Alavanca de pistão manual vertical -->
+            <line x1="60" y1="32" x2="60" y2="18" stroke="#D97706" stroke-width="2.5" />
+            <circle cx="60" cy="16" r="3.5" fill="#78350F" />
+            <!-- Xícara de espresso fumegante -->
+            <rect x="56" y="68" width="8" height="6" rx="1.5" fill="#FFFFFF" />
+          </g>
+        }
+
+        <!-- Sofá Curvo Ilha Bouclê Areia -->
+        @case ('rec_sofa_curvo_organico') {
+          <g>
+            <ellipse cx="60" cy="88" rx="46" ry="16" fill="rgba(0,0,0,0.15)" />
+            <!-- Estrutura sinuosa orgânica do sofá em forma de rim -->
+            <path d="M20 72 C16 54 36 44 60 48 C84 44 104 54 100 72 C96 86 76 90 60 86 C44 90 24 86 20 72 Z" fill="#F5F5F4" stroke="#D6D3D1" stroke-width="2.5" />
+            <!-- Almofadas de encosto com costura suave -->
+            <path d="M30 64 Q60 52 90 64" stroke="#E7E5E4" stroke-width="3" fill="none" />
+            <!-- Almofada decorativa de veludo verde sálvia -->
+            <ellipse cx="44" cy="68" rx="6" ry="4" fill="#84CC16" />
+            <ellipse cx="76" cy="68" rx="6" ry="4" fill="#F97316" />
+          </g>
+        }
+
+        <!-- Jardim Vertical Hidropônico Iluminado -->
+        @case ('rec_jardim_vertical_hidroponico') {
+          <g>
+            <!-- Painel de parede com moldura de carvalho -->
+            <rect x="26" y="24" width="68" height="68" rx="6" fill="#1C1917" stroke="#78350F" stroke-width="2.5" />
+            <!-- Bolsões hidropônicos com folhagens exuberantes (samambaias, filodendros) -->
+            <circle cx="40" cy="38" r="10" fill="#15803D" />
+            <circle cx="60" cy="34" r="12" fill="#22C55E" />
+            <circle cx="80" cy="38" r="10" fill="#16A34A" />
+            <circle cx="48" cy="54" r="11" fill="#166534" />
+            <circle cx="72" cy="54" r="11" fill="#4ADE80" />
+            <circle cx="38" cy="70" r="10" fill="#15803D" />
+            <circle cx="60" cy="72" r="12" fill="#22C55E" />
+            <circle cx="82" cy="70" r="10" fill="#16A34A" />
+            <!-- Fita LED de crescimento fotossintético no topo -->
+            <line x1="30" y1="28" x2="90" y2="28" stroke="#F472B6" stroke-width="2" opacity="0.9" />
+          </g>
+        }
+
+        <!-- Husky Terapêutico Dr. Neve -->
+        @case ('rec_mascote_husky_dr_neve') {
+          <g class="ambient-bob">
+            <ellipse cx="60" cy="85" rx="22" ry="9" fill="rgba(0,0,0,0.18)" />
+            <!-- Corpo peludo do cãozinho deitado feliz -->
+            <ellipse cx="60" cy="74" rx="16" ry="9" fill="#94A3B8" />
+            <ellipse cx="60" cy="75" rx="13" ry="7" fill="#F8FAFC" />
+            <!-- Patas brancas dianteiras -->
+            <ellipse cx="48" cy="80" rx="3" ry="2" fill="#FFFFFF" />
+            <ellipse cx="72" cy="80" rx="3" ry="2" fill="#FFFFFF" />
+            <!-- Cabeça com máscara clássica de Husky -->
+            <circle cx="60" cy="56" r="10" fill="#475569" />
+            <circle cx="60" cy="58" r="8" fill="#FFFFFF" />
+            <!-- Orelhas pontudas com interior rosa -->
+            <polygon points="52,48 48,36 56,44" fill="#475569" />
+            <polygon points="52,46 49,38 55,44" fill="#FDA4AF" />
+            <polygon points="68,48 72,36 64,44" fill="#475569" />
+            <polygon points="68,46 71,38 65,44" fill="#FDA4AF" />
+            <!-- Olhos azuis gélidos e focinho fofo -->
+            <circle cx="56" cy="56" r="1.5" fill="#38BDF8" />
+            <circle cx="64" cy="56" r="1.5" fill="#38BDF8" />
+            <ellipse cx="60" cy="62" rx="2" ry="1.2" fill="#0F172A" />
+            <!-- Bandana médica azul com cruz de apoio -->
+            <polygon points="52,66 60,74 68,66" fill="#0284C7" />
+            <circle cx="60" cy="69" r="1" fill="#FFFFFF" />
+          </g>
+        }
+
+        <!-- Gato Persa Branco Dr. Algodão -->
+        @case ('rec_mascote_gato_persa_angoror') {
+          <g class="ambient-bob">
+            <ellipse cx="60" cy="86" rx="22" ry="9" fill="rgba(0,0,0,0.18)" />
+            <!-- Almofada de veludo esmeralda onde o gatinho descansa -->
+            <ellipse cx="60" cy="80" rx="24" ry="10" fill="#0D9488" stroke="#0F766E" stroke-width="1.8" />
+            <!-- Corpo peludo branquinho macio como nuvem -->
+            <circle cx="60" cy="70" r="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" />
+            <!-- Cabeça arredondada com bochechas volumosas -->
+            <circle cx="60" cy="58" r="9" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" />
+            <!-- Orelhinhas triangulares rosadas -->
+            <polygon points="53,52 50,44 56,48" fill="#FBCFE8" />
+            <polygon points="67,52 70,44 64,48" fill="#FBCFE8" />
+            <!-- Olhinhos amendoados verdes e narizinho rosa -->
+            <ellipse cx="56" cy="58" rx="1.5" ry="1" fill="#22C55E" />
+            <ellipse cx="64" cy="58" rx="1.5" ry="1" fill="#22C55E" />
+            <circle cx="60" cy="61" r="0.8" fill="#F472B6" />
+            <!-- Mini estetoscópio de brinquedo no pescoço -->
+            <path d="M54 64 Q60 68 66 64" stroke="#F59E0B" stroke-width="1.2" fill="none" />
+            <circle cx="60" cy="67" r="1.2" fill="#F59E0B" />
+          </g>
+        }
+
+        <!-- Mega Aquário Recife 360° com Corais -->
+        @case ('rec_aquario_recife_coral_gigante') {
+          <g class="ambient-bob">
+            <ellipse cx="60" cy="88" rx="46" ry="16" fill="rgba(0,0,0,0.22)" />
+            <!-- Base redonda de mármore e latão -->
+            <ellipse cx="60" cy="80" rx="42" ry="14" fill="#0F172A" stroke="#F59E0B" stroke-width="2.5" />
+            <!-- Tanque 360 graus de água cristalina azul caribenho -->
+            <ellipse cx="60" cy="46" rx="36" ry="12" fill="#38BDF8" stroke="#0284C7" stroke-width="2" />
+            <rect x="24" y="46" width="72" height="34" fill="rgba(2,132,199,0.4)" stroke="#0284C7" stroke-width="2" />
+            <!-- Recifes de corais coloridos no centro -->
+            <path d="M48 76 Q54 62 60 76 Q66 60 72 76" fill="#F43F5E" />
+            <circle cx="48" cy="68" r="4" fill="#F97316" />
+            <circle cx="70" cy="66" r="4" fill="#8B5CF6" />
+            <!-- Peixinho palhaço laranja e azul cirurgião -->
+            <polygon points="40,56 36,53 36,59" fill="#F97316" />
+            <circle cx="42" cy="56" r="2.5" fill="#F97316" />
+            <polygon points="76,52 80,49 80,55" fill="#2563EB" />
+            <circle cx="74" cy="52" r="2.5" fill="#2563EB" />
+          </g>
+        }
+
+        <!-- Harpa Cristalina Autotocável -->
+        @case ('rec_harpa_automatica_cristal') {
+          <g class="ambient-pulse">
+            <ellipse cx="60" cy="86" rx="32" ry="11" fill="rgba(0,0,0,0.18)" />
+            <!-- Base de cristal lapidado com iluminação interior -->
+            <polygon points="34,70 60,58 86,70 60,82" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" />
+            <!-- Coluna curvada e consolo da harpa clássica -->
+            <path d="M38 72 C36 40 46 24 72 24 C78 24 82 28 78 34 C64 40 58 60 56 74 Z" fill="rgba(186,230,253,0.6)" stroke="#0284C7" stroke-width="2" />
+            <!-- Cordas musicais que vibram e brilham -->
+            <line x1="48" y1="36" x2="44" y2="72" stroke="#FACC15" stroke-width="0.9" />
+            <line x1="53" y1="34" x2="48" y2="72" stroke="#38BDF8" stroke-width="0.9" />
+            <line x1="58" y1="32" x2="52" y2="72" stroke="#FACC15" stroke-width="0.9" />
+            <line x1="63" y1="30" x2="56" y2="72" stroke="#38BDF8" stroke-width="0.9" />
+            <line x1="68" y1="28" x2="60" y2="72" stroke="#FACC15" stroke-width="0.9" />
+            <circle cx="74" cy="22" r="2.5" fill="#FACC15" />
+          </g>
+        }
+
 
         <!-- Arquétipo Universal Clínico de Fallback -->
         @default {

@@ -204,9 +204,10 @@ import { DoctorGender } from '@core/models/clinic.model';
           <!-- 4. CAMADA DO JALECO / ROUPA (SLOT COAT) -->
           @switch (normalizedCoat) {
             @case ('coat_pediatric') {
-              <!-- Jaleco Pediátrico Menta Lúdico -->
+              <!-- Jaleco Pediátrico Menta com Estampas e Apliques de Bichinhos (P-087) -->
               <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatPediatricGrad)" stroke="#10B981" stroke-width="1" />
               <line x1="36" y1="50" x2="36" y2="70" stroke="#059669" stroke-width="1" />
+
               <!-- Botões Coloridos Pastéis Divertidos -->
               <circle cx="36" cy="54" r="1.3" fill="#F59E0B" />
               <circle cx="36" cy="60" r="1.3" fill="#0D9488" />
@@ -216,22 +217,83 @@ import { DoctorGender } from '@core/models/clinic.model';
               <path d="M27 37 L36 50 L32 50 L24 41 Z" fill="#FFFFFF" stroke="#10B981" stroke-width="0.9" />
               <path d="M45 37 L36 50 L40 50 L48 41 Z" fill="#FFFFFF" stroke="#10B981" stroke-width="0.9" />
 
-              <!-- Bolso com Bordado Lúdico Dino/Bichinho -->
-              <rect x="24" y="46" width="6.8" height="7.5" rx="1.5" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8" />
-              <circle cx="27.4" cy="49" r="1.2" fill="#D97706" />
-              <circle cx="26" cy="47.6" r="0.6" fill="#D97706" />
-              <circle cx="28.8" cy="47.6" r="0.6" fill="#D97706" />
+              <!-- Bolso com Ursinho de Pelúcia Bordado -->
+              <rect x="23.5" y="45" width="8" height="8.5" rx="1.5" fill="#FEF3C7" stroke="#F59E0B" stroke-width="0.8" />
+              <!-- Cabeça e Orelhinhas do Ursinho -->
+              <circle cx="27.5" cy="48" r="2.8" fill="#F59E0B" />
+              <circle cx="25.2" cy="45.6" r="1.1" fill="#F59E0B" />
+              <circle cx="25.2" cy="45.6" r="0.6" fill="#FECDD3" />
+              <circle cx="29.8" cy="45.6" r="1.1" fill="#F59E0B" />
+              <circle cx="29.8" cy="45.6" r="0.6" fill="#FECDD3" />
+              <ellipse cx="27.5" cy="49" rx="1.4" ry="0.9" fill="#FEF3C7" />
+              <circle cx="27.5" cy="48.6" r="0.45" fill="#78350F" />
+              <circle cx="26.6" cy="47.6" r="0.35" fill="#1E293B" />
+              <circle cx="28.4" cy="47.6" r="0.35" fill="#1E293B" />
+
+              <!-- Gatinho Curioso no Lado Direito -->
+              <g transform="translate(43, 49)">
+                <circle cx="3" cy="3" r="2.6" fill="#FDA4AF" />
+                <polygon points="0.8,1.2 1.3,-1.2 2.6,0.8" fill="#FB7185" />
+                <polygon points="5.2,1.2 4.7,-1.2 3.4,0.8" fill="#FB7185" />
+                <circle cx="2.1" cy="2.8" r="0.35" fill="#1E293B" />
+                <circle cx="3.9" cy="2.8" r="0.35" fill="#1E293B" />
+                <circle cx="3" cy="3.6" r="0.35" fill="#E11D48" />
+                <line x1="0.6" y1="3.2" x2="1.8" y2="3.4" stroke="#E11D48" stroke-width="0.35" />
+                <line x1="5.4" y1="3.2" x2="4.2" y2="3.4" stroke="#E11D48" stroke-width="0.35" />
+              </g>
+
+              <!-- Patinhas Coloridas de Bichinhos Estampadas no Jaleco -->
+              <!-- Patinha Rosa no Quadril Direito -->
+              <g transform="translate(43.5, 61.5)">
+                <ellipse cx="1.5" cy="1.2" rx="1.3" ry="0.9" fill="#F472B6" />
+                <circle cx="0.4" cy="-0.2" r="0.4" fill="#F472B6" />
+                <circle cx="1.5" cy="-0.6" r="0.42" fill="#F472B6" />
+                <circle cx="2.6" cy="-0.2" r="0.4" fill="#F472B6" />
+              </g>
+
+              <!-- Patinha Azul Céu no Quadril Esquerdo -->
+              <g transform="translate(25.5, 62)">
+                <ellipse cx="1.5" cy="1.2" rx="1.3" ry="0.9" fill="#38BDF8" />
+                <circle cx="0.4" cy="-0.2" r="0.4" fill="#38BDF8" />
+                <circle cx="1.5" cy="-0.6" r="0.42" fill="#38BDF8" />
+                <circle cx="2.6" cy="-0.2" r="0.4" fill="#38BDF8" />
+              </g>
+
+              <!-- Girafinha Fofa no Meio Inferior -->
+              <g transform="translate(29.5, 54)">
+                <ellipse cx="2" cy="2.5" rx="1.8" ry="2.2" fill="#FCD34D" />
+                <line x1="1" y1="0.8" x2="0.6" y2="-0.6" stroke="#B45309" stroke-width="0.5" />
+                <circle cx="0.6" cy="-0.6" r="0.4" fill="#B45309" />
+                <line x1="3" y1="0.8" x2="3.4" y2="-0.6" stroke="#B45309" stroke-width="0.5" />
+                <circle cx="3.4" cy="-0.6" r="0.4" fill="#B45309" />
+                <ellipse cx="2" cy="3.6" rx="1.2" ry="0.8" fill="#FEF3C7" />
+                <circle cx="1.4" cy="2.2" r="0.3" fill="#1E293B" />
+                <circle cx="2.6" cy="2.2" r="0.3" fill="#1E293B" />
+                <circle cx="3.1" cy="1.6" r="0.4" fill="#B45309" />
+              </g>
 
               <!-- Bolsos Laterais -->
               <path d="M23 58 L28 60" stroke="#059669" stroke-width="1.2" stroke-linecap="round" />
               <path d="M49 58 L44 60" stroke="#059669" stroke-width="1.2" stroke-linecap="round" />
 
-              <!-- Mangas e Mãos Discretas nos Bolsos -->
+              <!-- Mangas com Patinhas de Bichinho e Mãos Discretas nos Bolsos -->
               <path d="M21 38 L16 57 Q18 60 21 59 L25 43 Z" fill="url(#coatPediatricGrad)" stroke="#10B981" stroke-width="1" />
+              <!-- Patinha Amarela na Manga Esquerda -->
+              <ellipse cx="19.5" cy="48" rx="0.9" ry="0.7" fill="#FBBF24" />
+              <circle cx="18.7" cy="46.9" r="0.3" fill="#FBBF24" />
+              <circle cx="19.5" cy="46.5" r="0.32" fill="#FBBF24" />
+              <circle cx="20.3" cy="46.9" r="0.3" fill="#FBBF24" />
+
               <path d="M16 57 Q18.5 60 21 59" stroke="#059669" stroke-width="1.2" fill="none" />
               <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
 
               <path d="M51 38 L56 57 Q54 60 51 59 L47 43 Z" fill="url(#coatPediatricGrad)" stroke="#10B981" stroke-width="1" />
+              <!-- Patinha Verde Menta na Manga Direita -->
+              <ellipse cx="52.5" cy="48" rx="0.9" ry="0.7" fill="#34D399" />
+              <circle cx="51.7" cy="46.9" r="0.3" fill="#34D399" />
+              <circle cx="52.5" cy="46.5" r="0.32" fill="#34D399" />
+              <circle cx="53.3" cy="46.9" r="0.3" fill="#34D399" />
+
               <path d="M56 57 Q53.5 60 51 59" stroke="#059669" stroke-width="1.2" fill="none" />
               <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
             }

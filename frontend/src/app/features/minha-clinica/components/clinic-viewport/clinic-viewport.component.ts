@@ -1344,7 +1344,10 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
           const tileIdx =
             placed.wallTileIndex ??
             (wallSide === 'NW' ? placed.gridY ?? 0 : placed.gridX ?? 0);
-          const elev = placed.elevationZ ?? 42;
+          const isFloorRuler =
+            placed.catalogItemId === 'ped_regua_girafa' ||
+            placed.catalogItemId === 'estadiometro_compacto';
+          const elev = placed.elevationZ ?? (isFloorRuler ? 0 : 76);
 
           let wallBaseScreen: { x: number; y: number };
           if (wallSide === 'NW') {
@@ -1361,7 +1364,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
             depth: this.clinicService.calculateDepth(
               wallSide === 'NW' ? 0 : tileIdx,
               wallSide === 'NW' ? tileIdx : 0,
-              25
+              -50
             ),
             effWidth: 1,
             effHeight: 1,

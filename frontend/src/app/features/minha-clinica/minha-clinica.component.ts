@@ -1703,21 +1703,24 @@ interface CategoryTabMeta {
       .btn-error-modal-dismiss {
         width: 100%;
         padding: 12px 20px;
-        background: #0d9488;
+        background: #dc2626;
         color: #ffffff;
         font-size: 0.95rem;
         font-weight: 600;
         border: none;
         border-radius: 10px;
         cursor: pointer;
-        transition: background 0.18s ease, transform 0.1s ease;
+        box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+        transition: background 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
       }
 
       .btn-error-modal-dismiss:hover {
-        background: #0f766e;
+        background: #b91c1c;
+        box-shadow: 0 6px 18px rgba(185, 28, 28, 0.45);
       }
 
       .btn-error-modal-dismiss:active {
+        background: #991b1b;
         transform: scale(0.98);
       }
 
@@ -3271,7 +3274,7 @@ export class MinhaClinicaComponent implements OnInit {
       const wallSide = isWall ? (coords.gridX === 0 ? 'NW' : 'NE') : undefined;
       const wallTileIndex = isWall ? (coords.gridX === 0 ? coords.gridY : coords.gridX) : undefined;
       const elevationZ = isWall
-        ? (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto' ? 0 : 34)
+        ? (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto' ? 0 : 76)
         : undefined;
 
       if (existingIdx >= 0) {
@@ -3408,8 +3411,11 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   saveCurrentLayout(): void {
+    const isUuid = (val?: string | null) =>
+      !!val && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+
     const itemsPayload = this.workingPlacedItems().map(item => ({
-      id: item.id,
+      id: isUuid(item.id) ? item.id : undefined,
       catalogItemId: item.catalogItemId,
       gridX: item.gridX,
       gridY: item.gridY,
@@ -3590,19 +3596,30 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   sanitizeErrorMessage(raw: string): string {
-    if (!raw) return 'Ocorreu um erro inesperado. Tente novamente.';
+    if (!raw) return 'Não foi possível concluir a ação no momento. Por favor, tente novamente.';
     const lower = raw.toLowerCase();
     if (
-      lower.includes('could not execute statement') ||
+      lower.includes('json') ||
+      lower.includes('deserialize') ||
+      lower.includes('uuid') ||
+      lower.includes('could not execute') ||
       lower.includes('check constraint') ||
       lower.includes('failing row') ||
       lower.includes('insert into') ||
       lower.includes('violates') ||
       lower.includes('sql') ||
       lower.includes('nullpointer') ||
-      lower.includes('exception')
+      lower.includes('exception') ||
+      lower.includes('bad request') ||
+      lower.includes('internal server') ||
+      lower.includes('status code') ||
+      lower.includes('error:') ||
+      lower.includes('java.') ||
+      lower.includes('stacktrace') ||
+      lower.includes('500') ||
+      lower.includes('400')
     ) {
-      return 'Ocorreu uma instabilidade temporária ao processar a requisição no servidor. Por favor, tente novamente em instantes.';
+      return 'Não foi possível salvar o layout do consultório no momento. Por favor, tente novamente.';
     }
     return raw;
   }

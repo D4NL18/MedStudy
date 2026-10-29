@@ -172,6 +172,20 @@ export class ClinicService {
           if (otherSide === targetSide && otherIdx === targetIdx) {
             return false;
           }
+        } else {
+          // Se for estadiômetro/régua de piso (altura 0), não pode colidir com item do chão no mesmo tile
+          const isFloorRuler = ignorePlacedId === 'ped_regua_girafa' || ignorePlacedId === 'estadiometro_compacto';
+          if (isFloorRuler) {
+            const { width: oW, height: oH } = this.getEffectiveFootprint(
+              otherCat ?? { footprintX: 1, footprintY: 1 },
+              other.rotation ?? 0
+            );
+            const ogx = other.gridX ?? 0;
+            const ogy = other.gridY ?? 0;
+            if (gridX >= ogx && gridX < ogx + oW && gridY >= ogy && gridY < ogy + oH) {
+              return false;
+            }
+          }
         }
       }
       return true;
