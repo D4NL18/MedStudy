@@ -21,11 +21,14 @@ import { CommonModule } from '@angular/common';
       [attr.data-item-key]="itemKey"
       aria-hidden="true"
     >
-      <!-- Sombra Isométrica Base -->
-      <polygon
-        points="60,98 102,77 60,56 18,77"
-        fill="rgba(15, 23, 42, 0.14)"
-      />
+      <!-- Sombra Isométrica Base (Apenas para móveis de chão) -->
+      @if (!isWallItem) {
+        <polygon
+          class="shadow-polygon"
+          points="60,98 102,77 60,56 18,77"
+          fill="rgba(15, 23, 42, 0.14)"
+        />
+      }
 
       @switch (itemKey) {
         <!-- 1. ped_maca_dino: Maca Dinossauro Safari (Braquiossauro verde pastel que pisca) -->
@@ -1488,6 +1491,18 @@ import { CommonModule } from '@angular/common';
         }
       }
 
+      :host {
+        display: block;
+        pointer-events: none;
+      }
+      .clinic-item-svg {
+        display: block;
+        pointer-events: none;
+      }
+      .shadow-polygon {
+        pointer-events: none !important;
+      }
+
       @keyframes itemBounce {
         0% {
           transform: scale(1);
@@ -1507,6 +1522,7 @@ export class ClinicItemSvgComponent {
   @Input() rotation = 0;
   @Input() width = 84;
   @Input() height = 78;
+  @Input() isWallItem = false;
   @Input() activePulse = false;
   @Input() paused = false;
 }

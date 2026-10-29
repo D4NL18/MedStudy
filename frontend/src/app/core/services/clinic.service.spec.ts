@@ -117,6 +117,16 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
       expect(screenPos.y).toBe(184);
       expect(gridBack.gridX).toBe(3);
       expect(gridBack.gridY).toBe(1);
+
+      // Assert tile center (3.5, 1.5): screenX = 400 + (3.5 - 1.5) * 32 = 464, screenY = 120 + 5 * 16 = 200
+      const centerBack = service.screenToGrid(464, 200, originX, originY);
+      expect(centerBack.gridX).toBe(3);
+      expect(centerBack.gridY).toBe(1);
+
+      // Assert tile (0, 0) center: screenX = 400, screenY = 136 -> must map 1:1 to (0, 0) without diagonal offset
+      const tile00Center = service.screenToGrid(originX, originY + 16, originX, originY);
+      expect(tile00Center.gridX).toBe(0);
+      expect(tile00Center.gridY).toBe(0);
     });
   });
 
@@ -174,6 +184,34 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
       expect(
         service.isPositionValid(0, 1, 1, 1, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
       ).toBeTrue();
+
+      // 5. Wall item (0x0 footprint) on NW wall (gridX = 0) is valid and does not collide with floor items
+      expect(
+        service.isPositionValid(0, 0, 0, 0, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
+      ).toBeTrue();
+
+      // 6. Wall item placed in middle of room (gridX != 0 and gridY != 0) is invalid
+      expect(
+        service.isPositionValid(2, 2, 0, 0, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
+      ).toBeFalse();
+
+      // 7. Wall item colliding with existing wall item on same slot
+      const itemsWithWall: ClinicPlacedItem[] = [
+        ...placedItems,
+        {
+          id: 'wall-1',
+          catalogItemId: 'ped_regua_girafa',
+          gridX: 0,
+          gridY: 1,
+          rotation: 0,
+          placed: true,
+          wallSide: 'NW',
+          wallTileIndex: 1
+        }
+      ];
+      expect(
+        service.isPositionValid(0, 1, 0, 0, 0, 4, 4, itemsWithWall, CLINIC_CATALOG_FALLBACK)
+      ).toBeFalse();
     });
   });
 

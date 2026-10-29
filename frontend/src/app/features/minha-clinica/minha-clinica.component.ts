@@ -13,16 +13,14 @@ import {
   ClinicCatalogItem,
   ClinicCategory,
   ClinicPlacedItem,
+  PlacementType,
   DoctorAvatar,
-  DoctorAvatarResponse,
   DoctorGender,
-  DoctorSkinSlot,
   ItemRarity,
   LOOTBOX_TIERS_FALLBACK,
   LootboxOpenResult,
   LootboxTier,
   LootboxTierInfo,
-  OwnedSurface,
   RARITY_CONFIG,
   StudyActionType,
   getItemRarity
@@ -2762,65 +2760,144 @@ export class MinhaClinicaComponent implements OnInit {
 
   onViewportTileClicked(coords: { gridX: number; gridY: number }): void {
     const state = this.clinic();
+    if (!this.editMode() || !state) {
+      return;
+    }
+
     const sel = this.selectedCatalogItem();
-    if (!this.editMode() || !state || !sel) {
-      return;
-    }
+    // Caso 1: Item selecionado para posicionar ou mover
+    if (sel) {
+      const isWall =
+        sel.placementType === 'WALL' ||
+        (sel.footprintX === 0 && sel.footprintY === 0) ||
+        sel.id === 'ped_regua_girafa' ||
+        sel.id === 'negatoscopio_led';
 
-    const rot = this.selectedRotation();
-    const valid = this.clinicService.isPositionValid(
-      coords.gridX,
-      coords.gridY,
-      sel.footprintX,
-      sel.footprintY,
-      rot,
-      state.gridWidth,
-      state.gridHeight,
-      this.workingPlacedItems(),
-      state.catalog,
-      this.movingPlacedId()
-    );
+      if (isWall && coords.gridX !== 0 && coords.gridY !== 0) {
+        this.localError.set(
+          'Itens de parede devem ser fixados em segmentos de parede (linha superior ou lateral esquerda).'
+        );
+        this.audioService.playErrorShake();
+        return;
+      }
 
-    if (!valid) {
-      this.localError.set(
-        `Posição (${coords.gridX}, ${coords.gridY}) inválida: há colisão com outro móvel ou extrapola o limite ${state.gridWidth}×${state.gridHeight}.`
+      const rot = this.selectedRotation();
+      const valid = this.clinicService.isPositionValid(
+        coords.gridX,
+        coords.gridY,
+        sel.footprintX,
+        sel.footprintY,
+        rot,
+        state.gridWidth,
+        state.gridHeight,
+        this.workingPlacedItems(),
+        state.catalog,
+        this.movingPlacedId()
       );
-      this.audioService.playErrorShake();
+
+      if (!valid) {
+        this.localError.set(
+          `Posição (${coords.gridX}, ${coords.gridY}) inválida: há colisão com outro móvel ou extrapola o limite ${state.gridWidth}×${state.gridHeight}.`
+        );
+        this.audioService.playErrorShake();
+        return;
+      }
+
+      this.localError.set(null);
+      const currentList = [...this.workingPlacedItems()];
+      const existingIdx = currentList.findIndex(
+        p =>
+          (this.movingPlacedId() && p.id === this.movingPlacedId()) ||
+          p.catalogItemId === sel.id
+      );
+
+      const wallSide = isWall ? (coords.gridX === 0 ? 'NW' : 'NE') : undefined;
+      const wallTileIndex = isWall ? (coords.gridX === 0 ? coords.gridY : coords.gridX) : undefined;
+      const elevationZ = isWall
+        ? (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto' ? 0 : 34)
+        : undefined;
+
+      if (existingIdx >= 0) {
+        currentList[existingIdx] = {
+          ...currentList[existingIdx],
+          gridX: coords.gridX,
+          gridY: coords.gridY,
+          rotation: rot,
+          placed: true,
+          wallSide: wallSide as any,
+          wallTileIndex,
+          elevationZ,
+          placementType: (isWall ? 'WALL' : 'FLOOR') as PlacementType
+        };
+      } else {
+        currentList.push({
+          id: `placed-${sel.id}-${Date.now()}`,
+          catalogItemId: sel.id,
+          gridX: coords.gridX,
+          gridY: coords.gridY,
+          rotation: rot,
+          placed: true,
+          wallSide: wallSide as any,
+          wallTileIndex,
+          elevationZ,
+          placementType: (isWall ? 'WALL' : 'FLOOR') as PlacementType
+        });
+      }
+
+      this.workingPlacedItems.set(currentList);
+      this.isLayoutDirty.set(true);
+      this.movingPlacedId.set(undefined);
+      this.selectedCatalogItem.set(null);
+      this.audioService.playPlaceItem();
       return;
     }
 
-    this.localError.set(null);
-    const currentList = [...this.workingPlacedItems()];
-    const existingIdx = currentList.findIndex(
-      p =>
-        (this.movingPlacedId() && p.id === this.movingPlacedId()) ||
-        p.catalogItemId === sel.id
-    );
-
-    if (existingIdx >= 0) {
-      currentList[existingIdx] = {
-        ...currentList[existingIdx],
-        gridX: coords.gridX,
-        gridY: coords.gridY,
-        rotation: rot,
-        placed: true
-      };
-    } else {
-      currentList.push({
-        id: `placed-${sel.id}-${Date.now()}`,
-        catalogItemId: sel.id,
-        gridX: coords.gridX,
-        gridY: coords.gridY,
-        rotation: rot,
-        placed: true
-      });
+    // Caso 2: Nenhum item em mãos — se clicou em um tile que possui um móvel, seleciona-o para mover!
+    const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY);
+    if (itemOnTile) {
+      this.onViewportPlacedItemClicked(itemOnTile);
     }
+  }
 
-    this.workingPlacedItems.set(currentList);
-    this.isLayoutDirty.set(true);
-    this.movingPlacedId.set(undefined);
-    this.selectedCatalogItem.set(null);
-    this.audioService.playPlaceItem();
+  findPlacedItemAtTile(gridX: number, gridY: number): ClinicPlacedItem | undefined {
+    const catalog = this.clinic()?.catalog ?? CLINIC_CATALOG_FALLBACK;
+    const catMap = new Map(catalog.map(c => [c.id, c]));
+    const items = this.workingPlacedItems();
+
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
+      if (!item.placed) continue;
+      const cat = catMap.get(item.catalogItemId);
+      const isWall =
+        item.placementType === 'WALL' ||
+        cat?.placementType === 'WALL' ||
+        (cat?.footprintX === 0 && cat?.footprintY === 0) ||
+        item.catalogItemId === 'ped_regua_girafa' ||
+        item.catalogItemId === 'negatoscopio_led';
+
+      if (isWall) {
+        const wallSide = item.wallSide ?? (item.gridX === 0 ? 'NW' : 'NE');
+        const tileIdx = item.wallTileIndex ?? (wallSide === 'NW' ? item.gridY : item.gridX);
+        if (wallSide === 'NW' && gridX === 0 && gridY === tileIdx) {
+          return item;
+        }
+        if (wallSide === 'NE' && gridY === 0 && gridX === tileIdx) {
+          return item;
+        }
+      } else {
+        const rot = item.rotation ?? 0;
+        const { width: w, height: h } = this.clinicService.getEffectiveFootprint(
+          cat ?? { footprintX: 1, footprintY: 1 },
+          rot
+        );
+        const gx = item.gridX ?? 0;
+        const gy = item.gridY ?? 0;
+        if (gridX >= gx && gridX < gx + w && gridY >= gy && gridY < gy + h) {
+          return item;
+        }
+      }
+    }
+    return undefined;
   }
 
   storeSelectedPlacedItem(): void {
@@ -2842,7 +2919,11 @@ export class MinhaClinicaComponent implements OnInit {
       gridX: item.gridX,
       gridY: item.gridY,
       rotation: item.rotation,
-      placed: item.placed
+      placed: item.placed,
+      wallSide: item.wallSide ?? undefined,
+      wallTileIndex: item.wallTileIndex ?? undefined,
+      elevationZ: item.elevationZ ?? undefined,
+      placementType: item.placementType ?? 'FLOOR'
     }));
 
     this.clinicService.saveLayout({ items: itemsPayload }).subscribe({

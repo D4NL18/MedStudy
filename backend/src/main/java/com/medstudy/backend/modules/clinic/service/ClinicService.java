@@ -574,10 +574,25 @@ public class ClinicService {
                 target.setGridY(dto.getGridY() != null ? dto.getGridY() : 0);
                 target.setRotation(dto.getRotation());
                 target.setPlaced(dto.isPlaced());
-                if (dto.getWallSide() != null) {
-                    target.setWallSide(dto.getWallSide());
-                    target.setWallTileIndex(dto.getWallTileIndex());
-                    target.setElevationZ(dto.getElevationZ() != null ? dto.getElevationZ() : 45);
+                ClinicCatalogItem catItem = catalogMap.get(target.getCatalogItemId());
+                boolean isWallItem = (catItem != null && "WALL".equalsIgnoreCase(catItem.getPlacementType()))
+                        || dto.getWallSide() != null;
+                if (isWallItem) {
+                    String wallSide = dto.getWallSide() != null && !dto.getWallSide().isBlank()
+                            ? dto.getWallSide()
+                            : (dto.getGridX() != null && dto.getGridX() == 0 ? "NW" : "NE");
+                    int wallTileIdx = dto.getWallTileIndex() != null
+                            ? dto.getWallTileIndex()
+                            : ("NW".equalsIgnoreCase(wallSide)
+                                    ? (dto.getGridY() != null ? dto.getGridY() : 0)
+                                    : (dto.getGridX() != null ? dto.getGridX() : 0));
+                    target.setWallSide(wallSide.toUpperCase());
+                    target.setWallTileIndex(wallTileIdx);
+                    target.setElevationZ(dto.getElevationZ() != null ? dto.getElevationZ() : 34);
+                } else {
+                    target.setWallSide(null);
+                    target.setWallTileIndex(null);
+                    target.setElevationZ(null);
                 }
                 toSave.add(target);
             }

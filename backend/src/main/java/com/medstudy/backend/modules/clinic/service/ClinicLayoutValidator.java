@@ -77,8 +77,12 @@ public class ClinicLayoutValidator {
                     );
                 }
 
-                int maxWallTiles = "NW".equals(wallSide) ? gridWidth : gridHeight;
-                int tileIndex = item.getWallTileIndex() != null ? item.getWallTileIndex() : (item.getGridX() != null ? item.getGridX() : 0);
+                int maxWallTiles = "NW".equals(wallSide) ? gridHeight : gridWidth;
+                int tileIndex = item.getWallTileIndex() != null
+                        ? item.getWallTileIndex()
+                        : ("NW".equals(wallSide)
+                                ? (item.getGridY() != null ? item.getGridY() : 0)
+                                : (item.getGridX() != null ? item.getGridX() : 0));
 
                 if (tileIndex < 0 || tileIndex >= maxWallTiles) {
                     throw new ResponseStatusException(

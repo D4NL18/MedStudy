@@ -89,8 +89,8 @@ export class ClinicService {
     const rawX = (dx / halfW + dy / halfH) / 2;
     const rawY = (dy / halfH - dx / halfW) / 2;
     return {
-      gridX: Math.round(rawX),
-      gridY: Math.round(rawY)
+      gridX: Math.floor(rawX),
+      gridY: Math.floor(rawY)
     };
   }
 
@@ -110,7 +110,8 @@ export class ClinicService {
   }
 
   /**
-   * P-084: Validação espacial de fronteiras do grid e detecção de colisão AABB 2D.
+   * P-084: Validação espacial de fronteiras do grid e detecção de colisão AABB 2D
+   * com suporte a slots lineares de parede (WALL, 0x0).
    */
   isPositionValid(
     gridX: number,
@@ -133,6 +134,49 @@ export class ClinicService {
       return false;
     }
 
+    const isWallItem = footprintX === 0 && footprintY === 0;
+    const catalogMap = new Map<string, ClinicCatalogItem>(
+      (catalog.length > 0 ? catalog : CLINIC_CATALOG_FALLBACK).map(c => [c.id, c])
+    );
+
+    if (isWallItem) {
+      // Itens de parede devem ficar estritamente fixados na parede NW (gridX === 0) ou NE (gridY === 0)
+      if (gridX !== 0 && gridY !== 0) {
+        return false;
+      }
+      if (gridX === 0 && (gridY < 0 || gridY >= gridHeight)) {
+        return false;
+      }
+      if (gridY === 0 && (gridX < 0 || gridX >= gridWidth)) {
+        return false;
+      }
+
+      const targetSide: 'NW' | 'NE' = gridX === 0 ? 'NW' : 'NE';
+      const targetIdx = gridX === 0 ? gridY : gridX;
+
+      for (const other of placedItems) {
+        if (!other.placed || (ignorePlacedId && other.id === ignorePlacedId)) {
+          continue;
+        }
+        const otherCat = catalogMap.get(other.catalogItemId);
+        const otherIsWall =
+          other.placementType === 'WALL' ||
+          otherCat?.placementType === 'WALL' ||
+          (otherCat?.footprintX === 0 && otherCat?.footprintY === 0);
+
+        if (otherIsWall) {
+          const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
+          const otherIdx =
+            other.wallTileIndex ??
+            (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
+          if (otherSide === targetSide && otherIdx === targetIdx) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
     const { width: effW, height: effH } = this.getEffectiveFootprint(
       { footprintX, footprintY },
       rotation
@@ -145,10 +189,6 @@ export class ClinicService {
       return false;
     }
 
-    const catalogMap = new Map<string, ClinicCatalogItem>(
-      (catalog.length > 0 ? catalog : CLINIC_CATALOG_FALLBACK).map(c => [c.id, c])
-    );
-
     for (const other of placedItems) {
       if (!other.placed || other.gridX === null || other.gridY === null) {
         continue;
@@ -159,8 +199,19 @@ export class ClinicService {
 
       const otherCatalog = catalogMap.get(other.catalogItemId) ?? {
         footprintX: 1,
-        footprintY: 1
+        footprintY: 1,
+        placementType: 'FLOOR' as const
       };
+      const otherIsWall =
+        other.placementType === 'WALL' ||
+        otherCatalog.placementType === 'WALL' ||
+        (otherCatalog.footprintX === 0 && otherCatalog.footprintY === 0);
+
+      // Itens de parede não bloqueiam o piso
+      if (otherIsWall) {
+        continue;
+      }
+
       const { width: otherW, height: otherH } = this.getEffectiveFootprint(
         otherCatalog,
         other.rotation ?? 0
@@ -210,7 +261,7 @@ export class ClinicService {
     streakDays: number,
     accuracyPercent = 0
   ): number {
-    let baseXp = 0;
+    let baseXp: number;
     const clampedAcc = Math.max(0, Math.min(100, Number(accuracyPercent) || 0));
 
     switch (actionType) {
