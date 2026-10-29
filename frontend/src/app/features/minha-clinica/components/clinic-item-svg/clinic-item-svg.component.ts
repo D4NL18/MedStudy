@@ -24,8 +24,7 @@ export class ClinicItemSvgComponent {
   get hasCustomRotation(): boolean {
     return (
       this.itemKey === 'cadeira_ergonomica' ||
-      this.itemKey === 'cadeira_presidente_couro' ||
-      this.isTwoTile
+      this.itemKey === 'cadeira_presidente_couro'
     );
   }
 
