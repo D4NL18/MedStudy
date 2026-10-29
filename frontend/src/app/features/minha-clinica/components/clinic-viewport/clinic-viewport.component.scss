@@ -94,43 +94,27 @@
       }
 
       .iso-tile.floor-wood-light {
-        fill: #fdfbf7;
-        stroke: #e7e2d8;
-      }
-
-      .iso-tile.floor-wood-dark {
-        fill: #ede4d8;
+        fill: #f5ebe1;
         stroke: #d6c6b2;
       }
 
+      .iso-tile.floor-wood-dark {
+        fill: #78350f;
+        stroke: #451a03;
+      }
+
       .iso-tile.floor-marble {
-        fill: #f8fafc;
+        fill: #fafcff;
         stroke: #cbd5e1;
       }
 
       .iso-tile.floor-tatame {
-        fill: #fefce8;
-        stroke: #fef08a;
+        fill: #fef08a;
+        stroke: #fde047;
       }
 
-      .iso-tile.floor-tatame:nth-child(even) {
-        fill: #f0fdf4;
-        stroke: #bbf7d0;
-      }
-
-      .iso-tile.zone-pediatria {
-        fill: #ecfdf5;
-        stroke: #a7f3d0;
-      }
-
-      .iso-tile.zone-hall {
-        fill: #fffbeb;
-        stroke: #fde68a;
-      }
-
-      .iso-tile.zone-lounge {
-        fill: #f0f9ff;
-        stroke: #bae6fd;
+      .iso-tile-surface-detail {
+        pointer-events: none;
       }
 
       .iso-tile.edit-grid {

@@ -399,6 +399,26 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     )
   );
 
+  readonly slabLeftColor = computed(() => {
+    switch (this.floorThemeSignal()) {
+      case 'wood_dark_herringbone': return '#592507';
+      case 'wood_light': return '#D6C6B2';
+      case 'marble_carrara': return '#E2E8F0';
+      case 'tatame_eva': return '#FDE68A';
+      default: return '#CBD5E1';
+    }
+  });
+
+  readonly slabRightColor = computed(() => {
+    switch (this.floorThemeSignal()) {
+      case 'wood_dark_herringbone': return '#451A03';
+      case 'wood_light': return '#B8A793';
+      case 'marble_carrara': return '#CBD5E1';
+      case 'tatame_eva': return '#FCD34D';
+      default: return '#94A3B8';
+    }
+  });
+
   readonly slabShadowPoints = computed(() =>
     ClinicIsometricUtil.computeSlabShadowPoints(
       this.gridWidthSignal(),
