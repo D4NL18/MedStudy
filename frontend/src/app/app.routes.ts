@@ -107,7 +107,7 @@ export const routes: Routes = [
       },
       {
         path: 'planos',
-        loadComponent: () => import('./modules/planos/planos').then(m => m.Planos)
+        loadComponent: () => import('./features/planos/planos').then(m => m.Planos)
       },
       {
         path: 'minha-clinica',
