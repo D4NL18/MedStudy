@@ -93,3 +93,23 @@
   - Tratamento acolhedor de duplicatas com cashback justo creditado instantaneamente na conta do estudante: Comum (+150 XP), Raro (+500 XP), Épico (+1.500 XP), Lendário (+3.000 XP).
   - Acessibilidade: suporte integral a `prefers-reduced-motion: reduce` (supressão de shakes e oscilações).
   - Performance: rota lazy-loaded `/minha-clinica` gerou bundle de apenas **35.73 kB gzipped**, bem abaixo do limite de 300 kB.
+
+
+### MINHA CLÍNICA MÉDICA: REVISÃO INTEGRAL DE SKINS, SUPERFÍCIES E GUARDA-ROUPA ([P-096], US-14, ADR-011)
+- **Unificação e Governança de Superfícies de Revestimento ([P-096.1], [P-096.2], [P-096.3]):**
+  - Migration Flyway `V31__sync_official_clinic_surfaces_catalog.sql` adiciona os 8 revestimentos oficiais (4 paredes: `clean_white`, `ped_papel_safari`, `wallpaper_geometric_teal`, `wallpaper_brick_white`; 4 pisos: `wood_light`, `wood_dark_herringbone`, `marble_carrara`, `tatame_eva`) com `footprint_x = 0, footprint_y = 0` e suporte nativo a `SURFACE_WALL` e `SURFACE_FLOOR`.
+  - Sincronização em `ClinicService.OFFICIAL_SURFACES` e `OFFICIAL_CATALOG_ITEMS`.
+  - Compra idempotente em `POST /api/v1/clinic/items/buy`: verifica titularidade prévia em `user_unlocked_skins`, prevenindo cobrança duplicada de XP.
+  - Atualização em `PUT /api/v1/clinic/surfaces`: validação estrita de posse em `user_unlocked_skins`, liberando automaticamente os padrões iniciais gratuitos (`clean_white` e `wood_light`).
+- **Guarda-Roupa Completo do Avatar Médico com 22 Skins ([P-096.4]):**
+  - Exposição de todo o acervo cosmético homologado em `doctor-wardrobe-modal.component.ts` e `minha-clinica.component.ts`: 8 jalecos/roupas, 8 estetoscópios e 6 acessórios.
+  - Preview reativo efêmero sem débito prematuro de XP; commit somente via `PUT /api/v1/clinic/avatar` ou `POST /api/v1/clinic/avatar/skins/buy`.
+- **Arte Vetorial Dedicada no Avatar SVG ([P-096.5]):**
+  - Erradicação de aliases genéricos no `doctor-avatar-svg`.
+  - `coat_pediatric_dino`: jaleco menta pastel com filhote de T-Rex esmeralda no peito, Triceratops âmbar na barra inferior e pegadas tridáctilas nas mangas.
+  - `coat_executive_doc`: alta alfaiataria médica italiana, lapela peaked de 45º, botões duplos de madrepérola e bolso superior com lenço de seda nobre (pocket square) azul-marinho de duas pontas com vivo dourado acetinado.
+  - `acc_ped_gorro_colorido`: gorro cirúrgico safari amarelo savana com folhagens de costela-de-adão, silhuetas safari e tiras cirúrgicas na nuca.
+- **Swatches Isométricos 2.5D em `clinic-item-svg` ([P-096.6]):**
+  - 8 blocos `@case` dedicados com lajes isométricas 2:1 chanfradas (pisos) e painéis verticais arquitetônicos (paredes), eliminando completamente o fallback `@default` (caixa cinza com cruz verde).
+- **Correção Estética e Acessibilidade no Modal de Lootboxes:**
+  - Contraste tipográfico elevado para `#0f172a` e `#334155`, badges com bordas suaves e botões com elevação sutil.
