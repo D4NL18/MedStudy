@@ -145,11 +145,11 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
     });
 
     it('should validate grid boundaries and detect AABB 2D collisions including rotated footprints', () => {
-      // Arrange: 4x4 grid with mesa_scandi (2x1) placed at (0,0) with rotation 0 (occupies (0,0) and (1,0))
+      // Arrange: 4x4 grid with ped_maca_baleia (2x1) placed at (0,0) with rotation 0 (occupies (0,0) and (1,0))
       const placedItems: ClinicPlacedItem[] = [
         {
           id: 'placed-1',
-          catalogItemId: 'mesa_scandi',
+          catalogItemId: 'ped_maca_baleia',
           gridX: 0,
           gridY: 0,
           rotation: 0,
@@ -170,7 +170,7 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
         service.isPositionValid(3, 0, 2, 1, 1, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
       ).toBeTrue();
 
-      // 2. Collision with mesa_scandi at (1,0)
+      // 2. Collision with ped_maca_baleia at (1,0)
       expect(
         service.isPositionValid(1, 0, 1, 1, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
       ).toBeFalse();

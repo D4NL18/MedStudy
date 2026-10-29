@@ -32,7 +32,7 @@ class ClinicLayoutValidatorTest {
     @DisplayName("P-084: Starter kit layout in 4x4 grid should be valid without collisions")
     void shouldAcceptValidStarterKitLayoutIn4x4Grid() {
         List<PlacedItemDto> items = List.of(
-                new PlacedItemDto(UUID.randomUUID(), "mesa_scandi", 0, 0, 0, true),       // 2x1 -> [0..2, 0..1)
+                new PlacedItemDto(UUID.randomUUID(), "mesa_scandi", 0, 0, 0, true),       // 1x1 -> [0..1, 0..1)
                 new PlacedItemDto(UUID.randomUUID(), "cadeira_ergonomica", 0, 1, 0, true), // 1x1 -> [0..1, 1..2)
                 new PlacedItemDto(UUID.randomUUID(), "ped_maca_baleia", 2, 0, 0, true)     // 2x1 -> [2..4, 0..1)
         );
@@ -43,10 +43,10 @@ class ClinicLayoutValidatorTest {
     @Test
     @DisplayName("P-084: Should reject AABB 2D collision between two placed items")
     void shouldRejectOverlappingItemsOnFloor() {
-        // mesa_scandi at (0,0) with rotation=0 occupies (0,0) and (1,0)
-        // cadeira_ergonomica at (1,0) collides with the second tile of mesa_scandi
+        // ped_maca_baleia at (0,0) with rotation=0 occupies (0,0) and (1,0)
+        // cadeira_ergonomica at (1,0) collides with the second tile of ped_maca_baleia
         List<PlacedItemDto> collidingItems = List.of(
-                new PlacedItemDto(UUID.randomUUID(), "mesa_scandi", 0, 0, 0, true),
+                new PlacedItemDto(UUID.randomUUID(), "ped_maca_baleia", 0, 0, 0, true),
                 new PlacedItemDto(UUID.randomUUID(), "cadeira_ergonomica", 1, 0, 0, true)
         );
 
@@ -58,19 +58,19 @@ class ClinicLayoutValidatorTest {
     @Test
     @DisplayName("P-084: Should invert footprintX and footprintY when rotation == 1")
     void shouldInvertFootprintWhenRotationIsOne() {
-        // mesa_scandi has footprint 2x1.
+        // ped_maca_baleia has footprint 2x1.
         // At gridX=3, gridY=2 in a 4x4 grid:
         // - rotation=0 -> effW=2, effH=1 -> 3+2 = 5 > 4 (OUT OF BOUNDS)
         // - rotation=1 -> effW=1, effH=2 -> 3+1 = 4 <= 4 and 2+2 = 4 <= 4 (VALID)
         List<PlacedItemDto> overflowRotation0 = List.of(
-                new PlacedItemDto(UUID.randomUUID(), "mesa_scandi", 3, 2, 0, true)
+                new PlacedItemDto(UUID.randomUUID(), "ped_maca_baleia", 3, 2, 0, true)
         );
         ResponseStatusException ex = assertThrows(ResponseStatusException.class,
                 () -> validator.validateLayout(4, 4, overflowRotation0, catalogMap));
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, ex.getStatusCode());
 
         List<PlacedItemDto> validRotation1 = List.of(
-                new PlacedItemDto(UUID.randomUUID(), "mesa_scandi", 3, 2, 1, true)
+                new PlacedItemDto(UUID.randomUUID(), "ped_maca_baleia", 3, 2, 1, true)
         );
         assertDoesNotThrow(() -> validator.validateLayout(4, 4, validRotation1, catalogMap));
 

@@ -33,9 +33,6 @@ export class ClinicItemSvgComponent {
       this.itemKey === 'ped_maca_baleia' ||
       this.itemKey === 'ped_maca_dino' ||
       this.itemKey === 'ped_maca_f1' ||
-      this.itemKey === 'mesa_scandi' ||
-      this.itemKey === 'mesa_mogno_cafe' ||
-      this.itemKey === 'mesa_carrara' ||
       this.itemKey === 'balcao_recepcao_madeira' ||
       this.itemKey === 'sofa_chesterfield_couro' ||
       this.itemKey === 'longarina_espera_confort' ||

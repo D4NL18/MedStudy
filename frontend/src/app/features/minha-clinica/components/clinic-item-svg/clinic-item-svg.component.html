@@ -235,49 +235,88 @@
           </g>
         }
 
-        <!-- 11. mesa_scandi: Mesa Escandinava de Carvalho com Suculenta -->
+        <!-- 11. mesa_scandi: Mesa Escandinava de Carvalho com Suculenta (Ocupa exatamente 1 quadrado do piso) -->
         @case ('mesa_scandi') {
-          <g>
-            <!-- Pés de madeira clara -->
-            <line x1="30" y1="64" x2="30" y2="84" stroke="#B45309" stroke-width="4" stroke-linecap="round" />
-            <line x1="60" y1="78" x2="60" y2="96" stroke="#B45309" stroke-width="4" stroke-linecap="round" />
-            <line x1="90" y1="64" x2="90" y2="84" stroke="#B45309" stroke-width="4" stroke-linecap="round" />
-            <!-- Tampo isométrico carvalho claro -->
-            <polygon points="20,60 60,40 100,60 60,80" fill="#FDE68A" stroke="#D97706" stroke-width="2" />
-            <!-- Vaso de suculenta -->
-            <rect x="70" y="48" width="10" height="8" rx="2" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" />
-            <circle cx="75" cy="46" r="5" fill="#10B981" />
-            <!-- Prontuário sobre a mesa -->
-            <polygon points="44,60 56,54 64,58 52,64" fill="#FFFFFF" stroke="#64748B" stroke-width="1" />
+          <g class="clinic-desk-1tile">
+            <!-- Sombra de contato dos 4 pes no piso isometrico -->
+            <polygon points="18,83 60,61 102,83 60,105" fill="rgba(15, 23, 42, 0.12)" />
+            <!-- Pe traseiro (NW-NE) -->
+            <line x1="60" y1="36" x2="60" y2="61" stroke="#92400E" stroke-width="3.5" stroke-linecap="round" />
+            <!-- Painel de modestia / saia estrutural de madeira clara -->
+            <polygon points="24,60 60,42 60,62 24,80" fill="#B45309" opacity="0.35" />
+            <polygon points="60,42 96,60 96,80 60,62" fill="#78350F" opacity="0.25" />
+            <!-- Pe esquerdo (NW-SW) -->
+            <line x1="18" y1="58" x2="18" y2="83" stroke="#B45309" stroke-width="4" stroke-linecap="round" />
+            <!-- Pe direito (NE-SE) -->
+            <line x1="102" y1="58" x2="102" y2="83" stroke="#B45309" stroke-width="4" stroke-linecap="round" />
+            <!-- Pe dianteiro (SW-SE) -->
+            <line x1="60" y1="80" x2="60" y2="104" stroke="#78350F" stroke-width="4.5" stroke-linecap="round" />
+            <!-- Bordas do tampo (espessura 3D do carvalho) -->
+            <polygon points="14,54 60,76 60,81 14,59" fill="#D97706" />
+            <polygon points="60,76 106,54 106,59 60,81" fill="#B45309" />
+            <!-- Tampo isometrico carvalho claro preenchendo exatamente o 1 quadrado -->
+            <polygon points="14,54 60,32 106,54 60,76" fill="#FDE68A" stroke="#D97706" stroke-width="1.8" />
+            <!-- Vaso de ceramica com suculenta -->
+            <rect x="74" y="44" width="10" height="9" rx="2" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.2" />
+            <circle cx="79" cy="42" r="5" fill="#10B981" />
+            <circle cx="77" cy="40" r="2.2" fill="#34D399" />
+            <circle cx="81" cy="40" r="2.2" fill="#059669" />
+            <!-- Prontuario medico com folhas pautadas sobre a mesa -->
+            <polygon points="36,54 52,46 64,52 48,60" fill="#FFFFFF" stroke="#64748B" stroke-width="1.2" />
+            <rect x="42" y="48" width="6" height="3" rx="1" fill="#475569" />
+            <line x1="42" y1="54" x2="54" y2="48" stroke="#94A3B8" stroke-width="1" />
           </g>
         }
 
-        <!-- 12. mesa_mogno_cafe: Mesa de Mogno com Xícara de Café Quente -->
+        <!-- 12. mesa_mogno_cafe: Mesa de Mogno com Xicara de Cafe Quente (Ocupa exatamente 1 quadrado do piso) -->
         @case ('mesa_mogno_cafe') {
-          <g>
-            <polygon points="22,64 60,45 98,64 60,83" fill="#7C2D12" stroke="#431407" stroke-width="2" />
-            <polygon points="26,64 26,82 60,96 60,83" fill="#9A3412" />
-            <polygon points="94,64 94,82 60,96 60,83" fill="#7C2D12" />
-            <!-- Xícara de café quente -->
-            <ellipse cx="64" cy="60" rx="6" ry="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5" />
-            <!-- Fumaça animada contínua -->
-            <path class="ambient-steam" d="M62,53 Q59,45 64,39 Q68,33 63,27" stroke="#CBD5E1" stroke-width="2" fill="none" stroke-linecap="round" />
-            <path class="ambient-steam" d="M67,54 Q70,46 66,40" stroke="#E2E8F0" stroke-width="1.5" fill="none" stroke-linecap="round" />
+          <g class="clinic-desk-1tile">
+            <!-- Sombra de contato no piso isometrico -->
+            <polygon points="18,83 60,61 102,83 60,105" fill="rgba(15, 23, 42, 0.15)" />
+            <!-- Pe traseiro (NW-NE) -->
+            <line x1="60" y1="36" x2="60" y2="61" stroke="#431407" stroke-width="4" stroke-linecap="round" />
+            <!-- Painel executivo frontal em mogno nobre -->
+            <polygon points="24,60 60,42 60,65 24,83" fill="#431407" opacity="0.65" />
+            <polygon points="60,42 96,60 96,83 60,65" fill="#290B04" opacity="0.5" />
+            <!-- Pe esquerdo -->
+            <line x1="18" y1="58" x2="18" y2="83" stroke="#7C2D12" stroke-width="4.5" stroke-linecap="round" />
+            <!-- Pe direito -->
+            <line x1="102" y1="58" x2="102" y2="83" stroke="#7C2D12" stroke-width="4.5" stroke-linecap="round" />
+            <!-- Pe dianteiro -->
+            <line x1="60" y1="80" x2="60" y2="104" stroke="#431407" stroke-width="5" stroke-linecap="round" />
+            <!-- Bordas 3D mogno nobre -->
+            <polygon points="14,54 60,76 60,82 14,60" fill="#9A3412" />
+            <polygon points="60,76 106,54 106,60 60,82" fill="#7C2D12" />
+            <!-- Tampo isometrico mogno polido -->
+            <polygon points="14,54 60,32 106,54 60,76" fill="#7C2D12" stroke="#431407" stroke-width="1.8" />
+            <!-- Xicara de cafe quente -->
+            <ellipse cx="76" cy="54" rx="7" ry="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1.2" />
+            <ellipse cx="76" cy="51" rx="5" ry="3" fill="#D97706" />
+            <ellipse cx="76" cy="50" rx="3.8" ry="2" fill="#451A03" />
+            <!-- Fumaca animada continua -->
+            <path class="ambient-steam" d="M74,44 Q71,37 76,31 Q80,25 75,19" stroke="#CBD5E1" stroke-width="2" fill="none" stroke-linecap="round" />
+            <path class="ambient-steam" d="M79,45 Q82,38 78,32" stroke="#E2E8F0" stroke-width="1.5" fill="none" stroke-linecap="round" />
           </g>
         }
 
-        <!-- 13. mesa_carrara: Mesa Mármore Carrara & Dourado -->
+        <!-- 13. mesa_carrara: Mesa Marmore Carrara & Dourado (Ocupa exatamente 1 quadrado do piso) -->
         @case ('mesa_carrara') {
-          <g>
-            <!-- Estrutura dourada fosca -->
-            <line x1="28" y1="62" x2="28" y2="86" stroke="#F59E0B" stroke-width="3.5" />
-            <line x1="60" y1="78" x2="60" y2="96" stroke="#F59E0B" stroke-width="3.5" />
-            <line x1="92" y1="62" x2="92" y2="86" stroke="#F59E0B" stroke-width="3.5" />
-            <!-- Tampo de mármore branco Carrara -->
-            <polygon points="20,60 60,40 100,60 60,80" fill="#F8FAFC" stroke="#F59E0B" stroke-width="2.2" />
-            <!-- Veios sutis do mármore -->
-            <path d="M38,58 L54,52 L62,56" stroke="#CBD5E1" stroke-width="1.5" fill="none" />
-            <path d="M64,62 L78,56" stroke="#CBD5E1" stroke-width="1.5" fill="none" />
+          <g class="clinic-desk-1tile">
+            <!-- Sombra de contato no piso isometrico -->
+            <polygon points="18,83 60,61 102,83 60,105" fill="rgba(15, 23, 42, 0.13)" />
+            <!-- Estrutura metalica dourada fosca -->
+            <line x1="60" y1="36" x2="60" y2="61" stroke="#D97706" stroke-width="3.5" stroke-linecap="round" />
+            <line x1="18" y1="58" x2="18" y2="83" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round" />
+            <line x1="102" y1="58" x2="102" y2="83" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round" />
+            <line x1="60" y1="80" x2="60" y2="104" stroke="#D97706" stroke-width="4" stroke-linecap="round" />
+            <!-- Bordas bisotadas ouro e marmore -->
+            <polygon points="14,54 60,76 60,81 14,59" fill="#E2E8F0" stroke="#F59E0B" stroke-width="1" />
+            <polygon points="60,76 106,54 106,59 60,81" fill="#CBD5E1" stroke="#F59E0B" stroke-width="1" />
+            <!-- Tampo de marmore branco Carrara -->
+            <polygon points="14,54 60,32 106,54 60,76" fill="#F8FAFC" stroke="#F59E0B" stroke-width="2" />
+            <!-- Veios sutis do marmore -->
+            <path d="M34,52 L52,44 L68,48" stroke="#CBD5E1" stroke-width="1.5" fill="none" />
+            <path d="M58,58 L78,49" stroke="#CBD5E1" stroke-width="1.5" fill="none" />
           </g>
         }
 
