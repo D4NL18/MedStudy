@@ -149,45 +149,86 @@
 
         <div class="lootbox-tiers-grid">
           @for (t of lootboxTiers(); track t.tier) {
-            <div class="lootbox-tier-card" [attr.data-testid]="'lootbox-tier-card-' + t.tier">
-              <div class="tier-card-badge" [style.background-color]="t.badgeColor">
-                {{ t.name }}
+            <div
+              class="lootbox-tier-card"
+              [class.tier-resident]="t.tier === 'TIER_1_RESIDENT'"
+              [class.tier-specialist]="t.tier === 'TIER_2_SPECIALIST'"
+              [class.tier-chief]="t.tier === 'TIER_3_CHIEF_OF_STAFF'"
+              [class.tier-disabled]="currentXp() < t.costXp"
+              [attr.data-testid]="'lootbox-card-' + t.tier"
+            >
+              <div class="tier-badge-pill">
+                {{ t.tier === 'TIER_1_RESIDENT' ? 'Kit do Interno' : t.tier === 'TIER_2_SPECIALIST' ? '✦ Zero Comuns' : '👑 1 em 4 Lendário' }}
               </div>
 
-              <div class="tier-card-svg">
+              <div class="tier-briefcase-preview">
                 <app-clinic-item-svg [itemKey]="t.assetSvgKey" [width]="90" [height]="80" />
               </div>
 
-              <h4 class="tier-card-title">{{ t.name }}</h4>
-              <p class="tier-card-desc">{{ t.description }}</p>
+              <div class="tier-info">
+                <h3 class="tier-name">{{ t.name }}</h3>
+                <p class="tier-description">{{ t.description }}</p>
+              </div>
 
-              <div class="tier-prob-pills">
-                @if (t.probabilities.common > 0) {
-                  <span class="prob-pill pill-common">{{ t.probabilities.common }}% Comum</span>
-                } @else {
-                  <span class="prob-pill pill-zero">✦ Zero Comuns</span>
-                }
-                @if (t.probabilities.legendary > 0) {
-                  <span class="prob-pill pill-legendary">👑 {{ t.probabilities.legendary }}% Lendário</span>
-                }
+              <div class="tier-cost-chip mono-num">
+                ⚡ {{ t.costXp }} XP
+              </div>
+
+              <div class="tier-probabilities">
+                <span class="probs-title">Probabilidades Transparentes:</span>
+                <div class="prob-bars">
+                  @if (t.probabilities.common > 0) {
+                    <div class="prob-row">
+                      <span class="prob-name"><span class="prob-dot dot-common"></span>Comum</span>
+                      <span class="prob-val">{{ t.probabilities.common }}%</span>
+                    </div>
+                  }
+                  @if (t.probabilities.rare > 0) {
+                    <div class="prob-row">
+                      <span class="prob-name"><span class="prob-dot dot-rare"></span>Raro</span>
+                      <span class="prob-val">{{ t.probabilities.rare }}%</span>
+                    </div>
+                  }
+                  @if (t.probabilities.epic > 0) {
+                    <div class="prob-row">
+                      <span class="prob-name"><span class="prob-dot dot-epic"></span>Épico</span>
+                      <span class="prob-val">{{ t.probabilities.epic }}%</span>
+                    </div>
+                  }
+                  @if (t.probabilities.legendary > 0) {
+                    <div class="prob-row">
+                      <span class="prob-name"><span class="prob-dot dot-legendary"></span>Lendário</span>
+                      <span class="prob-val">{{ t.probabilities.legendary }}%</span>
+                    </div>
+                  }
+                </div>
               </div>
 
               <button
                 type="button"
-                class="btn-open-box"
+                class="btn-open-lootbox"
                 [disabled]="currentXp() < t.costXp || isUnboxing() || isLoading()"
                 (click)="onOpenTier(t.tier)"
                 [attr.data-testid]="'open-lootbox-btn-' + t.tier"
               >
                 @if (currentXp() < t.costXp) {
-                  <span>🔒 XP Insuficiente ({{ t.costXp }} XP)</span>
+                  <span>🔒 XP Insuficiente</span>
                 } @else {
-                  <span>⚡ Abrir Caixa por {{ t.costXp }} XP</span>
+                  <span>⚡ Abrir Caixa ({{ t.costXp }} XP)</span>
                 }
               </button>
             </div>
           }
         </div>
+
+        <footer class="lootbox-modal-footer">
+          <span class="guarantee-note">
+            ⚖️ Sistema de compensação justa: se você tirar um item que já possui, ele é reciclado automaticamente em XP de volta.
+          </span>
+          <button type="button" class="btn-theater-back" (click)="onClose()">
+            Fechar Loja
+          </button>
+        </footer>
       }
     </div>
   </div>
