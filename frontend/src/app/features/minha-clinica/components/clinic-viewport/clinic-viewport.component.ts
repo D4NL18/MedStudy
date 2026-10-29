@@ -419,6 +419,46 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     }
   });
 
+  readonly leftWallBricks = computed(() =>
+    ClinicIsometricUtil.computeWallBricks(
+      'NW',
+      this.gridHeightSignal(),
+      this.originX(),
+      this.originY(),
+      (gx, gy, ox, oy) => this.clinicService.gridToScreen(gx, gy, ox, oy)
+    )
+  );
+
+  readonly rightWallBricks = computed(() =>
+    ClinicIsometricUtil.computeWallBricks(
+      'NE',
+      this.gridWidthSignal(),
+      this.originX(),
+      this.originY(),
+      (gx, gy, ox, oy) => this.clinicService.gridToScreen(gx, gy, ox, oy)
+    )
+  );
+
+  readonly leftWallFacets = computed(() =>
+    ClinicIsometricUtil.computeWallGeometricFacets(
+      'NW',
+      this.gridHeightSignal(),
+      this.originX(),
+      this.originY(),
+      (gx, gy, ox, oy) => this.clinicService.gridToScreen(gx, gy, ox, oy)
+    )
+  );
+
+  readonly rightWallFacets = computed(() =>
+    ClinicIsometricUtil.computeWallGeometricFacets(
+      'NE',
+      this.gridWidthSignal(),
+      this.originX(),
+      this.originY(),
+      (gx, gy, ox, oy) => this.clinicService.gridToScreen(gx, gy, ox, oy)
+    )
+  );
+
   readonly slabShadowPoints = computed(() =>
     ClinicIsometricUtil.computeSlabShadowPoints(
       this.gridWidthSignal(),

@@ -134,13 +134,37 @@
               }
               @case ('wallpaper_geometric_teal') {
                 <polygon [attr.points]="leftWallPoints()" fill="#F0FDFA" opacity="0.95" />
-                <line [attr.x1]="originX() - 120" [attr.y1]="originY() + 20" [attr.x2]="originX() - 40" [attr.y2]="originY() - 40" stroke="#0D9488" stroke-width="1.5" opacity="0.25" />
-                <line [attr.x1]="originX() - 80" [attr.y1]="originY() + 40" [attr.x2]="originX()" [attr.y2]="originY() - 20" stroke="#0D9488" stroke-width="1.5" opacity="0.25" />
+                @for (facet of leftWallFacets(); track $index) {
+                  <polygon
+                    [attr.points]="facet.points"
+                    [attr.fill]="facet.fill"
+                    [attr.stroke]="facet.stroke"
+                    stroke-width="0.9"
+                    [attr.opacity]="facet.opacity"
+                  />
+                }
               }
               @case ('wallpaper_brick_white') {
-                <polygon [attr.points]="leftWallPoints()" fill="#FAFAFA" opacity="0.95" />
-                <line [attr.x1]="originX() - 120" [attr.y1]="originY() - 15" [attr.x2]="originX()" [attr.y2]="originY() - 45" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="8 4" opacity="0.6" />
-                <line [attr.x1]="originX() - 120" [attr.y1]="originY() + 10" [attr.x2]="originX()" [attr.y2]="originY() - 20" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="8 4" opacity="0.6" />
+                <polygon [attr.points]="leftWallPoints()" fill="#CBD5E1" opacity="0.95" />
+                @for (brick of leftWallBricks(); track $index) {
+                  <polygon
+                    [attr.points]="brick.points"
+                    [attr.fill]="brick.fill"
+                    [attr.stroke]="brick.stroke"
+                    stroke-width="0.8"
+                  />
+                  @if (brick.highlightLine; as hl) {
+                    <line
+                      [attr.x1]="hl.x1"
+                      [attr.y1]="hl.y1"
+                      [attr.x2]="hl.x2"
+                      [attr.y2]="hl.y2"
+                      stroke="#FFFFFF"
+                      stroke-width="0.8"
+                      opacity="0.8"
+                    />
+                  }
+                }
               }
             }
           </g>
@@ -162,13 +186,37 @@
               }
               @case ('wallpaper_geometric_teal') {
                 <polygon [attr.points]="rightWallPoints()" fill="#F0FDFA" opacity="0.95" />
-                <line [attr.x1]="originX()" [attr.y1]="originY() - 20" [attr.x2]="originX() + 80" [attr.y2]="originY() + 40" stroke="#0D9488" stroke-width="1.5" opacity="0.25" />
-                <line [attr.x1]="originX() + 40" [attr.y1]="originY() - 40" [attr.x2]="originX() + 120" [attr.y2]="originY() + 20" stroke="#0D9488" stroke-width="1.5" opacity="0.25" />
+                @for (facet of rightWallFacets(); track $index) {
+                  <polygon
+                    [attr.points]="facet.points"
+                    [attr.fill]="facet.fill"
+                    [attr.stroke]="facet.stroke"
+                    stroke-width="0.9"
+                    [attr.opacity]="facet.opacity"
+                  />
+                }
               }
               @case ('wallpaper_brick_white') {
-                <polygon [attr.points]="rightWallPoints()" fill="#FAFAFA" opacity="0.95" />
-                <line [attr.x1]="originX()" [attr.y1]="originY() - 45" [attr.x2]="originX() + 120" [attr.y2]="originY() - 15" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="8 4" opacity="0.6" />
-                <line [attr.x1]="originX()" [attr.y1]="originY() - 20" [attr.x2]="originX() + 120" [attr.y2]="originY() + 10" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="8 4" opacity="0.6" />
+                <polygon [attr.points]="rightWallPoints()" fill="#CBD5E1" opacity="0.95" />
+                @for (brick of rightWallBricks(); track $index) {
+                  <polygon
+                    [attr.points]="brick.points"
+                    [attr.fill]="brick.fill"
+                    [attr.stroke]="brick.stroke"
+                    stroke-width="0.8"
+                  />
+                  @if (brick.highlightLine; as hl) {
+                    <line
+                      [attr.x1]="hl.x1"
+                      [attr.y1]="hl.y1"
+                      [attr.x2]="hl.x2"
+                      [attr.y2]="hl.y2"
+                      stroke="#FFFFFF"
+                      stroke-width="0.8"
+                      opacity="0.8"
+                    />
+                  }
+                }
               }
             }
           </g>

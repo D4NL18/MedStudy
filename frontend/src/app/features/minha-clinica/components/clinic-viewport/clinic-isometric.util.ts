@@ -10,6 +10,20 @@ export interface WallSliceRender {
   points: string;
 }
 
+export interface WallBrickRender {
+  points: string;
+  fill: string;
+  stroke: string;
+  highlightLine?: { x1: number; y1: number; x2: number; y2: number };
+}
+
+export interface WallFacetRender {
+  points: string;
+  fill: string;
+  stroke: string;
+  opacity: number;
+}
+
 /**
  * Utilitários puros de geometria e projeção isométrica 2.5D (tile 64x32px).
  */
@@ -169,5 +183,134 @@ export class ClinicIsometricUtil {
       }
     }
     return slices;
+  }
+
+  static computeWallBricks(
+    side: 'NW' | 'NE',
+    count: number,
+    ox: number,
+    oy: number,
+    gridToScreen: GridToScreenFn,
+    wallH = 68
+  ): WallBrickRender[] {
+    const list: WallBrickRender[] = [];
+    const nCourses = 6;
+    const hc = wallH / nCourses;
+    const my = 1.6;
+    const hBrick = hc - my;
+    const sWidth = 0.5;
+    const ms = 0.04;
+    const sBrick = sWidth - ms;
+
+    const getPoint = (s: number, elev: number) => {
+      const base = side === 'NW'
+        ? gridToScreen(0, s, ox, oy)
+        : gridToScreen(s, 0, ox, oy);
+      return {
+        x: Number(base.x.toFixed(1)),
+        y: Number((base.y - elev).toFixed(1))
+      };
+    };
+
+    for (let c = 0; c < nCourses; c++) {
+      const eBot = c * hc + my;
+      const eTop = eBot + hBrick;
+      const offset = (c % 2 === 1) ? 0.25 : 0.0;
+      for (let s = -0.5; s < count + 0.5; s += sWidth) {
+        const sStart = s + offset;
+        const sEnd = sStart + sBrick;
+        const b0 = getPoint(sStart, eBot);
+        const b1 = getPoint(sEnd, eBot);
+        const t1 = getPoint(sEnd, eTop);
+        const t0 = getPoint(sStart, eTop);
+
+        const isAlt = (Math.floor(sStart * 4) + c) % 3 === 0;
+        const isAlt2 = (Math.floor(sStart * 4) + c) % 4 === 0;
+        const fill = isAlt ? '#FFFFFF' : isAlt2 ? '#F8FAFC' : '#F1F5F9';
+
+        list.push({
+          points: `${b0.x},${b0.y} ${b1.x},${b1.y} ${t1.x},${t1.y} ${t0.x},${t0.y}`,
+          fill,
+          stroke: '#CBD5E1',
+          highlightLine: { x1: t0.x, y1: t0.y, x2: t1.x, y2: t1.y }
+        });
+      }
+    }
+    return list;
+  }
+
+  static computeWallGeometricFacets(
+    side: 'NW' | 'NE',
+    count: number,
+    ox: number,
+    oy: number,
+    gridToScreen: GridToScreenFn,
+    wallH = 68
+  ): WallFacetRender[] {
+    const list: WallFacetRender[] = [];
+    const getPoint = (s: number, elev: number) => {
+      const base = side === 'NW'
+        ? gridToScreen(0, s, ox, oy)
+        : gridToScreen(s, 0, ox, oy);
+      return {
+        x: Number(base.x.toFixed(1)),
+        y: Number((base.y - elev).toFixed(1))
+      };
+    };
+
+    const palettes = [
+      ['#5EEAD4', '#14B8A6', '#2DD4BF', '#0D9488', '#99F6E4', '#CCFBF1'],
+      ['#99F6E4', '#0D9488', '#5EEAD4', '#115E59', '#CCFBF1', '#2DD4BF'],
+      ['#2DD4BF', '#115E59', '#99F6E4', '#047857', '#5EEAD4', '#A7F3D0'],
+    ];
+
+    for (let i = 0; i < count; i++) {
+      const pal = palettes[i % palettes.length];
+      const botL = getPoint(i, 0);
+      const botR = getPoint(i + 1, 0);
+      const topL = getPoint(i, wallH);
+      const topR = getPoint(i + 1, wallH);
+      const midL = getPoint(i, wallH / 2);
+      const midR = getPoint(i + 1, wallH / 2);
+      const center = getPoint(i + 0.5, wallH / 2);
+
+      list.push({
+        points: `${topL.x},${topL.y} ${topR.x},${topR.y} ${center.x},${center.y}`,
+        fill: pal[0],
+        stroke: '#0D9488',
+        opacity: 0.60
+      });
+      list.push({
+        points: `${topL.x},${topL.y} ${center.x},${center.y} ${midL.x},${midL.y}`,
+        fill: pal[1],
+        stroke: '#0D9488',
+        opacity: 0.65
+      });
+      list.push({
+        points: `${midL.x},${midL.y} ${center.x},${center.y} ${botL.x},${botL.y}`,
+        fill: pal[2],
+        stroke: '#0D9488',
+        opacity: 0.50
+      });
+      list.push({
+        points: `${botL.x},${botL.y} ${center.x},${center.y} ${botR.x},${botR.y}`,
+        fill: pal[3],
+        stroke: '#0D9488',
+        opacity: 0.45
+      });
+      list.push({
+        points: `${botR.x},${botR.y} ${center.x},${center.y} ${midR.x},${midR.y}`,
+        fill: pal[4],
+        stroke: '#0D9488',
+        opacity: 0.70
+      });
+      list.push({
+        points: `${midR.x},${midR.y} ${center.x},${center.y} ${topR.x},${topR.y}`,
+        fill: pal[5],
+        stroke: '#0D9488',
+        opacity: 0.75
+      });
+    }
+    return list;
   }
 }
