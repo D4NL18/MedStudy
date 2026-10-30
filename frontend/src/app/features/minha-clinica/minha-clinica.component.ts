@@ -248,7 +248,7 @@ export class MinhaClinicaComponent implements OnInit {
 
   readonly expandButtonTooltip = computed<string>(() => {
     const state = this.clinic();
-    if (!state || !state.nextExpansionLevel) {
+    if (!state?.nextExpansionLevel) {
       return 'Nível máximo atingido';
     }
     if (state.lifetimeXp < (state.nextExpansionRequiredLifetimeXp ?? 0)) {
@@ -532,8 +532,12 @@ export class MinhaClinicaComponent implements OnInit {
           p.catalogItemId === sel.id
       );
 
-      const wallSide = isWall ? (coords.gridX === 0 ? 'NW' : 'NE') : undefined;
-      const wallTileIndex = isWall ? (coords.gridX === 0 ? coords.gridY : coords.gridX) : undefined;
+      let wallSide: 'NW' | 'NE' | undefined;
+      let wallTileIndex: number | undefined;
+      if (isWall) {
+        wallSide = coords.gridX === 0 ? 'NW' : 'NE';
+        wallTileIndex = coords.gridX === 0 ? coords.gridY : coords.gridX;
+      }
       let elevationZ: number | undefined;
       if (isWall) {
         elevationZ = (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto') ? 0 : 76;

@@ -240,9 +240,9 @@ import { ToastService } from '@core/services/toast.service';
   `]
 })
 export class StreakRepairBannerComponent implements OnInit {
-  private streakRepairService = inject(StreakRepairService);
-  private toastService = inject(ToastService);
-  private router = inject(Router);
+  private readonly streakRepairService = inject(StreakRepairService);
+  private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router);
 
   status = signal<StreakStatusResponse | null>(null);
   isRepairing = signal(false);

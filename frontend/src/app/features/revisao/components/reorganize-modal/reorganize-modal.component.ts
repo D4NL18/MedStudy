@@ -6,7 +6,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { RevisionActions } from '@store/revision/revision.actions';
 import { selectRedistributionDraft, selectIsRedistributing } from '@store/revision/revision.reducer';
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, map, take, takeUntil } from 'rxjs/operators';
 import { RedistributionDraftResponse } from '@core/models/revision.model';
 import { ToastService } from '@core/services/toast.service';
 import { NgxChartsModule, LegendPosition } from '@swimlane/ngx-charts';
@@ -98,12 +98,10 @@ export class ReorganizeModalComponent implements OnInit, OnDestroy {
   }
 
   applyDraft(): void {
-    import('rxjs').then(({ take }) => {
-      this.draft$.pipe(take(1)).subscribe(draft => {
-        if (draft && draft.draftId) {
-          this.store.dispatch(RevisionActions.applyRedistribution({ draftId: draft.draftId }));
-        }
-      });
+    this.draft$.pipe(take(1)).subscribe(draft => {
+      if (draft && draft.draftId) {
+        this.store.dispatch(RevisionActions.applyRedistribution({ draftId: draft.draftId }));
+      }
     });
   }
 
