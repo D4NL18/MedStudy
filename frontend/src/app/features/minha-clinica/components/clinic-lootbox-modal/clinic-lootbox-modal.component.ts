@@ -47,9 +47,8 @@ export class ClinicLootboxModalComponent {
     return RARITY_CONFIG[rarity]?.label ?? 'Comum';
   }
 
-  getRarityGlow(rarity?: ItemRarity): string {
-    const r = rarity ?? 'COMMON';
-    const color = RARITY_CONFIG[r]?.color ?? '#94A3B8';
+  getRarityGlow(rarity: ItemRarity = 'COMMON'): string {
+    const color = RARITY_CONFIG[rarity]?.color ?? '#94A3B8';
     return `0 0 35px ${color}88, inset 0 0 20px ${color}33`;
   }
 

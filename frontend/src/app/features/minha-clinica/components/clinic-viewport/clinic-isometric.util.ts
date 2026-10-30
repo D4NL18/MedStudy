@@ -43,7 +43,7 @@ export class ClinicIsometricUtil {
         const bottom = gridToScreen(gx + 1, gy + 1, ox, oy);
         const left = gridToScreen(gx, gy + 1, ox, oy);
 
-        let zone: 'main' | 'pediatria' | 'hall' | 'lounge' = 'main';
+        let zone: 'main' | 'pediatria' | 'hall' | 'lounge';
         if (gx < 2 && gy < 2) {
           zone = 'main';
         } else if (gx >= 2 && gy < 2) {

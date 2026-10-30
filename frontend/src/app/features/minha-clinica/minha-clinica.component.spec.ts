@@ -96,7 +96,7 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     expect(component.clinic()?.expansionName).toBe('Box do Internato');
     expect(component.clinic()?.lifetimeXp).toBe(1800);
     expect(component.clinic()?.currentXp).toBe(1500);
-    expect(component.filteredCatalogItems().length).toBe(39); // Default tab: pediatria (39 items)
+    expect(component.filteredCatalogItems()).toHaveSize(39); // Default tab: pediatria (39 items)
   });
 
   it('should filter catalog across the 4 official tabs (Pediatria=39, Móveis=38, Equipamentos=39, Conforto=38) (P-083)', () => {
@@ -107,16 +107,16 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
 
     // Act & Assert
     component.selectCategory('pediatria');
-    expect(component.filteredCatalogItems().length).toBe(39);
+    expect(component.filteredCatalogItems()).toHaveSize(39);
 
     component.selectCategory('mobiliario');
-    expect(component.filteredCatalogItems().length).toBe(38);
+    expect(component.filteredCatalogItems()).toHaveSize(38);
 
     component.selectCategory('clinica');
     expect(component.filteredCatalogItems().length).toBe(39);
 
     component.selectCategory('recepcao');
-    expect(component.filteredCatalogItems().length).toBe(38);
+    expect(component.filteredCatalogItems()).toHaveSize(38);
   });
 
   it('should show illustrated Empty State when filtering by Meus Itens in a category without owned items', () => {

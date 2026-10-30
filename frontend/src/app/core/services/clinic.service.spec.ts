@@ -315,7 +315,7 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
     it('should fetch lootbox tiers with probabilities from /api/v1/clinic/lootboxes', () => {
       // Act
       service.getLootboxTiers().subscribe(tiers => {
-        expect(tiers.length).toBe(3);
+        expect(tiers).toHaveSize(3);
         expect(tiers[0].tier).toBe('TIER_1_RESIDENT');
         expect(tiers[0].costXp).toBe(500);
       });

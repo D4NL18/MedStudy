@@ -710,7 +710,7 @@ export class ClinicService {
     const payload: SkinBuyRequest = { skinId };
 
     return this.http
-      .post<ApiEnvelope<any> | any>(
+      .post<ApiEnvelope<any>>(
         `${this.clinicApiUrl}/avatar/skins/buy`,
         payload
       )
@@ -720,11 +720,14 @@ export class ClinicService {
           const curr = this.doctorAvatarResponse();
           if (curr) {
             const rawUnlocked = (buyRes && buyRes.unlockedSkins) as string[] | undefined;
-            const updatedUnlocked = rawUnlocked && Array.isArray(rawUnlocked)
-              ? rawUnlocked
-              : curr.unlockedSkins.includes(skinId)
-                ? curr.unlockedSkins
-                : [...curr.unlockedSkins, skinId];
+            let updatedUnlocked: string[];
+            if (rawUnlocked && Array.isArray(rawUnlocked)) {
+              updatedUnlocked = rawUnlocked;
+            } else if (curr.unlockedSkins.includes(skinId)) {
+              updatedUnlocked = curr.unlockedSkins;
+            } else {
+              updatedUnlocked = [...curr.unlockedSkins, skinId];
+            }
 
             this.doctorAvatarResponse.set({
               ...curr,
@@ -924,10 +927,7 @@ export class ClinicService {
     const nextReqLifetime =
       raw.nextExpansionRequiredLifetimeXp ?? nextMeta?.requiredLifetimeXp ?? null;
 
-    const canExpand =
-      raw.canExpand !== undefined
-        ? raw.canExpand
-        : Boolean(
+    const canExpand = raw.canExpand ?? Boolean(
             nextMeta &&
               nextCost !== null &&
               nextReqLifetime !== null &&

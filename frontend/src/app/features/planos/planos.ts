@@ -57,6 +57,8 @@ export class Planos implements OnDestroy {
         this.copiado = false;
         this.cdr.detectChanges();
       }, 2000);
+    }).catch(err => {
+      console.error('Erro ao copiar código PIX:', err);
     });
   }
 

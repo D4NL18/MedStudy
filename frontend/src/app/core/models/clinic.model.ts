@@ -224,7 +224,7 @@ export interface StudyActionRewardResponse {
   currentStreakDays: number;
   lifetimeXp: number;
   currentXp: number;
-  actionType: StudyActionType | string;
+  actionType: StudyActionType;
   message: string;
 }
 
