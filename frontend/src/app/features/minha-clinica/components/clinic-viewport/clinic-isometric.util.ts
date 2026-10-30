@@ -202,16 +202,6 @@ export class ClinicIsometricUtil {
     const ms = 0.04;
     const sBrick = sWidth - ms;
 
-    const getPoint = (s: number, elev: number) => {
-      const base = side === 'NW'
-        ? gridToScreen(0, s, ox, oy)
-        : gridToScreen(s, 0, ox, oy);
-      return {
-        x: Number(base.x.toFixed(1)),
-        y: Number((base.y - elev).toFixed(1))
-      };
-    };
-
     for (let c = 0; c < nCourses; c++) {
       const eBot = c * hc + my;
       const eTop = eBot + hBrick;
@@ -219,10 +209,10 @@ export class ClinicIsometricUtil {
       for (let s = -0.5; s < count + 0.5; s += sWidth) {
         const sStart = s + offset;
         const sEnd = sStart + sBrick;
-        const b0 = getPoint(sStart, eBot);
-        const b1 = getPoint(sEnd, eBot);
-        const t1 = getPoint(sEnd, eTop);
-        const t0 = getPoint(sStart, eTop);
+        const b0 = this.getWallPoint(side, sStart, eBot, ox, oy, gridToScreen);
+        const b1 = this.getWallPoint(side, sEnd, eBot, ox, oy, gridToScreen);
+        const t1 = this.getWallPoint(side, sEnd, eTop, ox, oy, gridToScreen);
+        const t0 = this.getWallPoint(side, sStart, eTop, ox, oy, gridToScreen);
 
         const isAlt = (Math.floor(sStart * 4) + c) % 3 === 0;
         const isAlt2 = (Math.floor(sStart * 4) + c) % 4 === 0;
@@ -253,16 +243,6 @@ export class ClinicIsometricUtil {
     wallH = 68
   ): WallFacetRender[] {
     const list: WallFacetRender[] = [];
-    const getPoint = (s: number, elev: number) => {
-      const base = side === 'NW'
-        ? gridToScreen(0, s, ox, oy)
-        : gridToScreen(s, 0, ox, oy);
-      return {
-        x: Number(base.x.toFixed(1)),
-        y: Number((base.y - elev).toFixed(1))
-      };
-    };
-
     const palettes = [
       ['#5EEAD4', '#14B8A6', '#2DD4BF', '#0D9488', '#99F6E4', '#CCFBF1'],
       ['#99F6E4', '#0D9488', '#5EEAD4', '#115E59', '#CCFBF1', '#2DD4BF'],
@@ -271,13 +251,13 @@ export class ClinicIsometricUtil {
 
     for (let i = 0; i < count; i++) {
       const pal = palettes[i % palettes.length];
-      const botL = getPoint(i, 0);
-      const botR = getPoint(i + 1, 0);
-      const topL = getPoint(i, wallH);
-      const topR = getPoint(i + 1, wallH);
-      const midL = getPoint(i, wallH / 2);
-      const midR = getPoint(i + 1, wallH / 2);
-      const center = getPoint(i + 0.5, wallH / 2);
+      const botL = this.getWallPoint(side, i, 0, ox, oy, gridToScreen);
+      const botR = this.getWallPoint(side, i + 1, 0, ox, oy, gridToScreen);
+      const topL = this.getWallPoint(side, i, wallH, ox, oy, gridToScreen);
+      const topR = this.getWallPoint(side, i + 1, wallH, ox, oy, gridToScreen);
+      const midL = this.getWallPoint(side, i, wallH / 2, ox, oy, gridToScreen);
+      const midR = this.getWallPoint(side, i + 1, wallH / 2, ox, oy, gridToScreen);
+      const center = this.getWallPoint(side, i + 0.5, wallH / 2, ox, oy, gridToScreen);
 
       list.push(
         {
@@ -303,21 +283,38 @@ export class ClinicIsometricUtil {
           fill: pal[3],
           stroke: '#0D9488',
           opacity: 0.45
+        },
+        {
+          points: `${botR.x},${botR.y} ${center.x},${center.y} ${midR.x},${midR.y}`,
+          fill: pal[4],
+          stroke: '#0D9488',
+          opacity: 0.70
+        },
+        {
+          points: `${midR.x},${midR.y} ${center.x},${center.y} ${topR.x},${topR.y}`,
+          fill: pal[5],
+          stroke: '#0D9488',
+          opacity: 0.75
         }
       );
-      list.push({
-        points: `${botR.x},${botR.y} ${center.x},${center.y} ${midR.x},${midR.y}`,
-        fill: pal[4],
-        stroke: '#0D9488',
-        opacity: 0.70
-      });
-      list.push({
-        points: `${midR.x},${midR.y} ${center.x},${center.y} ${topR.x},${topR.y}`,
-        fill: pal[5],
-        stroke: '#0D9488',
-        opacity: 0.75
-      });
     }
     return list;
+  }
+
+  private static getWallPoint(
+    side: 'NW' | 'NE',
+    s: number,
+    elev: number,
+    ox: number,
+    oy: number,
+    gridToScreen: GridToScreenFn
+  ): { x: number; y: number } {
+    const base = side === 'NW'
+      ? gridToScreen(0, s, ox, oy)
+      : gridToScreen(s, 0, ox, oy);
+    return {
+      x: Number(base.x.toFixed(1)),
+      y: Number((base.y - elev).toFixed(1))
+    };
   }
 }
