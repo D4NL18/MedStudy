@@ -2,6 +2,8 @@
   <div
     class="clinic-basic-error-backdrop"
     (click)="onDismiss()"
+    (keydown.enter)="onDismiss()"
+    (keydown.escape)="onDismiss()"
     role="presentation"
     data-testid="clinic-error-modal-backdrop"
   >

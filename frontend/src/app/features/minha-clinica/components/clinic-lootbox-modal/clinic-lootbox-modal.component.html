@@ -1,6 +1,6 @@
 @if (isOpen()) {
   <div class="lootbox-fullscreen-theater" [class.unboxing-active]="isUnboxing()" data-testid="lootbox-fullscreen-theater">
-    <div class="lootbox-theater-container" (click)="$event.stopPropagation()">
+    <div class="lootbox-theater-container" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
       <!-- FASE 1 & FASE 2: ANIMAÇÃO DE UNBOXING (1.35s) -->
       @if (isUnboxing()) {
         <div class="unboxing-stage" [style.--ray-color]="openingRayColor()">

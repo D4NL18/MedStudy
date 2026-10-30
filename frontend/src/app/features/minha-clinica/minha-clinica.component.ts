@@ -554,7 +554,10 @@ export class MinhaClinicaComponent implements OnInit {
     const isGroundRuler = sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto';
     const wallSide = isWall ? (coords.gridX === 0 ? 'NW' : 'NE') : undefined;
     const wallTileIndex = isWall ? (coords.gridX === 0 ? coords.gridY : coords.gridX) : undefined;
-    const elevationZ = isWall ? (isGroundRuler ? 0 : 76) : undefined;
+    let elevationZ: number | undefined;
+    if (isWall) {
+      elevationZ = isGroundRuler ? 0 : 76;
+    }
 
     return {
       id: existingId ?? `placed-${sel.id}-${Date.now()}`,
