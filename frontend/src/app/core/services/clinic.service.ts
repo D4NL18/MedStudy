@@ -956,7 +956,7 @@ export class ClinicService {
       ownedSurfaces: raw.ownedSurfaces ?? [],
       userName: raw.userName ?? 'Lari',
       userFirstName: raw.userFirstName ?? (raw.userName ? raw.userName.trim().split(/\s+/)[0] : 'Lari'),
-      dailyFreeLootboxAvailable: raw.dailyFreeLootboxAvailable !== undefined ? raw.dailyFreeLootboxAvailable : true,
+      dailyFreeLootboxAvailable: raw.dailyFreeLootboxAvailable ?? true,
       lifetimeXp,
       currentXp,
       currentStreakDays: streakDays,

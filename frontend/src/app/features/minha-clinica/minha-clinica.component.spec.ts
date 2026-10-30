@@ -487,6 +487,6 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
 
     expect(component.editMode()).toBeFalse();
     expect(component.isLayoutDirty()).toBeFalse();
-    expect(component.workingPlacedItems().length).toBe(1);
+    expect(component.workingPlacedItems()).toHaveSize(1);
   });
 });

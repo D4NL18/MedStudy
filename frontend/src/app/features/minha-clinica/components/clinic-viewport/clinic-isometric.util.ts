@@ -226,7 +226,12 @@ export class ClinicIsometricUtil {
 
         const isAlt = (Math.floor(sStart * 4) + c) % 3 === 0;
         const isAlt2 = (Math.floor(sStart * 4) + c) % 4 === 0;
-        const fill = isAlt ? '#FFFFFF' : isAlt2 ? '#F8FAFC' : '#F1F5F9';
+        let fill = '#F1F5F9';
+        if (isAlt) {
+          fill = '#FFFFFF';
+        } else if (isAlt2) {
+          fill = '#F8FAFC';
+        }
 
         list.push({
           points: `${b0.x},${b0.y} ${b1.x},${b1.y} ${t1.x},${t1.y} ${t0.x},${t0.y}`,
@@ -274,30 +279,32 @@ export class ClinicIsometricUtil {
       const midR = getPoint(i + 1, wallH / 2);
       const center = getPoint(i + 0.5, wallH / 2);
 
-      list.push({
-        points: `${topL.x},${topL.y} ${topR.x},${topR.y} ${center.x},${center.y}`,
-        fill: pal[0],
-        stroke: '#0D9488',
-        opacity: 0.60
-      });
-      list.push({
-        points: `${topL.x},${topL.y} ${center.x},${center.y} ${midL.x},${midL.y}`,
-        fill: pal[1],
-        stroke: '#0D9488',
-        opacity: 0.65
-      });
-      list.push({
-        points: `${midL.x},${midL.y} ${center.x},${center.y} ${botL.x},${botL.y}`,
-        fill: pal[2],
-        stroke: '#0D9488',
-        opacity: 0.50
-      });
-      list.push({
-        points: `${botL.x},${botL.y} ${center.x},${center.y} ${botR.x},${botR.y}`,
-        fill: pal[3],
-        stroke: '#0D9488',
-        opacity: 0.45
-      });
+      list.push(
+        {
+          points: `${topL.x},${topL.y} ${topR.x},${topR.y} ${center.x},${center.y}`,
+          fill: pal[0],
+          stroke: '#0D9488',
+          opacity: 0.60
+        },
+        {
+          points: `${topL.x},${topL.y} ${center.x},${center.y} ${midL.x},${midL.y}`,
+          fill: pal[1],
+          stroke: '#0D9488',
+          opacity: 0.65
+        },
+        {
+          points: `${midL.x},${midL.y} ${center.x},${center.y} ${botL.x},${botL.y}`,
+          fill: pal[2],
+          stroke: '#0D9488',
+          opacity: 0.50
+        },
+        {
+          points: `${botL.x},${botL.y} ${center.x},${center.y} ${botR.x},${botR.y}`,
+          fill: pal[3],
+          stroke: '#0D9488',
+          opacity: 0.45
+        }
+      );
       list.push({
         points: `${botR.x},${botR.y} ${center.x},${center.y} ${midR.x},${midR.y}`,
         fill: pal[4],

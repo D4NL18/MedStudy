@@ -1,11 +1,15 @@
 const fs = require('fs');
-const path = require('path');
+const path = require('node:path');
 
-const prodApiUrl = 'https://medstudy-backend-142872223826.us-central1.run.app/api';
-const srcEmail = 'larimeirellescj@gmail.com';
-const srcPassword = 'Lilalink10';
+const prodApiUrl = process.env.PROD_API_URL || 'https://medstudy-backend-142872223826.us-central1.run.app/api';
+const srcEmail = process.env.SRC_EMAIL || 'larimeirellescj@gmail.com';
+const srcPassword = process.env.SRC_PASSWORD || '';
 
 const destUserId = '550e8400-e29b-41d4-a716-446655440000'; // admin@medstudy.com
+
+function sanitizeLog(val) {
+    return String(val ?? '').replace(/[\r\n\t]/g, '');
+}
 
 function escapeSql(str) {
     if (str === null || str === undefined) return 'NULL';
@@ -13,25 +17,25 @@ function escapeSql(str) {
     if (typeof str === 'number') return isNaN(str) ? 'NULL' : String(str);
     if (typeof str === 'object') {
         const json = JSON.stringify(str);
-        return `'${json.replace(/'/g, "''")}'::jsonb`;
+        return `'${json.replaceAll("'", "''")}'::jsonb`;
     }
-    return `'${String(str).replace(/'/g, "''")}'`;
+    return `'${String(str).replaceAll("'", "''")}'`;
 }
 
 function escapeJsonField(val) {
     if (val === null || val === undefined) return 'NULL';
     if (typeof val === 'object') {
-        return `'${JSON.stringify(val).replace(/'/g, "''")}'::jsonb`;
+        return `'${JSON.stringify(val).replaceAll("'", "''")}'::jsonb`;
     }
     // If it's a string, convert to JSON string object or raw jsonb
     const str = String(val).trim();
     if (str.startsWith('{') || str.startsWith('[')) {
         try {
             JSON.parse(str);
-            return `'${str.replace(/'/g, "''")}'::jsonb`;
+            return `'${str.replaceAll("'", "''")}'::jsonb`;
         } catch (e) {}
     }
-    return `'${JSON.stringify({ text: str }).replace(/'/g, "''")}'::jsonb`;
+    return `'${JSON.stringify({ text: str }).replaceAll("'", "''")}'::jsonb`;
 }
 
 function escapeDate(d) {
@@ -87,27 +91,27 @@ async function main() {
     const simulados = simuladosData.content || (Array.isArray(simuladosData) ? simuladosData : []);
 
     console.log(`Dados obtidos de produção:`);
-    console.log(`- Perfil: ${profile?.nomeCompleto || 'N/A'}`);
-    console.log(`- Badges: ${profile?.badges?.length || 0}`);
-    console.log(`- Assinatura: ${subscription?.status || 'N/A'}`);
-    console.log(`- Sessões de Estudo: ${sessions.length}`);
-    console.log(`- Flashcards: ${flashcards.length}`);
-    console.log(`- Aulas: ${lessons.length}`);
-    console.log(`- Simulados: ${simulados.length}`);
+    console.log(`- Perfil: ${sanitizeLog(profile?.nomeCompleto || 'N/A')}`);
+    console.log(`- Badges: ${Number(profile?.badges?.length || 0)}`);
+    console.log(`- Assinatura: ${sanitizeLog(subscription?.status || 'N/A')}`);
+    console.log(`- Sessões de Estudo: ${Number(sessions.length)}`);
+    console.log(`- Flashcards: ${Number(flashcards.length)}`);
+    console.log(`- Aulas: ${Number(lessons.length)}`);
+    console.log(`- Simulados: ${Number(simulados.length)}`);
 
     console.log("3. Gerando SQL de sincronização local...");
     const sqlStatements = [];
-    sqlStatements.push('-- Script gerado automaticamente para sincronizar conta admin local com os dados de produção');
-    sqlStatements.push('BEGIN;');
-
-    // Limpar dados anteriores do usuário local
-    sqlStatements.push(`DELETE FROM study_sessions WHERE user_id = '${destUserId}';`);
-    sqlStatements.push(`DELETE FROM flashcards WHERE user_id = '${destUserId}';`);
-    sqlStatements.push(`DELETE FROM lessons WHERE user_id = '${destUserId}';`);
-    sqlStatements.push(`DELETE FROM simulados WHERE user_id = '${destUserId}';`);
-    sqlStatements.push(`DELETE FROM user_badges WHERE user_id = '${destUserId}';`);
-    sqlStatements.push(`DELETE FROM subscriptions WHERE user_id = '${destUserId}';`);
-    sqlStatements.push(`DELETE FROM streak_repairs WHERE user_id = '${destUserId}';`);
+    sqlStatements.push(
+        '-- Script gerado automaticamente para sincronizar conta admin local com os dados de produção',
+        'BEGIN;',
+        `DELETE FROM study_sessions WHERE user_id = '${destUserId}';`,
+        `DELETE FROM flashcards WHERE user_id = '${destUserId}';`,
+        `DELETE FROM lessons WHERE user_id = '${destUserId}';`,
+        `DELETE FROM simulados WHERE user_id = '${destUserId}';`,
+        `DELETE FROM user_badges WHERE user_id = '${destUserId}';`,
+        `DELETE FROM subscriptions WHERE user_id = '${destUserId}';`,
+        `DELETE FROM streak_repairs WHERE user_id = '${destUserId}';`
+    );
 
     // Atualizar tabela users
     const userName = profile?.nomeCompleto || 'Lari Meirelles';

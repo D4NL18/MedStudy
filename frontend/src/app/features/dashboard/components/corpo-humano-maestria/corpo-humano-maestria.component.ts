@@ -909,10 +909,7 @@ export class EstrelaVidaMaestriaComponent implements OnInit {
   }
 
   onHoverArea(grandeAreaKey: string) {
-    const area = this.data()?.areas.find(a => a.grandeArea === grandeAreaKey);
-    if (area) {
-      this.selectedArea.set(area);
-    }
+    this.onSelectArea(grandeAreaKey);
   }
 
   onSelectArea(grandeAreaKey: string) {

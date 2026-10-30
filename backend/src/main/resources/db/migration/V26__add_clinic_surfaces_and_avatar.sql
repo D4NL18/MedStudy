@@ -179,10 +179,10 @@ SET wall_theme = 'ped_papel_safari'
 FROM clinic_placed_items cpi
 WHERE cpi.clinic_id = uc.id
   AND cpi.catalog_item_id = 'ped_papel_safari'
-  AND cpi.is_placed = TRUE;
+  AND cpi.is_placed;
 
 -- 6.5. Desacoplar ped_papel_safari da malha de piso sem deletar o registro contábil de aquisição
 UPDATE clinic_placed_items
 SET is_placed = FALSE
 WHERE catalog_item_id = 'ped_papel_safari'
-  AND is_placed = TRUE;
+  AND is_placed;

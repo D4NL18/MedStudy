@@ -238,7 +238,7 @@ export class MinhaClinicaComponent implements OnInit {
 
   readonly canExpandNow = computed<boolean>(() => {
     const state = this.clinic();
-    if (!state || !state.nextExpansionLevel) {
+    if (!state?.nextExpansionLevel) {
       return false;
     }
     const reqLife = state.nextExpansionRequiredLifetimeXp ?? 0;
@@ -575,7 +575,7 @@ export class MinhaClinicaComponent implements OnInit {
 
     // Caso C: Nenhum item em mãos — se clicou no piso onde o(a) Doutor(a) está, seleciona para mover!
     const currentDoc = this.currentAvatar();
-    if (currentDoc && currentDoc.avatarX === coords.gridX && currentDoc.avatarY === coords.gridY) {
+    if (currentDoc?.avatarX === coords.gridX && currentDoc?.avatarY === coords.gridY) {
       this.startMovingDoctor();
       return;
     }
@@ -1331,13 +1331,12 @@ export class MinhaClinicaComponent implements OnInit {
     this.lootboxErrorMessage.set(null);
     this.isUnboxing.set(true);
     this.unboxingPhase.set('shake');
-    this.openingTierAssetSvgKey.set(
-      tier === 'TIER_3_CHIEF_OF_STAFF'
-        ? 'lootbox_tier3_chief'
-        : tier === 'TIER_2_SPECIALIST'
-        ? 'lootbox_tier2_specialist'
-        : 'lootbox_tier1_resident'
-    );
+    const lootboxSvgMap: Record<LootboxTier, string> = {
+      TIER_3_CHIEF_OF_STAFF: 'lootbox_tier3_chief',
+      TIER_2_SPECIALIST: 'lootbox_tier2_specialist',
+      TIER_1_RESIDENT: 'lootbox_tier1_resident'
+    };
+    this.openingTierAssetSvgKey.set(lootboxSvgMap[tier] ?? 'lootbox_tier1_resident');
     this.audioService.playLootboxUnbox();
 
     this.clinicService.openLootbox(tier).subscribe({
