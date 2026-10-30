@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import { ImagePasteDirective } from '@shared/directives/image-paste.directive';
 import { ImageCompressorService } from '@core/services/image-compressor.service';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
 describe('FlashcardFormComponent', () => {
   MockInstance.scope();

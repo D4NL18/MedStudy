@@ -10,7 +10,7 @@ import { Directive, ElementRef, HostListener, Renderer2, Input } from '@angular/
   standalone: true
 })
 export class RippleDirective {
-  @Input() appRippleDisabled: boolean = false;
+  @Input() appRippleDisabled = false;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {
     this.renderer.setStyle(this.el.nativeElement, 'position', 'relative');

@@ -18,5 +18,5 @@ export class SkeletonComponent {
   @Input() width?: string;
   @Input() height?: string;
   @Input() borderRadius?: string;
-  @Input() customClass: string = '';
+  @Input() customClass = '';
 }

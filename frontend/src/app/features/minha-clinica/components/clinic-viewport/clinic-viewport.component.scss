@@ -1,0 +1,413 @@
+:host {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .clinic-viewport-shell {
+        position: relative;
+        width: 100%;
+        min-height: 470px;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 16px;
+        background: radial-gradient(circle at 50% 35%, #ffffff 0%, #f1f5f9 72%, #e2e8f0 100%);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        cursor: grab;
+      }
+
+      .clinic-viewport-shell.is-dragging {
+        cursor: grabbing;
+      }
+
+      .clinic-viewport-shell.is-edit-mode {
+        background: radial-gradient(circle at 50% 35%, #f0fdfa 0%, #f1f5f9 75%, #e2e8f0 100%);
+        border-color: #0d9488;
+      }
+
+      .viewport-edit-pill {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 40;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-radius: 9999px;
+        background: rgba(15, 23, 42, 0.9);
+        color: #f8fafc;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.82rem;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+      }
+
+      .pill-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 9999px;
+        background: #10b981;
+      }
+
+      .pill-dot.invalid {
+        background: #ef4444;
+      }
+
+      .mono-coord {
+        font-family: 'JetBrains Mono', monospace;
+        font-variant-numeric: tabular-nums;
+        color: #fbbf24;
+        margin-left: 4px;
+      }
+
+      .btn-rotate-inline {
+        background: #0d9488;
+        color: #ffffff;
+        border: none;
+        border-radius: 9999px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .isometric-stage {
+        position: relative;
+        transition: transform 80ms ease-out;
+        transform-origin: center center;
+      }
+
+      .diorama-floor-svg {
+        display: block;
+        overflow: visible;
+      }
+
+      .iso-tile {
+        fill: #f8fafc;
+        stroke: #e2e8f0;
+        stroke-width: 1;
+        transition: fill 120ms ease;
+      }
+
+      .iso-tile.floor-wood-light {
+        fill: #f5ebe1;
+        stroke: #d6c6b2;
+      }
+
+      .iso-tile.floor-wood-dark {
+        fill: #78350f;
+        stroke: #451a03;
+      }
+
+      .iso-tile.floor-marble {
+        fill: #fafcff;
+        stroke: #cbd5e1;
+      }
+
+      .iso-tile.floor-tatame {
+        fill: #fef08a;
+        stroke: #fde047;
+      }
+
+      .iso-tile-surface-detail {
+        pointer-events: none;
+      }
+
+      .iso-tile.edit-grid {
+        stroke: #94a3b8;
+        stroke-dasharray: 2 2;
+        cursor: pointer;
+      }
+
+      .iso-tile.edit-grid:hover {
+        fill: #ccfbf1;
+      }
+
+      .iso-ghost-polygon {
+        pointer-events: none !important;
+      }
+
+      .iso-wall-slice {
+        fill: transparent;
+        pointer-events: none;
+      }
+
+      .clinic-viewport-shell.is-edit-mode .iso-wall-slice {
+        pointer-events: visiblePainted !important;
+        cursor: pointer;
+      }
+
+      .clinic-viewport-shell.is-edit-mode .iso-wall-slice:hover {
+        fill: rgba(13, 148, 136, 0.12);
+        stroke: #0d9488;
+        stroke-width: 1.5;
+        stroke-dasharray: 4 2;
+      }
+
+      .placed-items-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .placed-item-anchor {
+        position: absolute;
+        transform: translate(-50%, -75%);
+        pointer-events: none !important;
+        transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), filter 150ms ease;
+      }
+
+      app-clinic-item-svg,
+      .clinic-item-svg {
+        pointer-events: none !important;
+      }
+
+      .shadow-polygon {
+        pointer-events: none !important;
+      }
+
+      /* Parede NW (Esquerda): Skew -26.565deg para grudar perfeitamente na parede isométrica */
+      .placed-item-anchor.is-wall-item.is-wall-nw {
+        transform: translate(-50%, -50%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+        filter: drop-shadow(3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      /* Parede NE (Direita): Skew +26.565deg para grudar perfeitamente na parede isométrica */
+      .placed-item-anchor.is-wall-item.is-wall-ne {
+        transform: translate(-50%, -50%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+        filter: drop-shadow(-3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-nw {
+        transform: translate(-50%, -86%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+        filter: drop-shadow(3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-ne {
+        transform: translate(-50%, -86%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+        filter: drop-shadow(-3px 4px 5px rgba(15, 23, 42, 0.22));
+      }
+
+      /* Hitbox estrita: apenas o contorno e traços desenhados do SVG interceptam cliques, nunca a caixa vazia */
+      .placed-item-anchor.is-interactable svg :is(path, circle, rect, polyline, polygon:not(.shadow-polygon), ellipse, text),
+      .placed-item-anchor.is-edit-selectable svg :is(path, circle, rect, polyline, polygon:not(.shadow-polygon), ellipse, text) {
+        pointer-events: visiblePainted !important;
+        cursor: pointer;
+      }
+
+      .doctor-avatar-anchor {
+        position: absolute;
+        transform: translate(-50%, -84%);
+        pointer-events: none !important;
+        cursor: pointer;
+        z-index: 2000;
+        transition: transform 150ms ease;
+      }
+
+      app-doctor-avatar-svg,
+      .doctor-avatar-svg {
+        pointer-events: none !important;
+      }
+
+      .doctor-avatar-anchor svg :is(path, circle, rect, polyline, polygon, ellipse, text) {
+        pointer-events: visiblePainted !important;
+        cursor: pointer;
+      }
+
+      .doctor-avatar-anchor:hover svg :is(path, circle, rect, polyline, polygon, ellipse, text) {
+        filter: drop-shadow(0 4px 8px rgba(13, 148, 136, 0.35));
+      }
+
+      .doctor-avatar-anchor.is-selected-moving {
+        opacity: 0.45;
+        filter: saturate(0.5);
+      }
+
+      .placed-item-anchor.is-interactable:hover,
+      .placed-item-anchor.is-edit-selectable:hover {
+        transform: translate(-50%, -80%) scale(1.04);
+        filter: drop-shadow(0 6px 10px rgba(13, 148, 136, 0.22));
+      }
+
+      .placed-item-anchor.is-wall-item.is-wall-nw:hover {
+        transform: translate(-50%, -54%) skewY(-26.565deg) scaleX(0.92) scaleY(1.03);
+      }
+
+      .placed-item-anchor.is-wall-item.is-wall-ne:hover {
+        transform: translate(-50%, -54%) skewY(26.565deg) scaleX(0.92) scaleY(1.03);
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-nw:hover {
+        transform: translate(-50%, -90%) skewY(-26.565deg) scaleX(0.92) scaleY(1.03);
+      }
+
+      .placed-item-anchor.is-wall-ruler.is-wall-ne:hover {
+        transform: translate(-50%, -90%) skewY(26.565deg) scaleX(0.92) scaleY(1.03);
+      }
+
+      .placed-item-anchor.is-selected-moving {
+        opacity: 0.45;
+        filter: saturate(0.5);
+      }
+
+      .ghost-item-anchor {
+        position: absolute;
+        transform: translate(-50%, -75%);
+        pointer-events: none !important;
+        opacity: 0.88;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .ghost-item-anchor.is-wall-item.is-wall-nw {
+        transform: translate(-50%, -50%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+      }
+
+      .ghost-item-anchor.is-wall-item.is-wall-ne {
+        transform: translate(-50%, -50%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center center;
+      }
+
+      .ghost-item-anchor.is-wall-ruler.is-wall-nw {
+        transform: translate(-50%, -86%) skewY(-26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+      }
+
+      .ghost-item-anchor.is-wall-ruler.is-wall-ne {
+        transform: translate(-50%, -86%) skewY(26.565deg) scaleX(0.8944);
+        transform-origin: center bottom;
+      }
+
+      .ghost-avatar-anchor {
+        position: absolute;
+        transform: translate(-50%, -84%);
+        pointer-events: none !important;
+        opacity: 0.88;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 99999;
+      }
+
+      .ghost-avatar-anchor.is-valid {
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.55));
+      }
+
+      .ghost-avatar-anchor.is-invalid {
+        filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.65));
+      }
+
+      .btn-cancel-inline {
+        background: #ef4444 !important;
+        color: #ffffff;
+      }
+
+      .ghost-item-anchor.is-wall-ruler {
+        transform: translate(-50%, -88%);
+      }
+
+      /* P-090: Durante o posicionamento ativo de um item, NADA na camada de móveis ou avatar intercepta o ponteiro */
+      .clinic-viewport-shell.is-placing .placed-item-anchor,
+      .clinic-viewport-shell.is-placing .placed-item-anchor *,
+      .clinic-viewport-shell.is-placing .doctor-avatar-anchor,
+      .clinic-viewport-shell.is-placing .doctor-avatar-anchor *,
+      .clinic-viewport-shell.is-placing .ghost-item-anchor,
+      .clinic-viewport-shell.is-placing .ghost-item-anchor * {
+        pointer-events: none !important;
+      }
+
+      .ghost-item-anchor.is-valid {
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.55));
+      }
+
+      .ghost-item-anchor.is-invalid {
+        filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.65));
+      }
+
+      .ghost-status-tag {
+        margin-top: -8px;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: #10b981;
+        white-space: nowrap;
+      }
+
+      .ghost-item-anchor.is-invalid .ghost-status-tag {
+        background: #ef4444;
+      }
+
+      .item-interaction-bubble {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        z-index: 40;
+        max-width: 320px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: #0f172a;
+        color: #f8fafc;
+        border: 1px solid #0d9488;
+        box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.25);
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+      }
+
+      .item-interaction-bubble strong {
+        color: #5eead4;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+
+      .camera-controls {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        z-index: 40;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid #cbd5e1;
+        box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.07);
+      }
+
+      .cam-btn {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 8px;
+        border-radius: 6px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: #0f172a;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .cam-btn:hover {
+        background: #f1f5f9;
+      }
+
+      .cam-btn:focus-visible {
+        outline: 2px solid #0d9488;
+        outline-offset: 2px;
+      }

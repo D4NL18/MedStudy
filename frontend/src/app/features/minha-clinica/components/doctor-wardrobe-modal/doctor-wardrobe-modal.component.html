@@ -1,0 +1,198 @@
+@if (isOpen()) {
+  <div class="clinic-modal-backdrop" (click)="onClose()" (keydown.enter)="onClose()" (keydown.escape)="onClose()" role="presentation" data-testid="avatar-modal-backdrop">
+    <div class="clinic-modal-card avatar-modal" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" data-testid="avatar-customizer-modal">
+      <header class="modal-header">
+        <div class="modal-title-group">
+          <h3>{{ tempAvatarGender() === 'FEMALE' ? '👩‍⚕️' : '👨‍⚕️' }} Estilo de {{ doctorDisplayName() }}</h3>
+          <p>Personalize o gênero e equipe as skins cosméticas de {{ doctorDisplayName() }}.</p>
+        </div>
+        <button type="button" class="btn-modal-close" (click)="onClose()" aria-label="Fechar modal">✕</button>
+      </header>
+
+      <div class="modal-body avatar-modal-grid">
+        <!-- Visualização ao Vivo do Avatar -->
+        <div class="avatar-live-stage">
+          <app-doctor-avatar-svg
+            [gender]="tempAvatarGender()"
+            [skinCoat]="tempAvatarCoat()"
+            [skinStethoscope]="tempAvatarSteth()"
+            [skinAccessory]="tempAvatarAccessory()"
+            [width]="108"
+            [height]="148"
+            [activeAnimation]="true"
+          />
+          <div class="avatar-stage-tag">
+            {{ doctorDisplayName() }}
+          </div>
+        </div>
+
+        <!-- Controles de Customização -->
+        <div class="avatar-slots-scroll">
+          <!-- 1. Gênero (Gratuito e Ilimitado) -->
+          <div class="customizer-section">
+            <h3 class="section-label">Identidade do Médico (Alternância Gratuita)</h3>
+            <div class="gender-toggle-group">
+              <button
+                type="button"
+                class="gender-btn"
+                [class.active]="tempAvatarGender() === 'MALE'"
+                (click)="setAvatarGender('MALE')"
+                data-testid="gender-male-btn"
+              >
+                👨‍⚕️ Doutor (Dr.)
+              </button>
+              <button
+                type="button"
+                class="gender-btn"
+                [class.active]="tempAvatarGender() === 'FEMALE'"
+                (click)="setAvatarGender('FEMALE')"
+                data-testid="gender-female-btn"
+              >
+                👩‍⚕️ Doutora (Dra.)
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Jaleco (Slot Coat) -->
+          <div class="customizer-section">
+            <h3 class="section-label">Jaleco Médico</h3>
+            <div class="skin-options-grid">
+              @for (coat of coatOptions; track coat.id) {
+                <div
+                  class="skin-option-card"
+                  [class.is-equipped]="tempAvatarCoat() === coat.id && isSkinUnlocked(coat.id)"
+                  [class.is-previewing]="tempAvatarCoat() === coat.id && !isSkinUnlocked(coat.id)"
+                  (click)="selectCoatSkin(coat.id)" (keydown.enter)="selectCoatSkin(coat.id)" (keydown.space)="selectCoatSkin(coat.id)" tabindex="0" role="button"
+                  [attr.data-testid]="'skin-coat-' + coat.id"
+                >
+                  <div class="skin-info">
+                    <span class="skin-name">{{ coat.name }}</span>
+                    <span class="skin-cost mono-num">
+                      {{ coat.costXp === 0 ? 'Grátis' : isSkinUnlocked(coat.id) ? 'Desbloqueado' : coat.costXp + ' XP' }}
+                    </span>
+                  </div>
+                  @if (!isSkinUnlocked(coat.id) && coat.costXp > 0) {
+                    <div class="skin-action-group">
+                      @if (tempAvatarCoat() === coat.id) {
+                        <span class="preview-badge">👀 Provando</span>
+                      }
+                      <button
+                        type="button"
+                        class="btn-unlock-skin"
+                        [disabled]="currentXp() < coat.costXp"
+                        (click)="buySkinPrompt(coat.id, $event)"
+                      >
+                        🔓 Desbloquear
+                      </button>
+                    </div>
+                  } @else {
+                    <span class="equip-indicator">
+                      {{ tempAvatarCoat() === coat.id ? '✓ Equipado' : 'Equipar' }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- 3. Estetoscópio (Slot Stethoscope) -->
+          <div class="customizer-section">
+            <h3 class="section-label">Estetoscópio</h3>
+            <div class="skin-options-grid">
+              @for (steth of stethOptions; track steth.id) {
+                <div
+                  class="skin-option-card"
+                  [class.is-equipped]="tempAvatarSteth() === steth.id && isSkinUnlocked(steth.id)"
+                  [class.is-previewing]="tempAvatarSteth() === steth.id && !isSkinUnlocked(steth.id)"
+                  (click)="selectStethSkin(steth.id)" (keydown.enter)="selectStethSkin(steth.id)" (keydown.space)="selectStethSkin(steth.id)" tabindex="0" role="button"
+                  [attr.data-testid]="'skin-steth-' + steth.id"
+                >
+                  <div class="skin-info">
+                    <span class="skin-name">{{ steth.name }}</span>
+                    <span class="skin-cost mono-num">
+                      {{ steth.costXp === 0 ? 'Grátis' : isSkinUnlocked(steth.id) ? 'Desbloqueado' : steth.costXp + ' XP' }}
+                    </span>
+                  </div>
+                  @if (!isSkinUnlocked(steth.id) && steth.costXp > 0) {
+                    <div class="skin-action-group">
+                      @if (tempAvatarSteth() === steth.id) {
+                        <span class="preview-badge">👀 Provando</span>
+                      }
+                      <button
+                        type="button"
+                        class="btn-unlock-skin"
+                        [disabled]="currentXp() < steth.costXp"
+                        (click)="buySkinPrompt(steth.id, $event)"
+                      >
+                        🔓 Desbloquear
+                      </button>
+                    </div>
+                  } @else {
+                    <span class="equip-indicator">
+                      {{ tempAvatarSteth() === steth.id ? '✓ Equipado' : 'Equipar' }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- 4. Acessórios (Slot Accessory) -->
+          <div class="customizer-section">
+            <h3 class="section-label">Acessório</h3>
+            <div class="skin-options-grid">
+              @for (acc of accessoryOptions; track acc.id) {
+                <div
+                  class="skin-option-card"
+                  [class.is-equipped]="tempAvatarAccessory() === acc.id && isSkinUnlocked(acc.id)"
+                  [class.is-previewing]="tempAvatarAccessory() === acc.id && !isSkinUnlocked(acc.id)"
+                  (click)="selectAccessorySkin(acc.id)" (keydown.enter)="selectAccessorySkin(acc.id)" (keydown.space)="selectAccessorySkin(acc.id)" tabindex="0" role="button"
+                  [attr.data-testid]="'skin-acc-' + acc.id"
+                >
+                  <div class="skin-info">
+                    <span class="skin-name">{{ acc.name }}</span>
+                    <span class="skin-cost mono-num">
+                      {{ acc.costXp === 0 ? 'Grátis' : isSkinUnlocked(acc.id) ? 'Desbloqueado' : acc.costXp + ' XP' }}
+                    </span>
+                  </div>
+                  @if (!isSkinUnlocked(acc.id) && acc.costXp > 0) {
+                    <div class="skin-action-group">
+                      @if (tempAvatarAccessory() === acc.id) {
+                        <span class="preview-badge">👀 Provando</span>
+                      }
+                      <button
+                        type="button"
+                        class="btn-unlock-skin"
+                        [disabled]="currentXp() < acc.costXp"
+                        (click)="buySkinPrompt(acc.id, $event)"
+                      >
+                        🔓 Desbloquear
+                      </button>
+                    </div>
+                  } @else {
+                    <span class="equip-indicator">
+                      {{ tempAvatarAccessory() === acc.id ? '✓ Equipado' : 'Equipar' }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button type="button" class="btn-modal-cancel" (click)="onClose()">Cancelar</button>
+        <button
+          type="button"
+          class="btn-modal-save"
+          [disabled]="isSaving()"
+          (click)="onSave()"
+          data-testid="save-avatar-btn"
+        >
+          💾 Salvar e Equipar
+        </button>
+      </footer>
+    </div>
+  </div>
+}

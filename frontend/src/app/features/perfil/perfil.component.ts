@@ -15,8 +15,7 @@ import { selectUser } from '@store/auth/auth.selectors';
 import { selectDashboardKPIs } from '@store/dashboard/dashboard.selectors';
 import * as DashboardActions from '@store/dashboard/dashboard.actions';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { combineLatest, Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 import { SubscriptionService, UserSubscription, PixTransaction } from '@core/services/subscription.service';
 
 

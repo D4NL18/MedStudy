@@ -16,6 +16,7 @@ import { SocialService } from '@core/services/social.service';
 import { PwaService } from '../services/pwa.service';
 import { OnboardingComponent } from '@features/auth/onboarding/onboarding.component';
 import { AvatarComponent } from '@shared/components/avatar/avatar.component';
+import { XpRewardToastComponent } from '@shared/components/xp-reward-toast/xp-reward-toast.component';
 import { ProfileActions } from '@store/profile/profile.actions';
 import { selectProfile } from '@store/profile/profile.reducer';
 import { ExpirationBanner } from './expiration-banner/expiration-banner';
@@ -34,6 +35,7 @@ import { ExpirationBanner } from './expiration-banner/expiration-banner';
     LucideAngularModule,
     OnboardingComponent,
     AvatarComponent,
+    XpRewardToastComponent,
     OverlayModule,
     PortalModule
   ],

@@ -1,0 +1,584 @@
+<section class="clinic-bottom-dock" aria-label="Loja e Inventário da Clínica">
+  <div class="dock-header">
+    <div class="dock-tabs" role="tablist" aria-label="Categorias de itens da clínica">
+      @for (tab of categoryTabs; track tab.id) {
+        <button
+          type="button"
+          role="tab"
+          class="dock-tab-btn"
+          [class.is-active]="activeCategory === tab.id"
+          [attr.aria-selected]="activeCategory === tab.id"
+          (click)="categorySelected.emit(tab.id)"
+          [attr.data-testid]="'tab-' + tab.id"
+        >
+          <span>{{ tab.badge }} {{ tab.label }}</span>
+          <span class="tab-count mono-num">{{ tab.count }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="dock-controls">
+      <div class="filter-switch" aria-label="Filtro de catálogo">
+        <button
+          type="button"
+          class="filter-btn"
+          [class.active]="inventoryFilter === 'all'"
+          (click)="inventoryFilterChanged.emit('all')"
+          data-testid="filter-all-btn"
+        >
+          Catálogo ({{ totalCatalogCount }})
+        </button>
+        <button
+          type="button"
+          class="filter-btn"
+          [class.active]="inventoryFilter === 'owned'"
+          (click)="inventoryFilterChanged.emit('owned')"
+          data-testid="filter-owned-btn"
+        >
+          Meus Itens ({{ state.ownedItemIds.length }})
+        </button>
+      </div>
+
+      @if (editMode && selectedCatalogItem) {
+        <button
+          type="button"
+          class="btn-dock-tool"
+          (click)="rotateRequested.emit()"
+          data-testid="dock-rotate-btn"
+        >
+          ↻ Girar ({{ getRotationLabel(selectedRotation) }}) [R]
+        </button>
+      }
+
+      @if (editMode && movingPlacedId) {
+        <button
+          type="button"
+          class="btn-dock-tool danger"
+          (click)="storeSelectedRequested.emit()"
+          data-testid="store-item-btn"
+        >
+          📦 Guardar no Inventário
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ABA REVESTIMENTOS: Papéis de Parede e Pisos Isométricos (P-087) -->
+  @if (activeCategory === 'revestimentos') {
+    <div class="dock-cards-grid dock-surfaces-grid" data-testid="dock-surfaces-grid">
+      <!-- PAPÉIS DE PAREDE (NW/NE) -->
+      @for (wall of wallpaperOptions; track wall.id) {
+        <article
+          class="catalog-item-card surface-card"
+          [class.is-placed]="state.wallTheme === wall.id"
+          [class.is-previewing]="previewWallTheme === wall.id"
+          [class.is-owned]="isSurfaceOwned(wall.id)"
+          [attr.data-testid]="'surface-wall-card-' + wall.id"
+        >
+          <div class="card-top-badges">
+            <span class="rarity-badge" style="background-color: #0D9488;">Parede</span>
+            @if (previewWallTheme === wall.id) {
+              <span class="preview-badge animate-pulse">👁️ Em Teste</span>
+            } @else if (state.wallTheme === wall.id) {
+              <span class="placed-badge">✓ Em Uso</span>
+            } @else if (isSurfaceOwned(wall.id)) {
+              <span class="owned-badge">Adquirido</span>
+            }
+          </div>
+
+          <!-- Amostra Quadrada do Papel de Parede (Sem emojis!) -->
+          <button
+            type="button"
+            class="card-surface-swatch"
+            [class.is-previewing]="previewWallTheme === wall.id"
+            (click)="previewSurfaceRequested.emit({ type: 'wall', id: wall.id })"
+            title="Clique para testar este papel de parede na sala"
+          >
+            <div class="surface-sample-square">
+              @switch (wall.id) {
+                @case ('ped_papel_safari') {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="wallSafariGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#F0FDF4" />
+                        <stop offset="100%" stop-color="#ECFDF5" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="80" height="80" fill="url(#wallSafariGrad)" />
+                    <circle cx="64" cy="20" r="14" fill="#FEF08A" opacity="0.9" />
+                    <path d="M 6 68 L 6 38 Q 18 24 30 38 L 30 68 Z" fill="#A7F3D0" opacity="0.85" />
+                    <circle cx="18" cy="32" r="12" fill="#6EE7B7" opacity="0.6" />
+                    <path d="M 18 42 Q 26 30 22 20" stroke="#059669" stroke-width="1.2" fill="none" opacity="0.5" />
+                    <polygon points="40,68 40,32 48,26 53,32 48,68" fill="#FCD34D" />
+                    <circle cx="48" cy="24" r="6" fill="#FBBF24" />
+                    <line x1="46" y1="20" x2="45" y2="16" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" />
+                    <circle cx="45" cy="15" r="1.2" fill="#D97706" />
+                    <line x1="50" y1="20" x2="51" y2="16" stroke="#D97706" stroke-width="1.5" stroke-linecap="round" />
+                    <circle cx="51" cy="15" r="1.2" fill="#D97706" />
+                    <circle cx="50" cy="23" r="1.2" fill="#78350F" />
+                    <circle cx="43" cy="42" r="2.2" fill="#D97706" opacity="0.85" />
+                    <circle cx="45" cy="52" r="2.5" fill="#D97706" opacity="0.85" />
+                    <circle cx="43" cy="62" r="2" fill="#D97706" opacity="0.85" />
+                    <rect x="0" y="68" width="80" height="12" fill="#E7E2D8" />
+                    <line x1="0" y1="68" x2="80" y2="68" stroke="#D6C6B2" stroke-width="1.5" />
+                  </svg>
+                }
+                @case ('wallpaper_geometric_teal') {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="wallTealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#F0FDFA" />
+                        <stop offset="100%" stop-color="#CCFBF1" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="80" height="80" fill="url(#wallTealGrad)" />
+                    <polygon points="0,0 40,0 20,34" fill="#5EEAD4" opacity="0.35" />
+                    <polygon points="40,0 80,0 60,34 20,34" fill="#99F6E4" opacity="0.45" />
+                    <polygon points="0,0 20,34 0,68" fill="#A7F3D0" opacity="0.3" />
+                    <polygon points="20,34 60,34 40,68" fill="#14B8A6" opacity="0.35" />
+                    <polygon points="60,34 80,0 80,68" fill="#2DD4BF" opacity="0.4" />
+                    <polygon points="0,68 40,68 20,34" fill="#0D9488" opacity="0.25" />
+                    <polygon points="40,68 80,68 60,34" fill="#115E59" opacity="0.2" />
+                    <line x1="0" y1="0" x2="80" y2="68" stroke="#0D9488" stroke-width="1.2" opacity="0.45" />
+                    <line x1="80" y1="0" x2="0" y2="68" stroke="#0D9488" stroke-width="1.2" opacity="0.45" />
+                    <line x1="40" y1="0" x2="40" y2="68" stroke="#0D9488" stroke-width="1" opacity="0.35" />
+                    <line x1="0" y1="34" x2="80" y2="34" stroke="#0D9488" stroke-width="0.8" opacity="0.3" />
+                    <rect x="0" y="68" width="80" height="12" fill="#CCFBF1" />
+                    <line x1="0" y1="68" x2="80" y2="68" stroke="#0D9488" stroke-width="1.5" />
+                  </svg>
+                }
+                @case ('wallpaper_brick_white') {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <rect x="0" y="0" width="80" height="80" fill="#CBD5E1" />
+                    <rect x="2" y="3" width="36" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="40" y="3" width="38" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="-18" y="19" width="36" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="21" y="19" width="37" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="61" y="19" width="36" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="2" y="35" width="36" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="40" y="35" width="38" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="-18" y="51" width="36" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="21" y="51" width="37" height="13" rx="1.5" fill="#FFFFFF" />
+                    <rect x="61" y="51" width="36" height="13" rx="1.5" fill="#FFFFFF" />
+                    <line x1="2" y1="16" x2="38" y2="16" stroke="#E2E8F0" stroke-width="1" />
+                    <line x1="40" y1="16" x2="78" y2="16" stroke="#E2E8F0" stroke-width="1" />
+                    <line x1="21" y1="32" x2="58" y2="32" stroke="#E2E8F0" stroke-width="1" />
+                    <line x1="2" y1="48" x2="38" y2="48" stroke="#E2E8F0" stroke-width="1" />
+                    <line x1="40" y1="48" x2="78" y2="48" stroke="#E2E8F0" stroke-width="1" />
+                    <rect x="0" y="68" width="80" height="12" fill="#E2E8F0" />
+                    <line x1="0" y1="68" x2="80" y2="68" stroke="#94A3B8" stroke-width="1.5" />
+                  </svg>
+                }
+                @default {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="wallWhiteGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="70%" stop-color="#F8FAFC" />
+                        <stop offset="100%" stop-color="#F1F5F9" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="80" height="80" fill="url(#wallWhiteGrad)" />
+                    <circle cx="20" cy="10" r="35" fill="#FFFFFF" opacity="0.6" />
+                    <line x1="26" y1="0" x2="26" y2="68" stroke="#E2E8F0" stroke-width="1" />
+                    <line x1="54" y1="0" x2="54" y2="68" stroke="#E2E8F0" stroke-width="1" />
+                    <rect x="0" y="68" width="80" height="12" fill="#E2E8F0" />
+                    <line x1="0" y1="68" x2="80" y2="68" stroke="#CBD5E1" stroke-width="1.5" />
+                    <line x1="0" y1="71" x2="80" y2="71" stroke="#FFFFFF" stroke-width="0.8" opacity="0.8" />
+                  </svg>
+                }
+              }
+            </div>
+            <span class="preview-hover-hint">
+              {{ previewWallTheme === wall.id ? '✕ Parar Teste' : '👁️ Testar na Sala' }}
+            </span>
+          </button>
+
+          <div class="card-info">
+            <h4>{{ wall.name }}</h4>
+            <p>Papel de Parede NW/NE</p>
+          </div>
+
+          <div class="card-footer">
+            @if (state.wallTheme === wall.id) {
+              <button type="button" class="btn-card-action place active" disabled>
+                ✓ Aplicado
+              </button>
+            } @else if (isSurfaceOwned(wall.id)) {
+              <div class="surface-btn-group">
+                <button
+                  type="button"
+                  class="btn-surface-preview"
+                  [class.active]="previewWallTheme === wall.id"
+                  (click)="previewSurfaceRequested.emit({ type: 'wall', id: wall.id })"
+                  title="Ver como fica na sala antes de aplicar"
+                >
+                  {{ previewWallTheme === wall.id ? '✕ Parar' : '👁️ Testar' }}
+                </button>
+                <button
+                  type="button"
+                  class="btn-card-action place"
+                  (click)="applyWallpaper.emit(wall.id)"
+                  [attr.data-testid]="'apply-wall-' + wall.id"
+                >
+                  Aplicar
+                </button>
+              </div>
+            } @else {
+              <div class="surface-btn-group">
+                <button
+                  type="button"
+                  class="btn-surface-preview"
+                  [class.active]="previewWallTheme === wall.id"
+                  (click)="previewSurfaceRequested.emit({ type: 'wall', id: wall.id })"
+                  title="Ver como fica na sala antes de comprar"
+                >
+                  {{ previewWallTheme === wall.id ? '✕ Parar' : '👁️ Testar' }}
+                </button>
+                <button
+                  type="button"
+                  class="btn-card-action buy"
+                  [disabled]="state.currentXp < wall.costXp || isLoading"
+                  (click)="buyWallpaper.emit(wall)"
+                  [attr.data-testid]="'buy-wall-' + wall.id"
+                >
+                  <span>Comprar</span>
+                  <strong class="mono-num">{{ wall.costXp }} XP</strong>
+                </button>
+              </div>
+            }
+          </div>
+        </article>
+      }
+
+      <!-- PISOS ISOMÉTRICOS (P-087) -->
+      @for (fl of floorOptions; track fl.id) {
+        <article
+          class="catalog-item-card surface-card"
+          [class.is-placed]="state.floorTheme === fl.id"
+          [class.is-previewing]="previewFloorTheme === fl.id"
+          [class.is-owned]="isSurfaceOwned(fl.id)"
+          [attr.data-testid]="'surface-floor-card-' + fl.id"
+        >
+          <div class="card-top-badges">
+            <span class="rarity-badge" style="background-color: #0284C7;">Piso</span>
+            @if (previewFloorTheme === fl.id) {
+              <span class="preview-badge animate-pulse">👁️ Em Teste</span>
+            } @else if (state.floorTheme === fl.id) {
+              <span class="placed-badge">✓ Em Uso</span>
+            } @else if (isSurfaceOwned(fl.id)) {
+              <span class="owned-badge">Adquirido</span>
+            }
+          </div>
+
+          <!-- Amostra Quadrada do Piso (Sem emojis!) -->
+          <button
+            type="button"
+            class="card-surface-swatch"
+            [class.is-previewing]="previewFloorTheme === fl.id"
+            (click)="previewSurfaceRequested.emit({ type: 'floor', id: fl.id })"
+            title="Clique para testar este piso na sala"
+          >
+            <div class="surface-sample-square">
+              @switch (fl.id) {
+                @case ('wood_dark_herringbone') {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="herringDark1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#92400E" />
+                        <stop offset="100%" stop-color="#78350F" />
+                      </linearGradient>
+                      <linearGradient id="herringDark2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#B45309" />
+                        <stop offset="100%" stop-color="#854D0E" />
+                      </linearGradient>
+                      <linearGradient id="herringDark3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#A16207" />
+                        <stop offset="100%" stop-color="#713F12" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="80" height="80" fill="#451A03" />
+                    <polygon points="0,0 20,-20 38,-2 18,18" fill="url(#herringDark1)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="20,-20 40,0 20,20 0,0" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="0,20 20,0 38,18 18,38" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="20,0 40,20 20,40 0,20" fill="url(#herringDark3)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="0,40 20,20 38,38 18,58" fill="url(#herringDark1)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="20,20 40,40 20,60 0,40" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="0,60 20,40 38,58 18,78" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="20,40 40,60 20,80 0,60" fill="url(#herringDark3)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="0,80 20,60 38,78 18,98" fill="url(#herringDark1)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="40,0 60,-20 78,-2 58,18" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="60,-20 80,0 60,20 40,0" fill="url(#herringDark1)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="40,20 60,0 78,18 58,38" fill="url(#herringDark3)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="60,0 80,20 60,40 40,20" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="40,40 60,20 78,38 58,58" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="60,20 80,40 60,60 40,40" fill="url(#herringDark1)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="40,60 60,40 78,58 58,78" fill="url(#herringDark1)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="60,40 80,60 60,80 40,60" fill="url(#herringDark2)" stroke="#3E1906" stroke-width="1" />
+                    <polygon points="40,80 60,60 78,78 58,98" fill="url(#herringDark3)" stroke="#3E1906" stroke-width="1" />
+                    <rect x="0" y="0" width="80" height="80" fill="none" stroke="#270F03" stroke-width="1.5" />
+                  </svg>
+                }
+                @case ('marble_carrara') {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="marbleSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF" />
+                        <stop offset="45%" stop-color="#F8FAFC" />
+                        <stop offset="70%" stop-color="#F1F5F9" />
+                        <stop offset="100%" stop-color="#E2E8F0" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="80" height="80" fill="url(#marbleSheen)" />
+                    <polygon points="20,0 45,0 15,80 0,80" fill="#FFFFFF" opacity="0.4" />
+                    <path d="M 0 24 Q 22 26 36 38 T 58 52 T 80 48" stroke="#94A3B8" stroke-width="1.8" fill="none" opacity="0.75" />
+                    <path d="M 36 38 Q 48 28 64 26 T 80 16" stroke="#CBD5E1" stroke-width="1.4" fill="none" opacity="0.8" />
+                    <path d="M 12 68 Q 28 60 42 66 T 68 74" stroke="#CBD5E1" stroke-width="1.2" fill="none" opacity="0.75" />
+                    <path d="M 18 10 Q 28 14 34 8" stroke="#CBD5E1" stroke-width="1" fill="none" opacity="0.6" />
+                    <path d="M 52 64 Q 60 70 72 68" stroke="#94A3B8" stroke-width="1" fill="none" opacity="0.5" />
+                    <rect x="0" y="0" width="80" height="80" fill="none" stroke="#CBD5E1" stroke-width="1.5" />
+                  </svg>
+                }
+                @case ('tatame_eva') {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <rect x="0" y="0" width="40" height="40" fill="#FEF08A" />
+                    <rect x="40" y="0" width="40" height="40" fill="#BBF7D0" />
+                    <rect x="0" y="40" width="40" height="40" fill="#BAE6FD" />
+                    <rect x="40" y="40" width="40" height="40" fill="#FBCFE8" />
+                    <path d="M 40 0 L 40 12 Q 46 16 40 20 L 40 28 Q 34 32 40 36 L 40 40 L 40 52 Q 46 56 40 60 L 40 68 Q 34 72 40 76 L 40 80" stroke="#0F172A" stroke-width="1.2" fill="none" opacity="0.2" />
+                    <path d="M 0 40 L 12 40 Q 16 46 20 40 L 28 40 Q 32 34 36 40 L 40 40 L 52 40 Q 56 46 60 40 L 68 40 Q 72 34 76 40 L 80 40" stroke="#0F172A" stroke-width="1.2" fill="none" opacity="0.2" />
+                    <circle cx="15" cy="15" r="1.5" fill="#EAB308" opacity="0.4" />
+                    <circle cx="25" cy="25" r="1.5" fill="#EAB308" opacity="0.4" />
+                    <circle cx="55" cy="15" r="1.5" fill="#22C55E" opacity="0.4" />
+                    <circle cx="65" cy="25" r="1.5" fill="#22C55E" opacity="0.4" />
+                    <circle cx="15" cy="55" r="1.5" fill="#0284C7" opacity="0.4" />
+                    <circle cx="25" cy="65" r="1.5" fill="#0284C7" opacity="0.4" />
+                    <circle cx="55" cy="55" r="1.5" fill="#EC4899" opacity="0.4" />
+                    <circle cx="65" cy="65" r="1.5" fill="#EC4899" opacity="0.4" />
+                    <rect x="0" y="0" width="80" height="80" fill="none" stroke="rgba(15,23,42,0.15)" stroke-width="1.5" />
+                  </svg>
+                }
+                @default {
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="plankLight1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#FDFBF7" />
+                        <stop offset="50%" stop-color="#F9F5EC" />
+                        <stop offset="100%" stop-color="#FAF6EE" />
+                      </linearGradient>
+                      <linearGradient id="plankLight2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#F5EFE4" />
+                        <stop offset="60%" stop-color="#FAF6EE" />
+                        <stop offset="100%" stop-color="#F4ECE0" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="80" height="20" fill="url(#plankLight1)" />
+                    <rect x="0" y="20" width="80" height="20" fill="url(#plankLight2)" />
+                    <rect x="0" y="40" width="80" height="20" fill="url(#plankLight1)" />
+                    <rect x="0" y="60" width="80" height="20" fill="url(#plankLight2)" />
+                    <line x1="0" y1="20" x2="80" y2="20" stroke="#E7E2D8" stroke-width="1.5" />
+                    <line x1="0" y1="40" x2="80" y2="40" stroke="#E7E2D8" stroke-width="1.5" />
+                    <line x1="0" y1="60" x2="80" y2="60" stroke="#E7E2D8" stroke-width="1.5" />
+                    <line x1="50" y1="0" x2="50" y2="20" stroke="#E7E2D8" stroke-width="1.5" />
+                    <line x1="26" y1="20" x2="26" y2="40" stroke="#E7E2D8" stroke-width="1.5" />
+                    <line x1="62" y1="40" x2="62" y2="60" stroke="#E7E2D8" stroke-width="1.5" />
+                    <line x1="36" y1="60" x2="36" y2="80" stroke="#E7E2D8" stroke-width="1.5" />
+                    <path d="M 6 10 Q 28 8 46 11" stroke="#E8DFD1" stroke-width="1" fill="none" />
+                    <path d="M 10 30 Q 40 28 72 31" stroke="#DFD4C3" stroke-width="1" fill="none" />
+                    <path d="M 8 50 Q 32 48 58 51" stroke="#E8DFD1" stroke-width="1" fill="none" />
+                    <path d="M 12 70 Q 45 68 76 71" stroke="#DFD4C3" stroke-width="1" fill="none" />
+                    <rect x="0" y="0" width="80" height="80" fill="none" stroke="#E7E2D8" stroke-width="1.5" />
+                  </svg>
+                }
+              }
+            </div>
+            <span class="preview-hover-hint">
+              {{ previewFloorTheme === fl.id ? '✕ Parar Teste' : '👁️ Testar na Sala' }}
+            </span>
+          </button>
+
+          <div class="card-info">
+            <h4>{{ fl.name }}</h4>
+            <p>Piso Isométrico 2.5D</p>
+          </div>
+
+          <div class="card-footer">
+            @if (state.floorTheme === fl.id) {
+              <button type="button" class="btn-card-action place active" disabled>
+                ✓ Aplicado
+              </button>
+            } @else if (isSurfaceOwned(fl.id)) {
+              <div class="surface-btn-group">
+                <button
+                  type="button"
+                  class="btn-surface-preview"
+                  [class.active]="previewFloorTheme === fl.id"
+                  (click)="previewSurfaceRequested.emit({ type: 'floor', id: fl.id })"
+                  title="Ver como fica na sala antes de aplicar"
+                >
+                  {{ previewFloorTheme === fl.id ? '✕ Parar' : '👁️ Testar' }}
+                </button>
+                <button
+                  type="button"
+                  class="btn-card-action place"
+                  (click)="applyFloor.emit(fl.id)"
+                  [attr.data-testid]="'apply-floor-' + fl.id"
+                >
+                  Aplicar
+                </button>
+              </div>
+            } @else {
+              <div class="surface-btn-group">
+                <button
+                  type="button"
+                  class="btn-surface-preview"
+                  [class.active]="previewFloorTheme === fl.id"
+                  (click)="previewSurfaceRequested.emit({ type: 'floor', id: fl.id })"
+                  title="Ver como fica na sala antes de comprar"
+                >
+                  {{ previewFloorTheme === fl.id ? '✕ Parar' : '👁️ Testar' }}
+                </button>
+                <button
+                  type="button"
+                  class="btn-card-action buy"
+                  [disabled]="state.currentXp < fl.costXp || isLoading"
+                  (click)="buyFloor.emit(fl)"
+                  [attr.data-testid]="'buy-floor-' + fl.id"
+                >
+                  <span>Comprar</span>
+                  <strong class="mono-num">{{ fl.costXp }} XP</strong>
+                </button>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+    } @else if (filteredCatalogItems.length === 0) {
+    <div class="clinic-empty-state" data-testid="clinic-empty-state">
+      <div class="empty-illustration" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="52" height="52" fill="none" aria-hidden="true">
+          <rect x="10" y="20" width="44" height="32" rx="6" fill="#F1F5F9" stroke="#0D9488" stroke-width="2.5" />
+          <path d="M24,20 V14 C24,11.8 25.8,10 28,10 H36 C38.2,10 40,11.8 40,14 V20" stroke="#0D9488" stroke-width="2.5" />
+          <path d="M32,28 V44 M24,36 H40" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="empty-copy">
+        <h3>Nenhum item guardado nesta ala ainda</h3>
+        <p>
+          Resolva questões, revise flashcards ou explore o catálogo para adquirir novos equipamentos para sua clínica.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="btn-empty-cta"
+        (click)="inventoryFilterChanged.emit('all')"
+      >
+        Explorar Catálogo Completo
+      </button>
+    </div>
+  } @else {
+    <!-- Grade de Cards dos Itens da Categoria Ativa -->
+    <div class="dock-cards-grid" data-testid="dock-cards-grid">
+      @for (item of filteredCatalogItems; track item.id) {
+        <article
+          class="catalog-item-card"
+          [class.is-owned]="isItemOwned(item.id)"
+          [class.is-placed]="isItemPlaced(item.id)"
+          [class.is-selected]="selectedCatalogItem?.id === item.id"
+          [class.is-locked]="item.minExpansionLevel > state.expansionLevel"
+          [attr.data-testid]="'catalog-card-' + item.id"
+        >
+          <div class="card-top-badges">
+            <span class="rarity-badge" [style.background-color]="getRarityColor(item)">
+              {{ getRarityLabel(item) }}
+            </span>
+            @if (item.isLootboxExclusive) {
+              <span class="exclusive-pill" title="Item exclusivo obtido apenas via Caixas da Sorte">
+                🎁 Exclusivo
+              </span>
+            }
+            <span class="footprint-badge mono-num">
+              {{ item.footprintX }}×{{ item.footprintY }}
+            </span>
+            @if (isItemPlaced(item.id)) {
+              <span class="placed-badge">No Consultório</span>
+            } @else if (isItemOwned(item.id)) {
+              <span class="owned-badge">Adquirido</span>
+            }
+          </div>
+
+          <div
+            class="card-svg-preview"
+            (click)="cardPreviewClicked.emit(item)"
+            (keydown.enter)="cardPreviewClicked.emit(item)"
+            (keydown.space)="cardPreviewClicked.emit(item)"
+            tabindex="0"
+            role="button"
+          >
+            <app-clinic-item-svg
+              [itemKey]="item.assetSvgKey"
+              [width]="76"
+              [height]="70"
+            />
+          </div>
+
+          <div class="card-info">
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.description }}</p>
+          </div>
+
+          <div class="card-footer">
+            <!-- ESTADO 8: DISABLED / LOCKED POR NÍVEL -->
+            @if (item.minExpansionLevel > state.expansionLevel) {
+              <button
+                type="button"
+                class="btn-card-action locked"
+                disabled
+                [attr.data-testid]="'locked-btn-' + item.id"
+              >
+                🔒 Requer Nível {{ item.minExpansionLevel }}
+              </button>
+            } @else if (isItemOwned(item.id)) {
+              <button
+                type="button"
+                class="btn-card-action place"
+                [class.active]="selectedCatalogItem?.id === item.id"
+                (click)="selectForPlacement.emit(item)"
+                [attr.data-testid]="'place-btn-' + item.id"
+              >
+                {{
+                  selectedCatalogItem?.id === item.id
+                    ? '✓ Clique no Piso'
+                    : isItemPlaced(item.id)
+                      ? 'Mover no Piso'
+                      : 'Posicionar no Piso'
+                }}
+              </button>
+            } @else if (item.isLootboxExclusive) {
+              <button
+                type="button"
+                class="btn-card-action lootbox"
+                (click)="openLootboxModalRequested.emit()"
+                [attr.data-testid]="'lootbox-btn-' + item.id"
+              >
+                <span>🎁 Caixa da Sorte</span>
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn-card-action buy"
+                [disabled]="state.currentXp < item.costXp || isLoading"
+                (click)="buyItem.emit(item)"
+                [attr.data-testid]="'buy-btn-' + item.id"
+              >
+                <span>Comprar</span>
+                <strong class="mono-num">{{ item.costXp }} XP</strong>
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

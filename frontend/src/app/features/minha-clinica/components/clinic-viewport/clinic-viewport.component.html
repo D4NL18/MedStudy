@@ -1,0 +1,629 @@
+<div
+      class="clinic-viewport-shell"
+      [class.is-edit-mode]="editModeSignal()"
+      [class.is-placing]="isPlacingItem()"
+      [class.is-dragging]="isDragging()"
+      (mousedown)="onPointerDown($event)"
+      (mousemove)="onPointerMove($event)"
+      (mouseup)="onPointerUp()"
+      (mouseleave)="onPointerUp()"
+      (wheel)="onWheel($event)"
+      data-testid="clinic-viewport"
+    >
+      <!-- Sub-barra de Coordenadas e Status do Modo Edição -->
+      @if (editModeSignal()) {
+        <div class="viewport-edit-pill" data-testid="viewport-edit-pill">
+          <span class="pill-dot" [class.invalid]="ghostPreview() && !ghostPreview()!.valid"></span>
+          <span class="pill-label">
+            @if (isMovingDoctorSignal()) {
+              Posicionando: <strong>{{ (avatarSignal()?.gender === 'MALE' ? 'Dr. ' : 'Dra. ') + 'Residente' }}</strong>
+              <span class="mono-coord">
+                ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }})
+              </span>
+            } @else if (selectedCatalogItemSignal(); as sel) {
+              Posicionando: <strong>{{ sel.name }}</strong>
+              <span class="mono-coord">
+                ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }}) ·
+                {{ selectedRotationSignal() % 4 === 1 ? 'Aresta SW' : selectedRotationSignal() % 4 === 2 ? 'Aresta NW' : selectedRotationSignal() % 4 === 3 ? 'Aresta NE' : 'Aresta SE' }}
+              </span>
+            } @else {
+              Modo Edição Ativo · Clique em um móvel ou no(a) Doutor(a) para mover
+            }
+          </span>
+          @if (isMovingDoctorSignal()) {
+            <button
+              type="button"
+              class="btn-rotate-inline btn-cancel-inline"
+              (click)="cancelMovingDoctor.emit(); $event.stopPropagation()"
+              title="Cancelar movimentação do doutor"
+              data-testid="viewport-cancel-doc-btn"
+            >
+              ✕ Cancelar
+            </button>
+          } @else if (selectedCatalogItemSignal()) {
+            <button
+              type="button"
+              class="btn-rotate-inline"
+              (click)="rotateRequested.emit(); $event.stopPropagation()"
+              title="Rotacionar item (Tecla R)"
+              data-testid="viewport-rotate-btn"
+            >
+              ↻ Girar ({{ selectedRotationSignal() % 4 === 1 ? 'Aresta SW' : selectedRotationSignal() % 4 === 2 ? 'Aresta NW' : selectedRotationSignal() % 4 === 3 ? 'Aresta NE' : 'Aresta SE' }})
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Palco Isométrico com Zoom e Pan -->
+      <div
+        class="isometric-stage"
+        [style.transform]="'translate(' + panX() + 'px, ' + panY() + 'px) scale(' + zoom() + ')'"
+      >
+        <!-- Piso e Paredes em Corte Transversal (Cross-Section SVG 2.5D) -->
+        <svg
+          class="diorama-floor-svg"
+          aria-hidden="true"
+          role="presentation"
+          [attr.viewBox]="svgViewBox()"
+          [attr.width]="stageWidth()"
+          [attr.height]="stageHeight()"
+        >
+          <defs>
+            <linearGradient id="wallLeftGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F1F5F9" />
+              <stop offset="100%" stop-color="#E2E8F0" />
+            </linearGradient>
+            <linearGradient id="wallRightGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E2E8F0" />
+              <stop offset="100%" stop-color="#CBD5E1" />
+            </linearGradient>
+            <linearGradient id="sunlightBeam" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="rgba(254, 243, 199, 0.55)" />
+              <stop offset="100%" stop-color="rgba(254, 243, 199, 0)" />
+            </linearGradient>
+
+            <clipPath id="leftWallClip">
+              <polygon [attr.points]="leftWallPoints()" />
+            </clipPath>
+            <clipPath id="rightWallClip">
+              <polygon [attr.points]="rightWallPoints()" />
+            </clipPath>
+          </defs>
+
+          <!-- Sombra Projetada da Laje Isométrica -->
+          <polygon
+            [attr.points]="slabShadowPoints()"
+            fill="rgba(15, 23, 42, 0.10)"
+          />
+
+          <!-- Parede Traseira Esquerda (NW) Base -->
+          <polygon
+            [attr.points]="leftWallPoints()"
+            fill="url(#wallLeftGrad)"
+            stroke="#CBD5E1"
+            stroke-width="2"
+          />
+
+          <!-- Parede Traseira Direita (NE) Base -->
+          <polygon
+            [attr.points]="rightWallPoints()"
+            fill="url(#wallRightGrad)"
+            stroke="#94A3B8"
+            stroke-width="2"
+          />
+
+          <!-- Papel de Parede Desacoplado na Parede Esquerda (NW) (P-087) -->
+          <g clip-path="url(#leftWallClip)">
+            @switch (wallThemeSignal()) {
+              @case ('ped_papel_safari') {
+                <polygon [attr.points]="leftWallPoints()" fill="#ECFDF5" opacity="0.9" />
+                <circle [attr.cx]="originX() - 85" [attr.cy]="originY() - 36" r="20" fill="#FDE68A" opacity="0.8" />
+                <path
+                  [attr.d]="'M ' + (originX() - 120) + ' ' + (originY() + 15) + ' L ' + (originX() - 120) + ' ' + (originY() - 22) + ' Q ' + (originX() - 105) + ' ' + (originY() - 38) + ' ' + (originX() - 90) + ' ' + (originY() - 22) + ' Z'"
+                  fill="#A7F3D0"
+                  opacity="0.85"
+                />
+                <circle [attr.cx]="originX() - 105" [attr.cy]="originY() - 28" r="14" fill="#6EE7B7" opacity="0.65" />
+                <!-- Girafinha aquarela ilustrada na parede esquerda -->
+                <path
+                  [attr.d]="'M ' + (originX() - 48) + ' ' + (originY() + 6) + ' L ' + (originX() - 48) + ' ' + (originY() - 36) + ' Q ' + (originX() - 45) + ' ' + (originY() - 46) + ' ' + (originX() - 38) + ' ' + (originY() - 42) + ' L ' + (originX() - 40) + ' ' + (originY() + 10) + ' Z'"
+                  fill="#FCD34D"
+                  opacity="0.9"
+                />
+                <circle [attr.cx]="originX() - 42" [attr.cy]="originY() - 44" r="5" fill="#FBBF24" />
+                <circle [attr.cx]="originX() - 44" [attr.cy]="originY() - 25" r="2.5" fill="#D97706" opacity="0.8" />
+                <circle [attr.cx]="originX() - 43" [attr.cy]="originY() - 15" r="2" fill="#D97706" opacity="0.8" />
+              }
+              @case ('wallpaper_geometric_teal') {
+                <polygon [attr.points]="leftWallPoints()" fill="#F0FDFA" opacity="0.95" />
+                @for (facet of leftWallFacets(); track $index) {
+                  <polygon
+                    [attr.points]="facet.points"
+                    [attr.fill]="facet.fill"
+                    [attr.stroke]="facet.stroke"
+                    stroke-width="0.9"
+                    [attr.opacity]="facet.opacity"
+                  />
+                }
+              }
+              @case ('wallpaper_brick_white') {
+                <polygon [attr.points]="leftWallPoints()" fill="#CBD5E1" opacity="0.95" />
+                @for (brick of leftWallBricks(); track $index) {
+                  <polygon
+                    [attr.points]="brick.points"
+                    [attr.fill]="brick.fill"
+                    [attr.stroke]="brick.stroke"
+                    stroke-width="0.8"
+                  />
+                  @if (brick.highlightLine; as hl) {
+                    <line
+                      [attr.x1]="hl.x1"
+                      [attr.y1]="hl.y1"
+                      [attr.x2]="hl.x2"
+                      [attr.y2]="hl.y2"
+                      stroke="#FFFFFF"
+                      stroke-width="0.8"
+                      opacity="0.8"
+                    />
+                  }
+                }
+              }
+            }
+          </g>
+
+          <!-- Papel de Parede Desacoplado na Parede Direita (NE) (P-087) -->
+          <g clip-path="url(#rightWallClip)">
+            @switch (wallThemeSignal()) {
+              @case ('ped_papel_safari') {
+                <polygon [attr.points]="rightWallPoints()" fill="#ECFDF5" opacity="0.85" />
+                <circle [attr.cx]="originX() + 65" [attr.cy]="originY() - 28" r="14" fill="#BAE6FD" opacity="0.75" />
+                <path
+                  [attr.d]="'M ' + (originX() + 45) + ' ' + (originY() - 36) + ' Q ' + (originX() + 55) + ' ' + (originY() - 44) + ' ' + (originX() + 65) + ' ' + (originY() - 36) + ' Q ' + (originX() + 75) + ' ' + (originY() - 44) + ' ' + (originX() + 85) + ' ' + (originY() - 36) + ' Z'"
+                  fill="#FFFFFF"
+                  opacity="0.85"
+                />
+                <circle [attr.cx]="originX() + 82" [attr.cy]="originY() - 8" r="11" fill="#93C5FD" opacity="0.8" />
+                <circle [attr.cx]="originX() + 73" [attr.cy]="originY() - 15" r="5.5" fill="#60A5FA" opacity="0.85" />
+                <path [attr.d]="'M ' + (originX() + 71) + ' ' + (originY() - 11) + ' Q ' + (originX() + 65) + ' ' + (originY() - 7) + ' ' + (originX() + 67) + ' ' + (originY() - 3)" stroke="#3B82F6" stroke-width="2.2" fill="none" stroke-linecap="round" />
+              }
+              @case ('wallpaper_geometric_teal') {
+                <polygon [attr.points]="rightWallPoints()" fill="#F0FDFA" opacity="0.95" />
+                @for (facet of rightWallFacets(); track $index) {
+                  <polygon
+                    [attr.points]="facet.points"
+                    [attr.fill]="facet.fill"
+                    [attr.stroke]="facet.stroke"
+                    stroke-width="0.9"
+                    [attr.opacity]="facet.opacity"
+                  />
+                }
+              }
+              @case ('wallpaper_brick_white') {
+                <polygon [attr.points]="rightWallPoints()" fill="#CBD5E1" opacity="0.95" />
+                @for (brick of rightWallBricks(); track $index) {
+                  <polygon
+                    [attr.points]="brick.points"
+                    [attr.fill]="brick.fill"
+                    [attr.stroke]="brick.stroke"
+                    stroke-width="0.8"
+                  />
+                  @if (brick.highlightLine; as hl) {
+                    <line
+                      [attr.x1]="hl.x1"
+                      [attr.y1]="hl.y1"
+                      [attr.x2]="hl.x2"
+                      [attr.y2]="hl.y2"
+                      stroke="#FFFFFF"
+                      stroke-width="0.8"
+                      opacity="0.8"
+                    />
+                  }
+                }
+              }
+            }
+          </g>
+
+          <!-- Janela Iluminada na Parede Esquerda (Nível >= 2) -->
+          @if (expansionLevelSignal() >= 2) {
+            <polygon
+              [attr.points]="windowLeftPoints()"
+              fill="#BAE6FD"
+              stroke="#0D9488"
+              stroke-width="2.5"
+            />
+          }
+
+          <!-- Placa de Nível / Diploma na Parede Direita -->
+          <polygon
+            [attr.points]="plaqueRightPoints()"
+            fill="#FEF3C7"
+            stroke="#D97706"
+            stroke-width="1.5"
+          />
+
+          <!-- Segmentos Interativos da Parede NW (Linha Y, X=0) -->
+          @for (wallSlice of nwWallSlices(); track 'nw-' + wallSlice.index) {
+            <polygon
+              class="iso-wall-slice"
+              [class.edit-grid]="editModeSignal()"
+              [attr.points]="wallSlice.points"
+              (mouseenter)="onWallSliceHover('NW', wallSlice.index)"
+              (click)="onWallSliceClick('NW', wallSlice.index, $event)"
+            />
+          }
+
+          <!-- Segmentos Interativos da Parede NE (Linha X, Y=0) -->
+          @for (wallSlice of neWallSlices(); track 'ne-' + wallSlice.index) {
+            <polygon
+              class="iso-wall-slice"
+              [class.edit-grid]="editModeSignal()"
+              [attr.points]="wallSlice.points"
+              (mouseenter)="onWallSliceHover('NE', wallSlice.index)"
+              (click)="onWallSliceClick('NE', wallSlice.index, $event)"
+            />
+          }
+
+          <!-- Malha de Tiles Isométricos 2:1 (64x32px) com Revestimentos Ricos de Piso -->
+          @for (tile of tiles(); track tile.gridX + '-' + tile.gridY) {
+            <g class="iso-tile-group" [attr.data-grid-x]="tile.gridX" [attr.data-grid-y]="tile.gridY">
+              <!-- Base Tile Polygon (Interativo para Click / Hover / Modos) -->
+              <polygon
+                class="iso-tile"
+                [class.floor-wood-light]="floorThemeSignal() === 'wood_light'"
+                [class.floor-wood-dark]="floorThemeSignal() === 'wood_dark_herringbone'"
+                [class.floor-marble]="floorThemeSignal() === 'marble_carrara'"
+                [class.floor-tatame]="floorThemeSignal() === 'tatame_eva'"
+                [class.edit-grid]="editModeSignal()"
+                [attr.points]="tile.points"
+                (mouseenter)="onTileHover(tile.gridX, tile.gridY)"
+                (click)="onTileClick(tile.gridX, tile.gridY, $event)"
+              />
+
+              <!-- Detalhes Gráficos Ricos do Piso Isométrico (pointer-events: none) -->
+              <g class="iso-tile-surface-detail" pointer-events="none">
+                @switch (floorThemeSignal()) {
+                  @case ('wood_dark_herringbone') {
+                    <!-- Madeira Nobre Espinha de Peixe (Parquet Chevron em 4 ripas contrastantes) -->
+                    <!-- Ripa Superior -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 16) + ',' + (tile.screenY - 8) + ' ' + tile.screenX + ',' + (tile.screenY - 16) + ' ' + (tile.screenX + 16) + ',' + (tile.screenY - 8) + ' ' + tile.screenX + ',' + tile.screenY"
+                      fill="#92400E"
+                      stroke="#451A03"
+                      stroke-width="0.8"
+                    />
+                    <!-- Ripa Esquerda -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 32) + ',' + tile.screenY + ' ' + (tile.screenX - 16) + ',' + (tile.screenY - 8) + ' ' + tile.screenX + ',' + tile.screenY + ' ' + (tile.screenX - 16) + ',' + (tile.screenY + 8)"
+                      fill="#78350F"
+                      stroke="#451A03"
+                      stroke-width="0.8"
+                    />
+                    <!-- Ripa Direita -->
+                    <polygon
+                      [attr.points]="tile.screenX + ',' + tile.screenY + ' ' + (tile.screenX + 16) + ',' + (tile.screenY - 8) + ' ' + (tile.screenX + 32) + ',' + tile.screenY + ' ' + (tile.screenX + 16) + ',' + (tile.screenY + 8)"
+                      fill="#854D0E"
+                      stroke="#451A03"
+                      stroke-width="0.8"
+                    />
+                    <!-- Ripa Inferior -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 16) + ',' + (tile.screenY + 8) + ' ' + tile.screenX + ',' + tile.screenY + ' ' + (tile.screenX + 16) + ',' + (tile.screenY + 8) + ' ' + tile.screenX + ',' + (tile.screenY + 16)"
+                      fill="#713F12"
+                      stroke="#451A03"
+                      stroke-width="0.8"
+                    />
+                    <!-- Linhas de Veios de Madeira Orgânicos -->
+                    <line
+                      [attr.x1]="tile.screenX - 24"
+                      [attr.y1]="tile.screenY - 4"
+                      [attr.x2]="tile.screenX - 8"
+                      [attr.y2]="tile.screenY + 4"
+                      stroke="#A16207"
+                      stroke-width="0.7"
+                      opacity="0.35"
+                    />
+                    <line
+                      [attr.x1]="tile.screenX + 8"
+                      [attr.y1]="tile.screenY - 4"
+                      [attr.x2]="tile.screenX + 24"
+                      [attr.y2]="tile.screenY + 4"
+                      stroke="#A16207"
+                      stroke-width="0.7"
+                      opacity="0.35"
+                    />
+                  }
+                  @case ('wood_light') {
+                    <!-- Carvalho Claro Escandinavo (3 Tábuas Corridas com Juntas e Veios) -->
+                    <!-- Tábua 1 (Superior) -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 32) + ',' + tile.screenY + ' ' + tile.screenX + ',' + (tile.screenY - 16) + ' ' + (tile.screenX + 10) + ',' + (tile.screenY - 11) + ' ' + (tile.screenX - 22) + ',' + (tile.screenY + 5)"
+                      fill="#FAF5EC"
+                      stroke="#D6C6B2"
+                      stroke-width="0.8"
+                    />
+                    <!-- Tábua 2 (Central) -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 22) + ',' + (tile.screenY + 5) + ' ' + (tile.screenX + 10) + ',' + (tile.screenY - 11) + ' ' + (tile.screenX + 21) + ',' + (tile.screenY - 5) + ' ' + (tile.screenX - 11) + ',' + (tile.screenY + 11)"
+                      fill="#F3E8DB"
+                      stroke="#D6C6B2"
+                      stroke-width="0.8"
+                    />
+                    <!-- Tábua 3 (Inferior) -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 11) + ',' + (tile.screenY + 11) + ' ' + (tile.screenX + 21) + ',' + (tile.screenY - 5) + ' ' + (tile.screenX + 32) + ',' + tile.screenY + ' ' + tile.screenX + ',' + (tile.screenY + 16)"
+                      fill="#EDE0CE"
+                      stroke="#D6C6B2"
+                      stroke-width="0.8"
+                    />
+                    <!-- Fibras de Madeira Suaves -->
+                    <line
+                      [attr.x1]="tile.screenX - 15"
+                      [attr.y1]="tile.screenY - 3"
+                      [attr.x2]="tile.screenX + 5"
+                      [attr.y2]="tile.screenY - 8"
+                      stroke="#C9B69C"
+                      stroke-width="0.6"
+                      opacity="0.4"
+                    />
+                    <line
+                      [attr.x1]="tile.screenX - 5"
+                      [attr.y1]="tile.screenY + 8"
+                      [attr.x2]="tile.screenX + 15"
+                      [attr.y2]="tile.screenY + 3"
+                      stroke="#C9B69C"
+                      stroke-width="0.6"
+                      opacity="0.4"
+                    />
+                  }
+                  @case ('marble_carrara') {
+                    <!-- Mármore Carrara Luxo (Porcelanato Polido com Veios Ramificados e Brilho) -->
+                    <path
+                      [attr.d]="'M ' + (tile.screenX - 20) + ' ' + (tile.screenY + 5) + ' Q ' + (tile.screenX - 4) + ' ' + (tile.screenY - 5) + ' ' + (tile.screenX + 16) + ' ' + (tile.screenY - 10) + ' M ' + (tile.screenX - 4) + ' ' + (tile.screenY - 5) + ' Q ' + (tile.screenX + 6) + ' ' + (tile.screenY + 3) + ' ' + (tile.screenX + 20) + ' ' + (tile.screenY + 7)"
+                      stroke="#94A3B8"
+                      stroke-width="1.2"
+                      fill="none"
+                      opacity="0.65"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      [attr.d]="'M ' + (tile.screenX - 12) + ' ' + (tile.screenY - 9) + ' Q ' + (tile.screenX - 2) + ' ' + (tile.screenY - 7) + ' ' + (tile.screenX + 8) + ' ' + (tile.screenY - 2)"
+                      stroke="#CBD5E1"
+                      stroke-width="0.8"
+                      fill="none"
+                      opacity="0.5"
+                    />
+                    <!-- Reflexo Especular Suave de Rocha Polida -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 12) + ',' + (tile.screenY - 10) + ' ' + (tile.screenX + 8) + ',' + (tile.screenY) + ' ' + tile.screenX + ',' + (tile.screenY + 4) + ' ' + (tile.screenX - 20) + ',' + (tile.screenY - 6)"
+                      fill="#FFFFFF"
+                      opacity="0.35"
+                    />
+                  }
+                  @case ('tatame_eva') {
+                    <!-- Tatame EVA Pastel Candy Color (4 Placas Emborrachadas Intertravadas) -->
+                    <!-- Placa 1: Amarelo Manteiga (Topo) -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 16) + ',' + (tile.screenY - 8) + ' ' + tile.screenX + ',' + (tile.screenY - 16) + ' ' + (tile.screenX + 16) + ',' + (tile.screenY - 8) + ' ' + tile.screenX + ',' + tile.screenY"
+                      fill="#FEF08A"
+                      stroke="#FDE047"
+                      stroke-width="0.8"
+                    />
+                    <!-- Placa 2: Verde Menta (Direita) -->
+                    <polygon
+                      [attr.points]="tile.screenX + ',' + tile.screenY + ' ' + (tile.screenX + 16) + ',' + (tile.screenY - 8) + ' ' + (tile.screenX + 32) + ',' + tile.screenY + ' ' + (tile.screenX + 16) + ',' + (tile.screenY + 8)"
+                      fill="#A7F3D0"
+                      stroke="#86EFAC"
+                      stroke-width="0.8"
+                    />
+                    <!-- Placa 3: Azul Bebê (Fundo) -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 16) + ',' + (tile.screenY + 8) + ' ' + tile.screenX + ',' + tile.screenY + ' ' + (tile.screenX + 16) + ',' + (tile.screenY + 8) + ' ' + tile.screenX + ',' + (tile.screenY + 16)"
+                      fill="#BAE6FD"
+                      stroke="#93C5FD"
+                      stroke-width="0.8"
+                    />
+                    <!-- Placa 4: Rosa Pêssego (Esquerda) -->
+                    <polygon
+                      [attr.points]="(tile.screenX - 32) + ',' + tile.screenY + ' ' + (tile.screenX - 16) + ',' + (tile.screenY - 8) + ' ' + tile.screenX + ',' + tile.screenY + ' ' + (tile.screenX - 16) + ',' + (tile.screenY + 8)"
+                      fill="#FED7AA"
+                      stroke="#FDBA74"
+                      stroke-width="0.8"
+                    />
+                    <!-- Encaixes estilo Quebra-Cabeça no Centro -->
+                    <circle [attr.cx]="tile.screenX" [attr.cy]="tile.screenY - 4" r="2" fill="#FEF08A" />
+                    <circle [attr.cx]="tile.screenX + 6" [attr.cy]="tile.screenY" r="2" fill="#A7F3D0" />
+                    <circle [attr.cx]="tile.screenX" [attr.cy]="tile.screenY + 4" r="2" fill="#BAE6FD" />
+                    <circle [attr.cx]="tile.screenX - 6" [attr.cy]="tile.screenY" r="2" fill="#FED7AA" />
+                    <!-- Microtextura de aderência (Grip Dots) -->
+                    <circle [attr.cx]="tile.screenX - 16" [attr.cy]="tile.screenY - 2" r="0.8" fill="#F59E0B" opacity="0.4" />
+                    <circle [attr.cx]="tile.screenX + 16" [attr.cy]="tile.screenY - 2" r="0.8" fill="#059669" opacity="0.4" />
+                    <circle [attr.cx]="tile.screenX - 16" [attr.cy]="tile.screenY + 2" r="0.8" fill="#EA580C" opacity="0.4" />
+                    <circle [attr.cx]="tile.screenX + 16" [attr.cy]="tile.screenY + 2" r="0.8" fill="#2563EB" opacity="0.4" />
+                  }
+                }
+              </g>
+            </g>
+          }
+
+          <!-- Espessura 2.5D da Laje Inferior com Cor Dinâmica do Piso -->
+          <polygon
+            [attr.points]="slabLeftLipPoints()"
+            [attr.fill]="slabLeftColor()"
+          />
+          <polygon
+            [attr.points]="slabRightLipPoints()"
+            [attr.fill]="slabRightColor()"
+          />
+
+          <!-- Ghost Preview Isométrico no Modo Edição (Verde = Válido / Vermelho = Colisão) -->
+          @if (ghostPreview(); as ghost) {
+            <polygon
+              class="iso-ghost-polygon"
+              [class.is-valid]="ghost.valid"
+              [class.is-invalid]="!ghost.valid"
+              [attr.points]="ghost.points"
+              [attr.fill]="ghost.valid ? 'rgba(16, 185, 129, 0.35)' : 'rgba(239, 68, 68, 0.35)'"
+              [attr.stroke]="ghost.valid ? '#10B981' : '#EF4444'"
+              stroke-width="2.5"
+              data-testid="iso-ghost-preview"
+            />
+          }
+        </svg>
+
+        <!-- Camada de Itens Posicionados Ordenados por Depth = (x + y) * 1000 + z -->
+        <div
+          class="placed-items-layer"
+          [style.width.px]="stageWidth()"
+          [style.height.px]="stageHeight()"
+        >
+          @for (entry of sortedRenderItems(); track entry.placed.id) {
+            <div
+              class="placed-item-anchor"
+              [class.is-wall-item]="entry.placed.placementType === 'WALL'"
+              [class.is-wall-nw]="entry.placed.placementType === 'WALL' && entry.wallSide === 'NW'"
+              [class.is-wall-ne]="entry.placed.placementType === 'WALL' && entry.wallSide === 'NE'"
+              [class.is-wall-ruler]="entry.catalogItem.id === 'ped_regua_girafa' || entry.catalogItem.id === 'estadiometro_compacto'"
+              [class.is-interactable]="entry.catalogItem.interactable"
+              [class.is-edit-selectable]="editModeSignal()"
+              [class.is-selected-moving]="movingPlacedIdSignal() === entry.placed.id"
+              [style.left.px]="entry.screenX"
+              [style.top.px]="entry.screenY"
+              [style.zIndex]="entry.depth"
+              [attr.data-placed-id]="entry.placed.id"
+              [attr.data-depth]="entry.depth"
+              (click)="onPlacedItemClick(entry, $event)" (keydown.enter)="onPlacedItemClick(entry, $event)" (keydown.space)="onPlacedItemClick(entry, $event)" tabindex="0" role="button"
+              [title]="entry.catalogItem.name"
+            >
+              <app-clinic-item-svg
+                [itemKey]="entry.catalogItem.assetSvgKey"
+                [rotation]="entry.placed.rotation"
+                [isWallItem]="entry.placed.placementType === 'WALL'"
+                [width]="entry.effWidth > 1 || entry.effHeight > 1 ? 104 : 84"
+                [height]="entry.effWidth > 1 || entry.effHeight > 1 ? 96 : 78"
+                [activePulse]="pulsingItemId() === entry.placed.id"
+                [paused]="isPaused()"
+              />
+            </div>
+          }
+
+          <!-- Personagem Médico Residente 2.5D (P-087, P-088) -->
+          @if (avatarSignal(); as doc) {
+            <div
+              class="doctor-avatar-anchor"
+              [class.is-selected-moving]="isMovingDoctorSignal()"
+              [style.left.px]="doctorScreenCoords().x"
+              [style.top.px]="doctorScreenCoords().y"
+              [style.zIndex]="doctorDepth()"
+              (click)="onDoctorAvatarClick($event)" (keydown.enter)="onDoctorAvatarClick($event)" (keydown.space)="onDoctorAvatarClick($event)" tabindex="0" role="button"
+              [title]="editModeSignal() ? 'Clique para mover o(a) Doutor(a) de lugar' : 'Clique para personalizar o(a) Doutor(a)'"
+              data-testid="doctor-avatar-diorama"
+            >
+              <app-doctor-avatar-svg
+                [gender]="doc.gender"
+                [skinCoat]="doc.skinCoat"
+                [skinStethoscope]="doc.skinStethoscope"
+                [skinAccessory]="doc.skinAccessory"
+                [width]="66"
+                [height]="90"
+                [activeAnimation]="doctorGreetingActive()"
+                [paused]="isPaused()"
+              />
+            </div>
+          }
+
+          <!-- Ghost Doctor Avatar flutuante no Modo Edição ao mover Doutor(a) -->
+          @if (isMovingDoctorSignal() && hoveredTile(); as hover) {
+            <div
+              class="ghost-avatar-anchor"
+              [class.is-valid]="isDoctorHoverValid()"
+              [class.is-invalid]="!isDoctorHoverValid()"
+              [style.left.px]="doctorHoverScreenCoords().x"
+              [style.top.px]="doctorHoverScreenCoords().y"
+              [style.zIndex]="99999"
+            >
+              @if (avatarSignal(); as doc) {
+                <app-doctor-avatar-svg
+                  [gender]="doc.gender"
+                  [skinCoat]="doc.skinCoat"
+                  [skinStethoscope]="doc.skinStethoscope"
+                  [skinAccessory]="doc.skinAccessory"
+                  [width]="66"
+                  [height]="90"
+                  [paused]="isPaused()"
+                />
+              }
+              <span class="ghost-status-tag" [class.invalid]="!isDoctorHoverValid()">
+                {{ isDoctorHoverValid() ? '✓ Mover para cá' : '✕ Ocupado por móvel' }}
+              </span>
+            </div>
+          }
+
+          <!-- Ghost Item Visual Flutuante no Modo Edição -->
+          @if (!isMovingDoctorSignal() && ghostPreview(); as ghost) {
+            <div
+              class="ghost-item-anchor"
+              [class.is-wall-item]="ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)"
+              [class.is-wall-nw]="(ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)) && ghost.wallSide === 'NW'"
+              [class.is-wall-ne]="(ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)) && ghost.wallSide === 'NE'"
+              [class.is-wall-ruler]="ghost.catalogItem.id === 'ped_regua_girafa' || ghost.catalogItem.id === 'estadiometro_compacto'"
+              [class.is-valid]="ghost.valid"
+              [class.is-invalid]="!ghost.valid"
+              [style.left.px]="ghost.screenX"
+              [style.top.px]="ghost.screenY"
+              [style.zIndex]="99999"
+            >
+              <app-clinic-item-svg
+                [itemKey]="ghost.catalogItem.assetSvgKey"
+                [rotation]="ghost.rotation"
+                [isWallItem]="ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)"
+                [width]="ghost.effWidth > 1 || ghost.effHeight > 1 ? 104 : 84"
+                [height]="ghost.effWidth > 1 || ghost.effHeight > 1 ? 96 : 78"
+                [paused]="isPaused()"
+              />
+              <span class="ghost-status-tag">
+                {{ ghost.valid ? '✓ Posicionar' : '✕ Inválido / Limite' }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Tooltip Interativo do Item Clicado (Modo Visualização) -->
+      @if (activeItemBubble(); as bubble) {
+        <div class="item-interaction-bubble" data-testid="item-interaction-bubble">
+          <strong>{{ bubble.name }}</strong>
+          <span>{{ bubble.description }}</span>
+        </div>
+      }
+
+      <!-- Controles Flutuantes de Câmera (Zoom +, Zoom -, Reset 100%) -->
+      <div class="camera-controls" role="group" aria-label="Controles de câmera do diorama">
+        <button
+          type="button"
+          class="cam-btn"
+          (click)="zoomIn(); $event.stopPropagation()"
+          aria-label="Aumentar zoom"
+          data-testid="zoom-in-btn"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          class="cam-btn cam-reset"
+          (click)="resetCamera(); $event.stopPropagation()"
+          title="Restaurar câmera para 100%"
+          data-testid="zoom-reset-btn"
+        >
+          {{ Math.round(zoom() * 100) }}%
+        </button>
+        <button
+          type="button"
+          class="cam-btn"
+          (click)="zoomOut(); $event.stopPropagation()"
+          aria-label="Diminuir zoom"
+          data-testid="zoom-out-btn"
+        >
+          −
+        </button>
+      </div>
+    </div>

@@ -1,0 +1,268 @@
+<section class="clinic-workbench" aria-label="Minha Clínica Médica Isométrica 2.5D">
+      <!-- ESTADO 5: LOADING (Skeleton Loader Isométrico Shimmer — Zero Spinners Solitários) -->
+      @if (clinicService.loading() && !clinic()) {
+        <div class="clinic-skeleton-container" data-testid="clinic-skeleton" aria-busy="true">
+          <div class="skeleton-hud shimmer-block"></div>
+          <div class="skeleton-viewport">
+            <div class="skeleton-iso-diamond shimmer-block"></div>
+            <p class="skeleton-caption">Preparando o diorama 2.5D da sua Clínica Médica...</p>
+          </div>
+          <div class="skeleton-dock">
+            <div class="skeleton-card shimmer-block"></div>
+            <div class="skeleton-card shimmer-block"></div>
+            <div class="skeleton-card shimmer-block"></div>
+            <div class="skeleton-card shimmer-block"></div>
+          </div>
+        </div>
+      } @else if (clinic(); as state) {
+        <!-- HUD SUPERIOR FLUTUANTE (Nível, XP Vitalício, Saldo Investível, Streak, Expansão e Áudio) -->
+        <header class="clinic-hud-bar" data-testid="clinic-hud">
+          <div class="hud-identity">
+            <div class="level-badge" data-testid="clinic-level-badge">
+              <span class="level-num">NÍVEL {{ state.expansionLevel }}/6</span>
+              <span class="level-grid">{{ state.gridWidth }}×{{ state.gridHeight }}</span>
+            </div>
+            <div class="clinic-titles">
+              <h1>{{ state.expansionName }}</h1>
+              <div class="lifetime-progress-wrap" title="XP Vitalício acumulado (nunca decresce)">
+                <div class="lifetime-labels">
+                  <span>XP Vitalício (Carreira)</span>
+                  <span class="mono-num" data-testid="lifetime-xp-value">
+                    {{ state.lifetimeXp }}
+                    @if (state.nextExpansionRequiredLifetimeXp) {
+                      / {{ state.nextExpansionRequiredLifetimeXp }} XP
+                    }
+                  </span>
+                </div>
+                <div class="lifetime-bar-track">
+                  <div
+                    class="lifetime-bar-fill"
+                    [style.width.%]="lifetimeProgressPercent()"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicadores Econômicos Auditáveis (P-080, P-081) -->
+          <div class="hud-economy">
+            <div
+              class="xp-balance-pill"
+              title="Saldo de XP Investível para decorar e expandir sua clínica"
+              data-testid="current-xp-pill"
+            >
+              <span class="pill-tag">SALDO INVESTÍVEL</span>
+              <strong class="mono-num">{{ state.currentXp }} XP</strong>
+            </div>
+
+            <div
+              class="streak-pill"
+              title="Multiplicador de Ofensiva Diária sobre todo o XP ganho"
+              data-testid="streak-pill"
+            >
+              <span class="streak-fire" aria-hidden="true">🔥</span>
+              <div class="streak-meta">
+                <strong class="mono-num">{{ state.currentStreakDays }} dias</strong>
+                <span>+{{ state.streakMultiplierPercent }}% bônus XP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ações Principais do HUD -->
+          <div class="hud-actions">
+            @if (state.nextExpansionLevel) {
+              <button
+                type="button"
+                class="btn-expand-clinic"
+                [disabled]="!canExpandNow() || clinicService.loading()"
+                (click)="expandClinicRoom()"
+                [title]="expandButtonTooltip()"
+                data-testid="expand-clinic-btn"
+              >
+                <span class="btn-title">
+                  Expandir → Nível {{ state.nextExpansionLevel }} ({{ state.nextExpansionName }})
+                </span>
+                <span class="btn-sub mono-num">
+                  Custo: {{ state.nextExpansionCostXp }} XP · Req: {{ state.nextExpansionRequiredLifetimeXp }} Vitalício
+                </span>
+              </button>
+            } @else {
+              <div class="max-level-pill">🏆 Instituto Nível Máximo (16×12)</div>
+            }
+
+            <button
+              type="button"
+              class="btn-avatar-modal"
+              (click)="openAvatarCustomizer()"
+              [title]="'Personalizar visual de ' + doctorDisplayName()"
+              data-testid="open-avatar-modal-btn"
+            >
+              {{ currentAvatar()?.gender === 'FEMALE' ? '👩‍⚕️' : '👨‍⚕️' }} {{ doctorDisplayName() }}
+            </button>
+
+            <button
+              type="button"
+              class="btn-lootbox-modal"
+              (click)="openLootboxModal()"
+              title="Abrir Caixas da Sorte Médicas e resgatar caixa diária gratuita"
+              data-testid="open-lootbox-modal-btn"
+            >
+              🎁 Caixas da Sorte
+              @if (isDailyFreeAvailable()) {
+                <span class="free-daily-dot" title="Caixa gratuita disponível hoje!">★ Grátis</span>
+              }
+            </button>
+
+            <button
+              type="button"
+              class="btn-edit-toggle"
+              [class.is-active]="editMode()"
+              (click)="toggleEditMode()"
+              data-testid="toggle-edit-mode-btn"
+            >
+              {{ editMode() ? (isLayoutDirty() ? '💾 Salvar & Concluir' : '✓ Concluir Edição') : '🛠️ Decorar / Mover' }}
+            </button>
+
+            @if (editMode()) {
+              <button
+                type="button"
+                class="btn-avatar-modal"
+                [class.is-active]="isMovingDoctor()"
+                (click)="toggleMovingDoctor()"
+                [title]="'Mover ' + doctorDisplayName() + ' pela sala'"
+                data-testid="move-doctor-btn"
+              >
+                📍 Mover {{ currentAvatar()?.gender === 'FEMALE' ? 'Dra.' : 'Dr.' }}
+              </button>
+            }
+
+            <button
+              type="button"
+              class="btn-audio-mute"
+              (click)="toggleAudioMute()"
+              [attr.aria-pressed]="audioService.isMuted()"
+              [title]="audioService.isMuted() ? 'Ativar áudio cozy da clínica' : 'Silenciar áudio da clínica'"
+              data-testid="mute-audio-btn"
+            >
+              {{ audioService.isMuted() ? '🔇 Mudo' : '🔊 Som' }}
+            </button>
+          </div>
+        </header>
+
+        <!-- VIEWPORT ISOMÉTRICO 2.5D CENTRAL (P-084, P-085, P-087) -->
+        <div class="clinic-stage-wrapper">
+          @if (previewWallTheme() || previewFloorTheme()) {
+            <div class="surface-preview-floating-bar" data-testid="surface-preview-floating-bar">
+              <span class="preview-bar-text">
+                👁️ Testando revestimento:
+                <strong>{{ previewWallTheme() ? 'Papel de Parede' : 'Piso Isométrico' }}</strong>
+              </span>
+              <button
+                type="button"
+                class="btn-cancel-preview"
+                (click)="cancelSurfacePreview()"
+                data-testid="btn-cancel-surface-preview"
+              >
+                ✕ Desfazer Teste
+              </button>
+            </div>
+          }
+          <app-clinic-viewport
+            [gridWidth]="state.gridWidth"
+            [gridHeight]="state.gridHeight"
+            [expansionLevel]="state.expansionLevel"
+            [wallTheme]="previewWallTheme() || state.wallTheme"
+            [floorTheme]="previewFloorTheme() || state.floorTheme"
+            [avatar]="currentAvatar()"
+            [placedItems]="workingPlacedItems()"
+            [catalog]="state.catalog"
+            [editMode]="editMode()"
+            [selectedCatalogItem]="selectedCatalogItem()"
+            [selectedRotation]="selectedRotation()"
+            [movingPlacedId]="movingPlacedId()"
+            [isMovingDoctor]="isMovingDoctor()"
+            (tileClicked)="onViewportTileClicked($event)"
+            (placedItemClicked)="onViewportPlacedItemClicked($event)"
+            (rotateRequested)="toggleRotation()"
+            (avatarClicked)="onAvatarViewportClick()"
+            (cancelMovingDoctor)="cancelMovingDoctor()"
+          />
+        </div>
+
+        <!-- GAVETA INFERIOR DE CATÁLOGO & INVENTÁRIO (COMPONENTIZADO) -->
+        <app-clinic-catalog-drawer
+          [state]="state"
+          [activeCategory]="activeCategory()"
+          [inventoryFilter]="inventoryFilter()"
+          [selectedCatalogItem]="selectedCatalogItem()"
+          [selectedRotation]="selectedRotation()"
+          [movingPlacedId]="movingPlacedId()"
+          [editMode]="editMode()"
+          [isLayoutDirty]="isLayoutDirty()"
+          [filteredCatalogItems]="filteredCatalogItems()"
+          [categoryTabs]="categoryTabs()"
+          [totalCatalogCount]="totalCatalogCount()"
+          [wallpaperOptions]="wallpaperOptions"
+          [floorOptions]="floorOptions"
+          [previewWallTheme]="previewWallTheme()"
+          [previewFloorTheme]="previewFloorTheme()"
+          [ownedItemIds]="state.ownedItemIds"
+          [placedItemCatalogIds]="placedItemCatalogIds()"
+          [unlockedSkinIds]="unlockedSkinIds()"
+          [isLoading]="clinicService.loading()"
+          (categorySelected)="selectCategory($event)"
+          (inventoryFilterChanged)="setInventoryFilter($event)"
+          (rotateRequested)="toggleRotation()"
+          (storeSelectedRequested)="storeSelectedPlacedItem()"
+          (previewSurfaceRequested)="previewSurface($event)"
+          (cancelPreviewRequested)="cancelSurfacePreview()"
+          (applyWallpaper)="applyWallpaperDirectly($event)"
+          (buyWallpaper)="buyAndApplyWallpaper($event)"
+          (applyFloor)="applyFloorDirectly($event)"
+          (buyFloor)="buyAndApplyFloor($event)"
+          (selectForPlacement)="selectItemForPlacement($event)"
+          (buyItem)="buyCatalogItem($event)"
+          (cardPreviewClicked)="onCardPreviewClick($event)"
+          (openLootboxModalRequested)="openLootboxModal()"
+        />
+      }
+
+      <!-- MODAL: GUARDA-ROUPA DO DOUTOR(A) (P-087, P-088) -->
+
+      <!-- MODAL DE CUSTOMIZAÇÃO DO DOUTOR (COMPONENTIZADO) -->
+      <app-doctor-wardrobe-modal
+        [isOpen]="isAvatarModalOpen()"
+        [avatar]="currentAvatar()"
+        [doctorName]="doctorNameOnly()"
+        [currentXp]="clinic()?.currentXp ?? 0"
+        [unlockedSkinIds]="unlockedSkinIds()"
+        [isSaving]="clinicService.loading()"
+        (closeModal)="closeAvatarCustomizer()"
+        (saveAvatar)="saveAvatarCustomization($event)"
+        (unlockSkin)="buySkinPrompt($event)"
+      />
+
+      <!-- MODAL DE LOOTBOXES: TEATRO TELA CHEIA (COMPONENTIZADO) -->
+      <app-clinic-lootbox-modal
+        [isOpen]="isLootboxModalOpen()"
+        [currentXp]="clinic()?.currentXp ?? 0"
+        [lootboxTiers]="lootboxTiers()"
+        [isDailyFreeAvailable]="isDailyFreeAvailable()"
+        [isLoading]="clinicService.loading()"
+        [isUnboxing]="isUnboxing()"
+        [unboxingPhase]="unboxingPhase()"
+        [openingRayColor]="openingRayColor()"
+        [openingTierAssetSvgKey]="openingTierAssetSvgKey()"
+        [revealResult]="lootboxRevealResult()"
+        (closeModal)="closeLootboxModal()"
+        (openDailyFree)="triggerOpenDailyFreeLootbox()"
+        (openTier)="triggerOpenLootbox($event)"
+        (equipItem)="equipItemNow($event)"
+        (resetRoll)="resetLootboxForAnotherRoll()"
+      />
+
+      <!-- MODAL DE ERRO BÁSICO (COMPONENTIZADO) -->
+      <app-clinic-error-modal
+        [errorMessage]="activeErrorModalMessage()"
+        (dismiss)="closeErrorModal()"
+      />

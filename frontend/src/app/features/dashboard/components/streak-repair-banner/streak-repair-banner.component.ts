@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, computed, signal, inject, OnInit } from '@angular/core';
+import { Component, computed, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { Router } from '@angular/router';
@@ -240,9 +240,9 @@ import { ToastService } from '@core/services/toast.service';
   `]
 })
 export class StreakRepairBannerComponent implements OnInit {
-  private streakRepairService = inject(StreakRepairService);
-  private toastService = inject(ToastService);
-  private router = inject(Router);
+  private readonly streakRepairService = inject(StreakRepairService);
+  private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router);
 
   status = signal<StreakStatusResponse | null>(null);
   isRepairing = signal(false);

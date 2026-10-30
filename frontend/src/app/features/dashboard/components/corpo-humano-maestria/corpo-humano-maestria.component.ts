@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { ClinicalMasteryService } from '@core/services/clinical-mastery.service';
-import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/clinical-mastery.model';
+import { ClinicalMasteryResponse, AreaMastery } from '@core/models/clinical-mastery.model';
 
 @Component({
   selector: 'app-estrela-maestria, app-corpo-humano-maestria',
@@ -882,7 +882,7 @@ import { ClinicalMasteryResponse, AreaMastery, MasteryTier } from '@core/models/
   `]
 })
 export class EstrelaVidaMaestriaComponent implements OnInit {
-  private masteryService = inject(ClinicalMasteryService);
+  private readonly masteryService = inject(ClinicalMasteryService);
 
   data = signal<ClinicalMasteryResponse | null>(null);
   selectedArea = signal<AreaMastery | null>(null);
@@ -909,10 +909,7 @@ export class EstrelaVidaMaestriaComponent implements OnInit {
   }
 
   onHoverArea(grandeAreaKey: string) {
-    const area = this.data()?.areas.find(a => a.grandeArea === grandeAreaKey);
-    if (area) {
-      this.selectedArea.set(area);
-    }
+    this.onSelectArea(grandeAreaKey);
   }
 
   onSelectArea(grandeAreaKey: string) {

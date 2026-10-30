@@ -69,9 +69,10 @@ public class AuthService {
      */
     @Transactional
     public AuthResponse authenticate(LoginRequest request) {
+        String normalizedEmail = request.getEmail() != null ? request.getEmail().trim().toLowerCase() : "";
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                    new UsernamePasswordAuthenticationToken(normalizedEmail, request.getPassword())
             );
 
             User user = (User) authentication.getPrincipal();
@@ -79,11 +80,11 @@ public class AuthService {
 
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
-            loginAttemptService.loginSucceeded(request.getEmail());
+            loginAttemptService.loginSucceeded(normalizedEmail);
 
             return new AuthResponse(jwtToken, refreshToken.getToken());
         } catch (Exception e) {
-            loginAttemptService.loginFailed(request.getEmail());
+            loginAttemptService.loginFailed(normalizedEmail);
             throw e;
         }
     }

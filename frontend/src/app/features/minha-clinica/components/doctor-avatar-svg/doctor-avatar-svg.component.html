@@ -1,0 +1,797 @@
+<div
+      class="doctor-avatar-container"
+      [class.is-animating]="activeAnimation"
+      [class.is-paused]="paused"
+      [style.width.px]="width"
+      [style.height.px]="height"
+    >
+      <svg
+        role="img"
+        [attr.aria-label]="avatarAriaLabel"
+        viewBox="0 0 72 100"
+        [attr.width]="width"
+        [attr.height]="height"
+        class="doctor-svg"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <!-- Sombra Suave no Solo Isométrico -->
+          <radialGradient id="avatarFloorShadow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#0F172A" stop-opacity="0.32" />
+            <stop offset="60%" stop-color="#0F172A" stop-opacity="0.12" />
+            <stop offset="100%" stop-color="#0F172A" stop-opacity="0" />
+          </radialGradient>
+
+          <!-- Tons de Pele (Aspecto Acolhedor e Saudável) -->
+          <linearGradient id="skinFaceGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFEBE1" />
+            <stop offset="100%" stop-color="#FCD5C3" />
+          </linearGradient>
+
+          <linearGradient id="skinShadowGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F5BCA0" />
+            <stop offset="100%" stop-color="#EAA684" />
+          </linearGradient>
+
+          <!-- Cabelo Masculino: Quiff Moderno Grafite/Espresso -->
+          <linearGradient id="hairMaleGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#334155" />
+            <stop offset="40%" stop-color="#1E293B" />
+            <stop offset="100%" stop-color="#0F172A" />
+          </linearGradient>
+
+          <!-- Cabelo Feminino: Loiro Mel Dourado com Mechas Radiantes (Inspirado na Foto de Referência) -->
+          <linearGradient id="hairBlondeRootGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#854D0E" />
+            <stop offset="35%" stop-color="#A16207" />
+            <stop offset="70%" stop-color="#CA8A04" />
+            <stop offset="100%" stop-color="#EAB308" />
+          </linearGradient>
+
+          <linearGradient id="hairBlondeFlowGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#9A6B2F" />
+            <stop offset="40%" stop-color="#C69248" />
+            <stop offset="80%" stop-color="#EAB308" />
+            <stop offset="100%" stop-color="#FACC15" />
+          </linearGradient>
+
+          <linearGradient id="hairBlondeHighlightGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FEF08A" />
+            <stop offset="50%" stop-color="#FDE047" />
+            <stop offset="100%" stop-color="#D97706" />
+          </linearGradient>
+
+          <!-- Jaleco Branco Clássico -->
+          <linearGradient id="coatWhiteGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFFFFF" />
+            <stop offset="65%" stop-color="#FFFFFF" />
+            <stop offset="100%" stop-color="#EDF2F7" />
+          </linearGradient>
+
+          <linearGradient id="coatLapelGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFFFFF" />
+            <stop offset="100%" stop-color="#F8FAFC" />
+          </linearGradient>
+
+          <!-- Jaleco Pediátrico Menta Pastel -->
+          <linearGradient id="coatPediatricGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E0F2FE" />
+            <stop offset="40%" stop-color="#CCFBF1" />
+            <stop offset="100%" stop-color="#A7F3D0" />
+          </linearGradient>
+
+          <!-- Jaleco Dourado Mestre / Executivo -->
+          <linearGradient id="coatGoldGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FFFBEB" />
+            <stop offset="40%" stop-color="#FEF3C7" />
+            <stop offset="80%" stop-color="#FDE68A" />
+            <stop offset="100%" stop-color="#F59E0B" />
+          </linearGradient>
+
+          <!-- Scrubs Cirúrgicos -->
+          <linearGradient id="scrubsNavyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1E40AF" />
+            <stop offset="100%" stop-color="#1E3A8A" />
+          </linearGradient>
+
+          <linearGradient id="scrubsGreenGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#059669" />
+            <stop offset="100%" stop-color="#064E3B" />
+          </linearGradient>
+
+          <!-- Estetoscópios (Cromado e Ouro) -->
+          <linearGradient id="stethChromeGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#F8FAFC" />
+            <stop offset="50%" stop-color="#CBD5E1" />
+            <stop offset="100%" stop-color="#64748B" />
+          </linearGradient>
+
+          <linearGradient id="stethGoldGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FEF3C7" />
+            <stop offset="50%" stop-color="#F59E0B" />
+            <stop offset="100%" stop-color="#B45309" />
+          </linearGradient>
+
+          <!-- Touca Cirúrgica Teal Nórdica -->
+          <linearGradient id="scrubCapGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#14B8A6" />
+            <stop offset="60%" stop-color="#0D9488" />
+            <stop offset="100%" stop-color="#115E59" />
+          </linearGradient>
+
+          <!-- Filtro de Sombra Suave para Camadas Superiores -->
+          <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="1" stdDeviation="0.6" flood-color="#0F172A" flood-opacity="0.2" />
+          </filter>
+              <!-- Gradientes Especializados US-14 (Dino, Executivo e Gorro Safari) -->
+      <linearGradient id="coatDinoGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#E6F7F2" />
+        <stop offset="60%" stop-color="#D1FAE5" />
+        <stop offset="100%" stop-color="#A7F3D0" />
+      </linearGradient>
+
+      <linearGradient id="coatExecutiveGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FFFFFF" />
+        <stop offset="70%" stop-color="#F8FAFC" />
+        <stop offset="100%" stop-color="#E2E8F0" />
+      </linearGradient>
+
+      <linearGradient id="gorroSafariGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FEF3C7" />
+        <stop offset="100%" stop-color="#FDE68A" />
+      </linearGradient>
+
+      <linearGradient id="pocketSquareGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1E3A8A" />
+        <stop offset="100%" stop-color="#0F172A" />
+      </linearGradient>
+    </defs>
+
+        <!-- SOMBRA NO CHÃO -->
+        <ellipse cx="36" cy="95" rx="20" ry="4.5" fill="url(#avatarFloorShadow)" />
+        <ellipse cx="36" cy="95" rx="12" ry="2.5" fill="#0F172A" opacity="0.15" />
+
+        <!-- GRUPO DO CORPO COM ANIMAÇÃO DE RESPIRAÇÃO -->
+        <g class="doctor-breathing-group">
+          <!-- 1. PERNAS & TÊNIS HOSPITALARES -->
+          <!-- Pernas (Calça Médica Ajustada) -->
+          <path d="M26.5 68 L27.5 87 L33.5 87 L34.5 68 Z" [attr.fill]="pantsColor" />
+          <path d="M37.5 68 L38.5 87 L44.5 87 L45.5 68 Z" [attr.fill]="pantsColorDark" />
+
+          <!-- Tênis Hospitalar Clean Esquerdo -->
+          <path d="M25 87 C25 85 33 85 34 87 L34.5 91.5 C34.5 93 24.5 93 24.5 91.5 Z" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="0.8" />
+          <path d="M24.5 91.5 L34.5 91.5 L34.5 93 L24.5 93 Z" [attr.fill]="shoeAccentColor" />
+          <path d="M25 89 Q29.5 87 34 89" stroke="#E2E8F0" stroke-width="0.6" fill="none" />
+
+          <!-- Tênis Hospitalar Clean Direito -->
+          <path d="M37.5 87 C37.5 85 45.5 85 46.5 87 L47 91.5 C47 93 37 93 37 91.5 Z" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="0.8" />
+          <path d="M37 91.5 L47 91.5 L47 93 L37 93 Z" [attr.fill]="shoeAccentColor" />
+          <path d="M37.5 89 Q42 87 46.5 89" stroke="#E2E8F0" stroke-width="0.6" fill="none" />
+
+          <!-- 2. CABELO TRASEIRO (SOMENTE FEMININO - DISCRETO, RETO E NADA VOLUMOSO NO EIXO HORIZONTAL) -->
+          @if (gender === 'FEMALE') {
+            <!-- Base Traseira Compacta e Estreita (Dentro da Silhueta dos Ombros) -->
+            <path
+              d="M24 17 C22.5 24 22 34 22 46 L22 56 Q24.5 58 27 56 L27 34 L25 18 Z"
+              fill="url(#hairBlondeFlowGrad)"
+            />
+            <path
+              d="M48 17 C49.5 24 50 34 50 46 L50 56 Q47.5 58 45 56 L45 34 L47 18 Z"
+              fill="url(#hairBlondeFlowGrad)"
+            />
+            <!-- Preenchimento Traseiro Central Compacto e Estreito -->
+            <path
+              d="M24 17 C22.5 26 22 38 23 50 C25 56 47 56 49 50 C50 38 49.5 26 48 17 C45 10 27 10 24 17 Z"
+              fill="url(#hairBlondeRootGrad)"
+            />
+            <!-- Mechas com Brilho Reto Alinhado (Sem Volume Lateral) -->
+            <line x1="23.5" y1="26" x2="23.5" y2="52" stroke="url(#hairBlondeHighlightGrad)" stroke-width="1.1" stroke-linecap="round" opacity="0.8" />
+            <line x1="48.5" y1="26" x2="48.5" y2="52" stroke="url(#hairBlondeHighlightGrad)" stroke-width="1.1" stroke-linecap="round" opacity="0.8" />
+          }
+
+          <!-- 3. PESCOÇO & SCRUB INTERNO -->
+          <!-- Pescoço -->
+          <path d="M32 28 L32 37 C32 38 40 38 40 37 L40 28 Z" fill="url(#skinFaceGrad)" />
+          <!-- Sombra Anatômica sob a Mandíbula -->
+          <path d="M32 29 Q36 32 40 29 L40 33 Q36 35 32 33 Z" fill="url(#skinShadowGrad)" opacity="0.8" />
+
+          <!-- Scrub Interno V-Neck -->
+          <path d="M26 36 L36 47 L46 36 L45 52 L27 52 Z" [attr.fill]="innerScrubColor" />
+          <path d="M30 36 L36 44 L42 36" [attr.stroke]="innerScrubTrimColor" stroke-width="1.2" fill="none" />
+          <!-- Cordão do Crachá de Identificação -->
+          <path d="M34 37 L31 46" stroke="#0284C7" stroke-width="0.8" />
+          <path d="M38 37 L41 46" stroke="#0284C7" stroke-width="0.8" />
+
+          <!-- 4. CAMADA DO JALECO / ROUPA (SLOT COAT) -->
+          @switch (normalizedCoat) {
+            @case ('coat_pediatric') {
+              <!-- Jaleco Pediátrico Menta com Estampas e Apliques de Bichinhos Bem Visíveis (P-087) -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatPediatricGrad)" stroke="#059669" stroke-width="1.2" />
+              <line x1="36" y1="50" x2="36" y2="70" stroke="#059669" stroke-width="1" />
+
+              <!-- Botões Coloridos Pastéis Divertidos -->
+              <circle cx="36" cy="54" r="1.6" fill="#F59E0B" stroke="#B45309" stroke-width="0.4" />
+              <circle cx="36" cy="60" r="1.6" fill="#0D9488" stroke="#0F766E" stroke-width="0.4" />
+              <circle cx="36" cy="66" r="1.6" fill="#EC4899" stroke="#BE185D" stroke-width="0.4" />
+
+              <!-- Lapelas Menta com Pesponto Pediátrico -->
+              <path d="M27 37 L36 50 L32 50 L24 41 Z" fill="#FFFFFF" stroke="#059669" stroke-width="1" />
+              <path d="M45 37 L36 50 L40 50 L48 41 Z" fill="#FFFFFF" stroke="#059669" stroke-width="1" />
+
+              <!-- 🐻 BICHINHO 1: Ursinho Caramelo Fofo com Gravata no Bolso Esquerdo (Grande e Nítido) -->
+              <rect x="23" y="44" width="9.5" height="10" rx="2" fill="#FEF3C7" stroke="#D97706" stroke-width="0.9" />
+              <circle cx="27.7" cy="48" r="3.4" fill="#D97706" />
+              <circle cx="25" cy="45.2" r="1.4" fill="#D97706" />
+              <circle cx="25" cy="45.2" r="0.7" fill="#FDE68A" />
+              <circle cx="30.4" cy="45.2" r="1.4" fill="#D97706" />
+              <circle cx="30.4" cy="45.2" r="0.7" fill="#FDE68A" />
+              <ellipse cx="27.7" cy="49" rx="1.8" ry="1.2" fill="#FEF3C7" />
+              <circle cx="27.7" cy="48.5" r="0.6" fill="#78350F" />
+              <circle cx="26.6" cy="47.4" r="0.45" fill="#1E293B" />
+              <circle cx="28.8" cy="47.4" r="0.45" fill="#1E293B" />
+              <path d="M27 49.3 Q27.7 50.1 28.4 49.3" stroke="#78350F" stroke-width="0.4" fill="none" />
+
+              <!-- 🐱 BICHINHO 2: Gatinho / Panda Adorável no Lado Direito -->
+              <g transform="translate(41.5, 46.5)">
+                <circle cx="4" cy="4" r="3.5" fill="#FFFFFF" stroke="#1E293B" stroke-width="0.8" />
+                <polygon points="1.2,1.8 1.6,-1.2 3.5,1.2" fill="#1E293B" />
+                <polygon points="6.8,1.8 6.4,-1.2 4.5,1.2" fill="#1E293B" />
+                <circle cx="2.7" cy="3.6" r="0.6" fill="#1E293B" />
+                <circle cx="5.3" cy="3.6" r="0.6" fill="#1E293B" />
+                <circle cx="1.8" cy="4.5" r="0.8" fill="#FDA4AF" />
+                <circle cx="6.2" cy="4.5" r="0.8" fill="#FDA4AF" />
+                <circle cx="4" cy="4.4" r="0.45" fill="#E11D48" />
+                <path d="M3.3 5 Q4 5.6 4.7 5" stroke="#1E293B" stroke-width="0.4" fill="none" />
+              </g>
+
+              <!-- 🐥 BICHINHO 3: Patinho Amarelo Fofo no Centro Inferior -->
+              <g transform="translate(29, 53)">
+                <ellipse cx="3.2" cy="3.8" rx="2.8" ry="2.2" fill="#FBBF24" stroke="#D97706" stroke-width="0.6" />
+                <circle cx="2.4" cy="1.6" r="1.8" fill="#FBBF24" stroke="#D97706" stroke-width="0.6" />
+                <circle cx="1.8" cy="1.4" r="0.4" fill="#0F172A" />
+                <polygon points="0.8,1.4 -0.6,1.8 0.8,2.2" fill="#EA580C" />
+              </g>
+
+              <!-- 🐾 PATINHAS COLORIDAS NÍTIDAS NO JALECO -->
+              <g transform="translate(42.5, 60)">
+                <ellipse cx="2.2" cy="1.8" rx="2" ry="1.4" fill="#EC4899" stroke="#BE185D" stroke-width="0.5" />
+                <circle cx="0.8" cy="-0.2" r="0.65" fill="#EC4899" stroke="#BE185D" stroke-width="0.4" />
+                <circle cx="2.2" cy="-0.8" r="0.68" fill="#EC4899" stroke="#BE185D" stroke-width="0.4" />
+                <circle cx="3.6" cy="-0.2" r="0.65" fill="#EC4899" stroke="#BE185D" stroke-width="0.4" />
+              </g>
+
+              <g transform="translate(24, 60.5)">
+                <ellipse cx="2.2" cy="1.8" rx="2" ry="1.4" fill="#0284C7" stroke="#0369A1" stroke-width="0.5" />
+                <circle cx="0.8" cy="-0.2" r="0.65" fill="#0284C7" stroke="#0369A1" stroke-width="0.4" />
+                <circle cx="2.2" cy="-0.8" r="0.68" fill="#0284C7" stroke="#0369A1" stroke-width="0.4" />
+                <circle cx="3.6" cy="-0.2" r="0.65" fill="#0284C7" stroke="#0369A1" stroke-width="0.4" />
+              </g>
+
+              <!-- Bolsos Laterais -->
+              <path d="M23 58 L28 60" stroke="#059669" stroke-width="1.2" stroke-linecap="round" />
+              <path d="M49 58 L44 60" stroke="#059669" stroke-width="1.2" stroke-linecap="round" />
+
+              <!-- Mangas com Patinhas de Bichinho e Mãos Discretas nos Bolsos -->
+              <path d="M21 38 L16 57 Q18 60 21 59 L25 43 Z" fill="url(#coatPediatricGrad)" stroke="#059669" stroke-width="1.2" />
+              <ellipse cx="19.5" cy="48" rx="1.4" ry="1.1" fill="#F59E0B" stroke="#B45309" stroke-width="0.4" />
+              <circle cx="18.3" cy="46.7" r="0.45" fill="#F59E0B" />
+              <circle cx="19.5" cy="46.2" r="0.48" fill="#F59E0B" />
+              <circle cx="20.7" cy="46.7" r="0.45" fill="#F59E0B" />
+
+              <path d="M16 57 Q18.5 60 21 59" stroke="#059669" stroke-width="1.2" fill="none" />
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+
+              <path d="M51 38 L56 57 Q54 60 51 59 L47 43 Z" fill="url(#coatPediatricGrad)" stroke="#059669" stroke-width="1.2" />
+              <ellipse cx="52.5" cy="48" rx="1.4" ry="1.1" fill="#10B981" stroke="#047857" stroke-width="0.4" />
+              <circle cx="51.3" cy="46.7" r="0.45" fill="#10B981" />
+              <circle cx="52.5" cy="46.2" r="0.48" fill="#10B981" />
+              <circle cx="53.7" cy="46.7" r="0.45" fill="#10B981" />
+
+              <path d="M56 57 Q53.5 60 51 59" stroke="#059669" stroke-width="1.2" fill="none" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @case ('coat_pediatric_dino') {
+              <!-- Jaleco Pediátrico Dinossauro (US-14 / P-096.3) -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatDinoGrad)" stroke="#059669" stroke-width="1.2" />
+              <line x1="36" y1="50" x2="36" y2="70" stroke="#059669" stroke-width="1" />
+
+              <!-- Botões Estilo Fóssil/Patinha -->
+              <circle cx="36" cy="54" r="1.5" fill="#10B981" stroke="#047857" stroke-width="0.4" />
+              <circle cx="36" cy="60" r="1.5" fill="#F59E0B" stroke="#B45309" stroke-width="0.4" />
+              <circle cx="36" cy="66" r="1.5" fill="#10B981" stroke="#047857" stroke-width="0.4" />
+
+              <!-- Lapelas Menta com Pesponto Cirúrgico -->
+              <path d="M27 37 L36 50 L32 50 L24 41 Z" fill="#F0FDF4" stroke="#059669" stroke-width="1" />
+              <path d="M45 37 L36 50 L40 50 L48 41 Z" fill="#F0FDF4" stroke="#059669" stroke-width="1" />
+
+              <!-- 🦖 MINI T-REX PEDIÁTRICO NO PEITO DIREITO (Coords 24, 45) -->
+              <g class="mini-trex" transform="translate(23.5, 43.5)">
+                <!-- Corpo e Cauda do T-Rex -->
+                <path d="M5.5 3 C4.2 1.8 2 1.5 1 2.8 C0.5 3.5 0.6 5 1.8 5.6 L1.5 7.5 L2.5 7.5 L2.8 6 L4.2 6.2 L4.5 7.5 L5.5 7.5 L5.2 5.5 C6.5 5.5 8 6.5 9 8 L9.4 7.2 C8 5 6.8 4 5.5 3 Z" fill="#047857" stroke="#064E3B" stroke-width="0.3" />
+                <!-- Cabeça e Focinho -->
+                <path d="M1 2.8 Q0.2 2.5 0 3.2 Q0.3 4 1.2 3.8 Z" fill="#047857" />
+                <!-- Olho brilhante -->
+                <circle cx="0.8" cy="2.8" r="0.4" fill="#FFFFFF" />
+                <circle cx="0.7" cy="2.8" r="0.2" fill="#0F172A" />
+                <!-- Bracinho curto amigável -->
+                <path d="M2.5 4.5 Q1.8 4.7 1.6 5.2" stroke="#A7F3D0" stroke-width="0.5" stroke-linecap="round" fill="none" />
+                <!-- Cristas dorsais amarelas -->
+                <polygon points="3.5,1.8 4,1 4.5,2" fill="#F59E0B" />
+                <polygon points="4.8,2.2 5.3,1.4 5.8,2.5" fill="#F59E0B" />
+              </g>
+
+              <!-- 🦕 MINI TRICERATOPS PASTEL NA BARRA (Coords 40.5, 59) -->
+              <g class="mini-triceratops" transform="translate(40.5, 58)">
+                <ellipse cx="4.5" cy="4.5" rx="3.5" ry="2.5" fill="#FDE68A" stroke="#B45309" stroke-width="0.4" />
+                <!-- Gola/Escudo do Triceratops -->
+                <path d="M2 2.5 C1.5 1.5 3.5 1 4 2 Z" fill="#F59E0B" stroke="#B45309" stroke-width="0.3" />
+                <!-- Cabeça e Chifrinhos -->
+                <circle cx="2.2" cy="3.8" r="1.8" fill="#FDE68A" stroke="#B45309" stroke-width="0.3" />
+                <polygon points="1.2,2.8 0.4,1.8 1.8,2.4" fill="#FEF3C7" stroke="#B45309" stroke-width="0.25" />
+                <polygon points="2.8,2.6 3.2,1.6 3.4,2.6" fill="#FEF3C7" stroke="#B45309" stroke-width="0.25" />
+                <circle cx="1.6" cy="3.6" r="0.35" fill="#0F172A" />
+                <!-- Patinhas curtas -->
+                <rect x="2.5" y="6.5" width="1.2" height="1.6" rx="0.5" fill="#B45309" />
+                <rect x="5.5" y="6.5" width="1.2" height="1.6" rx="0.5" fill="#B45309" />
+              </g>
+
+              <!-- 🐾 PEGADAS TRI-DÁCTILAS NAS MANGAS -->
+              <!-- Manga Direita -->
+              <g transform="translate(18, 47)">
+                <ellipse cx="2" cy="1.6" rx="1.4" ry="1" fill="#047857" opacity="0.85" />
+                <circle cx="0.9" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+                <circle cx="2" cy="-0.2" r="0.48" fill="#047857" opacity="0.85" />
+                <circle cx="3.1" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+              </g>
+              <g transform="translate(19.5, 53)">
+                <ellipse cx="2" cy="1.6" rx="1.2" ry="0.9" fill="#D97706" opacity="0.85" />
+                <circle cx="1" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+                <circle cx="2" cy="0" r="0.42" fill="#D97706" opacity="0.85" />
+                <circle cx="3" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+              </g>
+              <!-- Manga Esquerda -->
+              <g transform="translate(50.5, 47)">
+                <ellipse cx="2" cy="1.6" rx="1.4" ry="1" fill="#047857" opacity="0.85" />
+                <circle cx="0.9" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+                <circle cx="2" cy="-0.2" r="0.48" fill="#047857" opacity="0.85" />
+                <circle cx="3.1" cy="0.2" r="0.45" fill="#047857" opacity="0.85" />
+              </g>
+              <g transform="translate(49, 53)">
+                <ellipse cx="2" cy="1.6" rx="1.2" ry="0.9" fill="#D97706" opacity="0.85" />
+                <circle cx="1" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+                <circle cx="2" cy="0" r="0.42" fill="#D97706" opacity="0.85" />
+                <circle cx="3" cy="0.4" r="0.4" fill="#D97706" opacity="0.85" />
+              </g>
+
+              <!-- Mãozinhas -->
+              <path d="M16 57 Q18.5 60 21 59" stroke="#059669" stroke-width="1.2" fill="none" />
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+              <path d="M56 57 Q53.5 60 51 59" stroke="#059669" stroke-width="1.2" fill="none" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @case ('coat_executive_doc') {
+              <!-- Jaleco Executivo de Alta Alfaiataria Nobre (US-14 / P-096.3) -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatExecutiveGrad)" stroke="#64748B" stroke-width="1.2" />
+              <!-- Costura Central Transpassada (Double-Breasted) -->
+              <line x1="37.5" y1="50" x2="37.5" y2="70" stroke="#94A3B8" stroke-width="0.9" />
+
+              <!-- Botões Duplos em Madrepérola com Aro Metálico -->
+              <circle cx="34.5" cy="53" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="38.5" cy="53" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="34.5" cy="59" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="38.5" cy="59" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="34.5" cy="65" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+              <circle cx="38.5" cy="65" r="1.3" fill="#F8FAFC" stroke="#64748B" stroke-width="0.5" />
+
+              <!-- Lapelas Peaked Chanfradas Italianas de 45 Graus -->
+              <path d="M26 37 L36 50 L31 50 L23 43 L27 41 L23 37 Z" fill="#FFFFFF" stroke="#475569" stroke-width="1.1" />
+              <path d="M46 37 L36 50 L41 50 L49 43 L45 41 L49 37 Z" fill="#FFFFFF" stroke="#475569" stroke-width="1.1" />
+              <!-- Pesponto Fino de Alfaiate (Pick Stitching) -->
+              <path d="M27 38 L35 49 M45 38 L37 49" stroke="#94A3B8" stroke-width="0.5" stroke-dasharray="1.5 1.5" fill="none" />
+
+              <!-- 🎩 BOLSO SUPERIOR COM POCKET SQUARE DE SEDA NOBRE AZUL E OURO -->
+              <g class="pocket-square" transform="translate(24, 46)">
+                <!-- Bolso em Debrum Fino -->
+                <rect x="0" y="3" width="7.5" height="1.4" rx="0.4" fill="#FFFFFF" stroke="#64748B" stroke-width="0.7" />
+                <!-- Lenço de Seda com Duas Pontas Proeminentes -->
+                <polygon points="1.5,3 3,0 4.5,3" fill="url(#pocketSquareGrad)" stroke="#F59E0B" stroke-width="0.4" />
+                <polygon points="3.5,3 5,-1.2 6.5,3" fill="url(#pocketSquareGrad)" stroke="#F59E0B" stroke-width="0.4" />
+              </g>
+
+              <!-- Bolsos Inferiores Embutidos com Portinhola -->
+              <rect x="22.5" y="61" width="7" height="1.6" rx="0.5" fill="#F8FAFC" stroke="#64748B" stroke-width="0.6" />
+              <rect x="42.5" y="61" width="7" height="1.6" rx="0.5" fill="#F8FAFC" stroke="#64748B" stroke-width="0.6" />
+
+              <!-- Mangas Estruturadas com Ombreira e Punhos com 3 Botões -->
+              <path d="M21 38 L16 57 Q18.5 60 21 59 L23 47 Z" fill="url(#coatExecutiveGrad)" stroke="#64748B" stroke-width="1.1" />
+              <circle cx="17.5" cy="54" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="18.5" cy="55.5" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="19.5" cy="57" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+
+              <path d="M51 38 L56 57 Q53.5 60 51 59 L49 47 Z" fill="url(#coatExecutiveGrad)" stroke="#64748B" stroke-width="1.1" />
+              <circle cx="54.5" cy="54" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="53.5" cy="55.5" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+              <circle cx="52.5" cy="57" r="0.6" fill="#F8FAFC" stroke="#64748B" stroke-width="0.3" />
+
+              <!-- Mãozinhas -->
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @case ('coat_gold') {
+              <!-- Jaleco Mestre Ouro 24k Executivo -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatGoldGrad)" stroke="#D97706" stroke-width="1.2" />
+              <line x1="36" y1="50" x2="36" y2="70" stroke="#B45309" stroke-width="1.2" />
+              <!-- Botões Dourados de Alta Joalheria -->
+              <circle cx="36" cy="54" r="1.4" fill="#B45309" />
+              <circle cx="36" cy="60" r="1.4" fill="#B45309" />
+              <circle cx="36" cy="66" r="1.4" fill="#B45309" />
+
+              <!-- Lapelas Douradas de Gala -->
+              <path d="M27 37 L36 50 L32 50 L24 41 Z" fill="#FFFBEB" stroke="#B45309" stroke-width="1" />
+              <path d="M45 37 L36 50 L40 50 L48 41 Z" fill="#FFFBEB" stroke="#B45309" stroke-width="1" />
+
+              <!-- Brasão Dourado de Honra Médica no Peito -->
+              <path d="M24 46 L27 44 L30 46 L30 50 L27 52 L24 50 Z" fill="#F59E0B" stroke="#B45309" stroke-width="0.8" />
+              <circle cx="27" cy="48" r="1" fill="#FFFBEB" />
+
+              <!-- Bolsos Laterais -->
+              <path d="M23 58 L28 60" stroke="#B45309" stroke-width="1.2" stroke-linecap="round" />
+              <path d="M49 58 L44 60" stroke="#B45309" stroke-width="1.2" stroke-linecap="round" />
+
+              <!-- Mangas com Punho Dourado -->
+              <path d="M21 38 L16 57 Q18 60 21 59 L25 43 Z" fill="url(#coatGoldGrad)" stroke="#D97706" stroke-width="1.2" />
+              <rect x="16" y="56" width="5" height="3" rx="1" fill="#F59E0B" />
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+
+              <path d="M51 38 L56 57 Q54 60 51 59 L47 43 Z" fill="url(#coatGoldGrad)" stroke="#D97706" stroke-width="1.2" />
+              <rect x="51" y="56" width="5" height="3" rx="1" fill="#F59E0B" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @case ('coat_scrubs_navy') {
+              <!-- Scrub Azul Marinho Plantão -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#scrubsNavyGrad)" stroke="#172554" stroke-width="1" />
+              <!-- Gola V do Scrub -->
+              <path d="M28 38 L36 48 L44 38" fill="none" stroke="#60A5FA" stroke-width="1.2" />
+              <!-- Bolso de Scrub Superior -->
+              <rect x="24" y="47" width="6.5" height="7.5" rx="1.5" fill="#1E3A8A" stroke="#3B82F6" stroke-width="0.8" />
+              <line x1="26" y1="45" x2="26" y2="48" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" />
+
+              <!-- Mangas do Scrub -->
+              <path d="M21 38 L16 57 Q18 60 21 59 L25 43 Z" fill="url(#scrubsNavyGrad)" stroke="#172554" stroke-width="1" />
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+              <path d="M51 38 L56 57 Q54 60 51 59 L47 43 Z" fill="url(#scrubsNavyGrad)" stroke="#172554" stroke-width="1" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @case ('coat_scrubs_green') {
+              <!-- Scrub Verde Cirúrgico -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#scrubsGreenGrad)" stroke="#064E3B" stroke-width="1" />
+              <path d="M28 38 L36 48 L44 38" fill="none" stroke="#34D399" stroke-width="1.2" />
+              <rect x="24" y="47" width="6.5" height="7.5" rx="1.5" fill="#065F46" stroke="#10B981" stroke-width="0.8" />
+              <line x1="26" y1="45" x2="26" y2="48" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" />
+
+              <path d="M21 38 L16 57 Q18 60 21 59 L25 43 Z" fill="url(#scrubsGreenGrad)" stroke="#064E3B" stroke-width="1" />
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+              <path d="M51 38 L56 57 Q54 60 51 59 L47 43 Z" fill="url(#scrubsGreenGrad)" stroke="#064E3B" stroke-width="1" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+
+            @default {
+              <!-- Jaleco Branco Tradicional de Internato / Residente (Padrão) -->
+              <path d="M21 38 L20 69 Q36 71.5 52 69 L51 38 Q36 40 21 38 Z" fill="url(#coatWhiteGrad)" stroke="#CBD5E1" stroke-width="1" />
+              <!-- Costura Central e Botões Elegantes -->
+              <line x1="36" y1="50" x2="36" y2="70" stroke="#CBD5E1" stroke-width="1" />
+              <circle cx="36" cy="54" r="1.1" fill="#94A3B8" />
+              <circle cx="36" cy="60" r="1.1" fill="#94A3B8" />
+              <circle cx="36" cy="66" r="1.1" fill="#94A3B8" />
+
+              <!-- Lapelas do Jaleco com Caimento Realista -->
+              <path d="M27 37 L36 50 L32 50 L24 41 Z" fill="url(#coatLapelGrad)" stroke="#CBD5E1" stroke-width="0.9" />
+              <path d="M45 37 L36 50 L40 50 L48 41 Z" fill="url(#coatLapelGrad)" stroke="#CBD5E1" stroke-width="0.9" />
+
+              <!-- Bolsos Laterais para as Mãos -->
+              <path d="M23 58 L28 60" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+              <path d="M49 58 L44 60" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round" />
+
+              <!-- Bolso Superior com Canetas e Crachá MedStudy -->
+              <rect x="24" y="46" width="6.5" height="7.5" rx="1.5" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="0.8" />
+              <line x1="26" y1="44" x2="26" y2="47.5" stroke="#0284C7" stroke-width="1.2" stroke-linecap="round" />
+              <line x1="28" y1="44.5" x2="28" y2="47.5" stroke="#94A3B8" stroke-width="1" stroke-linecap="round" />
+              <!-- Crachá Hospitalar -->
+              <rect x="25" y="49" width="4.5" height="3.2" rx="0.6" fill="#F8FAFC" stroke="#0284C7" stroke-width="0.5" />
+              <rect x="25.5" y="49.5" width="1.6" height="2.2" rx="0.3" fill="#0284C7" opacity="0.8" />
+              <line x1="27.6" y1="50.2" x2="29" y2="50.2" stroke="#64748B" stroke-width="0.4" />
+              <line x1="27.6" y1="51.2" x2="29" y2="51.2" stroke="#64748B" stroke-width="0.4" />
+
+              <!-- Mangas e Mãos Discretas nos Bolsos -->
+              <path d="M21 38 L16 57 Q18 60 21 59 L25 43 Z" fill="url(#coatWhiteGrad)" stroke="#CBD5E1" stroke-width="1" />
+              <path d="M16 57 Q18.5 60 21 59" stroke="#94A3B8" stroke-width="1.2" fill="none" />
+              <circle cx="21" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+
+              <path d="M51 38 L56 57 Q54 60 51 59 L47 43 Z" fill="url(#coatWhiteGrad)" stroke="#CBD5E1" stroke-width="1" />
+              <path d="M56 57 Q53.5 60 51 59" stroke="#94A3B8" stroke-width="1.2" fill="none" />
+              <circle cx="51" cy="59.5" r="1.8" fill="url(#skinFaceGrad)" />
+            }
+          }
+
+          <!-- 5. ESTETOSCÓPIO DRAPEADO NOS OMBROS (SLOT STETHOSCOPE) -->
+          @if (normalizedSteth !== 'steth_none') {
+            <g class="stethoscope-layer" filter="url(#softShadow)">
+              @switch (normalizedSteth) {
+                @case ('steth_elephant') {
+                  <!-- Esteto Pediátrico Elefante -->
+                  <path
+                    d="M30 36 C28 42 27 49 32 54 C34 56 38 56 40 54 C45 49 44 42 42 36"
+                    stroke="#06B6D4"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                  <path d="M36 55.5 L36 58" stroke="#06B6D4" stroke-width="2.2" stroke-linecap="round" />
+                  <!-- Campânula com Cabeça de Elefantinho -->
+                  <g transform="translate(36, 61)">
+                    <circle cx="0" cy="0" r="4.2" fill="#0891B2" stroke="#FFFFFF" stroke-width="0.8" />
+                    <circle cx="-3.8" cy="-1.5" r="2.2" fill="#06B6D4" stroke="#0891B2" stroke-width="0.5" />
+                    <circle cx="3.8" cy="-1.5" r="2.2" fill="#06B6D4" stroke="#0891B2" stroke-width="0.5" />
+                    <circle cx="-3.8" cy="-1.5" r="1.1" fill="#F472B6" />
+                    <circle cx="3.8" cy="-1.5" r="1.1" fill="#F472B6" />
+                    <circle cx="-1.5" cy="-0.8" r="0.6" fill="#FFFFFF" />
+                    <circle cx="1.5" cy="-0.8" r="0.6" fill="#FFFFFF" />
+                    <path d="M0 1 Q0 4.5 2 3.8" stroke="#FFFFFF" stroke-width="1.1" stroke-linecap="round" fill="none" />
+                  </g>
+                }
+
+                @case ('steth_gold') {
+                  <!-- Esteto Master Ouro 24k Reluzente -->
+                  <path
+                    d="M30 36 C28 42 27 49 32 54 C34 56 38 56 40 54 C45 49 44 42 42 36"
+                    stroke="url(#stethGoldGrad)"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                  <path d="M36 55.5 L36 58.5" stroke="url(#stethGoldGrad)" stroke-width="2.4" stroke-linecap="round" />
+                  <!-- Campânula de Ouro Dupla com Brilho Estelar -->
+                  <circle cx="36" cy="61" r="3.8" fill="url(#stethGoldGrad)" stroke="#B45309" stroke-width="0.9" />
+                  <circle cx="36" cy="61" r="2" fill="#FEF3C7" />
+                  <path d="M36 59.2 L36.4 60.5 L37.7 61 L36.4 61.5 L36 62.8 L35.6 61.5 L34.3 61 L35.6 60.5 Z" fill="#FFFFFF" />
+                }
+
+                @case ('steth_cardio_burgundy') {
+                  <!-- Esteto Cardiológico Vinho & Smoke -->
+                  <path
+                    d="M30 36 C28 42 27 49 32 54 C34 56 38 56 40 54 C45 49 44 42 42 36"
+                    stroke="#9F1239"
+                    stroke-width="2.3"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                  <path d="M36 55.5 L36 58.5" stroke="#9F1239" stroke-width="2.3" stroke-linecap="round" />
+                  <circle cx="36" cy="61" r="3.5" fill="#1E293B" stroke="#475569" stroke-width="0.8" />
+                  <circle cx="36" cy="61" r="1.8" fill="#0F172A" />
+                }
+
+                @default {
+                  <!-- Esteto Standard Littmann Preto & Aço Cromado (Padrão) -->
+                  <path
+                    d="M30 36 C28 42 27 49 32 54 C34 56 38 56 40 54 C45 49 44 42 42 36"
+                    stroke="#1E293B"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                  <path d="M36 55.5 L36 58.5" stroke="#1E293B" stroke-width="2.2" stroke-linecap="round" />
+                  <circle cx="36" cy="61" r="3.6" fill="url(#stethChromeGrad)" stroke="#475569" stroke-width="0.8" />
+                  <circle cx="36" cy="61" r="1.8" fill="#1E293B" />
+                  <circle cx="35" cy="60" r="0.8" fill="#FFFFFF" opacity="0.8" />
+                }
+              }
+            </g>
+          }
+
+          <!-- 6. CABEÇA, ROSTO & EXPRESSÃO FACIAL -->
+          <!-- Contorno do Rosto -->
+          <path
+            d="M24.5 19 C24.5 13 29 11 36 11 C43 11 47.5 13 47.5 19 C47.5 25 45 31.5 36 31.5 C27 31.5 24.5 25 24.5 19 Z"
+            fill="url(#skinFaceGrad)"
+          />
+
+          <!-- Orelhas com Detalhe Anatômico e Brincos -->
+          <!-- Orelha Esquerda -->
+          <ellipse cx="24.5" cy="22" rx="2" ry="3" fill="url(#skinFaceGrad)" />
+          <path d="M24.8 21 Q24 22 24.8 23" stroke="url(#skinShadowGrad)" stroke-width="0.8" fill="none" stroke-linecap="round" />
+          @if (gender === 'FEMALE') {
+            <circle cx="24.5" cy="24" r="0.8" fill="#F59E0B" />
+            <circle cx="24.3" cy="23.8" r="0.3" fill="#FEF3C7" />
+          }
+
+          <!-- Orelha Direita -->
+          <ellipse cx="47.5" cy="22" rx="2" ry="3" fill="url(#skinFaceGrad)" />
+          <path d="M47.2 21 Q48 22 47.2 23" stroke="url(#skinShadowGrad)" stroke-width="0.8" fill="none" stroke-linecap="round" />
+          @if (gender === 'FEMALE') {
+            <circle cx="47.5" cy="24" r="0.8" fill="#F59E0B" />
+            <circle cx="47.3" cy="23.8" r="0.3" fill="#FEF3C7" />
+          }
+
+          <!-- Bochechas Coradas (Visual Acolhedor) -->
+          <ellipse cx="29" cy="24" rx="2.4" ry="1.4" fill="#FB7185" opacity="0.35" />
+          <ellipse cx="43" cy="24" rx="2.4" ry="1.4" fill="#FB7185" opacity="0.35" />
+
+          <!-- Olhos Expressivos com Brilho Especular Duplo -->
+          <!-- Olho Esquerdo -->
+          <path d="M29.5 20.5 Q32 19.5 34.5 20.5" stroke="#1E293B" stroke-width="1.3" stroke-linecap="round" fill="none" />
+          <ellipse cx="32" cy="22" rx="1.8" ry="2" fill="#1E293B" />
+          <circle cx="31.3" cy="21.2" r="0.75" fill="#FFFFFF" />
+          <circle cx="32.8" cy="22.8" r="0.35" fill="#FFFFFF" opacity="0.85" />
+
+          <!-- Olho Direito -->
+          <path d="M37.5 20.5 Q40 19.5 42.5 20.5" stroke="#1E293B" stroke-width="1.3" stroke-linecap="round" fill="none" />
+          <ellipse cx="40" cy="22" rx="1.8" ry="2" fill="#1E293B" />
+          <circle cx="39.3" cy="21.2" r="0.75" fill="#FFFFFF" />
+          <circle cx="40.8" cy="22.8" r="0.35" fill="#FFFFFF" opacity="0.85" />
+
+          <!-- Sobrancelhas Suaves e Bem Desenhadas -->
+          @if (gender === 'FEMALE') {
+            <!-- Sobrancelhas Femininas Castanho-Mel Harmoniosas com Cabelo Loiro -->
+            <path d="M29.5 17.8 Q32 16.2 34.2 17.2" stroke="#854D0E" stroke-width="1" stroke-linecap="round" fill="none" />
+            <path d="M37.8 17.2 Q40 16.2 42.5 17.8" stroke="#854D0E" stroke-width="1" stroke-linecap="round" fill="none" />
+          } @else {
+            <path d="M29.5 18 Q32 16.8 34.5 17.8" stroke="#1E293B" stroke-width="1.2" stroke-linecap="round" fill="none" />
+            <path d="M37.5 17.8 Q40 16.8 42.5 18" stroke="#1E293B" stroke-width="1.2" stroke-linecap="round" fill="none" />
+          }
+
+          <!-- Nariz Delicado -->
+          <path d="M35.5 23.5 Q36 24.5 36.5 23.5" stroke="url(#skinShadowGrad)" stroke-width="0.9" stroke-linecap="round" fill="none" />
+
+          <!-- Sorriso Radiante -->
+          @if (gender === 'FEMALE') {
+            <!-- Sorriso Aberto, Alegre e Acolhedor com Dentes Brancos (Inspirado na Foto) -->
+            <!-- Fundo da Boca -->
+            <path d="M32.8 26.2 Q36 29.8 39.2 26.2 Q36 27.2 32.8 26.2 Z" fill="#991B1B" />
+            <!-- Dentes Superiores Brancos -->
+            <path d="M33.2 26.3 Q36 28.2 38.8 26.3 Q36 26.8 33.2 26.3 Z" fill="#FFFFFF" />
+            <!-- Contorno dos Lábios em Rosa Coral Radiante -->
+            <path d="M32.5 26.2 Q36 29.8 39.5 26.2" stroke="#E11D48" stroke-width="1.1" stroke-linecap="round" fill="none" />
+            <path d="M33 26.1 Q36 25.5 39 26.1" stroke="#F43F5E" stroke-width="0.7" stroke-linecap="round" fill="none" />
+          } @else {
+            <path d="M33.5 26.5 Q36 28.8 38.5 26.5" stroke="#9A3412" stroke-width="1.2" stroke-linecap="round" fill="none" />
+          }
+
+          <!-- 7. CABELO FRONTAL -->
+          @if (gender === 'FEMALE') {
+            <!-- Cabelo Feminino Frontal: Liso, Alinhado e Escorrido Reto pra Baixo -->
+            <!-- Topo da Cabeça Liso e Polido com Repartição Central -->
+            <path
+              d="M24 17 C23.5 10.5 29 7.5 36 7.5 C43 7.5 48.5 10.5 48 17 C47 13.5 43 10 36 10 C29 10 25 13.5 24 17 Z"
+              fill="url(#hairBlondeRootGrad)"
+            />
+            <!-- Mecha Frontal Esquerda: Lisa, Retinha e Caindo Alinhada sobre o Ombro -->
+            <path
+              d="M36 9 C30 9.5 25 13 24 18 L23 35 L23 50 Q25 52 27 50 L27 34 C27 26 29 18 36 12 Z"
+              fill="url(#hairBlondeFlowGrad)"
+            />
+            <!-- Mecha Frontal Direita: Lisa, Retinha e Caindo Alinhada sobre o Ombro -->
+            <path
+              d="M36 9 C42 9.5 47 13 48 18 L49 35 L49 50 Q47 52 45 50 L45 34 C45 26 43 18 36 12 Z"
+              fill="url(#hairBlondeFlowGrad)"
+            />
+            <!-- Linhas de Brilho Retilíneo / Fios Lisos Escorridos -->
+            <line x1="24.5" y1="22" x2="24.5" y2="48" stroke="#FEF08A" stroke-width="1" stroke-linecap="round" opacity="0.9" />
+            <line x1="47.5" y1="22" x2="47.5" y2="48" stroke="#FEF08A" stroke-width="1" stroke-linecap="round" opacity="0.9" />
+            <!-- Faixa de Brilho Polido no Topo (Efeito Cabelo Liso Sedoso) -->
+            <path d="M28 11 Q36 9.5 44 11" stroke="#FEF9C3" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.85" />
+          } @else {
+            <!-- Cabelo Masculino Moderno: Topete Quiff com Fade e Textura (Sem Calvície) -->
+            <path
+              d="M24 18 C23.5 13 27 7.5 35 7.5 C43 7.5 48 11 47.5 18 C46.5 14 43 12 37 12 C29 12 26 15 24 18 Z"
+              fill="url(#hairMaleGrad)"
+            />
+            <path
+              d="M25 15 C28 8 34 7 38 8.5 C36 10 32 11 27 15 Z"
+              fill="#334155"
+            />
+            <path
+              d="M34 8 C38 7 43 8.5 46 12.5 C43 11.5 39 10.5 35 11 Z"
+              fill="#1E293B"
+            />
+            <path d="M24.5 18 L24.5 21" stroke="#1E293B" stroke-width="1.2" stroke-linecap="round" />
+            <path d="M47.5 18 L47.5 21" stroke="#0F172A" stroke-width="1.2" stroke-linecap="round" />
+            <path d="M28 10 Q35 8 42 10" stroke="#64748B" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6" />
+          }
+
+          <!-- 8. ACESSÓRIOS (SLOT ACCESSORY) -->
+          @switch (normalizedAccessory) {
+            @case ('acc_red_bowtie') {
+              <!-- Gravata Borboleta Vermelha -->
+              <g transform="translate(36, 38)">
+                <circle cx="0" cy="0" r="1.6" fill="#991B1B" />
+                <path d="M-1 0 L-5 -3 L-5 3 Z" fill="#DC2626" stroke="#991B1B" stroke-width="0.5" />
+                <path d="M1 0 L5 -3 L5 3 Z" fill="#DC2626" stroke="#991B1B" stroke-width="0.5" />
+              </g>
+            }
+
+            @case ('acc_scrub_cap') {
+              <!-- Touca Cirúrgica Teal Nórdica -->
+              <g class="acc-scrub-cap">
+                <path
+                  d="M23.5 18 C23 9 49 9 48.5 18 C49 20 23 20 23.5 18 Z"
+                  fill="url(#scrubCapGrad)"
+                  stroke="#042F2E"
+                  stroke-width="0.9"
+                />
+                <path d="M23.5 18 Q36 20 48.5 18" stroke="#2DD4BF" stroke-width="1.2" fill="none" opacity="0.85" />
+                <path d="M47 19 Q51 21 50 24" stroke="#115E59" stroke-width="1.2" stroke-linecap="round" fill="none" />
+                <path d="M46 20 Q49 23 47 25" stroke="#0D9488" stroke-width="1.2" stroke-linecap="round" fill="none" />
+                <path d="M36 12 L36 16 M34 14 L38 14" stroke="#CCFBF1" stroke-width="1.1" stroke-linecap="round" />
+              </g>
+            }
+
+            @case ('acc_ped_gorro_colorido') {
+              <!-- Gorro Cirúrgico Safari Pediátrico (US-14 / P-096.3) -->
+              <g class="acc-ped-gorro-safari">
+                <!-- Domo Anatômico do Gorro Amarelo Savana -->
+                <path
+                  d="M23.5 18 C23 8.5 49 8.5 48.5 18 C49 20.5 23 20.5 23.5 18 Z"
+                  fill="url(#gorroSafariGrad)"
+                  stroke="#B45309"
+                  stroke-width="0.9"
+                />
+                <!-- Borda Rebatida em Terracota -->
+                <path d="M23.5 18 Q36 20.2 48.5 18" stroke="#D97706" stroke-width="1.4" fill="none" />
+
+                <!-- Folhagens Tropicais Verdes Cirúrgicas -->
+                <!-- Folha 1 -->
+                <path d="M27 13 C26 11 28 10 29 12 C28.5 13.5 27.5 13.5 27 13 Z" fill="#059669" />
+                <line x1="27" y1="13" x2="28.5" y2="11.5" stroke="#A7F3D0" stroke-width="0.3" />
+                <!-- Folha 2 -->
+                <path d="M43 13 C44 11 42 10 41 12 C41.5 13.5 42.5 13.5 43 13 Z" fill="#059669" />
+                <line x1="43" y1="13" x2="41.5" y2="11.5" stroke="#A7F3D0" stroke-width="0.3" />
+
+                <!-- Silhueta Delicada de Girafinha no Centro Superior -->
+                <path d="M35 15 L35 11 Q35 10 36 10 L37 10 L37 11 L36 11 L36 15 Z" fill="#B45309" />
+                <circle cx="36" cy="9.8" r="0.4" fill="#B45309" />
+                <!-- Patinhas da Savana -->
+                <circle cx="31" cy="15.5" r="0.6" fill="#D97706" />
+                <circle cx="39" cy="15.5" r="0.6" fill="#D97706" />
+
+                <!-- Tiras Cirúrgicas Rebatidas caindo na nuca -->
+                <path d="M47.5 19 Q51.5 21.5 50.5 25" stroke="#B45309" stroke-width="1.3" stroke-linecap="round" fill="none" />
+                <path d="M46.5 20 Q49.5 23.5 47.5 26" stroke="#D97706" stroke-width="1.3" stroke-linecap="round" fill="none" />
+              </g>
+            }
+
+            @case ('acc_glasses_classic') {
+              <!-- Óculos Redondos Clássicos -->
+              <g class="acc-glasses">
+                <circle cx="32" cy="22" r="3.2" fill="none" stroke="#78350F" stroke-width="0.9" />
+                <circle cx="40" cy="22" r="3.2" fill="none" stroke="#78350F" stroke-width="0.9" />
+                <path d="M35.2 21.5 Q36 20.8 36.8 21.5" stroke="#78350F" stroke-width="0.8" fill="none" />
+                <line x1="28.8" y1="21.5" x2="25" y2="21" stroke="#78350F" stroke-width="0.8" />
+                <line x1="43.2" y1="21.5" x2="47" y2="21" stroke="#78350F" stroke-width="0.8" />
+                <!-- Reflexo sutil nas lentes -->
+                <line x1="31" y1="20" x2="33" y2="24" stroke="#FFFFFF" stroke-width="0.7" stroke-linecap="round" opacity="0.6" />
+                <line x1="39" y1="20" x2="41" y2="24" stroke="#FFFFFF" stroke-width="0.7" stroke-linecap="round" opacity="0.6" />
+              </g>
+            }
+
+            @case ('acc_prontuario_clipboard') {
+              <!-- Prancheta Médica na Mão -->
+              <g transform="translate(48, 52) rotate(10)" filter="url(#softShadow)">
+                <rect x="0" y="0" width="10" height="14" rx="1.2" fill="#D97706" stroke="#92400E" stroke-width="0.7" />
+                <rect x="1" y="2" width="8" height="10.5" rx="0.5" fill="#FFFFFF" />
+                <rect x="3" y="-1" width="4" height="2" rx="0.5" fill="#64748B" />
+                <line x1="2.5" y1="4.5" x2="7.5" y2="4.5" stroke="#0D9488" stroke-width="0.6" />
+                <line x1="2.5" y1="6.5" x2="7.5" y2="6.5" stroke="#94A3B8" stroke-width="0.5" />
+                <line x1="2.5" y1="8.5" x2="6.5" y2="8.5" stroke="#94A3B8" stroke-width="0.5" />
+                <line x1="2.5" y1="10.5" x2="5.5" y2="10.5" stroke="#EF4444" stroke-width="0.5" />
+              </g>
+            }
+          }
+        </g>
+      </svg>
+    </div>

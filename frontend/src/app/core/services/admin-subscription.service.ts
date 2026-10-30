@@ -85,8 +85,8 @@ export class AdminSubscriptionService {
   }
 
   getTransactions(
-    page: number = 0,
-    size: number = 20,
+    page = 0,
+    size = 20,
     sortCol?: string,
     sortDir?: string,
     search?: string,

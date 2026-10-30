@@ -1,0 +1,62 @@
+:host {
+        display: inline-block;
+        user-select: none;
+      }
+
+      .doctor-avatar-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+      }
+
+      .doctor-avatar-container:hover {
+        transform: scale(1.06);
+      }
+
+      .doctor-svg {
+        display: block;
+        overflow: visible;
+      }
+
+      /* Animação suave e orgânica de respiração (P-087) */
+      .doctor-breathing-group {
+        animation: doctorBreathing 3.4s ease-in-out infinite alternate;
+        transform-origin: 36px 72px;
+      }
+
+      @keyframes doctorBreathing {
+        0% {
+          transform: translateY(0) scaleY(1);
+        }
+        100% {
+          transform: translateY(-2px) scaleY(1.02);
+        }
+      }
+
+      /* Micro-aceno e pulo alegre ao clicar / interagir (P-088) */
+      .doctor-avatar-container.is-animating .doctor-breathing-group {
+        animation: doctorTapGreeting 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes doctorTapGreeting {
+        0% {
+          transform: translateY(0) scale(1);
+        }
+        35% {
+          transform: translateY(-8px) scale(1.08) rotate(-2.5deg);
+        }
+        70% {
+          transform: translateY(-2px) scale(1.03) rotate(2deg);
+        }
+        100% {
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+      }
+
+      /* Page Visibility API: Suspende keyframes se a aba estiver oculta (P-085, P-087) */
+      .doctor-avatar-container.is-paused .doctor-breathing-group {
+        animation-play-state: paused !important;
+      }
