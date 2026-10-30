@@ -14,6 +14,7 @@ import {
   ClinicCatalogItem,
   ClinicCategory,
   ClinicPlacedItem,
+  ClinicState,
   PlacementType,
   DoctorAvatar,
   DoctorGender,
@@ -431,161 +432,166 @@ export class MinhaClinicaComponent implements OnInit {
       return;
     }
 
-    // Caso A: Doutor(a) selecionado(a) para mover de lugar
     if (this.isMovingDoctor()) {
-      const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
-      if (itemOnTile) {
-        this.showErrorModal(
-          `Posição (${coords.gridX}, ${coords.gridY}) já ocupada por um móvel. Escolha um piso livre para o(a) Doutor(a).`
-        );
-        return;
-      }
-
-      this.localError.set(null);
-      this.isMovingDoctor.set(false);
-      this.audioService.playPlaceItem();
-
-      const current = this.currentAvatar();
-      const updatedAvatar: DoctorAvatar = {
-        gender: current?.gender ?? 'FEMALE',
-        skinCoat: current?.skinCoat ?? 'coat_intern_white',
-        skinStethoscope: current?.skinStethoscope ?? 'steth_classic_black',
-        skinAccessory: current?.skinAccessory ?? 'acc_none',
-        avatarX: coords.gridX,
-        avatarY: coords.gridY
-      };
-
-      // Atualização otimista imediata no viewport
-      this.clinicService.clinicState.set({
-        ...state,
-        avatar: updatedAvatar
-      });
-
-      // Persiste no backend
-      this.clinicService.updateDoctorAvatar({
-        avatarX: coords.gridX,
-        avatarY: coords.gridY
-      }).subscribe({
-        next: resp => {
-          const s = this.clinic();
-          if (s) {
-            this.clinicService.clinicState.set({
-              ...s,
-              avatar: {
-                ...updatedAvatar,
-                avatarId: resp.avatarId ?? updatedAvatar.avatarId,
-                avatarX: resp.avatarX,
-                avatarY: resp.avatarY
-              }
-            });
-          }
-        },
-        error: () => {
-          // Mantém fallback otimista
-        }
-      });
+      this.handleDoctorRelocation(coords, state);
       return;
     }
 
     const sel = this.selectedCatalogItem();
-    // Caso B: Item selecionado para posicionar ou mover
     if (sel) {
-      const isWall =
-        sel.placementType === 'WALL' ||
-        (sel.footprintX === 0 && sel.footprintY === 0) ||
-        sel.id === 'ped_regua_girafa' ||
-        sel.id === 'negatoscopio_led';
-
-      if (isWall && coords.gridX !== 0 && coords.gridY !== 0) {
-        this.showErrorModal(
-          'Itens de parede devem ser fixados em segmentos de parede (linha superior ou lateral esquerda).'
-        );
-        return;
-      }
-
-      const rot = this.selectedRotation();
-      const valid = this.clinicService.isPositionValid(
-        coords.gridX,
-        coords.gridY,
-        sel.footprintX,
-        sel.footprintY,
-        rot,
-        state.gridWidth,
-        state.gridHeight,
-        this.workingPlacedItems(),
-        state.catalog,
-        this.movingPlacedId()
-      );
-
-      if (!valid) {
-        this.showErrorModal(
-          `Posição (${coords.gridX}, ${coords.gridY}) inválida: há colisão com outro móvel ou extrapola o limite ${state.gridWidth}×${state.gridHeight}.`
-        );
-        return;
-      }
-
-      this.localError.set(null);
-      const currentList = [...this.workingPlacedItems()];
-      const existingIdx = currentList.findIndex(
-        p =>
-          (this.movingPlacedId() && p.id === this.movingPlacedId()) ||
-          p.catalogItemId === sel.id
-      );
-
-      let wallSide: 'NW' | 'NE' | undefined;
-      let wallTileIndex: number | undefined;
-      if (isWall) {
-        wallSide = coords.gridX === 0 ? 'NW' : 'NE';
-        wallTileIndex = coords.gridX === 0 ? coords.gridY : coords.gridX;
-      }
-      let elevationZ: number | undefined;
-      if (isWall) {
-        elevationZ = (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto') ? 0 : 76;
-      }
-
-      if (existingIdx >= 0) {
-        currentList[existingIdx] = {
-          ...currentList[existingIdx],
-          gridX: coords.gridX,
-          gridY: coords.gridY,
-          rotation: rot,
-          placed: true,
-          wallSide: wallSide as any,
-          wallTileIndex,
-          elevationZ,
-          placementType: (isWall ? 'WALL' : 'FLOOR') as PlacementType
-        };
-      } else {
-        currentList.push({
-          id: `placed-${sel.id}-${Date.now()}`,
-          catalogItemId: sel.id,
-          gridX: coords.gridX,
-          gridY: coords.gridY,
-          rotation: rot,
-          placed: true,
-          wallSide: wallSide as any,
-          wallTileIndex,
-          elevationZ,
-          placementType: (isWall ? 'WALL' : 'FLOOR') as PlacementType
-        });
-      }
-
-      this.workingPlacedItems.set(currentList);
-      this.isLayoutDirty.set(true);
-      this.movingPlacedId.set(undefined);
-      this.selectedCatalogItem.set(null);
-      this.audioService.playPlaceItem();
+      this.handleItemPlacement(coords, state, sel);
       return;
     }
 
-    // Caso C: Nenhum item em mãos — se clicou no piso onde o(a) Doutor(a) está, seleciona para mover!
+    this.handleEmptyHandClick(coords);
+  }
+
+  private handleDoctorRelocation(coords: { gridX: number; gridY: number; fromWall?: boolean }, state: ClinicState): void {
+    const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
+    if (itemOnTile) {
+      this.showErrorModal(
+        `Posição (${coords.gridX}, ${coords.gridY}) já ocupada por um móvel. Escolha um piso livre para o(a) Doutor(a).`
+      );
+      return;
+    }
+
+    this.localError.set(null);
+    this.isMovingDoctor.set(false);
+    this.audioService.playPlaceItem();
+
+    const current = this.currentAvatar();
+    const updatedAvatar: DoctorAvatar = {
+      gender: current?.gender ?? 'FEMALE',
+      skinCoat: current?.skinCoat ?? 'coat_intern_white',
+      skinStethoscope: current?.skinStethoscope ?? 'steth_classic_black',
+      skinAccessory: current?.skinAccessory ?? 'acc_none',
+      avatarX: coords.gridX,
+      avatarY: coords.gridY
+    };
+
+    this.clinicService.clinicState.set({
+      ...state,
+      avatar: updatedAvatar
+    });
+
+    this.clinicService.updateDoctorAvatar({
+      avatarX: coords.gridX,
+      avatarY: coords.gridY
+    }).subscribe({
+      next: resp => {
+        const s = this.clinic();
+        if (s) {
+          this.clinicService.clinicState.set({
+            ...s,
+            avatar: {
+              ...updatedAvatar,
+              avatarId: resp.avatarId ?? updatedAvatar.avatarId,
+              avatarX: resp.avatarX,
+              avatarY: resp.avatarY
+            }
+          });
+        }
+      },
+      error: () => {
+        // Mantém fallback otimista
+      }
+    });
+  }
+
+  private handleItemPlacement(
+    coords: { gridX: number; gridY: number; fromWall?: boolean },
+    state: ClinicState,
+    sel: ClinicCatalogItem
+  ): void {
+    const isWall =
+      sel.placementType === 'WALL' ||
+      (sel.footprintX === 0 && sel.footprintY === 0) ||
+      sel.id === 'ped_regua_girafa' ||
+      sel.id === 'negatoscopio_led';
+
+    if (isWall && coords.gridX !== 0 && coords.gridY !== 0) {
+      this.showErrorModal(
+        'Itens de parede devem ser fixados em segmentos de parede (linha superior ou lateral esquerda).'
+      );
+      return;
+    }
+
+    const rot = this.selectedRotation();
+    const valid = this.clinicService.isPositionValid(
+      coords.gridX,
+      coords.gridY,
+      sel.footprintX,
+      sel.footprintY,
+      rot,
+      state.gridWidth,
+      state.gridHeight,
+      this.workingPlacedItems(),
+      state.catalog,
+      this.movingPlacedId()
+    );
+
+    if (!valid) {
+      this.showErrorModal(
+        `Posição (${coords.gridX}, ${coords.gridY}) inválida: há colisão com outro móvel ou extrapola o limite ${state.gridWidth}×${state.gridHeight}.`
+      );
+      return;
+    }
+
+    this.localError.set(null);
+    const currentList = [...this.workingPlacedItems()];
+    const existingIdx = currentList.findIndex(
+      p =>
+        (this.movingPlacedId() && p.id === this.movingPlacedId()) ||
+        p.catalogItemId === sel.id
+    );
+
+    let wallSide: 'NW' | 'NE' | undefined;
+    let wallTileIndex: number | undefined;
+    if (isWall) {
+      wallSide = coords.gridX === 0 ? 'NW' : 'NE';
+      wallTileIndex = coords.gridX === 0 ? coords.gridY : coords.gridX;
+    }
+    let elevationZ: number | undefined;
+    if (isWall) {
+      elevationZ = (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto') ? 0 : 76;
+    }
+
+    const placedData: ClinicPlacedItem = {
+      id: existingIdx >= 0 ? currentList[existingIdx].id : `placed-${sel.id}-${Date.now()}`,
+      catalogItemId: sel.id,
+      gridX: coords.gridX,
+      gridY: coords.gridY,
+      rotation: rot,
+      placed: true,
+      wallSide: wallSide as any,
+      wallTileIndex,
+      elevationZ,
+      placementType: (isWall ? 'WALL' : 'FLOOR') as PlacementType
+    };
+
+    if (existingIdx >= 0) {
+      currentList[existingIdx] = {
+        ...currentList[existingIdx],
+        ...placedData
+      };
+    } else {
+      currentList.push(placedData);
+    }
+
+    this.workingPlacedItems.set(currentList);
+    this.isLayoutDirty.set(true);
+    this.movingPlacedId.set(undefined);
+    this.selectedCatalogItem.set(null);
+    this.audioService.playPlaceItem();
+  }
+
+  private handleEmptyHandClick(coords: { gridX: number; gridY: number; fromWall?: boolean }): void {
     const currentDoc = this.currentAvatar();
     if (currentDoc?.avatarX === coords.gridX && currentDoc?.avatarY === coords.gridY) {
       this.startMovingDoctor();
       return;
     }
 
-    // Caso D: Nenhum item em mãos — se clicou em um tile ou fatia de parede que possui um item, seleciona-o para mover!
     const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
     if (itemOnTile) {
       this.onViewportPlacedItemClicked(itemOnTile);
