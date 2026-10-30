@@ -498,22 +498,26 @@ export class MinhaClinicaComponent implements OnInit {
     });
   }
 
-  private handleItemPlacement(
-    coords: { gridX: number; gridY: number; fromWall?: boolean },
-    state: ClinicState,
-    sel: ClinicCatalogItem
-  ): void {
-    const isWall =
+  private isCatalogWallItem(sel: ClinicCatalogItem): boolean {
+    return (
       sel.placementType === 'WALL' ||
       (sel.footprintX === 0 && sel.footprintY === 0) ||
       sel.id === 'ped_regua_girafa' ||
-      sel.id === 'negatoscopio_led';
+      sel.id === 'negatoscopio_led'
+    );
+  }
 
+  private validateItemPlacement(
+    coords: { gridX: number; gridY: number; fromWall?: boolean },
+    state: ClinicState,
+    sel: ClinicCatalogItem,
+    isWall: boolean
+  ): boolean {
     if (isWall && coords.gridX !== 0 && coords.gridY !== 0) {
       this.showErrorModal(
         'Itens de parede devem ser fixados em segmentos de parede (linha superior ou lateral esquerda).'
       );
-      return;
+      return false;
     }
 
     const rot = this.selectedRotation();
@@ -534,30 +538,26 @@ export class MinhaClinicaComponent implements OnInit {
       this.showErrorModal(
         `Posição (${coords.gridX}, ${coords.gridY}) inválida: há colisão com outro móvel ou extrapola o limite ${state.gridWidth}×${state.gridHeight}.`
       );
-      return;
+      return false;
     }
 
-    this.localError.set(null);
-    const currentList = [...this.workingPlacedItems()];
-    const existingIdx = currentList.findIndex(
-      p =>
-        (this.movingPlacedId() && p.id === this.movingPlacedId()) ||
-        p.catalogItemId === sel.id
-    );
+    return true;
+  }
 
-    let wallSide: 'NW' | 'NE' | undefined;
-    let wallTileIndex: number | undefined;
-    if (isWall) {
-      wallSide = coords.gridX === 0 ? 'NW' : 'NE';
-      wallTileIndex = coords.gridX === 0 ? coords.gridY : coords.gridX;
-    }
-    let elevationZ: number | undefined;
-    if (isWall) {
-      elevationZ = (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto') ? 0 : 76;
-    }
+  private buildPlacedItemData(
+    coords: { gridX: number; gridY: number; fromWall?: boolean },
+    sel: ClinicCatalogItem,
+    isWall: boolean,
+    existingId?: string
+  ): ClinicPlacedItem {
+    const rot = this.selectedRotation();
+    const isGroundRuler = sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto';
+    const wallSide = isWall ? (coords.gridX === 0 ? 'NW' : 'NE') : undefined;
+    const wallTileIndex = isWall ? (coords.gridX === 0 ? coords.gridY : coords.gridX) : undefined;
+    const elevationZ = isWall ? (isGroundRuler ? 0 : 76) : undefined;
 
-    const placedData: ClinicPlacedItem = {
-      id: existingIdx >= 0 ? currentList[existingIdx].id : `placed-${sel.id}-${Date.now()}`,
+    return {
+      id: existingId ?? `placed-${sel.id}-${Date.now()}`,
       catalogItemId: sel.id,
       gridX: coords.gridX,
       gridY: coords.gridY,
@@ -568,12 +568,30 @@ export class MinhaClinicaComponent implements OnInit {
       elevationZ,
       placementType: (isWall ? 'WALL' : 'FLOOR') as PlacementType
     };
+  }
+
+  private handleItemPlacement(
+    coords: { gridX: number; gridY: number; fromWall?: boolean },
+    state: ClinicState,
+    sel: ClinicCatalogItem
+  ): void {
+    const isWall = this.isCatalogWallItem(sel);
+    if (!this.validateItemPlacement(coords, state, sel, isWall)) {
+      return;
+    }
+
+    this.localError.set(null);
+    const currentList = [...this.workingPlacedItems()];
+    const movingId = this.movingPlacedId();
+    const existingIdx = currentList.findIndex(
+      p => (movingId && p.id === movingId) || p.catalogItemId === sel.id
+    );
+
+    const existingId = existingIdx >= 0 ? currentList[existingIdx].id : undefined;
+    const placedData = this.buildPlacedItemData(coords, sel, isWall, existingId);
 
     if (existingIdx >= 0) {
-      currentList[existingIdx] = {
-        ...currentList[existingIdx],
-        ...placedData
-      };
+      currentList[existingIdx] = { ...currentList[existingIdx], ...placedData };
     } else {
       currentList.push(placedData);
     }
