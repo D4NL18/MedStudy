@@ -610,64 +610,79 @@ export class MinhaClinicaComponent implements OnInit {
     const isWallTile = gridX === 0 || gridY === 0;
     const shouldCheckWallFirst = preferWall || isWallTile;
 
-    const findWall = (): ClinicPlacedItem | undefined => {
-      for (let i = items.length - 1; i >= 0; i--) {
-        const item = items[i];
-        if (!item.placed) continue;
-        const cat = catMap.get(item.catalogItemId);
-        const isWall =
-          item.placementType === 'WALL' ||
-          cat?.placementType === 'WALL' ||
-          (cat?.footprintX === 0 && cat?.footprintY === 0) ||
-          item.catalogItemId === 'ped_regua_girafa' ||
-          item.catalogItemId === 'negatoscopio_led';
-
-        if (isWall) {
-          const wallSide = item.wallSide ?? (item.gridX === 0 ? 'NW' : 'NE');
-          const tileIdx = item.wallTileIndex ?? (wallSide === 'NW' ? item.gridY : item.gridX);
-          if (wallSide === 'NW' && gridX === 0 && gridY === tileIdx) {
-            return item;
-          }
-          if (wallSide === 'NE' && gridY === 0 && gridX === tileIdx) {
-            return item;
-          }
-        }
-      }
-      return undefined;
-    };
-
-    const findFloor = (): ClinicPlacedItem | undefined => {
-      for (let i = items.length - 1; i >= 0; i--) {
-        const item = items[i];
-        if (!item.placed) continue;
-        const cat = catMap.get(item.catalogItemId);
-        const isWall =
-          item.placementType === 'WALL' ||
-          cat?.placementType === 'WALL' ||
-          (cat?.footprintX === 0 && cat?.footprintY === 0) ||
-          item.catalogItemId === 'ped_regua_girafa' ||
-          item.catalogItemId === 'negatoscopio_led';
-
-        if (!isWall) {
-          const rot = item.rotation ?? 0;
-          const { width: w, height: h } = this.clinicService.getEffectiveFootprint(
-            cat ?? { footprintX: 1, footprintY: 1 },
-            rot
-          );
-          const gx = item.gridX ?? 0;
-          const gy = item.gridY ?? 0;
-          if (gridX >= gx && gridX < gx + w && gridY >= gy && gridY < gy + h) {
-            return item;
-          }
-        }
-      }
-      return undefined;
-    };
-
     if (shouldCheckWallFirst) {
-      return findWall() ?? findFloor();
+      return this.findWallItemAt(items, catMap, gridX, gridY) ?? this.findFloorItemAt(items, catMap, gridX, gridY);
     }
-    return findFloor() ?? findWall();
+    return this.findFloorItemAt(items, catMap, gridX, gridY) ?? this.findWallItemAt(items, catMap, gridX, gridY);
+  }
+
+  private isWallItemType(item: ClinicPlacedItem, cat?: ClinicCatalogItem): boolean {
+    return (
+      item.placementType === 'WALL' ||
+      cat?.placementType === 'WALL' ||
+      (cat?.footprintX === 0 && cat?.footprintY === 0) ||
+      item.catalogItemId === 'ped_regua_girafa' ||
+      item.catalogItemId === 'negatoscopio_led'
+    );
+  }
+
+  private findWallItemAt(
+    items: ClinicPlacedItem[],
+    catMap: Map<string, ClinicCatalogItem>,
+    gridX: number,
+    gridY: number
+  ): ClinicPlacedItem | undefined {
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
+      if (!item.placed) continue;
+      const cat = catMap.get(item.catalogItemId);
+      if (this.isWallItemType(item, cat) && this.matchesWallCoordinates(item, gridX, gridY)) {
+        return item;
+      }
+    }
+    return undefined;
+  }
+
+  private matchesWallCoordinates(item: ClinicPlacedItem, gridX: number, gridY: number): boolean {
+    const wallSide = item.wallSide ?? (item.gridX === 0 ? 'NW' : 'NE');
+    const tileIdx = item.wallTileIndex ?? (wallSide === 'NW' ? item.gridY : item.gridX);
+    return (
+      (wallSide === 'NW' && gridX === 0 && gridY === tileIdx) ||
+      (wallSide === 'NE' && gridY === 0 && gridX === tileIdx)
+    );
+  }
+
+  private findFloorItemAt(
+    items: ClinicPlacedItem[],
+    catMap: Map<string, ClinicCatalogItem>,
+    gridX: number,
+    gridY: number
+  ): ClinicPlacedItem | undefined {
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
+      if (!item.placed) continue;
+      const cat = catMap.get(item.catalogItemId);
+      if (!this.isWallItemType(item, cat) && this.matchesFloorCoordinates(item, cat, gridX, gridY)) {
+        return item;
+      }
+    }
+    return undefined;
+  }
+
+  private matchesFloorCoordinates(
+    item: ClinicPlacedItem,
+    cat: ClinicCatalogItem | undefined,
+    gridX: number,
+    gridY: number
+  ): boolean {
+    const rot = item.rotation ?? 0;
+    const { width: w, height: h } = this.clinicService.getEffectiveFootprint(
+      cat ?? { footprintX: 1, footprintY: 1 },
+      rot
+    );
+    const gx = item.gridX ?? 0;
+    const gy = item.gridY ?? 0;
+    return gridX >= gx && gridX < gx + w && gridY >= gy && gridY < gy + h;
   }
 
   storeSelectedPlacedItem(): void {
