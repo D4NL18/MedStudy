@@ -882,7 +882,7 @@ import { ClinicalMasteryResponse, AreaMastery } from '@core/models/clinical-mast
   `]
 })
 export class EstrelaVidaMaestriaComponent implements OnInit {
-  private masteryService = inject(ClinicalMasteryService);
+  private readonly masteryService = inject(ClinicalMasteryService);
 
   data = signal<ClinicalMasteryResponse | null>(null);
   selectedArea = signal<AreaMastery | null>(null);

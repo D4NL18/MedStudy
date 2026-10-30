@@ -56,7 +56,7 @@ describe('ClinicViewportComponent (P-082, P-084, P-085, P-086)', () => {
     const sorted = component.sortedRenderItems();
 
     // Assert
-    expect(sorted.length).toBe(3);
+    expect(sorted).toHaveSize(3);
     expect(sorted[0].placed.id).toBe('item-near-origin'); // depth = 0
     expect(sorted[1].placed.id).toBe('item-mid'); // depth = 1000
     expect(sorted[2].placed.id).toBe('item-far'); // depth = 4000
