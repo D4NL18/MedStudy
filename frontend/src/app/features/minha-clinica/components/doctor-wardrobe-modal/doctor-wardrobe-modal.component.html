@@ -1,6 +1,6 @@
 @if (isOpen()) {
-  <div class="clinic-modal-backdrop" (click)="onClose()" data-testid="avatar-modal-backdrop">
-    <div class="clinic-modal-card avatar-modal" (click)="$event.stopPropagation()" data-testid="avatar-customizer-modal">
+  <div class="clinic-modal-backdrop" (click)="onClose()" (keydown.escape)="onClose()" tabindex="0" data-testid="avatar-modal-backdrop">
+    <div class="clinic-modal-card avatar-modal" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" data-testid="avatar-customizer-modal">
       <header class="modal-header">
         <div class="modal-title-group">
           <h3>{{ tempAvatarGender() === 'FEMALE' ? '👩‍⚕️' : '👨‍⚕️' }} Estilo de {{ doctorDisplayName() }}</h3>
@@ -30,7 +30,7 @@
         <div class="avatar-slots-scroll">
           <!-- 1. Gênero (Gratuito e Ilimitado) -->
           <div class="customizer-section">
-            <label class="section-label">Identidade do Médico (Alternância Gratuita)</label>
+            <h3 class="section-label">Identidade do Médico (Alternância Gratuita)</h3>
             <div class="gender-toggle-group">
               <button
                 type="button"
@@ -55,14 +55,14 @@
 
           <!-- 2. Jaleco (Slot Coat) -->
           <div class="customizer-section">
-            <label class="section-label">Jaleco Médico</label>
+            <h3 class="section-label">Jaleco Médico</h3>
             <div class="skin-options-grid">
               @for (coat of coatOptions; track coat.id) {
                 <div
                   class="skin-option-card"
                   [class.is-equipped]="tempAvatarCoat() === coat.id && isSkinUnlocked(coat.id)"
                   [class.is-previewing]="tempAvatarCoat() === coat.id && !isSkinUnlocked(coat.id)"
-                  (click)="selectCoatSkin(coat.id)"
+                  (click)="selectCoatSkin(coat.id)" (keydown.enter)="selectCoatSkin(coat.id)" (keydown.space)="selectCoatSkin(coat.id)" tabindex="0" role="button"
                   [attr.data-testid]="'skin-coat-' + coat.id"
                 >
                   <div class="skin-info">
@@ -104,7 +104,7 @@
                   class="skin-option-card"
                   [class.is-equipped]="tempAvatarSteth() === steth.id && isSkinUnlocked(steth.id)"
                   [class.is-previewing]="tempAvatarSteth() === steth.id && !isSkinUnlocked(steth.id)"
-                  (click)="selectStethSkin(steth.id)"
+                  (click)="selectStethSkin(steth.id)" (keydown.enter)="selectStethSkin(steth.id)" (keydown.space)="selectStethSkin(steth.id)" tabindex="0" role="button"
                   [attr.data-testid]="'skin-steth-' + steth.id"
                 >
                   <div class="skin-info">
@@ -146,7 +146,7 @@
                   class="skin-option-card"
                   [class.is-equipped]="tempAvatarAccessory() === acc.id && isSkinUnlocked(acc.id)"
                   [class.is-previewing]="tempAvatarAccessory() === acc.id && !isSkinUnlocked(acc.id)"
-                  (click)="selectAccessorySkin(acc.id)"
+                  (click)="selectAccessorySkin(acc.id)" (keydown.enter)="selectAccessorySkin(acc.id)" (keydown.space)="selectAccessorySkin(acc.id)" tabindex="0" role="button"
                   [attr.data-testid]="'skin-acc-' + acc.id"
                 >
                   <div class="skin-info">

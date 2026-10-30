@@ -141,7 +141,15 @@ export class ClinicService {
 
     return isWallItem
       ? this.validateWallPlacement(gridX, gridY, gridWidth, gridHeight, placedItems, catalogMap, ignorePlacedId)
-      : this.validateFloorPlacement(gridX, gridY, footprintX, footprintY, rotation, gridWidth, gridHeight, placedItems, catalogMap, ignorePlacedId);
+      : this.validateFloorPlacement(
+          { x: gridX, y: gridY },
+          { x: footprintX, y: footprintY },
+          rotation,
+          { width: gridWidth, height: gridHeight },
+          placedItems,
+          catalogMap,
+          ignorePlacedId
+        );
   }
 
   private validateWallPlacement(
@@ -209,26 +217,23 @@ export class ClinicService {
   }
 
   private validateFloorPlacement(
-    gridX: number,
-    gridY: number,
-    footprintX: number,
-    footprintY: number,
+    coords: { x: number; y: number },
+    footprint: { x: number; y: number },
     rotation: number,
-    gridWidth: number,
-    gridHeight: number,
+    gridBounds: { width: number; height: number },
     placedItems: ClinicPlacedItem[],
     catalogMap: Map<string, ClinicCatalogItem>,
     ignorePlacedId?: string
   ): boolean {
     const { width: effW, height: effH } = this.getEffectiveFootprint(
-      { footprintX, footprintY },
+      { footprintX: footprint.x, footprintY: footprint.y },
       rotation
     );
 
-    if (gridX < 0 || gridY < 0) {
+    if (coords.x < 0 || coords.y < 0) {
       return false;
     }
-    if (gridX + effW > gridWidth || gridY + effH > gridHeight) {
+    if (coords.x + effW > gridBounds.width || coords.y + effH > gridBounds.height) {
       return false;
     }
 
@@ -239,7 +244,7 @@ export class ClinicService {
       if (ignorePlacedId && other.id === ignorePlacedId) {
         continue;
       }
-      if (this.collidesWithFloorOccupant(gridX, gridY, effW, effH, other, catalogMap)) {
+      if (this.collidesWithFloorOccupant(coords.x, coords.y, effW, effH, other, catalogMap)) {
         return false;
       }
     }
@@ -751,7 +756,7 @@ export class ClinicService {
         tap(buyRes => {
           const curr = this.doctorAvatarResponse();
           if (curr) {
-            const rawUnlocked = (buyRes && buyRes.unlockedSkins) as string[] | undefined;
+            const rawUnlocked = buyRes?.unlockedSkins as string[] | undefined;
             let updatedUnlocked: string[];
             if (rawUnlocked && Array.isArray(rawUnlocked)) {
               updatedUnlocked = rawUnlocked;
@@ -767,7 +772,7 @@ export class ClinicService {
             });
           }
           const clinic = this.clinicState();
-          if (clinic && buyRes && typeof buyRes.remainingCurrentXp === 'number') {
+          if (clinic && typeof buyRes?.remainingCurrentXp === 'number') {
             this.clinicState.set({
               ...clinic,
               currentXp: buyRes.remainingCurrentXp

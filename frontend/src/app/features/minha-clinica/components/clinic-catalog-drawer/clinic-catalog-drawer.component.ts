@@ -46,13 +46,13 @@ export class ClinicCatalogDrawerComponent {
   @Input() activeCategory: ClinicCategory = 'mobiliario';
   @Input() inventoryFilter: 'all' | 'owned' = 'all';
   @Input() selectedCatalogItem: ClinicCatalogItem | null = null;
-  @Input() selectedRotation: number = 0;
+  @Input() selectedRotation = 0;
   @Input() movingPlacedId: string | undefined = undefined;
-  @Input() editMode: boolean = false;
-  @Input() isLayoutDirty: boolean = false;
+  @Input() editMode = false;
+  @Input() isLayoutDirty = false;
   @Input() filteredCatalogItems: ClinicCatalogItem[] = [];
   @Input() categoryTabs: CategoryTabItem[] = [];
-  @Input() totalCatalogCount: number = 0;
+  @Input() totalCatalogCount = 0;
   @Input() wallpaperOptions: SurfaceOption[] = [];
   @Input() floorOptions: SurfaceOption[] = [];
   @Input() ownedItemIds: string[] = [];
@@ -60,7 +60,7 @@ export class ClinicCatalogDrawerComponent {
   @Input() unlockedSkinIds: string[] = [];
   @Input() previewWallTheme: string | null = null;
   @Input() previewFloorTheme: string | null = null;
-  @Input() isLoading: boolean = false;
+  @Input() isLoading = false;
 
   @Output() readonly categorySelected = new EventEmitter<ClinicCategory>();
   @Output() readonly inventoryFilterChanged = new EventEmitter<'all' | 'owned'>();

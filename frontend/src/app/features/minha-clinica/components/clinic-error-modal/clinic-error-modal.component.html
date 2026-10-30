@@ -1,7 +1,7 @@
 @if (errorMessage(); as msg) {
   <div
     class="clinic-basic-error-backdrop"
-    (click)="onDismiss()"
+    (click)="onDismiss()" (keydown.escape)="onDismiss()" tabindex="0"
     role="presentation"
     data-testid="clinic-error-modal-backdrop"
   >
@@ -11,7 +11,7 @@
       aria-modal="true"
       aria-labelledby="basic-error-title"
       aria-describedby="basic-error-desc"
-      (click)="$event.stopPropagation()"
+      (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()"
       data-testid="clinic-error-modal"
     >
       <div class="error-modal-icon-badge">

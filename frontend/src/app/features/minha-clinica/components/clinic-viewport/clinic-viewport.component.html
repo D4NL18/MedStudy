@@ -491,7 +491,7 @@
               [style.zIndex]="entry.depth"
               [attr.data-placed-id]="entry.placed.id"
               [attr.data-depth]="entry.depth"
-              (click)="onPlacedItemClick(entry, $event)"
+              (click)="onPlacedItemClick(entry, $event)" (keydown.enter)="onPlacedItemClick(entry, $event)" (keydown.space)="onPlacedItemClick(entry, $event)" tabindex="0" role="button"
               [title]="entry.catalogItem.name"
             >
               <app-clinic-item-svg
@@ -514,7 +514,7 @@
               [style.left.px]="doctorScreenCoords().x"
               [style.top.px]="doctorScreenCoords().y"
               [style.zIndex]="doctorDepth()"
-              (click)="onDoctorAvatarClick($event)"
+              (click)="onDoctorAvatarClick($event)" (keydown.enter)="onDoctorAvatarClick($event)" (keydown.space)="onDoctorAvatarClick($event)" tabindex="0" role="button"
               [title]="editModeSignal() ? 'Clique para mover o(a) Doutor(a) de lugar' : 'Clique para personalizar o(a) Doutor(a)'"
               data-testid="doctor-avatar-diorama"
             >

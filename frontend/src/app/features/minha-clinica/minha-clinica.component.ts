@@ -534,9 +534,10 @@ export class MinhaClinicaComponent implements OnInit {
 
       const wallSide = isWall ? (coords.gridX === 0 ? 'NW' : 'NE') : undefined;
       const wallTileIndex = isWall ? (coords.gridX === 0 ? coords.gridY : coords.gridX) : undefined;
-      const elevationZ = isWall
-        ? (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto' ? 0 : 76)
-        : undefined;
+      let elevationZ: number | undefined;
+      if (isWall) {
+        elevationZ = (sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto') ? 0 : 76;
+      }
 
       if (existingIdx >= 0) {
         currentList[existingIdx] = {
@@ -590,7 +591,7 @@ export class MinhaClinicaComponent implements OnInit {
   findPlacedItemAtTile(
     gridX: number,
     gridY: number,
-    preferWall: boolean = false
+    preferWall = false
   ): ClinicPlacedItem | undefined {
     const catalog = this.clinic()?.catalog ?? CLINIC_CATALOG_FALLBACK;
     const catMap = new Map(catalog.map(c => [c.id, c]));

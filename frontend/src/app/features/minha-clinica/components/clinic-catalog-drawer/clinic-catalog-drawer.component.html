@@ -18,7 +18,7 @@
     </div>
 
     <div class="dock-controls">
-      <div class="filter-switch" role="group" aria-label="Filtro de catálogo">
+      <div class="filter-switch" aria-label="Filtro de catálogo">
         <button
           type="button"
           class="filter-btn"
@@ -87,18 +87,17 @@
           </div>
 
           <!-- Amostra Quadrada do Papel de Parede (Sem emojis!) -->
-          <div
+          <button
+            type="button"
             class="card-surface-swatch"
             [class.is-previewing]="previewWallTheme === wall.id"
             (click)="previewSurfaceRequested.emit({ type: 'wall', id: wall.id })"
-            role="button"
-            tabindex="0"
             title="Clique para testar este papel de parede na sala"
           >
             <div class="surface-sample-square">
               @switch (wall.id) {
                 @case ('ped_papel_safari') {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <defs>
                       <linearGradient id="wallSafariGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                         <stop offset="0%" stop-color="#F0FDF4" />
@@ -125,7 +124,7 @@
                   </svg>
                 }
                 @case ('wallpaper_geometric_teal') {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <defs>
                       <linearGradient id="wallTealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#F0FDFA" />
@@ -149,7 +148,7 @@
                   </svg>
                 }
                 @case ('wallpaper_brick_white') {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <rect x="0" y="0" width="80" height="80" fill="#CBD5E1" />
                     <rect x="2" y="3" width="36" height="13" rx="1.5" fill="#FFFFFF" />
                     <rect x="40" y="3" width="38" height="13" rx="1.5" fill="#FFFFFF" />
@@ -171,7 +170,7 @@
                   </svg>
                 }
                 @default {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <defs>
                       <linearGradient id="wallWhiteGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                         <stop offset="0%" stop-color="#FFFFFF" />
@@ -193,7 +192,7 @@
             <span class="preview-hover-hint">
               {{ previewWallTheme === wall.id ? '✕ Parar Teste' : '👁️ Testar na Sala' }}
             </span>
-          </div>
+          </button>
 
           <div class="card-info">
             <h4>{{ wall.name }}</h4>
@@ -273,18 +272,17 @@
           </div>
 
           <!-- Amostra Quadrada do Piso (Sem emojis!) -->
-          <div
+          <button
+            type="button"
             class="card-surface-swatch"
             [class.is-previewing]="previewFloorTheme === fl.id"
             (click)="previewSurfaceRequested.emit({ type: 'floor', id: fl.id })"
-            role="button"
-            tabindex="0"
             title="Clique para testar este piso na sala"
           >
             <div class="surface-sample-square">
               @switch (fl.id) {
                 @case ('wood_dark_herringbone') {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <defs>
                       <linearGradient id="herringDark1" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#92400E" />
@@ -322,7 +320,7 @@
                   </svg>
                 }
                 @case ('marble_carrara') {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <defs>
                       <linearGradient id="marbleSheen" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#FFFFFF" />
@@ -342,7 +340,7 @@
                   </svg>
                 }
                 @case ('tatame_eva') {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <rect x="0" y="0" width="40" height="40" fill="#FEF08A" />
                     <rect x="40" y="0" width="40" height="40" fill="#BBF7D0" />
                     <rect x="0" y="40" width="40" height="40" fill="#BAE6FD" />
@@ -361,7 +359,7 @@
                   </svg>
                 }
                 @default {
-                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg">
+                  <svg viewBox="0 0 80 80" width="100%" height="100%" class="swatch-sample-svg" aria-hidden="true">
                     <defs>
                       <linearGradient id="plankLight1" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#FDFBF7" />
@@ -397,7 +395,7 @@
             <span class="preview-hover-hint">
               {{ previewFloorTheme === fl.id ? '✕ Parar Teste' : '👁️ Testar na Sala' }}
             </span>
-          </div>
+          </button>
 
           <div class="card-info">
             <h4>{{ fl.name }}</h4>
@@ -459,7 +457,7 @@
     } @else if (filteredCatalogItems.length === 0) {
     <div class="clinic-empty-state" data-testid="clinic-empty-state">
       <div class="empty-illustration" aria-hidden="true">
-        <svg viewBox="0 0 64 64" width="52" height="52" fill="none">
+        <svg viewBox="0 0 64 64" width="52" height="52" fill="none" aria-hidden="true">
           <rect x="10" y="20" width="44" height="32" rx="6" fill="#F1F5F9" stroke="#0D9488" stroke-width="2.5" />
           <path d="M24,20 V14 C24,11.8 25.8,10 28,10 H36 C38.2,10 40,11.8 40,14 V20" stroke="#0D9488" stroke-width="2.5" />
           <path d="M32,28 V44 M24,36 H40" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" />
@@ -510,7 +508,14 @@
             }
           </div>
 
-          <div class="card-svg-preview" (click)="cardPreviewClicked.emit(item)">
+          <div
+            class="card-svg-preview"
+            (click)="cardPreviewClicked.emit(item)"
+            (keydown.enter)="cardPreviewClicked.emit(item)"
+            (keydown.space)="cardPreviewClicked.emit(item)"
+            tabindex="0"
+            role="button"
+          >
             <app-clinic-item-svg
               [itemKey]="item.assetSvgKey"
               [width]="76"

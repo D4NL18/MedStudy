@@ -1,8 +1,6 @@
 import { IsometricTileRender } from './clinic-viewport.component';
 
-export interface GridToScreenFn {
-  (gx: number, gy: number, ox: number, oy: number): { x: number; y: number };
-}
+export type GridToScreenFn = (gx: number, gy: number, ox: number, oy: number) => { x: number; y: number };
 
 export interface WallSliceRender {
   side: 'NW' | 'NE';

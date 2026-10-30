@@ -113,7 +113,7 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     expect(component.filteredCatalogItems()).toHaveSize(38);
 
     component.selectCategory('clinica');
-    expect(component.filteredCatalogItems().length).toBe(39);
+    expect(component.filteredCatalogItems()).toHaveSize(39);
 
     component.selectCategory('recepcao');
     expect(component.filteredCatalogItems()).toHaveSize(38);
@@ -131,7 +131,7 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     fixture.detectChanges();
 
     // Assert
-    expect(component.filteredCatalogItems().length).toBe(0);
+    expect(component.filteredCatalogItems()).toHaveSize(0);
     const emptyEl = fixture.nativeElement.querySelector('[data-testid="clinic-empty-state"]');
     expect(emptyEl).toBeTruthy();
   });
@@ -289,7 +289,7 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     // Act 1: open modal
     component.openLootboxModal();
     expect(component.isLootboxModalOpen()).toBeTrue();
-    expect(component.lootboxTiers().length).toBe(3);
+    expect(component.lootboxTiers()).toHaveSize(3);
 
     // Act 2: open resident box
     component.triggerOpenLootbox('TIER_1_RESIDENT');

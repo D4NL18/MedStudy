@@ -802,7 +802,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPlacedItemClick(entry: SortedRenderItem, event: MouseEvent): void {
+  onPlacedItemClick(entry: SortedRenderItem, event: Event): void {
     event.stopPropagation();
     if (this.hasDragged || this.isDragging()) {
       return;
@@ -891,7 +891,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     }, 80);
   }
 
-  onDoctorAvatarClick(event: MouseEvent): void {
+  onDoctorAvatarClick(event: Event): void {
     event.stopPropagation();
     this.avatarClicked.emit();
     this.audioService.playClick();
