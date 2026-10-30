@@ -611,7 +611,7 @@
           type="button"
           class="cam-btn cam-reset"
           (click)="resetCamera(); $event.stopPropagation()"
-          aria-label="Restaurar câmera 100%"
+          title="Restaurar câmera para 100%"
           data-testid="zoom-reset-btn"
         >
           {{ Math.round(zoom() * 100) }}%
