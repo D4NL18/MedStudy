@@ -569,40 +569,16 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
    * P-084 & P-086: Ghost Preview Isométrico Verde (válido) ou Vermelho (colisão/fora de limite).
    */
   readonly ghostPreview = computed<GhostPreviewRender | null>(() => {
-    if (!this.editModeSignal()) {
-      return null;
-    }
+    if (!this.editModeSignal()) return null;
 
     if (this.isMovingDoctorSignal()) {
       const hover = this.hoveredTile();
-      if (!hover) return null;
-      const valid = this.isDoctorHoverValid();
-      const ox = this.originX();
-      const oy = this.originY();
-      const top = this.clinicService.gridToScreen(hover.gridX, hover.gridY, ox, oy);
-      const right = this.clinicService.gridToScreen(hover.gridX + 1, hover.gridY, ox, oy);
-      const bottom = this.clinicService.gridToScreen(hover.gridX + 1, hover.gridY + 1, ox, oy);
-      const left = this.clinicService.gridToScreen(hover.gridX, hover.gridY + 1, ox, oy);
-      const center = this.clinicService.gridToScreen(hover.gridX + 0.5, hover.gridY + 0.5, ox, oy);
-      return {
-        gridX: hover.gridX,
-        gridY: hover.gridY,
-        effWidth: 1,
-        effHeight: 1,
-        screenX: center.x,
-        screenY: center.y,
-        points: `${top.x},${top.y} ${right.x},${right.y} ${bottom.x},${bottom.y} ${left.x},${left.y}`,
-        valid,
-        catalogItem: CLINIC_CATALOG_FALLBACK[0],
-        rotation: 0
-      };
+      return hover ? this.computeDoctorGhostPreview(hover) : null;
     }
 
     const sel = this.selectedCatalogItemSignal();
     const hover = this.hoveredTile();
-    if (!sel || !hover) {
-      return null;
-    }
+    if (!sel || !hover) return null;
 
     const rot = this.selectedRotationSignal();
     const isWall =
@@ -624,90 +600,103 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
       this.movingPlacedIdSignal()
     );
 
+    return isWall
+      ? this.computeWallGhostPreview(sel, hover, rot, valid)
+      : this.computeFloorGhostPreview(sel, hover, rot, valid);
+  });
+
+  private computeDoctorGhostPreview(hover: { gridX: number; gridY: number }): GhostPreviewRender {
+    const valid = this.isDoctorHoverValid();
     const ox = this.originX();
     const oy = this.originY();
+    const top = this.clinicService.gridToScreen(hover.gridX, hover.gridY, ox, oy);
+    const right = this.clinicService.gridToScreen(hover.gridX + 1, hover.gridY, ox, oy);
+    const bottom = this.clinicService.gridToScreen(hover.gridX + 1, hover.gridY + 1, ox, oy);
+    const left = this.clinicService.gridToScreen(hover.gridX, hover.gridY + 1, ox, oy);
+    const center = this.clinicService.gridToScreen(hover.gridX + 0.5, hover.gridY + 0.5, ox, oy);
+    return {
+      gridX: hover.gridX,
+      gridY: hover.gridY,
+      effWidth: 1,
+      effHeight: 1,
+      screenX: center.x,
+      screenY: center.y,
+      points: `${top.x},${top.y} ${right.x},${right.y} ${bottom.x},${bottom.y} ${left.x},${left.y}`,
+      valid,
+      catalogItem: CLINIC_CATALOG_FALLBACK[0],
+      rotation: 0
+    };
+  }
 
-    if (isWall) {
-      const wallSide: 'NW' | 'NE' = hover.gridX === 0 ? 'NW' : 'NE';
-      const maxIdx =
-        (wallSide === 'NW' ? this.gridHeightSignal() : this.gridWidthSignal()) - 1;
-      const tileIdx = Math.max(
-        0,
-        Math.min(hover.gridX === 0 ? hover.gridY : hover.gridX, maxIdx)
-      );
-      const wallH = 68;
+  private computeWallGhostPreview(
+    sel: ClinicCatalogItem,
+    hover: { gridX: number; gridY: number },
+    rot: number,
+    valid: boolean
+  ): GhostPreviewRender {
+    const ox = this.originX();
+    const oy = this.originY();
+    const wallSide: 'NW' | 'NE' = hover.gridX === 0 ? 'NW' : 'NE';
+    const maxIdx = (wallSide === 'NW' ? this.gridHeightSignal() : this.gridWidthSignal()) - 1;
+    const tileIdx = Math.max(0, Math.min(hover.gridX === 0 ? hover.gridY : hover.gridX, maxIdx));
+    const wallH = 68;
 
-      let wallBase: { x: number; y: number };
-      let pTopLeft: { x: number; y: number };
-      let pTopRight: { x: number; y: number };
-      let pBottomRight: { x: number; y: number };
-      let pBottomLeft: { x: number; y: number };
+    let wallBase: { x: number; y: number };
+    let pTopLeft: { x: number; y: number };
+    let pTopRight: { x: number; y: number };
+    let pBottomRight: { x: number; y: number };
+    let pBottomLeft: { x: number; y: number };
 
-      if (wallSide === 'NW') {
-        wallBase = this.clinicService.gridToScreen(0, tileIdx + 0.5, ox, oy);
-        const b0 = this.clinicService.gridToScreen(0, tileIdx, ox, oy);
-        const b1 = this.clinicService.gridToScreen(0, tileIdx + 1, ox, oy);
-        pBottomLeft = b1;
-        pBottomRight = b0;
-        pTopRight = { x: b0.x, y: b0.y - wallH };
-        pTopLeft = { x: b1.x, y: b1.y - wallH };
-      } else {
-        wallBase = this.clinicService.gridToScreen(tileIdx + 0.5, 0, ox, oy);
-        const b0 = this.clinicService.gridToScreen(tileIdx, 0, ox, oy);
-        const b1 = this.clinicService.gridToScreen(tileIdx + 1, 0, ox, oy);
-        pBottomLeft = b0;
-        pBottomRight = b1;
-        pTopRight = { x: b1.x, y: b1.y - wallH };
-        pTopLeft = { x: b0.x, y: b0.y - wallH };
-      }
-
-      const isWallRuler =
-        sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto';
-      const posY = isWallRuler ? wallBase.y : wallBase.y - 34;
-
-      return {
-        gridX: hover.gridX,
-        gridY: hover.gridY,
-        effWidth: 1,
-        effHeight: 1,
-        screenX: wallBase.x,
-        screenY: posY,
-        points: `${pBottomLeft.x},${pBottomLeft.y} ${pBottomRight.x},${pBottomRight.y} ${pTopRight.x},${pTopRight.y} ${pTopLeft.x},${pTopLeft.y}`,
-        valid,
-        catalogItem: sel,
-        rotation: rot,
-        wallSide
-      };
+    if (wallSide === 'NW') {
+      wallBase = this.clinicService.gridToScreen(0, tileIdx + 0.5, ox, oy);
+      const b0 = this.clinicService.gridToScreen(0, tileIdx, ox, oy);
+      const b1 = this.clinicService.gridToScreen(0, tileIdx + 1, ox, oy);
+      pBottomLeft = b1;
+      pBottomRight = b0;
+      pTopRight = { x: b0.x, y: b0.y - wallH };
+      pTopLeft = { x: b1.x, y: b1.y - wallH };
+    } else {
+      wallBase = this.clinicService.gridToScreen(tileIdx + 0.5, 0, ox, oy);
+      const b0 = this.clinicService.gridToScreen(tileIdx, 0, ox, oy);
+      const b1 = this.clinicService.gridToScreen(tileIdx + 1, 0, ox, oy);
+      pBottomLeft = b0;
+      pBottomRight = b1;
+      pTopRight = { x: b1.x, y: b1.y - wallH };
+      pTopLeft = { x: b0.x, y: b0.y - wallH };
     }
 
-    const { width: effWidth, height: effHeight } =
-      this.clinicService.getEffectiveFootprint(sel, rot);
+    const isWallRuler = sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto';
+    const posY = isWallRuler ? wallBase.y : wallBase.y - 34;
 
+    return {
+      gridX: hover.gridX,
+      gridY: hover.gridY,
+      effWidth: 1,
+      effHeight: 1,
+      screenX: wallBase.x,
+      screenY: posY,
+      points: `${pBottomLeft.x},${pBottomLeft.y} ${pBottomRight.x},${pBottomRight.y} ${pTopRight.x},${pTopRight.y} ${pTopLeft.x},${pTopLeft.y}`,
+      valid,
+      catalogItem: sel,
+      rotation: rot,
+      wallSide
+    };
+  }
+
+  private computeFloorGhostPreview(
+    sel: ClinicCatalogItem,
+    hover: { gridX: number; gridY: number },
+    rot: number,
+    valid: boolean
+  ): GhostPreviewRender {
+    const ox = this.originX();
+    const oy = this.originY();
+    const { width: effWidth, height: effHeight } = this.clinicService.getEffectiveFootprint(sel, rot);
     const top = this.clinicService.gridToScreen(hover.gridX, hover.gridY, ox, oy);
-    const right = this.clinicService.gridToScreen(
-      hover.gridX + effWidth,
-      hover.gridY,
-      ox,
-      oy
-    );
-    const bottom = this.clinicService.gridToScreen(
-      hover.gridX + effWidth,
-      hover.gridY + effHeight,
-      ox,
-      oy
-    );
-    const left = this.clinicService.gridToScreen(
-      hover.gridX,
-      hover.gridY + effHeight,
-      ox,
-      oy
-    );
-    const center = this.clinicService.gridToScreen(
-      hover.gridX + effWidth / 2,
-      hover.gridY + effHeight / 2,
-      ox,
-      oy
-    );
+    const right = this.clinicService.gridToScreen(hover.gridX + effWidth, hover.gridY, ox, oy);
+    const bottom = this.clinicService.gridToScreen(hover.gridX + effWidth, hover.gridY + effHeight, ox, oy);
+    const left = this.clinicService.gridToScreen(hover.gridX, hover.gridY + effHeight, ox, oy);
+    const center = this.clinicService.gridToScreen(hover.gridX + effWidth / 2, hover.gridY + effHeight / 2, ox, oy);
 
     return {
       gridX: hover.gridX,
@@ -721,7 +710,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
       catalogItem: sel,
       rotation: rot
     };
-  });
+  }
 
   ngOnInit(): void {
     if (typeof document !== 'undefined') {

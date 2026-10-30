@@ -139,58 +139,87 @@ export class ClinicService {
       (catalog.length > 0 ? catalog : CLINIC_CATALOG_FALLBACK).map(c => [c.id, c])
     );
 
-    if (isWallItem) {
-      // Itens de parede devem ficar estritamente fixados na parede NW (gridX === 0) ou NE (gridY === 0)
-      if (gridX !== 0 && gridY !== 0) {
-        return false;
-      }
-      if (gridX === 0 && (gridY < 0 || gridY >= gridHeight)) {
-        return false;
-      }
-      if (gridY === 0 && (gridX < 0 || gridX >= gridWidth)) {
-        return false;
-      }
+    return isWallItem
+      ? this.validateWallPlacement(gridX, gridY, gridWidth, gridHeight, placedItems, catalogMap, ignorePlacedId)
+      : this.validateFloorPlacement(gridX, gridY, footprintX, footprintY, rotation, gridWidth, gridHeight, placedItems, catalogMap, ignorePlacedId);
+  }
 
-      const targetSide: 'NW' | 'NE' = gridX === 0 ? 'NW' : 'NE';
-      const targetIdx = gridX === 0 ? gridY : gridX;
-
-      for (const other of placedItems) {
-        if (!other.placed || (ignorePlacedId && other.id === ignorePlacedId)) {
-          continue;
-        }
-        const otherCat = catalogMap.get(other.catalogItemId);
-        const otherIsWall =
-          other.placementType === 'WALL' ||
-          otherCat?.placementType === 'WALL' ||
-          (otherCat?.footprintX === 0 && otherCat?.footprintY === 0);
-
-        if (otherIsWall) {
-          const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
-          const otherIdx =
-            other.wallTileIndex ??
-            (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
-          if (otherSide === targetSide && otherIdx === targetIdx) {
-            return false;
-          }
-        } else {
-          // Prevenção de sobreposição visual: itens de parede não podem ser fixados
-          // em um quadrado que já possua um móvel de chão posicionado.
-          const { width: oW, height: oH } = this.getEffectiveFootprint(
-            otherCat ?? { footprintX: 1, footprintY: 1 },
-            other.rotation ?? 0
-          );
-          const ogx = other.gridX ?? 0;
-          const ogy = other.gridY ?? 0;
-          const checkX = targetSide === 'NW' ? 0 : targetIdx;
-          const checkY = targetSide === 'NW' ? targetIdx : 0;
-          if (checkX >= ogx && checkX < ogx + oW && checkY >= ogy && checkY < ogy + oH) {
-            return false;
-          }
-        }
-      }
-      return true;
+  private validateWallPlacement(
+    gridX: number,
+    gridY: number,
+    gridWidth: number,
+    gridHeight: number,
+    placedItems: ClinicPlacedItem[],
+    catalogMap: Map<string, ClinicCatalogItem>,
+    ignorePlacedId?: string
+  ): boolean {
+    if (gridX !== 0 && gridY !== 0) {
+      return false;
+    }
+    if (gridX === 0 && (gridY < 0 || gridY >= gridHeight)) {
+      return false;
+    }
+    if (gridY === 0 && (gridX < 0 || gridX >= gridWidth)) {
+      return false;
     }
 
+    const targetSide: 'NW' | 'NE' = gridX === 0 ? 'NW' : 'NE';
+    const targetIdx = gridX === 0 ? gridY : gridX;
+
+    for (const other of placedItems) {
+      if (!other.placed || (ignorePlacedId && other.id === ignorePlacedId)) {
+        continue;
+      }
+      if (this.collidesWithWallSlot(other, targetSide, targetIdx, catalogMap)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private collidesWithWallSlot(
+    other: ClinicPlacedItem,
+    targetSide: 'NW' | 'NE',
+    targetIdx: number,
+    catalogMap: Map<string, ClinicCatalogItem>
+  ): boolean {
+    const otherCat = catalogMap.get(other.catalogItemId);
+    const otherIsWall =
+      other.placementType === 'WALL' ||
+      otherCat?.placementType === 'WALL' ||
+      (otherCat?.footprintX === 0 && otherCat?.footprintY === 0);
+
+    if (otherIsWall) {
+      const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
+      const otherIdx =
+        other.wallTileIndex ??
+        (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
+      return otherSide === targetSide && otherIdx === targetIdx;
+    }
+
+    const { width: oW, height: oH } = this.getEffectiveFootprint(
+      otherCat ?? { footprintX: 1, footprintY: 1 },
+      other.rotation ?? 0
+    );
+    const ogx = other.gridX ?? 0;
+    const ogy = other.gridY ?? 0;
+    const checkX = targetSide === 'NW' ? 0 : targetIdx;
+    const checkY = targetSide === 'NW' ? targetIdx : 0;
+    return checkX >= ogx && checkX < ogx + oW && checkY >= ogy && checkY < ogy + oH;
+  }
+
+  private validateFloorPlacement(
+    gridX: number,
+    gridY: number,
+    footprintX: number,
+    footprintY: number,
+    rotation: number,
+    gridWidth: number,
+    gridHeight: number,
+    placedItems: ClinicPlacedItem[],
+    catalogMap: Map<string, ClinicCatalogItem>,
+    ignorePlacedId?: string
+  ): boolean {
     const { width: effW, height: effH } = this.getEffectiveFootprint(
       { footprintX, footprintY },
       rotation
@@ -210,49 +239,52 @@ export class ClinicService {
       if (ignorePlacedId && other.id === ignorePlacedId) {
         continue;
       }
-
-      const otherCatalog = catalogMap.get(other.catalogItemId) ?? {
-        footprintX: 1,
-        footprintY: 1,
-        placementType: 'FLOOR' as const
-      };
-      const otherIsWall =
-        other.placementType === 'WALL' ||
-        otherCatalog.placementType === 'WALL' ||
-        (otherCatalog.footprintX === 0 && otherCatalog.footprintY === 0);
-
-      // Prevenção de sobreposição: se houver um item de parede afixado na linha adjacente
-      // coberta por este móvel de chão, bloqueia para evitar sobreposição visual.
-      if (otherIsWall) {
-        const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
-        const otherIdx =
-          other.wallTileIndex ??
-          (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
-        const wallX = otherSide === 'NW' ? 0 : otherIdx;
-        const wallY = otherSide === 'NW' ? otherIdx : 0;
-        if (wallX >= gridX && wallX < gridX + effW && wallY >= gridY && wallY < gridY + effH) {
-          return false;
-        }
-        continue;
-      }
-
-      const { width: otherW, height: otherH } = this.getEffectiveFootprint(
-        otherCatalog,
-        other.rotation ?? 0
-      );
-
-      const intersects =
-        gridX < other.gridX + otherW &&
-        gridX + effW > other.gridX &&
-        gridY < other.gridY + otherH &&
-        gridY + effH > other.gridY;
-
-      if (intersects) {
+      if (this.collidesWithFloorOccupant(gridX, gridY, effW, effH, other, catalogMap)) {
         return false;
       }
     }
-
     return true;
+  }
+
+  private collidesWithFloorOccupant(
+    gridX: number,
+    gridY: number,
+    effW: number,
+    effH: number,
+    other: ClinicPlacedItem,
+    catalogMap: Map<string, ClinicCatalogItem>
+  ): boolean {
+    const otherCatalog = catalogMap.get(other.catalogItemId) ?? {
+      footprintX: 1,
+      footprintY: 1,
+      placementType: 'FLOOR' as const
+    };
+    const otherIsWall =
+      other.placementType === 'WALL' ||
+      otherCatalog.placementType === 'WALL' ||
+      (otherCatalog.footprintX === 0 && otherCatalog.footprintY === 0);
+
+    if (otherIsWall) {
+      const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
+      const otherIdx =
+        other.wallTileIndex ??
+        (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
+      const wallX = otherSide === 'NW' ? 0 : otherIdx;
+      const wallY = otherSide === 'NW' ? otherIdx : 0;
+      return wallX >= gridX && wallX < gridX + effW && wallY >= gridY && wallY < gridY + effH;
+    }
+
+    const { width: otherW, height: otherH } = this.getEffectiveFootprint(
+      otherCatalog,
+      other.rotation ?? 0
+    );
+
+    return (
+      gridX < (other.gridX ?? 0) + otherW &&
+      gridX + effW > (other.gridX ?? 0) &&
+      gridY < (other.gridY ?? 0) + otherH &&
+      gridY + effH > (other.gridY ?? 0)
+    );
   }
 
   /**
