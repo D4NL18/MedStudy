@@ -135,6 +135,7 @@
   2. **Compra Atômica (`POST /api/v1/clinic/items/buy`):** Debita `cost_xp` de `current_xp`, registra o item adquirido no inventário/clínica do usuário e grava transação `ITEM_PURCHASE` em `user_xp_transactions`.
   3. **Validação Espacial (`PUT /api/v1/clinic/layout`):**
      - Cada item posicionado possui `rotation` em `{0, 1}` (`0` = SE, `1` = SW).
+     - Na UI, "Girar" alterna `0 ↔ 1` apenas no preview (ghost); a rotação só é gravada no layout quando a posição é confirmada.
      - Se `rotation == 0`: `eff_w = footprint_x`, `eff_h = footprint_y`. Se `rotation == 1`: `eff_w = footprint_y`, `eff_h = footprint_x`.
      - Todo item posicionado no chão (`grid_x >= 0`, `grid_y >= 0`) deve respeitar `grid_x + eff_w <= grid_width` e `grid_y + eff_h <= grid_height` e não pode ter interseção AABB 2D com nenhum outro item posicionado no chão.
 
@@ -250,12 +251,17 @@
      - Sempre que um item do catálogo estiver selecionado para compra ou reposicionamento (`selectedCatalogItem !== null` ou `movingItem !== null`):
        - O container flutuante do *Ghost Preview* (`.ghost-item-anchor`) DEVE ter `pointer-events: none` inegociável. Ele atua exclusivamente como guia visual e jamais pode interceptar cliques ou eventos de mouse.
        - Todos os containers HTML dos itens já posicionados (`.placed-item-anchor`) e do avatar médico (`.doctor-avatar-anchor`) DEVEM receber temporariamente `pointer-events: none`, permitindo que os polígonos SVG dos ladrilhos do piso (`.iso-tile`) e paredes recebam diretamente 100% dos eventos `mouseenter`, `mousemove` e `click`.
-  3. **Mitigação de Overlap de Bounding Box em Modo Navegação:**
+  3. **Confirmação Explícita e Telas de Toque:**
+     - A pílula de edição oferece `✓ Confirmar` (posição em preview), `✕ Cancelar` (também via `Esc`) e `↻ Girar` (somente itens de piso).
+     - Com mouse, o clique no tile confirma imediatamente. Com toque (sem hover), o 1º toque posiciona o ghost e o 2º toque no mesmo alvo — comparado pelo slot resolvido, no caso de itens de parede — confirma.
+     - Ao selecionar um móvel já posicionado, o ghost nasce na posição atual dele.
+     - O clique em uma faixa de parede informa o lado (`NW`/`NE`), pois o segmento 0 de ambas compartilha o tile `(0, 0)`.
+  4. **Mitigação de Overlap de Bounding Box em Modo Navegação:**
      - No modo normal de inspeção/interação, a div retangular container de cada item posicionado DEVE possuir `pointer-events: none`, enquanto os nós visíveis do SVG dentro de cada item (`path`, `rect`, `circle`, `polygon`) recebem `pointer-events: visiblePainted`. Isso impede que a porção superior transparente de um móvel posicionado em `(1, 1)` cubra o tile ou item posicionado em `(0, 0)`.
 - **Condições de Ativação:**
   - Posicionamento de item, seleção de móvel no consultório, clique sobre ladrilhos do grid isométrico.
 - **Resultado Esperado:**
-  - Clique na posição visual de `(0, 0)` emite `{ gridX: 0, gridY: 0 }` imediatamente e posiciona o item na coordenada exata, sem saltos para `(1, 1)`.
+  - Clique de mouse na posição visual de `(0, 0)` emite `{ gridX: 0, gridY: 0 }` imediatamente e posiciona o item na coordenada exata, sem saltos para `(1, 1)`; no toque, a emissão ocorre na confirmação (2º toque ou `✓`).
 - **Exceção / Mensagem de Erro:**
   - Nenhuma; garantia puramente geométrica e de hit-testing no DOM/SVG.
 
