@@ -20,6 +20,8 @@ export class ClinicItemSvgComponent {
   @Input() isWallItem = false;
   @Input() activePulse = false;
   @Input() paused = false;
+  /** P-090: só os traços desenhados recebem ponteiro, e apenas quando o host habilita (nunca no ghost). */
+  @Input() interactive = false;
 
   get hasCustomRotation(): boolean {
     return (

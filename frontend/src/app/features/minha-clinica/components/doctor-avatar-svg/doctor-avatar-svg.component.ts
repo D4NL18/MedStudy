@@ -29,6 +29,8 @@ export class DoctorAvatarSvgComponent {
   @Input() height = 88;
   @Input() activeAnimation = false;
   @Input() paused = false;
+  /** P-090: habilita clique/toque apenas nos traços do personagem (desligado no ghost e em previews). */
+  @Input() interactive = false;
 
   get avatarAriaLabel(): string {
     const title = this.gender === 'FEMALE' ? 'Doutora Residente' : 'Doutor Residente';
