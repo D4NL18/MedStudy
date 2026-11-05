@@ -3,6 +3,11 @@
   width: 100%;
 }
 
+.mono-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
 .clinic-bottom-dock {
   padding: 16px 20px;
   border-radius: 16px;
@@ -415,5 +420,67 @@
     background: var(--color-neutral-200, #E2E8F0);
     color: var(--color-neutral-600, #475569);
     cursor: not-allowed;
+  }
+}
+
+/* Mobile: abas em faixa rolável, controles na largura total e cards em 2 colunas */
+@media (max-width: 767px) {
+  .clinic-bottom-dock {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .dock-header {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .dock-tabs {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dock-tab-btn {
+    flex-shrink: 0;
+    min-height: 40px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+
+  .dock-controls {
+    width: 100%;
+  }
+
+  .filter-switch {
+    flex: 1 1 100%;
+  }
+
+  .filter-btn {
+    flex: 1 1 0;
+    min-height: 36px;
+  }
+
+  .btn-dock-tool {
+    flex: 1 1 0;
+    min-height: 40px;
+  }
+
+  .dock-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .catalog-item-card {
+    padding: 10px;
+  }
+
+  .btn-card-action,
+  .surface-btn-group .btn-surface-preview {
+    height: 40px;
   }
 }
