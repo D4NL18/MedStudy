@@ -20,7 +20,8 @@ import {
   StudyActionRewardRequest,
   StudyActionRewardResponse,
   StudyActionType,
-  UpdateClinicLayoutRequest
+  UpdateClinicLayoutRequest,
+  WallSide
 } from '../models/clinic.model';
 
 /**
@@ -37,6 +38,8 @@ export class ClinicService {
 
   static readonly TILE_WIDTH = 64;
   static readonly TILE_HEIGHT = 32;
+  /** IDs legados que são de parede mesmo quando o catálogo do servidor não informa `placementType`. */
+  private static readonly LEGACY_WALL_ITEM_IDS = ['ped_regua_girafa', 'negatoscopio_led'];
 
   readonly clinicState = signal<ClinicState | null>(null);
   readonly doctorAvatarResponse = signal<DoctorAvatarResponse | null>(null);
@@ -110,6 +113,54 @@ export class ClinicService {
   }
 
   /**
+   * P-088: Regra única para identificar itens fixados em parede no catálogo
+   * (placement WALL, footprint 0x0 ou IDs legados), compartilhada por ghost, clique e renderização.
+   */
+  isWallMountedItem(item: Pick<ClinicCatalogItem, 'id' | 'footprintX' | 'footprintY' | 'placementType'>): boolean {
+    return (
+      item.placementType === 'WALL' ||
+      (item.footprintX === 0 && item.footprintY === 0) ||
+      ClinicService.LEGACY_WALL_ITEM_IDS.includes(item.id)
+    );
+  }
+
+  /**
+   * P-088: Projeta uma coordenada do piso no segmento de parede traseira mais próximo
+   * (ou no lado explícito vindo do hover de parede). Ghost e clique usam a mesma regra.
+   */
+  resolveWallSlot(
+    gridX: number,
+    gridY: number,
+    preferredSide?: WallSide | null
+  ): { wallSide: WallSide; wallTileIndex: number } {
+    const wallSide: WallSide = preferredSide ?? (gridX <= gridY ? 'NW' : 'NE');
+    return { wallSide, wallTileIndex: wallSide === 'NW' ? gridY : gridX };
+  }
+
+  /**
+   * P-088: Valida um slot explícito de parede (lado + índice). Necessário porque o segmento 0 da
+   * parede NE e o segmento 0 da parede NW compartilham a coordenada de piso (0, 0).
+   */
+  isWallSlotFree(
+    wallSide: WallSide,
+    wallTileIndex: number,
+    gridWidth: number,
+    gridHeight: number,
+    placedItems: ClinicPlacedItem[],
+    catalog: ClinicCatalogItem[] = CLINIC_CATALOG_FALLBACK,
+    ignorePlacedId?: string
+  ): boolean {
+    const maxIdx = wallSide === 'NW' ? gridHeight : gridWidth;
+    if (!Number.isFinite(wallTileIndex) || wallTileIndex < 0 || wallTileIndex >= maxIdx) {
+      return false;
+    }
+    const catalogMap = new Map<string, ClinicCatalogItem>(
+      (catalog.length > 0 ? catalog : CLINIC_CATALOG_FALLBACK).map(c => [c.id, c])
+    );
+    return !this.isWallSlotOccupied(wallSide, wallTileIndex, placedItems, catalogMap, ignorePlacedId);
+  }
+
+  /**
    * P-084: Validação espacial de fronteiras do grid e detecção de colisão AABB 2D
    * com suporte a slots lineares de parede (WALL, 0x0).
    */
@@ -161,28 +212,44 @@ export class ClinicService {
     catalogMap: Map<string, ClinicCatalogItem>,
     ignorePlacedId?: string
   ): boolean {
-    if (gridX !== 0 && gridY !== 0) {
+    // Mesma projeção do ghost e do clique: a coordenada encaixa no segmento de parede mais próximo
+    const { wallSide, wallTileIndex } = this.resolveWallSlot(gridX, gridY);
+    const maxIdx = wallSide === 'NW' ? gridHeight : gridWidth;
+    if (wallTileIndex < 0 || wallTileIndex >= maxIdx) {
       return false;
     }
-    if (gridX === 0 && (gridY < 0 || gridY >= gridHeight)) {
-      return false;
-    }
-    if (gridY === 0 && (gridX < 0 || gridX >= gridWidth)) {
-      return false;
-    }
+    return !this.isWallSlotOccupied(wallSide, wallTileIndex, placedItems, catalogMap, ignorePlacedId);
+  }
 
-    const targetSide: 'NW' | 'NE' = gridX === 0 ? 'NW' : 'NE';
-    const targetIdx = gridX === 0 ? gridY : gridX;
+  private isWallSlotOccupied(
+    wallSide: WallSide,
+    wallTileIndex: number,
+    placedItems: ClinicPlacedItem[],
+    catalogMap: Map<string, ClinicCatalogItem>,
+    ignorePlacedId?: string
+  ): boolean {
+    return placedItems.some(
+      other =>
+        other.placed &&
+        !(ignorePlacedId && other.id === ignorePlacedId) &&
+        this.collidesWithWallSlot(other, wallSide, wallTileIndex, catalogMap)
+    );
+  }
 
-    for (const other of placedItems) {
-      if (!other.placed || (ignorePlacedId && other.id === ignorePlacedId)) {
-        continue;
-      }
-      if (this.collidesWithWallSlot(other, targetSide, targetIdx, catalogMap)) {
-        return false;
-      }
-    }
-    return true;
+  /** P-088: item já posicionado que está fixado em parede (pelo próprio registro ou pelo catálogo). */
+  isPlacedWallItem(
+    other: ClinicPlacedItem,
+    otherCat?: Pick<ClinicCatalogItem, 'footprintX' | 'footprintY' | 'placementType'>
+  ): boolean {
+    return (
+      other.placementType === 'WALL' ||
+      this.isWallMountedItem({
+        id: other.catalogItemId,
+        footprintX: otherCat?.footprintX ?? 1,
+        footprintY: otherCat?.footprintY ?? 1,
+        placementType: otherCat?.placementType
+      })
+    );
   }
 
   private collidesWithWallSlot(
@@ -191,29 +258,15 @@ export class ClinicService {
     targetIdx: number,
     catalogMap: Map<string, ClinicCatalogItem>
   ): boolean {
-    const otherCat = catalogMap.get(other.catalogItemId);
-    const otherIsWall =
-      other.placementType === 'WALL' ||
-      otherCat?.placementType === 'WALL' ||
-      (otherCat?.footprintX === 0 && otherCat?.footprintY === 0);
-
-    if (otherIsWall) {
-      const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
-      const otherIdx =
-        other.wallTileIndex ??
-        (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
-      return otherSide === targetSide && otherIdx === targetIdx;
+    // P-088: móveis de piso nunca disputam slots de parede; só outro item de parede no mesmo segmento colide
+    if (!this.isPlacedWallItem(other, catalogMap.get(other.catalogItemId))) {
+      return false;
     }
-
-    const { width: oW, height: oH } = this.getEffectiveFootprint(
-      otherCat ?? { footprintX: 1, footprintY: 1 },
-      other.rotation ?? 0
-    );
-    const ogx = other.gridX ?? 0;
-    const ogy = other.gridY ?? 0;
-    const checkX = targetSide === 'NW' ? 0 : targetIdx;
-    const checkY = targetSide === 'NW' ? targetIdx : 0;
-    return checkX >= ogx && checkX < ogx + oW && checkY >= ogy && checkY < ogy + oH;
+    const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
+    const otherIdx =
+      other.wallTileIndex ??
+      (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
+    return otherSide === targetSide && otherIdx === targetIdx;
   }
 
   private validateFloorPlacement(
@@ -264,19 +317,10 @@ export class ClinicService {
       footprintY: 1,
       placementType: 'FLOOR' as const
     };
-    const otherIsWall =
-      other.placementType === 'WALL' ||
-      otherCatalog.placementType === 'WALL' ||
-      (otherCatalog.footprintX === 0 && otherCatalog.footprintY === 0);
 
-    if (otherIsWall) {
-      const otherSide = other.wallSide ?? (other.gridX === 0 ? 'NW' : 'NE');
-      const otherIdx =
-        other.wallTileIndex ??
-        (otherSide === 'NW' ? other.gridY ?? 0 : other.gridX ?? 0);
-      const wallX = otherSide === 'NW' ? 0 : otherIdx;
-      const wallY = otherSide === 'NW' ? otherIdx : 0;
-      return wallX >= gridX && wallX < gridX + effW && wallY >= gridY && wallY < gridY + effH;
+    // P-088: itens de parede têm footprint de piso nulo e não bloqueiam móveis rentes à parede
+    if (this.isPlacedWallItem(other, otherCatalog)) {
+      return false;
     }
 
     const { width: otherW, height: otherH } = this.getEffectiveFootprint(
