@@ -11,7 +11,8 @@ import {
   ClinicCategory,
   ClinicState,
   ItemRarity,
-  RARITY_CONFIG
+  RARITY_CONFIG,
+  getClinicRotationLabel
 } from '@core/models/clinic.model';
 import { ClinicItemSvgComponent } from '../clinic-item-svg/clinic-item-svg.component';
 
@@ -103,15 +104,6 @@ export class ClinicCatalogDrawerComponent {
   }
 
   getRotationLabel(rotation: number): string {
-    switch (rotation) {
-      case 90:
-        return 'Direita (90°)';
-      case 180:
-        return 'Atrás (180°)';
-      case 270:
-        return 'Esquerda (270°)';
-      default:
-        return 'Frente (0°)';
-    }
+    return getClinicRotationLabel(rotation);
   }
 }

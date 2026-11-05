@@ -25,6 +25,7 @@ import {
   LootboxTierInfo,
   RARITY_CONFIG,
   StudyActionType,
+  WallSide,
   getItemRarity
 } from '@core/models/clinic.model';
 import { ClinicService } from '@core/services/clinic.service';
@@ -34,6 +35,8 @@ import { DoctorWardrobeModalComponent } from './components/doctor-wardrobe-modal
 import { ClinicLootboxModalComponent } from './components/clinic-lootbox-modal/clinic-lootbox-modal.component';
 import { ClinicCatalogDrawerComponent } from './components/clinic-catalog-drawer/clinic-catalog-drawer.component';
 import { ClinicErrorModalComponent } from './components/clinic-error-modal/clinic-error-modal.component';
+
+type ViewportTileCoords = { gridX: number; gridY: number; fromWall?: boolean; wallSide?: WallSide };
 
 interface CategoryTabMeta {
   id: ClinicCategory;
@@ -289,9 +292,17 @@ export class MinhaClinicaComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
+    if (this.isAvatarModalOpen() || this.isLootboxModalOpen() || this.activeErrorModalMessage()) {
+      return;
+    }
     if ((event.key === 'r' || event.key === 'R') && this.editMode() && this.selectedCatalogItem()) {
       event.preventDefault();
       this.toggleRotation();
+      return;
+    }
+    if (event.key === 'Escape' && this.editMode() && (this.selectedCatalogItem() || this.isMovingDoctor())) {
+      event.preventDefault();
+      this.cancelPlacement();
     }
   }
 
@@ -350,30 +361,22 @@ export class MinhaClinicaComponent implements OnInit {
     this.isMovingDoctor.set(false);
   }
 
-  toggleRotation(): void {
-    const nextRot = (this.selectedRotation() + 1) % 4;
-    this.selectedRotation.set(nextRot);
-    const targetId = this.movingPlacedId();
-    if (targetId) {
-      this.workingPlacedItems.update(list =>
-        list.map(item => (item.id === targetId ? { ...item, rotation: nextRot } : item))
-      );
-      this.isLayoutDirty.set(true);
-    }
+  /** Abandona o item/doutor em posicionamento sem alterar o layout de trabalho. */
+  cancelPlacement(): void {
+    this.selectedCatalogItem.set(null);
+    this.movingPlacedId.set(undefined);
+    this.isMovingDoctor.set(false);
     this.audioService.playClick();
   }
 
-  getRotationLabel(rotation: number): string {
-    switch (rotation % 4) {
-      case 1:
-        return 'Aresta SW (Frente-Esquerda)';
-      case 2:
-        return 'Aresta NW (Fundo-Esquerda)';
-      case 3:
-        return 'Aresta NE (Fundo-Direita)';
-      default:
-        return 'Aresta SE (Frente-Direita)';
-    }
+  /**
+   * P-084: rotação binária (0 = SE, 1 = SW), alinhada ao CHECK do banco e ao espelhamento do SVG.
+   * Gira apenas o preview: o layout só muda ao confirmar a posição (validada com o novo footprint),
+   * então cancelar nunca deixa um móvel girado e sobreposto.
+   */
+  toggleRotation(): void {
+    this.selectedRotation.set(this.selectedRotation() === 1 ? 0 : 1);
+    this.audioService.playClick();
   }
 
   toggleAudioMute(): void {
@@ -397,8 +400,9 @@ export class MinhaClinicaComponent implements OnInit {
     const existingPlaced = this.workingPlacedItems().find(
       p => p.catalogItemId === item.id && p.placed
     );
+    this.isMovingDoctor.set(false);
     this.movingPlacedId.set(existingPlaced?.id);
-    this.selectedRotation.set(existingPlaced?.rotation ?? 0);
+    this.selectedRotation.set((existingPlaced?.rotation ?? 0) % 2);
     this.selectedCatalogItem.set(item);
     this.audioService.playClick();
   }
@@ -419,14 +423,15 @@ export class MinhaClinicaComponent implements OnInit {
         c => c.id === placed.catalogItemId
       ) ?? null;
     if (catItem) {
+      this.isMovingDoctor.set(false);
       this.movingPlacedId.set(placed.id);
-      this.selectedRotation.set(placed.rotation ?? 0);
+      this.selectedRotation.set((placed.rotation ?? 0) % 2);
       this.selectedCatalogItem.set(catItem);
       this.audioService.playClick();
     }
   }
 
-  onViewportTileClicked(coords: { gridX: number; gridY: number; fromWall?: boolean }): void {
+  onViewportTileClicked(coords: ViewportTileCoords): void {
     const state = this.clinic();
     if (!this.editMode() || !state) {
       return;
@@ -446,8 +451,14 @@ export class MinhaClinicaComponent implements OnInit {
     this.handleEmptyHandClick(coords);
   }
 
-  private handleDoctorRelocation(coords: { gridX: number; gridY: number; fromWall?: boolean }, state: ClinicState): void {
-    const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
+  private handleDoctorRelocation(coords: ViewportTileCoords, state: ClinicState): void {
+    // P-088: só móveis de piso bloqueiam o(a) Doutor(a); quadros na parede acima do tile não contam
+    const itemOnTile = this.findFloorItemAt(
+      this.workingPlacedItems(),
+      this.catalogMap(),
+      coords.gridX,
+      coords.gridY
+    );
     if (itemOnTile) {
       this.showErrorModal(
         `Posição (${coords.gridX}, ${coords.gridY}) já ocupada por um móvel. Escolha um piso livre para o(a) Doutor(a).`
@@ -498,26 +509,28 @@ export class MinhaClinicaComponent implements OnInit {
     });
   }
 
-  private isCatalogWallItem(sel: ClinicCatalogItem): boolean {
-    return (
-      sel.placementType === 'WALL' ||
-      (sel.footprintX === 0 && sel.footprintY === 0) ||
-      sel.id === 'ped_regua_girafa' ||
-      sel.id === 'negatoscopio_led'
-    );
-  }
-
   private validateItemPlacement(
-    coords: { gridX: number; gridY: number; fromWall?: boolean },
+    coords: ViewportTileCoords,
     state: ClinicState,
     sel: ClinicCatalogItem,
     isWall: boolean
   ): boolean {
-    if (isWall && coords.gridX !== 0 && coords.gridY !== 0) {
-      this.showErrorModal(
-        'Itens de parede devem ser fixados em segmentos de parede (linha superior ou lateral esquerda).'
+    if (isWall) {
+      // P-088: mesma projeção do ghost — o item encaixa no segmento de parede mais próximo
+      const slot = this.clinicService.resolveWallSlot(coords.gridX, coords.gridY, coords.wallSide);
+      const free = this.clinicService.isWallSlotFree(
+        slot.wallSide,
+        slot.wallTileIndex,
+        state.gridWidth,
+        state.gridHeight,
+        this.workingPlacedItems(),
+        state.catalog,
+        this.movingPlacedId()
       );
-      return false;
+      if (!free) {
+        this.showErrorModal('Já existe um item de parede fixado neste segmento. Escolha outro trecho da parede.');
+      }
+      return free;
     }
 
     const rot = this.selectedRotation();
@@ -545,15 +558,16 @@ export class MinhaClinicaComponent implements OnInit {
   }
 
   private buildPlacedItemData(
-    coords: { gridX: number; gridY: number; fromWall?: boolean },
+    coords: ViewportTileCoords,
     sel: ClinicCatalogItem,
     isWall: boolean,
     existingId?: string
   ): ClinicPlacedItem {
     const rot = this.selectedRotation();
     const isGroundRuler = sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto';
-    const wallSide = isWall ? (coords.gridX === 0 ? 'NW' : 'NE') : undefined;
-    const wallTileIndex = isWall ? (coords.gridX === 0 ? coords.gridY : coords.gridX) : undefined;
+    const slot = isWall
+      ? this.clinicService.resolveWallSlot(coords.gridX, coords.gridY, coords.wallSide)
+      : null;
     let elevationZ: number | undefined;
     if (isWall) {
       elevationZ = isGroundRuler ? 0 : 76;
@@ -562,23 +576,23 @@ export class MinhaClinicaComponent implements OnInit {
     return {
       id: existingId ?? `placed-${sel.id}-${Date.now()}`,
       catalogItemId: sel.id,
-      gridX: coords.gridX,
-      gridY: coords.gridY,
+      gridX: slot ? (slot.wallSide === 'NW' ? 0 : slot.wallTileIndex) : coords.gridX,
+      gridY: slot ? (slot.wallSide === 'NW' ? slot.wallTileIndex : 0) : coords.gridY,
       rotation: rot,
       placed: true,
-      wallSide: wallSide as any,
-      wallTileIndex,
+      wallSide: slot?.wallSide,
+      wallTileIndex: slot?.wallTileIndex,
       elevationZ,
       placementType: (isWall ? 'WALL' : 'FLOOR') as PlacementType
     };
   }
 
   private handleItemPlacement(
-    coords: { gridX: number; gridY: number; fromWall?: boolean },
+    coords: ViewportTileCoords,
     state: ClinicState,
     sel: ClinicCatalogItem
   ): void {
-    const isWall = this.isCatalogWallItem(sel);
+    const isWall = this.clinicService.isWallMountedItem(sel);
     if (!this.validateItemPlacement(coords, state, sel, isWall)) {
       return;
     }
@@ -606,66 +620,77 @@ export class MinhaClinicaComponent implements OnInit {
     this.audioService.playPlaceItem();
   }
 
-  private handleEmptyHandClick(coords: { gridX: number; gridY: number; fromWall?: boolean }): void {
+  private handleEmptyHandClick(coords: ViewportTileCoords): void {
     const currentDoc = this.currentAvatar();
     if (currentDoc?.avatarX === coords.gridX && currentDoc?.avatarY === coords.gridY) {
       this.startMovingDoctor();
       return;
     }
 
-    const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall);
+    const itemOnTile = this.findPlacedItemAtTile(coords.gridX, coords.gridY, coords.fromWall, coords.wallSide);
     if (itemOnTile) {
       this.onViewportPlacedItemClicked(itemOnTile);
     }
   }
 
+  /**
+   * Item sob o clique. O piso tem prioridade; a parede só vem primeiro quando o clique veio da
+   * faixa de parede (P-090), e o lado informado desfaz a ambiguidade NW-0 × NE-0 no tile (0, 0).
+   */
   findPlacedItemAtTile(
     gridX: number,
     gridY: number,
-    preferWall = false
+    preferWall = false,
+    wallSide?: WallSide
   ): ClinicPlacedItem | undefined {
-    const catalog = this.clinic()?.catalog ?? CLINIC_CATALOG_FALLBACK;
-    const catMap = new Map(catalog.map(c => [c.id, c]));
+    const catMap = this.catalogMap();
     const items = this.workingPlacedItems();
 
-    const isWallTile = gridX === 0 || gridY === 0;
-    const shouldCheckWallFirst = preferWall || isWallTile;
-
-    if (shouldCheckWallFirst) {
-      return this.findWallItemAt(items, catMap, gridX, gridY) ?? this.findFloorItemAt(items, catMap, gridX, gridY);
+    if (preferWall) {
+      return (
+        this.findWallItemAt(items, catMap, gridX, gridY, wallSide) ??
+        this.findFloorItemAt(items, catMap, gridX, gridY)
+      );
     }
     return this.findFloorItemAt(items, catMap, gridX, gridY) ?? this.findWallItemAt(items, catMap, gridX, gridY);
   }
 
-  private isWallItemType(item: ClinicPlacedItem, cat?: ClinicCatalogItem): boolean {
-    return (
-      item.placementType === 'WALL' ||
-      cat?.placementType === 'WALL' ||
-      (cat?.footprintX === 0 && cat?.footprintY === 0) ||
-      item.catalogItemId === 'ped_regua_girafa' ||
-      item.catalogItemId === 'negatoscopio_led'
-    );
+  private catalogMap(): Map<string, ClinicCatalogItem> {
+    const catalog = this.clinic()?.catalog ?? CLINIC_CATALOG_FALLBACK;
+    return new Map(catalog.map(c => [c.id, c]));
   }
 
   private findWallItemAt(
     items: ClinicPlacedItem[],
     catMap: Map<string, ClinicCatalogItem>,
     gridX: number,
-    gridY: number
+    gridY: number,
+    wallSide?: WallSide
   ): ClinicPlacedItem | undefined {
     for (let i = items.length - 1; i >= 0; i--) {
       const item = items[i];
       if (!item.placed) continue;
       const cat = catMap.get(item.catalogItemId);
-      if (this.isWallItemType(item, cat) && this.matchesWallCoordinates(item, gridX, gridY)) {
+      if (
+        this.clinicService.isPlacedWallItem(item, cat) &&
+        this.matchesWallCoordinates(item, gridX, gridY, wallSide)
+      ) {
         return item;
       }
     }
     return undefined;
   }
 
-  private matchesWallCoordinates(item: ClinicPlacedItem, gridX: number, gridY: number): boolean {
+  private matchesWallCoordinates(
+    item: ClinicPlacedItem,
+    gridX: number,
+    gridY: number,
+    clickedSide?: WallSide
+  ): boolean {
     const wallSide = item.wallSide ?? (item.gridX === 0 ? 'NW' : 'NE');
+    if (clickedSide && clickedSide !== wallSide) {
+      return false;
+    }
     const tileIdx = item.wallTileIndex ?? (wallSide === 'NW' ? item.gridY : item.gridX);
     return (
       (wallSide === 'NW' && gridX === 0 && gridY === tileIdx) ||
@@ -683,7 +708,7 @@ export class MinhaClinicaComponent implements OnInit {
       const item = items[i];
       if (!item.placed) continue;
       const cat = catMap.get(item.catalogItemId);
-      if (!this.isWallItemType(item, cat) && this.matchesFloorCoordinates(item, cat, gridX, gridY)) {
+      if (!this.clinicService.isPlacedWallItem(item, cat) && this.matchesFloorCoordinates(item, cat, gridX, gridY)) {
         return item;
       }
     }
@@ -1312,10 +1337,7 @@ export class MinhaClinicaComponent implements OnInit {
 
   equipItemNow(item: ClinicCatalogItem): void {
     this.closeLootboxModal();
-    this.selectedCatalogItem.set(item);
-    if (!this.editMode()) {
-      this.toggleEditMode();
-    }
+    this.selectItemForPlacement(item);
   }
 
   triggerOpenDailyFreeLootbox(): void {

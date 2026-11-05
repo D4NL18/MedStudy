@@ -1,10 +1,13 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
   computed,
   inject,
   signal
@@ -15,7 +18,9 @@ import {
   ClinicCatalogItem,
   ClinicPlacedItem,
   DoctorAvatar,
-  PlacementType
+  PlacementType,
+  WallSide,
+  getClinicRotationLabel
 } from '@core/models/clinic.model';
 import { ClinicService } from '@core/services/clinic.service';
 import { ClinicAudioService } from '@core/services/clinic-audio.service';
@@ -72,7 +77,7 @@ export interface GhostPreviewRender {
   templateUrl: './clinic-viewport.component.html',
   styleUrl: './clinic-viewport.component.scss'
 })
-export class ClinicViewportComponent implements OnInit, OnDestroy {
+export class ClinicViewportComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly clinicService = inject(ClinicService);
   private readonly audioService = inject(ClinicAudioService);
 
@@ -98,6 +103,9 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   });
 
   @Input() set isMovingDoctor(val: boolean) {
+    if (Boolean(val) !== this.isMovingDoctorSignal()) {
+      this.touchPreviewKey = null;
+    }
     this.isMovingDoctorSignal.set(Boolean(val));
   }
   get isMovingDoctor(): boolean {
@@ -149,6 +157,9 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   }
 
   @Input() set selectedCatalogItem(val: ClinicCatalogItem | null) {
+    if ((val ?? null) !== this.selectedCatalogItemSignal()) {
+      this.touchPreviewKey = null;
+    }
     this.selectedCatalogItemSignal.set(val ?? null);
   }
   get selectedCatalogItem(): ClinicCatalogItem | null {
@@ -156,14 +167,19 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   }
 
   @Input() set selectedRotation(val: number) {
-    this.selectedRotationSignal.set(val === 1 ? 1 : 0);
+    // P-084: a rotação persistida é binária (0 = SE, 1 = SW)
+    this.selectedRotationSignal.set(val % 2 === 1 ? 1 : 0);
   }
   get selectedRotation(): number {
     return this.selectedRotationSignal();
   }
 
   @Input() set movingPlacedId(val: string | undefined) {
+    const changed = val !== this.movingPlacedIdSignal();
     this.movingPlacedIdSignal.set(val);
+    if (changed && val) {
+      this.focusHoverOnPlacedItem(val);
+    }
   }
   get movingPlacedId(): string | undefined {
     return this.movingPlacedIdSignal();
@@ -194,8 +210,16 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     return this.avatarSignal();
   }
 
-  @Output() readonly tileClicked = new EventEmitter<{ gridX: number; gridY: number; fromWall?: boolean }>();
+  @Output() readonly tileClicked = new EventEmitter<{
+    gridX: number;
+    gridY: number;
+    fromWall?: boolean;
+    wallSide?: WallSide;
+  }>();
   @Output() readonly placedItemClicked = new EventEmitter<ClinicPlacedItem>();
+  @Output() readonly cancelPlacement = new EventEmitter<void>();
+
+  @ViewChild('viewportShell', { static: true }) private readonly shellRef?: ElementRef<HTMLElement>;
   @Output() readonly rotateRequested = new EventEmitter<void>();
   @Output() readonly avatarClicked = new EventEmitter<void>();
 
@@ -206,6 +230,11 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   readonly panY = signal<number>(0);
   readonly isDragging = signal<boolean>(false);
   readonly hoveredTile = signal<{ gridX: number; gridY: number } | null>({ gridX: 0, gridY: 0 });
+  /** Parede de origem do hover: o segmento 0 da NW e o da NE compartilham a coordenada (0, 0). */
+  readonly hoveredWallSide = signal<WallSide | null>(null);
+  /** Tipo do último ponteiro. No toque não existe hover: o 1º toque posiciona o ghost e o 2º confirma. */
+  readonly lastPointerType = signal<string>('mouse');
+  readonly isTouchPointer = computed(() => this.lastPointerType() === 'touch');
   readonly pulsingItemId = signal<string | null>(null);
   readonly activeItemBubble = signal<{ name: string; description: string } | null>(null);
 
@@ -221,6 +250,10 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   private isPointerActive = false;
   private hasDragged = false;
   private bubbleTimer: ReturnType<typeof setTimeout> | null = null;
+  private resizeObserver: ResizeObserver | null = null;
+  /** Alvo (tile ou slot de parede) mostrado pelo último toque; só um 2º toque nele confirma. */
+  private touchPreviewKey: string | null = null;
+  private readonly shellSize = signal<{ width: number; height: number } | null>(null);
 
   private readonly visibilityHandler = (): void => {
     if (typeof document !== 'undefined' && document.hidden) {
@@ -251,6 +284,42 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
 
   readonly originY = computed(() => 105);
 
+  /** Responsividade: encaixa o diorama inteiro no espaço disponível; o zoom do usuário é relativo a este ajuste. */
+  readonly fitScale = computed(() => {
+    const size = this.shellSize();
+    if (!size || size.width <= 0 || size.height <= 0) {
+      return 1;
+    }
+    const gutter = 24;
+    const fit = Math.min(
+      (size.width - gutter) / this.stageWidth(),
+      (size.height - gutter) / this.stageHeight()
+    );
+    return Math.max(0.35, Math.min(1.5, fit));
+  });
+
+  readonly stageTransform = computed(
+    () => `translate(${this.panX()}px, ${this.panY()}px) scale(${this.zoom() * this.fitScale()})`
+  );
+
+  readonly rotationLabel = computed(() => getClinicRotationLabel(this.selectedRotationSignal()));
+
+  readonly isPlacingWallItem = computed(() => {
+    const sel = this.selectedCatalogItemSignal();
+    return Boolean(sel && !this.isMovingDoctorSignal() && this.clinicService.isWallMountedItem(sel));
+  });
+
+  readonly placementHint = computed(() => {
+    if (this.isTouchPointer()) {
+      return this.isPlacingWallItem()
+        ? 'Toque na parede para prever e toque de novo (ou ✓) para fixar.'
+        : 'Toque no piso para prever e toque de novo (ou ✓) para confirmar.';
+    }
+    return this.isPlacingWallItem()
+      ? 'Clique na parede (ou no piso rente a ela) para fixar · Esc cancela.'
+      : 'Clique no piso para posicionar · R gira · Esc cancela.';
+  });
+
   readonly doctorHoverScreenCoords = computed(() => {
     const hover = this.hoveredTile();
     const ox = this.originX();
@@ -274,11 +343,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     for (const item of placed) {
       if (!item.placed) continue;
       const cat = catMap.get(item.catalogItemId);
-      const isWall =
-        item.placementType === 'WALL' ||
-        cat?.placementType === 'WALL' ||
-        (cat?.footprintX === 0 && cat?.footprintY === 0);
-      if (isWall) continue;
+      if (this.clinicService.isPlacedWallItem(item, cat)) continue;
       const { width: effW, height: effH } = this.clinicService.getEffectiveFootprint(
         cat ?? CLINIC_CATALOG_FALLBACK[0],
         item.rotation ?? 0
@@ -496,10 +561,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
           CLINIC_CATALOG_FALLBACK[0];
 
         const isWall =
-          placed.placementType === 'WALL' ||
-          catalogItem.placementType === 'WALL' ||
-          placed.catalogItemId === 'ped_regua_girafa' ||
-          placed.catalogItemId === 'negatoscopio_led';
+          placed.placementType === 'WALL' || this.clinicService.isWallMountedItem(catalogItem);
 
         if (isWall) {
           const wallSide = placed.wallSide ?? (placed.gridX === 0 ? 'NW' : 'NE');
@@ -581,11 +643,20 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     if (!sel || !hover) return null;
 
     const rot = this.selectedRotationSignal();
-    const isWall =
-      sel.placementType === 'WALL' ||
-      (sel.footprintX === 0 && sel.footprintY === 0) ||
-      sel.id === 'ped_regua_girafa' ||
-      sel.id === 'negatoscopio_led';
+    if (this.clinicService.isWallMountedItem(sel)) {
+      // P-088: o ghost de parede encaixa no segmento mais próximo; a validação é por slot (lado + índice)
+      const slot = this.clinicService.resolveWallSlot(hover.gridX, hover.gridY, this.hoveredWallSide());
+      const wallValid = this.clinicService.isWallSlotFree(
+        slot.wallSide,
+        slot.wallTileIndex,
+        this.gridWidthSignal(),
+        this.gridHeightSignal(),
+        this.placedItemsSignal(),
+        this.catalogSignal(),
+        this.movingPlacedIdSignal()
+      );
+      return this.computeWallGhostPreview(sel, hover, slot, rot, wallValid);
+    }
 
     const valid = this.clinicService.isPositionValid(
       hover.gridX,
@@ -600,9 +671,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
       this.movingPlacedIdSignal()
     );
 
-    return isWall
-      ? this.computeWallGhostPreview(sel, hover, rot, valid)
-      : this.computeFloorGhostPreview(sel, hover, rot, valid);
+    return this.computeFloorGhostPreview(sel, hover, rot, valid);
   });
 
   private computeDoctorGhostPreview(hover: { gridX: number; gridY: number }): GhostPreviewRender {
@@ -631,14 +700,15 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
   private computeWallGhostPreview(
     sel: ClinicCatalogItem,
     hover: { gridX: number; gridY: number },
+    slot: { wallSide: WallSide; wallTileIndex: number },
     rot: number,
     valid: boolean
   ): GhostPreviewRender {
     const ox = this.originX();
     const oy = this.originY();
-    const wallSide: 'NW' | 'NE' = hover.gridX === 0 ? 'NW' : 'NE';
+    const wallSide = slot.wallSide;
     const maxIdx = (wallSide === 'NW' ? this.gridHeightSignal() : this.gridWidthSignal()) - 1;
-    const tileIdx = Math.max(0, Math.min(hover.gridX === 0 ? hover.gridY : hover.gridX, maxIdx));
+    const tileIdx = Math.max(0, Math.min(slot.wallTileIndex, maxIdx));
     const wallH = 68;
 
     let wallBase: { x: number; y: number };
@@ -723,10 +793,32 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    const shell = this.shellRef?.nativeElement;
+    if (!shell) {
+      return;
+    }
+    // Medição síncrona: o 1º callback do ResizeObserver só chega no próximo frame renderizado
+    if (shell.clientWidth > 0 && shell.clientHeight > 0) {
+      this.shellSize.set({ width: shell.clientWidth, height: shell.clientHeight });
+    }
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+    this.resizeObserver = new ResizeObserver(entries => {
+      const rect = entries[0]?.contentRect;
+      if (rect) {
+        this.shellSize.set({ width: rect.width, height: rect.height });
+      }
+    });
+    this.resizeObserver.observe(shell);
+  }
+
   ngOnDestroy(): void {
     if (typeof document !== 'undefined') {
       document.removeEventListener('visibilitychange', this.visibilityHandler);
     }
+    this.resizeObserver?.disconnect();
     this.stopAnimationLoop();
     if (this.bubbleTimer) {
       clearTimeout(this.bubbleTimer);
@@ -761,45 +853,102 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTileHover(gridX: number, gridY: number): void {
-    this.hoveredTile.set({ gridX, gridY });
+  onTileHover(gridX: number, gridY: number, event?: PointerEvent): void {
+    if (event?.pointerType === 'touch') {
+      return; // Toque não tem hover: o preview acontece no 1º toque (handleGridTap)
+    }
+    this.setHover(gridX, gridY, null);
   }
 
   onTileClick(gridX: number, gridY: number, event?: MouseEvent): void {
     event?.stopPropagation();
-    if (this.hasDragged || this.isDragging()) {
+    this.handleGridTap(gridX, gridY, null);
+  }
+
+  onWallSliceHover(side: WallSide, index: number, event?: PointerEvent): void {
+    if (event?.pointerType === 'touch') {
       return;
     }
-    this.hoveredTile.set({ gridX, gridY });
-    if (this.editModeSignal()) {
-      this.tileClicked.emit({ gridX, gridY });
-    }
+    this.setHover(side === 'NW' ? 0 : index, side === 'NW' ? index : 0, side);
   }
 
-  onWallSliceHover(side: 'NW' | 'NE', index: number): void {
-    if (side === 'NW') {
-      this.hoveredTile.set({ gridX: 0, gridY: index });
-    } else {
-      this.hoveredTile.set({ gridX: index, gridY: 0 });
-    }
-  }
-
-  onWallSliceClick(side: 'NW' | 'NE', index: number, event?: MouseEvent): void {
+  onWallSliceClick(side: WallSide, index: number, event?: MouseEvent): void {
     event?.stopPropagation();
+    this.handleGridTap(side === 'NW' ? 0 : index, side === 'NW' ? index : 0, side);
+  }
+
+  /** Confirma o posicionamento na posição em preview (botão ✓ da pílula de edição). */
+  confirmPlacement(): void {
+    const hover = this.hoveredTile();
+    if (!hover || !this.editModeSignal() || !this.isPlacingItem()) {
+      return;
+    }
+    this.emitTile(hover.gridX, hover.gridY, this.hoveredWallSide());
+  }
+
+  onCancelPlacement(): void {
+    if (this.isMovingDoctorSignal()) {
+      this.cancelMovingDoctor.emit();
+    } else {
+      this.cancelPlacement.emit();
+    }
+  }
+
+  private handleGridTap(gridX: number, gridY: number, wallSide: WallSide | null): void {
     if (this.hasDragged || this.isDragging()) {
       return;
     }
-    if (side === 'NW') {
-      this.hoveredTile.set({ gridX: 0, gridY: index });
-      if (this.editModeSignal()) {
-        this.tileClicked.emit({ gridX: 0, gridY: index, fromWall: true });
-      }
-    } else {
-      this.hoveredTile.set({ gridX: index, gridY: 0 });
-      if (this.editModeSignal()) {
-        this.tileClicked.emit({ gridX: index, gridY: 0, fromWall: true });
-      }
+    this.setHover(gridX, gridY, wallSide);
+    if (!this.editModeSignal()) {
+      return;
     }
+    // No toque, o 1º toque só posiciona o ghost; confirmar exige tocar de novo no mesmo alvo (ou no ✓)
+    const key = this.placementKey(gridX, gridY, wallSide);
+    if (this.isTouchPointer() && this.isPlacingItem() && key !== this.touchPreviewKey) {
+      this.touchPreviewKey = key;
+      return;
+    }
+    this.touchPreviewKey = null;
+    this.emitTile(gridX, gridY, wallSide);
+  }
+
+  /** Item de parede é comparado pelo slot resolvido (tocar no piso ou na faixa da parede dá no mesmo). */
+  private placementKey(gridX: number, gridY: number, wallSide: WallSide | null): string {
+    if (this.isPlacingWallItem()) {
+      const slot = this.clinicService.resolveWallSlot(gridX, gridY, wallSide);
+      return `wall:${slot.wallSide}:${slot.wallTileIndex}`;
+    }
+    return `tile:${gridX}:${gridY}`;
+  }
+
+  private emitTile(gridX: number, gridY: number, wallSide: WallSide | null): void {
+    this.tileClicked.emit(wallSide ? { gridX, gridY, fromWall: true, wallSide } : { gridX, gridY });
+  }
+
+  private setHover(gridX: number, gridY: number, wallSide: WallSide | null): void {
+    const current = this.hoveredTile();
+    if (current?.gridX !== gridX || current?.gridY !== gridY) {
+      this.hoveredTile.set({ gridX, gridY });
+    }
+    this.hoveredWallSide.set(wallSide);
+  }
+
+  /** Ao escolher um móvel para mover, o ghost nasce na posição atual dele (indispensável no toque). */
+  private focusHoverOnPlacedItem(placedId: string): void {
+    const item = this.placedItemsSignal().find(p => p.id === placedId);
+    if (!item || item.gridX === null || item.gridY === null) {
+      return;
+    }
+    const cat = this.catalogSignal().find(c => c.id === item.catalogItemId);
+    if (this.clinicService.isPlacedWallItem(item, cat)) {
+      const side: WallSide = item.wallSide ?? (item.gridX === 0 ? 'NW' : 'NE');
+      const idx = item.wallTileIndex ?? (side === 'NW' ? item.gridY ?? 0 : item.gridX ?? 0);
+      this.setHover(side === 'NW' ? 0 : idx, side === 'NW' ? idx : 0, side);
+      this.touchPreviewKey = `wall:${side}:${idx}`;
+      return;
+    }
+    this.setHover(item.gridX ?? 0, item.gridY ?? 0, null);
+    this.touchPreviewKey = `tile:${item.gridX ?? 0}:${item.gridY ?? 0}`;
   }
 
   onPlacedItemClick(entry: SortedRenderItem, event: Event): void {
@@ -853,7 +1002,8 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPointerDown(event: MouseEvent): void {
+  onPointerDown(event: PointerEvent): void {
+    this.lastPointerType.set(event.pointerType || 'mouse');
     if (event.button !== 0) {
       return;
     }
@@ -865,7 +1015,7 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
     this.dragStartY = event.clientY - this.panY();
   }
 
-  onPointerMove(event: MouseEvent): void {
+  onPointerMove(event: PointerEvent): void {
     if (!this.isPointerActive) {
       return;
     }
@@ -873,7 +1023,9 @@ export class ClinicViewportComponent implements OnInit, OnDestroy {
       event.clientX - this.pointerStartX,
       event.clientY - this.pointerStartY
     );
-    if (!this.isDragging() && dist > 5) {
+    // Dedos tremem mais que o mouse: limiar maior evita que um toque vire arraste (e perca o clique)
+    const dragThreshold = event.pointerType === 'mouse' ? 5 : 12;
+    if (!this.isDragging() && dist > dragThreshold) {
       this.hasDragged = true;
       this.isDragging.set(true);
     }

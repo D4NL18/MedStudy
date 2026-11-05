@@ -402,7 +402,7 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     expect(component.lootboxRevealResult()?.droppedItem.id).toBe('ped_maca_dino');
   }));
 
-  it('should store item into inventory, auto-save layout on toggleEditMode(), and prioritize wall item over floor item on shared tile coordinate', () => {
+  it('should store item into inventory, auto-save layout on toggleEditMode(), and resolve floor vs wall picking on a shared tile', () => {
     fixture.detectChanges();
     httpMock.expectOne('/api/v1/clinic').flush({
       data: {
@@ -433,25 +433,21 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     });
     fixture.detectChanges();
 
-    // 1. Prioritize wall item when tile (0, 1) has both a wall item and a floor item
-    const foundItem = component.findPlacedItemAtTile(0, 1);
-    expect(foundItem).toBeTruthy();
-    expect(foundItem?.id).toBe('wall-item-1');
+    // 1. Floor click picks the furniture; a click coming from the wall strip (same side) picks the wall item (P-090)
+    expect(component.findPlacedItemAtTile(0, 1)?.id).toBe('floor-item-1');
+    expect(component.findPlacedItemAtTile(0, 1, true, 'NW')?.id).toBe('wall-item-1');
+    expect(component.findPlacedItemAtTile(0, 1, true, 'NE')?.id).toBe('floor-item-1');
 
-    // 2. Rotate placed item in-place across all 4 isometric orientations
+    // 2. Rotation only changes the preview (P-084: binary 0/1); the layout changes when the position is confirmed
     component.toggleEditMode();
     component.movingPlacedId.set('floor-item-1');
     component.selectedRotation.set(0);
     component.toggleRotation();
     expect(component.selectedRotation()).toBe(1);
-    expect(component.workingPlacedItems().find(i => i.id === 'floor-item-1')?.rotation).toBe(1);
-    expect(component.isLayoutDirty()).toBeTrue();
+    expect(component.workingPlacedItems().find(i => i.id === 'floor-item-1')?.rotation).toBe(0);
+    expect(component.isLayoutDirty()).toBeFalse();
 
-    // Verify 4-state cycling (0 -> 1 -> 2 -> 3 -> 0)
-    component.toggleRotation();
-    expect(component.selectedRotation()).toBe(2);
-    component.toggleRotation();
-    expect(component.selectedRotation()).toBe(3);
+    // Verify binary toggling (0 -> 1 -> 0), matching the CHECK (rotation IN (0, 1)) of the database
     component.toggleRotation();
     expect(component.selectedRotation()).toBe(0);
 
@@ -488,5 +484,101 @@ describe('MinhaClinicaComponent (P-080 a P-086)', () => {
     expect(component.editMode()).toBeFalse();
     expect(component.isLayoutDirty()).toBeFalse();
     expect(component.workingPlacedItems()).toHaveSize(1);
+  });
+
+  it('should hang a wall item on the explicit NE segment right above existing furniture (P-088)', () => {
+    // Arrange: mesa_scandi occupies floor tile (0, 0)
+    fixture.detectChanges();
+    httpMock.expectOne('/api/v1/clinic').flush({ data: mockLevel1Clinic });
+    fixture.detectChanges();
+    const wallItem = CLINIC_CATALOG_FALLBACK.find(i => i.placementType === 'WALL')!;
+
+    // Act: NE segment 0 shares tile (0, 0) with NW segment 0 — the side must come from the viewport
+    component.selectItemForPlacement(wallItem);
+    component.onViewportTileClicked({ gridX: 0, gridY: 0, fromWall: true, wallSide: 'NE' });
+
+    // Assert
+    const placedWall = component.workingPlacedItems().find(p => p.catalogItemId === wallItem.id);
+    expect(component.activeErrorModalMessage()).toBeNull();
+    expect(placedWall?.placementType).toBe('WALL');
+    expect(placedWall?.wallSide).toBe('NE');
+    expect(placedWall?.wallTileIndex).toBe(0);
+    expect(component.selectedCatalogItem()).toBeNull();
+  });
+
+  it('should let the doctor stand on a floor tile right under a wall-mounted item (P-088)', () => {
+    // Arrange: a ruler hangs on NW segment 2, the floor tile (0, 2) below it is free
+    fixture.detectChanges();
+    httpMock.expectOne('/api/v1/clinic').flush({
+      data: {
+        ...mockLevel1Clinic,
+        placedItems: [
+          ...mockLevel1Clinic.placedItems,
+          {
+            id: 'wall-ruler',
+            catalogItemId: 'ped_regua_girafa',
+            gridX: 0,
+            gridY: 2,
+            rotation: 0,
+            placed: true,
+            placementType: 'WALL',
+            wallSide: 'NW',
+            wallTileIndex: 2
+          }
+        ]
+      }
+    });
+    fixture.detectChanges();
+
+    // Act
+    component.toggleEditMode();
+    component.startMovingDoctor();
+    component.onViewportTileClicked({ gridX: 0, gridY: 2 });
+
+    // Assert
+    expect(component.activeErrorModalMessage()).toBeNull();
+    expect(component.isMovingDoctor()).toBeFalse();
+    expect(component.currentAvatar()?.avatarX).toBe(0);
+    expect(component.currentAvatar()?.avatarY).toBe(2);
+    const avatarReq = httpMock.expectOne('/api/v1/clinic/avatar');
+    expect(avatarReq.request.body).toEqual({ avatarX: 0, avatarY: 2 });
+    avatarReq.flush({
+      data: {
+        avatarId: 'av-1',
+        gender: 'MALE',
+        skinCoat: 'coat_default',
+        skinStethoscope: 'steth_standard',
+        skinAccessory: 'acc_none',
+        avatarX: 0,
+        avatarY: 2,
+        unlockedSkins: []
+      }
+    });
+  });
+
+  it('should send a lootbox reward straight to placement mode and cancel placement with Escape', () => {
+    // Arrange
+    fixture.detectChanges();
+    httpMock.expectOne('/api/v1/clinic').flush({ data: mockLevel1Clinic });
+    fixture.detectChanges();
+    const reward = CLINIC_CATALOG_FALLBACK.find(i => i.id === 'ped_bau_coragem')!;
+    component.openLootboxModal();
+
+    // Act 1: "📐 Posicionar Agora"
+    component.equipItemNow(reward);
+
+    // Assert 1
+    expect(component.isLootboxModalOpen()).toBeFalse();
+    expect(component.editMode()).toBeTrue();
+    expect(component.selectedCatalogItem()?.id).toBe('ped_bau_coragem');
+    expect(component.selectedRotation()).toBe(0);
+
+    // Act 2: Escape abandons the placement but keeps the edit mode
+    component.onKeyDown(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+    // Assert 2
+    expect(component.selectedCatalogItem()).toBeNull();
+    expect(component.movingPlacedId()).toBeUndefined();
+    expect(component.editMode()).toBeTrue();
   });
 });

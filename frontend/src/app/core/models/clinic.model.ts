@@ -356,3 +356,8 @@ export function getItemRarity(item: ClinicCatalogItem): ItemRarity {
   if (item.costXp >= 1650) return 'RARE';
   return 'COMMON';
 }
+
+/** P-084: rótulo único da rotação binária persistida (0 = SE / Frente-Direita, 1 = SW / Frente-Esquerda). */
+export function getClinicRotationLabel(rotation: number): string {
+  return rotation % 2 === 1 ? 'Frente-Esquerda' : 'Frente-Direita';
+}
