@@ -14,24 +14,33 @@
   --color-accent: #f59e0b;
 }
 
+.mono-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Overlay abaixo do modal de erro (z-index 10000): falhas ao abrir caixas precisam ficar visíveis.
+ * `inset: 0` já cobre a tela; `100vw` somava a largura da barra de rolagem e gerava overflow horizontal.
+ */
 .lootbox-fullscreen-theater {
         position: fixed;
         inset: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 99999;
-        background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 100%);
-        backdrop-filter: blur(16px);
+        z-index: 1100;
+        background: radial-gradient(circle at 50% 30%, rgba(30, 41, 59, 0.97) 0%, rgba(15, 23, 42, 0.98) 100%);
         overflow-y: auto;
+        overscroll-behavior: contain;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        padding: 40px 20px 60px;
-        box-sizing: border-box;
+        padding: clamp(12px, 4vh, 40px) clamp(8px, 3vw, 20px) 40px;
+        font-family: 'Inter', sans-serif;
       }
 
       .lootbox-theater-container {
+        flex-shrink: 0;
+        /* margin-block: auto centraliza sem cortar o topo quando o conteúdo é maior que a tela */
+        margin-block: auto;
         background: #ffffff;
         color: #0f172a;
         border-radius: 20px;
@@ -42,7 +51,11 @@
         display: flex;
         flex-direction: column;
         border: 1px solid rgba(255, 255, 255, 0.18);
-        transition: all 0.3s ease;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+
+        &:focus {
+          outline: none;
+        }
       }
 
       .lootbox-fullscreen-theater.unboxing-active .lootbox-theater-container {
@@ -53,12 +66,19 @@
       }
 
       .theater-header {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-areas: 'title balance close';
         align-items: center;
-        justify-content: space-between;
-        padding: 20px 28px;
+        gap: 12px 16px;
+        padding: 20px 24px;
         background: #ffffff;
         border-bottom: 1px solid var(--color-neutral-200);
+      }
+
+      .theater-header-title {
+        grid-area: title;
+        min-width: 0;
       }
 
       .theater-header-title h2 {
@@ -75,31 +95,69 @@
       }
 
       .theater-header-balance {
+        grid-area: balance;
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 18px;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+        padding: 8px 16px;
         background: #fef3c7;
         border: 1px solid #fde68a;
         border-radius: 999px;
       }
 
-      .btn-theater-close,
-      .btn-theater-back {
-        background: transparent;
+      .balance-label {
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: #92400e;
+      }
+
+      .balance-xp {
+        font-size: 0.92rem;
+        font-weight: 800;
+        color: #78350f;
+        white-space: nowrap;
+      }
+
+      .btn-theater-close {
+        grid-area: close;
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
         border: 1px solid var(--color-neutral-300);
-        border-radius: 10px;
+        background: #ffffff;
+        color: var(--color-neutral-700);
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+
+      .btn-theater-back {
+        min-height: 40px;
         padding: 8px 16px;
+        border-radius: 10px;
+        border: 1px solid var(--color-neutral-300);
+        background: #ffffff;
+        color: var(--color-neutral-700);
         font-weight: 700;
         font-size: 0.88rem;
+        white-space: nowrap;
         cursor: pointer;
-        color: var(--color-neutral-700);
         transition: background 0.15s ease;
       }
 
       .btn-theater-close:hover,
       .btn-theater-back:hover {
         background: var(--color-neutral-100);
+      }
+
+      .lootbox-theater-container button:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
       }
 
       /* Card de Caixa Diária Gratuita */
@@ -139,8 +197,8 @@
       }
 
       .daily-free-info {
-        flex: 1;
-        min-width: 240px;
+        flex: 1 1 240px;
+        min-width: 0;
       }
 
       .daily-free-info h3 {
@@ -203,7 +261,7 @@
 
       .lootbox-tiers-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 18px;
         padding: 20px 24px;
       }
@@ -293,7 +351,7 @@
 
       .tier-description {
         font-size: 0.82rem;
-        color: #334155 !important;
+        color: var(--color-neutral-700);
         margin: 0;
         line-height: 1.4;
         min-height: 36px;
@@ -406,13 +464,17 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px 16px;
         padding: 12px 24px;
         background: #f8fafc;
         border-top: 1px solid var(--color-neutral-200);
       }
 
       .guarantee-note {
+        flex: 1 1 280px;
         font-size: 0.78rem;
+        line-height: 1.4;
         color: var(--color-neutral-600);
       }
 
@@ -515,6 +577,8 @@
       .reveal-header {
         display: flex;
         align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
         gap: 8px;
         margin-bottom: 16px;
       }
@@ -582,7 +646,8 @@
         font-size: 0.82rem;
         color: var(--color-neutral-500);
         display: flex;
-        gap: 12px;
+        flex-wrap: wrap;
+        gap: 4px 12px;
         justify-content: center;
         margin-bottom: 14px;
       }
@@ -686,6 +751,78 @@
 
       .btn-reveal-again:hover {
         filter: brightness(1.1);
+      }
+
+      @media (max-width: 640px) {
+        .lootbox-fullscreen-theater {
+          padding: 0;
+        }
+
+        .lootbox-theater-container {
+          min-height: 100%;
+          margin-block: 0;
+          border: none;
+          border-radius: 0;
+        }
+
+        .theater-header {
+          grid-template-columns: minmax(0, 1fr) auto;
+          grid-template-areas:
+            'title close'
+            'balance balance';
+          padding: 16px;
+        }
+
+        .btn-theater-close {
+          align-self: start;
+        }
+
+        .theater-header-balance {
+          justify-self: start;
+        }
+
+        .theater-header-title h2 {
+          font-size: 1.15rem;
+        }
+
+        .daily-free-lootbox-card {
+          margin: 12px 16px 4px;
+          padding: 14px;
+        }
+
+        .btn-open-daily-free {
+          width: 100%;
+        }
+
+        .lootbox-tiers-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+          padding: 16px;
+        }
+
+        .lootbox-modal-footer {
+          flex-direction: column;
+          align-items: stretch;
+          padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+        }
+
+        .guarantee-note {
+          flex-basis: auto;
+        }
+
+        .reveal-stage {
+          padding: 28px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+        }
+
+        .reveal-actions {
+          flex-direction: column;
+          width: 100%;
+
+          button {
+            width: 100%;
+            min-height: 44px;
+          }
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
