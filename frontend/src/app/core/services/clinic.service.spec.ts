@@ -185,18 +185,18 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
         service.isPositionValid(0, 1, 1, 1, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
       ).toBeTrue();
 
-      // 5. Wall item (0x0 footprint) cannot overlap floor item at (0, 0), but is valid at free tile (0, 1)
+      // 5. P-088: wall item (0x0 footprint) has no floor footprint, so it may hang above furniture at (0, 0)
       expect(
         service.isPositionValid(0, 0, 0, 0, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
-      ).toBeFalse();
+      ).toBeTrue();
       expect(
         service.isPositionValid(0, 1, 0, 0, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
       ).toBeTrue();
 
-      // 6. Wall item placed in middle of room (gridX != 0 and gridY != 0) is invalid
+      // 6. P-088: a wall item aimed at the middle of the room snaps to the nearest back wall (NW-2 here)
       expect(
         service.isPositionValid(2, 2, 0, 0, 0, 4, 4, placedItems, CLINIC_CATALOG_FALLBACK)
-      ).toBeFalse();
+      ).toBeTrue();
 
       // 7. Wall item colliding with existing wall item on same slot
       const itemsWithWall: ClinicPlacedItem[] = [
@@ -214,6 +214,64 @@ describe('ClinicService & ClinicAudioService (P-080 a P-086)', () => {
       ];
       expect(
         service.isPositionValid(0, 1, 0, 0, 0, 4, 4, itemsWithWall, CLINIC_CATALOG_FALLBACK)
+      ).toBeFalse();
+    });
+  });
+
+  describe('P-088: Itens de parede desacoplados do piso e slots explícitos (NW/NE)', () => {
+    const floorAtOrigin: ClinicPlacedItem[] = [
+      { id: 'floor-1', catalogItemId: 'ped_maca_baleia', gridX: 0, gridY: 0, rotation: 0, placed: true }
+    ];
+    const wallAtNw1: ClinicPlacedItem = {
+      id: 'wall-1',
+      catalogItemId: 'negatoscopio_led',
+      gridX: 0,
+      gridY: 1,
+      rotation: 0,
+      placed: true,
+      placementType: 'WALL',
+      wallSide: 'NW',
+      wallTileIndex: 1
+    };
+
+    it('should let furniture sit right under a wall-mounted item and vice versa', () => {
+      // Act & Assert: 1x1 floor item at (0, 1), directly below the NW-1 wall item
+      expect(
+        service.isPositionValid(0, 1, 1, 1, 0, 4, 4, [wallAtNw1], CLINIC_CATALOG_FALLBACK)
+      ).toBeTrue();
+      // Wall slot NW-0 above the furniture placed at (0, 0)
+      expect(service.isWallSlotFree('NW', 0, 4, 4, floorAtOrigin, CLINIC_CATALOG_FALLBACK)).toBeTrue();
+    });
+
+    it('should distinguish NE segment 0 from NW segment 0 even though both touch tile (0, 0)', () => {
+      // Arrange
+      const wallAtNw0: ClinicPlacedItem = { ...wallAtNw1, id: 'wall-0', gridY: 0, wallTileIndex: 0 };
+
+      // Act & Assert
+      expect(service.isWallSlotFree('NW', 0, 4, 4, [wallAtNw0], CLINIC_CATALOG_FALLBACK)).toBeFalse();
+      expect(service.isWallSlotFree('NE', 0, 4, 4, [wallAtNw0], CLINIC_CATALOG_FALLBACK)).toBeTrue();
+      expect(service.isWallSlotFree('NE', 4, 4, 4, [], CLINIC_CATALOG_FALLBACK)).toBeFalse();
+      expect(
+        service.isWallSlotFree('NW', 1, 4, 4, [wallAtNw1], CLINIC_CATALOG_FALLBACK, 'wall-1')
+      ).toBeTrue();
+    });
+
+    it('should project any floor coordinate onto the nearest back wall segment', () => {
+      expect(service.resolveWallSlot(0, 2)).toEqual({ wallSide: 'NW', wallTileIndex: 2 });
+      expect(service.resolveWallSlot(3, 0)).toEqual({ wallSide: 'NE', wallTileIndex: 3 });
+      expect(service.resolveWallSlot(3, 1)).toEqual({ wallSide: 'NE', wallTileIndex: 3 });
+      expect(service.resolveWallSlot(1, 2)).toEqual({ wallSide: 'NW', wallTileIndex: 2 });
+      expect(service.resolveWallSlot(0, 0, 'NE')).toEqual({ wallSide: 'NE', wallTileIndex: 0 });
+    });
+
+    it('should recognize wall-mounted catalog items by placement type, 0x0 footprint or legacy id', () => {
+      expect(
+        service.isWallMountedItem({ id: 'quadro', footprintX: 1, footprintY: 1, placementType: 'WALL' })
+      ).toBeTrue();
+      expect(service.isWallMountedItem({ id: 'diploma', footprintX: 0, footprintY: 0 })).toBeTrue();
+      expect(service.isWallMountedItem({ id: 'negatoscopio_led', footprintX: 1, footprintY: 1 })).toBeTrue();
+      expect(
+        service.isWallMountedItem({ id: 'mesa_scandi', footprintX: 2, footprintY: 1, placementType: 'FLOOR' })
       ).toBeFalse();
     });
   });

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { A11yModule } from '@angular/cdk/a11y';
 import {
   ClinicCatalogItem,
   ItemRarity,
@@ -13,7 +14,7 @@ import { ClinicItemSvgComponent } from '../clinic-item-svg/clinic-item-svg.compo
 @Component({
   selector: 'app-clinic-lootbox-modal',
   standalone: true,
-  imports: [CommonModule, ClinicItemSvgComponent],
+  imports: [CommonModule, A11yModule, ClinicItemSvgComponent],
   templateUrl: './clinic-lootbox-modal.component.html',
   styleUrl: './clinic-lootbox-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -54,6 +55,12 @@ export class ClinicLootboxModalComponent {
 
   onClose(): void {
     this.closeModal.emit();
+  }
+
+  onBackdropClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.onClose();
+    }
   }
 
   onOpenDailyFree(): void {

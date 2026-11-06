@@ -5,10 +5,19 @@
         pointer-events: none;
       }
 
+      /*
+       * P-090: a caixa do <svg> nunca intercepta o ponteiro (cobriria tiles vizinhos);
+       * somente os traços desenhados respondem, e só quando o host marca o item como interativo.
+       */
       .clinic-item-svg {
         overflow: visible;
         transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+
+      .clinic-item-svg.is-interactive :is(path, circle, rect, line, polyline, polygon, ellipse, text) {
         pointer-events: visiblePainted;
+        cursor: pointer;
       }
 
       .clinic-item-svg.is-rotated:not(.has-custom-rotation) {

@@ -8,6 +8,7 @@ import {
   signal
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { A11yModule } from '@angular/cdk/a11y';
 import { DoctorAvatar } from '../../../../core/models/clinic.model';
 import { DoctorAvatarSvgComponent } from '../doctor-avatar-svg/doctor-avatar-svg.component';
 
@@ -20,7 +21,7 @@ export interface SkinOption {
 @Component({
   selector: 'app-doctor-wardrobe-modal',
   standalone: true,
-  imports: [CommonModule, DoctorAvatarSvgComponent],
+  imports: [CommonModule, A11yModule, DoctorAvatarSvgComponent],
   templateUrl: './doctor-wardrobe-modal.component.html',
   styleUrl: './doctor-wardrobe-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -175,5 +176,11 @@ export class DoctorWardrobeModalComponent {
 
   onClose(): void {
     this.closeModal.emit();
+  }
+
+  onBackdropClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.onClose();
+    }
   }
 }

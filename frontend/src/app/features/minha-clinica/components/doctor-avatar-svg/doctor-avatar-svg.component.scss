@@ -9,16 +9,22 @@
         align-items: center;
         justify-content: center;
         transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
-        cursor: pointer;
+        pointer-events: none;
       }
 
-      .doctor-avatar-container:hover {
+      .doctor-avatar-container.is-interactive:hover {
         transform: scale(1.06);
       }
 
       .doctor-svg {
         display: block;
         overflow: visible;
+        pointer-events: none;
+      }
+
+      .doctor-avatar-container.is-interactive .doctor-svg :is(path, circle, rect, line, polyline, polygon, ellipse) {
+        pointer-events: visiblePainted;
+        cursor: pointer;
       }
 
       /* Animação suave e orgânica de respiração (P-087) */

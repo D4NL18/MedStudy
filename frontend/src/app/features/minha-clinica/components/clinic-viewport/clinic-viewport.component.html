@@ -1,64 +1,74 @@
 <div
+      #viewportShell
       class="clinic-viewport-shell"
       [class.is-edit-mode]="editModeSignal()"
       [class.is-placing]="isPlacingItem()"
       [class.is-dragging]="isDragging()"
-      (mousedown)="onPointerDown($event)"
-      (mousemove)="onPointerMove($event)"
-      (mouseup)="onPointerUp()"
-      (mouseleave)="onPointerUp()"
+      (pointerdown)="onPointerDown($event)"
+      (pointermove)="onPointerMove($event)"
+      (pointerup)="onPointerUp()"
+      (pointercancel)="onPointerUp()"
+      (pointerleave)="onPointerUp()"
       (wheel)="onWheel($event)"
       data-testid="clinic-viewport"
     >
-      <!-- Sub-barra de Coordenadas e Status do Modo Edição -->
+      <!-- Pílula de Status do Modo Edição com ações explícitas de Confirmar / Cancelar / Girar -->
       @if (editModeSignal()) {
-        <div class="viewport-edit-pill" data-testid="viewport-edit-pill">
-          <span class="pill-dot" [class.invalid]="ghostPreview() && !ghostPreview()!.valid"></span>
-          <span class="pill-label">
-            @if (isMovingDoctorSignal()) {
-              Posicionando: <strong>{{ (avatarSignal()?.gender === 'MALE' ? 'Dr. ' : 'Dra. ') + 'Residente' }}</strong>
-              <span class="mono-coord">
-                ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }})
-              </span>
-            } @else if (selectedCatalogItemSignal(); as sel) {
-              Posicionando: <strong>{{ sel.name }}</strong>
-              <span class="mono-coord">
-                ({{ hoveredTile()?.gridX ?? 0 }}, {{ hoveredTile()?.gridY ?? 0 }}) ·
-                {{ selectedRotationSignal() % 4 === 1 ? 'Aresta SW' : selectedRotationSignal() % 4 === 2 ? 'Aresta NW' : selectedRotationSignal() % 4 === 3 ? 'Aresta NE' : 'Aresta SE' }}
-              </span>
-            } @else {
-              Modo Edição Ativo · Clique em um móvel ou no(a) Doutor(a) para mover
-            }
-          </span>
-          @if (isMovingDoctorSignal()) {
-            <button
-              type="button"
-              class="btn-rotate-inline btn-cancel-inline"
-              (click)="cancelMovingDoctor.emit(); $event.stopPropagation()"
-              title="Cancelar movimentação do doutor"
-              data-testid="viewport-cancel-doc-btn"
-            >
-              ✕ Cancelar
-            </button>
-          } @else if (selectedCatalogItemSignal()) {
-            <button
-              type="button"
-              class="btn-rotate-inline"
-              (click)="rotateRequested.emit(); $event.stopPropagation()"
-              title="Rotacionar item (Tecla R)"
-              data-testid="viewport-rotate-btn"
-            >
-              ↻ Girar ({{ selectedRotationSignal() % 4 === 1 ? 'Aresta SW' : selectedRotationSignal() % 4 === 2 ? 'Aresta NW' : selectedRotationSignal() % 4 === 3 ? 'Aresta NE' : 'Aresta SE' }})
-            </button>
+        <div class="viewport-edit-pill" [class.is-placing]="isPlacingItem()" data-testid="viewport-edit-pill">
+          <div class="pill-status">
+            <span class="pill-dot" [class.invalid]="ghostPreview() && !ghostPreview()!.valid"></span>
+            <span class="pill-label">
+              @if (isMovingDoctorSignal()) {
+                Posicionando: <strong>{{ avatarSignal()?.gender === 'FEMALE' ? 'Dra.' : 'Dr.' }} Residente</strong>
+              } @else if (selectedCatalogItemSignal(); as sel) {
+                Posicionando: <strong>{{ sel.name }}</strong>
+              } @else {
+                Modo edição · {{ isTouchPointer() ? 'toque' : 'clique' }} em um móvel ou no(a) Doutor(a) para mover
+              }
+              @if (isPlacingItem()) {
+                <span class="pill-hint" data-testid="viewport-placement-hint">{{ placementHint() }}</span>
+              }
+            </span>
+          </div>
+          @if (isPlacingItem()) {
+            <div class="pill-actions">
+              @if (selectedCatalogItemSignal() && !isMovingDoctorSignal() && !isPlacingWallItem()) {
+                <button
+                  type="button"
+                  class="btn-pill btn-pill-rotate"
+                  (click)="rotateRequested.emit(); $event.stopPropagation()"
+                  title="Girar item (tecla R)"
+                  data-testid="viewport-rotate-btn"
+                >
+                  ↻ {{ rotationLabel() }}
+                </button>
+              }
+              <button
+                type="button"
+                class="btn-pill btn-pill-confirm"
+                [disabled]="!ghostPreview()?.valid"
+                (click)="confirmPlacement(); $event.stopPropagation()"
+                title="Confirmar posição atual do preview"
+                data-testid="viewport-confirm-btn"
+              >
+                ✓ Confirmar
+              </button>
+              <button
+                type="button"
+                class="btn-pill btn-pill-cancel"
+                (click)="onCancelPlacement(); $event.stopPropagation()"
+                title="Cancelar posicionamento (Esc)"
+                data-testid="viewport-cancel-btn"
+              >
+                ✕ Cancelar
+              </button>
+            </div>
           }
         </div>
       }
 
-      <!-- Palco Isométrico com Zoom e Pan -->
-      <div
-        class="isometric-stage"
-        [style.transform]="'translate(' + panX() + 'px, ' + panY() + 'px) scale(' + zoom() + ')'"
-      >
+      <!-- Palco Isométrico com Zoom e Pan (escala base ajustada ao container) -->
+      <div class="isometric-stage" [style.transform]="stageTransform()">
         <!-- Piso e Paredes em Corte Transversal (Cross-Section SVG 2.5D) -->
         <svg
           class="diorama-floor-svg"
@@ -247,7 +257,7 @@
               class="iso-wall-slice"
               [class.edit-grid]="editModeSignal()"
               [attr.points]="wallSlice.points"
-              (mouseenter)="onWallSliceHover('NW', wallSlice.index)"
+              (pointerenter)="onWallSliceHover('NW', wallSlice.index, $event)"
               (click)="onWallSliceClick('NW', wallSlice.index, $event)"
             />
           }
@@ -258,7 +268,7 @@
               class="iso-wall-slice"
               [class.edit-grid]="editModeSignal()"
               [attr.points]="wallSlice.points"
-              (mouseenter)="onWallSliceHover('NE', wallSlice.index)"
+              (pointerenter)="onWallSliceHover('NE', wallSlice.index, $event)"
               (click)="onWallSliceClick('NE', wallSlice.index, $event)"
             />
           }
@@ -275,7 +285,7 @@
                 [class.floor-tatame]="floorThemeSignal() === 'tatame_eva'"
                 [class.edit-grid]="editModeSignal()"
                 [attr.points]="tile.points"
-                (mouseenter)="onTileHover(tile.gridX, tile.gridY)"
+                (pointerenter)="onTileHover(tile.gridX, tile.gridY, $event)"
                 (click)="onTileClick(tile.gridX, tile.gridY, $event)"
               />
 
@@ -502,6 +512,7 @@
                 [height]="entry.effWidth > 1 || entry.effHeight > 1 ? 96 : 78"
                 [activePulse]="pulsingItemId() === entry.placed.id"
                 [paused]="isPaused()"
+                [interactive]="!isPlacingItem()"
               />
             </div>
           }
@@ -527,6 +538,7 @@
                 [height]="90"
                 [activeAnimation]="doctorGreetingActive()"
                 [paused]="isPaused()"
+                [interactive]="!isPlacingItem()"
               />
             </div>
           }
@@ -562,9 +574,9 @@
           @if (!isMovingDoctorSignal() && ghostPreview(); as ghost) {
             <div
               class="ghost-item-anchor"
-              [class.is-wall-item]="ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)"
-              [class.is-wall-nw]="(ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)) && ghost.wallSide === 'NW'"
-              [class.is-wall-ne]="(ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)) && ghost.wallSide === 'NE'"
+              [class.is-wall-item]="!!ghost.wallSide"
+              [class.is-wall-nw]="ghost.wallSide === 'NW'"
+              [class.is-wall-ne]="ghost.wallSide === 'NE'"
               [class.is-wall-ruler]="ghost.catalogItem.id === 'ped_regua_girafa' || ghost.catalogItem.id === 'estadiometro_compacto'"
               [class.is-valid]="ghost.valid"
               [class.is-invalid]="!ghost.valid"
@@ -575,7 +587,7 @@
               <app-clinic-item-svg
                 [itemKey]="ghost.catalogItem.assetSvgKey"
                 [rotation]="ghost.rotation"
-                [isWallItem]="ghost.catalogItem.placementType === 'WALL' || (ghost.catalogItem.footprintX === 0 && ghost.catalogItem.footprintY === 0)"
+                [isWallItem]="!!ghost.wallSide"
                 [width]="ghost.effWidth > 1 || ghost.effHeight > 1 ? 104 : 84"
                 [height]="ghost.effWidth > 1 || ghost.effHeight > 1 ? 96 : 78"
                 [paused]="isPaused()"

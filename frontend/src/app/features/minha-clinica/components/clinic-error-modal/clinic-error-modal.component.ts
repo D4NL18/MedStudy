@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-clinic-error-modal',
   standalone: true,
+  imports: [A11yModule],
   templateUrl: './clinic-error-modal.component.html',
   styleUrl: './clinic-error-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

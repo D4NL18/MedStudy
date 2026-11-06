@@ -160,7 +160,8 @@ public class ClinicLayoutValidator {
         if ("WALL".equalsIgnoreCase(targetItem.getPlacementType())) {
             candidate.setWallSide("NW");
             candidate.setWallTileIndex(gridX);
-            candidate.setElevationZ(45);
+            boolean isFloorRuler = "ped_regua_girafa".equals(targetItem.getId()) || "estadiometro_compacto".equals(targetItem.getId());
+            candidate.setElevationZ(isFloorRuler ? 0 : 28);
         }
         candidateList.add(candidate);
         try {

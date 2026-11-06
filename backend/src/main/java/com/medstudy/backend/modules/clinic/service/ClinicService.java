@@ -513,7 +513,9 @@ public class ClinicService {
                     break;
                 }
             }
-            newPlacedEntity = new ClinicPlacedItem(clinic.getId(), item.getId(), wallSide, wallTileIndex, 45, true);
+            boolean isFloorRuler = "ped_regua_girafa".equals(item.getId()) || "estadiometro_compacto".equals(item.getId());
+            int defaultElev = isFloorRuler ? 0 : 28;
+            newPlacedEntity = new ClinicPlacedItem(clinic.getId(), item.getId(), wallSide, wallTileIndex, defaultElev, true);
         } else if (request.getGridX() != null && request.getGridY() != null) {
             List<PlacedItemDto> candidateLayout = new ArrayList<>(existingPlacedDtos);
             candidateLayout.add(new PlacedItemDto(null, item.getId(), request.getGridX(), request.getGridY(), rotation, true));
@@ -646,7 +648,15 @@ public class ClinicService {
                                     : (dto.getGridX() != null ? dto.getGridX() : 0));
                     target.setWallSide(wallSide.toUpperCase());
                     target.setWallTileIndex(wallTileIdx);
-                    target.setElevationZ(dto.getElevationZ() != null ? dto.getElevationZ() : 34);
+                    boolean isFloorRuler = "ped_regua_girafa".equals(target.getCatalogItemId())
+                            || "estadiometro_compacto".equals(target.getCatalogItemId());
+                    if (isFloorRuler) {
+                        target.setElevationZ(0);
+                    } else {
+                        Integer reqElev = dto.getElevationZ();
+                        int safeElev = (reqElev != null && reqElev >= 15 && reqElev <= 29) ? reqElev : 28;
+                        target.setElevationZ(safeElev);
+                    }
                 } else {
                     target.setWallSide(null);
                     target.setWallTileIndex(null);

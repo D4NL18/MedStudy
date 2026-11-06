@@ -118,7 +118,7 @@ class ClinicControllerTest {
                 .andExpect(jsonPath("$.expansionLevel").value(1))
                 .andExpect(jsonPath("$.data.expansionLevel").value(1))
                 .andExpect(jsonPath("$.data.expansionName").value("Box do Internato"))
-                .andExpect(jsonPath("$.meta.catalogTotalItems").value(104));
+                .andExpect(jsonPath("$.meta.catalogTotalItems").value(111));
     }
 
     @Test
