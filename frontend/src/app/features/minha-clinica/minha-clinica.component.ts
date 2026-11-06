@@ -570,7 +570,7 @@ export class MinhaClinicaComponent implements OnInit {
       : null;
     let elevationZ: number | undefined;
     if (isWall) {
-      elevationZ = isGroundRuler ? 0 : 76;
+      elevationZ = isGroundRuler ? 0 : 28;
     }
 
     return {

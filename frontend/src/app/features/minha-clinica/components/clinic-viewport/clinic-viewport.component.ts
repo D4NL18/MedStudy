@@ -571,7 +571,12 @@ export class ClinicViewportComponent implements OnInit, AfterViewInit, OnDestroy
           const isFloorRuler =
             placed.catalogItemId === 'ped_regua_girafa' ||
             placed.catalogItemId === 'estadiometro_compacto';
-          const elev = placed.elevationZ ?? (isFloorRuler ? 0 : 76);
+          // P-087/P-090: Clamp matematico definitivo para itens de parede (garante que nenhum item voe fora do diorama)
+          const rawElev =
+            placed.elevationZ != null && placed.elevationZ >= 15 && placed.elevationZ <= 32
+              ? placed.elevationZ
+              : 28;
+          const elev = isFloorRuler ? 0 : rawElev;
 
           let wallBaseScreen: { x: number; y: number };
           if (wallSide === 'NW') {
@@ -736,7 +741,7 @@ export class ClinicViewportComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     const isWallRuler = sel.id === 'ped_regua_girafa' || sel.id === 'estadiometro_compacto';
-    const posY = isWallRuler ? wallBase.y : wallBase.y - 34;
+    const posY = isWallRuler ? wallBase.y : wallBase.y - 28;
 
     return {
       gridX: hover.gridX,

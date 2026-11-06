@@ -292,4 +292,51 @@ describe('ClinicViewportComponent (P-082, P-084, P-085, P-086)', () => {
     expect(component.panX()).toBe(0);
     expect(component.panY()).toBe(0);
   });
+
+  it('should clamp wall item elevation to prevent flying items outside diorama', () => {
+    // Arrange: items with invalid high elevation (e.g. legacy 76)
+    const placedItemWithHighElevation = {
+      id: 'flying-lea',
+      catalogItemId: 'ped_oftalmo_figuras_lea',
+      gridX: 0,
+      gridY: 2,
+      wallSide: 'NW' as const,
+      wallTileIndex: 2,
+      elevationZ: 76,
+      rotation: 0,
+      placed: true,
+      placementType: 'WALL' as const
+    };
+    const groundRulerItem = {
+      id: 'ground-girafa',
+      catalogItemId: 'ped_regua_girafa',
+      gridX: 0,
+      gridY: 3,
+      wallSide: 'NW' as const,
+      wallTileIndex: 3,
+      elevationZ: 76,
+      rotation: 0,
+      placed: true,
+      placementType: 'WALL' as const
+    };
+
+    component.placedItems = [placedItemWithHighElevation as any, groundRulerItem as any];
+    fixture.detectChanges();
+
+    const rendered = component.sortedRenderItems();
+    const leaRender = rendered.find(r => r.placed.id === 'flying-lea');
+    const rulerRender = rendered.find(r => r.placed.id === 'ground-girafa');
+
+    expect(leaRender).toBeDefined();
+    expect(rulerRender).toBeDefined();
+
+    const wallBaseLea = component['clinicService'].gridToScreen(0, 2.5, component.originX(), component.originY());
+    const wallBaseRuler = component['clinicService'].gridToScreen(0, 3.5, component.originX(), component.originY());
+
+    // Lea chart must be clamped to safe 28px elevation, NOT 76px
+    expect(leaRender!.screenY).toBe(wallBaseLea.y - 28);
+
+    // Ground ruler must remain at floor level (elevation 0), NOT 76px
+    expect(rulerRender!.screenY).toBe(wallBaseRuler.y);
+  });
 });

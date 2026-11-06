@@ -269,26 +269,30 @@
         filter: saturate(0.5);
       }
 
-      .placed-item-anchor.is-interactable:hover,
-      .placed-item-anchor.is-edit-selectable:hover {
+      .placed-item-anchor:not(.is-wall-item).is-interactable:hover,
+      .placed-item-anchor:not(.is-wall-item).is-edit-selectable:hover {
         transform: translate(-50%, -80%) scale(1.04);
         filter: drop-shadow(0 6px 10px rgba(13, 148, 136, 0.22));
       }
 
       .placed-item-anchor.is-wall-item.is-wall-nw:hover {
-        transform: translate(-50%, -54%) skewY(-26.565deg) scaleX(0.92) scaleY(1.03);
+        transform: translate(-50%, -50%) skewY(-26.565deg) scaleX(0.8944) scale(1.04);
+        filter: drop-shadow(3px 4px 8px rgba(15, 23, 42, 0.3));
       }
 
       .placed-item-anchor.is-wall-item.is-wall-ne:hover {
-        transform: translate(-50%, -54%) skewY(26.565deg) scaleX(0.92) scaleY(1.03);
+        transform: translate(-50%, -50%) skewY(26.565deg) scaleX(0.8944) scale(1.04);
+        filter: drop-shadow(-3px 4px 8px rgba(15, 23, 42, 0.3));
       }
 
       .placed-item-anchor.is-wall-ruler.is-wall-nw:hover {
-        transform: translate(-50%, -90%) skewY(-26.565deg) scaleX(0.92) scaleY(1.03);
+        transform: translate(-50%, -86%) skewY(-26.565deg) scaleX(0.8944) scale(1.04);
+        filter: drop-shadow(3px 4px 8px rgba(15, 23, 42, 0.3));
       }
 
       .placed-item-anchor.is-wall-ruler.is-wall-ne:hover {
-        transform: translate(-50%, -90%) skewY(26.565deg) scaleX(0.92) scaleY(1.03);
+        transform: translate(-50%, -86%) skewY(26.565deg) scaleX(0.8944) scale(1.04);
+        filter: drop-shadow(-3px 4px 8px rgba(15, 23, 42, 0.3));
       }
 
       .placed-item-anchor.is-selected-moving {
