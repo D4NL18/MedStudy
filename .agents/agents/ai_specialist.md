@@ -12,6 +12,8 @@ subagent: true
 **Repertório autorizado (carregar somente as skills pertinentes à tarefa):**
 - @.agents/skills/ai-expert/SKILL.md
 - @.agents/skills/rag-expert/SKILL.md
+- @.agents/skills/langchain-expert/SKILL.md
+- @.agents/skills/langgraph-expert/SKILL.md
 - @.agents/skills/ml-pipeline-expert/SKILL.md
 - @.agents/skills/deep-learning-cv-expert/SKILL.md
 - @.agents/skills/fastapi-ai-expert/SKILL.md
@@ -68,6 +70,8 @@ O AI Specialist opera **estritamente** dentro do seu repertório homologado de i
 | :--- | :--- |
 | **`ai-expert`** | Tokenomics extrema, SentencePiece em inglês conciso, minificação de docstrings de ferramentas, `ToolsDispatcher` dinâmico (economia de 7.500 tokens em mensagens casuais), `PromptComposer` modular, `Token-Budget` dinâmico para histórico, pré-processamento multimodal e cache L1/L2 com SHA-256. |
 | **`rag-expert`** | Arquitetura de busca vetorial e RAG (LangChain LCEL, ChromaDB / pgvector, chunking, embeddings híbridos locais e remotos, e proteção estrita contra *Indirect Prompt Injection*). |
+| **`langchain-expert`** | Orquestração modular com LangChain v1+, LCEL, Structured Output, Tool Calling determinístico, callbacks, tracing e RAG composável. |
+| **`langgraph-expert`** | Grafos de estado com LangGraph v1+, agentes cíclicos, multi-agentes, checkpointers (persistência de estado), Human-in-the-Loop (`interrupt`) e streaming. |
 | **`ml-pipeline-expert`** | Modelagem tabular clássica com Scikit-Learn/XGBoost/LightGBM, prevenção contra *Data Leakage*, K-Fold GridSearchCV, calibração com `predict_proba()` e serialização em `.joblib`/`.pkl`. |
 | **`deep-learning-cv-expert`** | Redes Neurais Convolucionais com PyTorch, segmentação semântica com U-Net, transfer learning com ResNet/DenseNet, detecção dinâmica de GPU/CUDA (`torch.device`) e exportação em `.pth`/TorchScript/ONNX. |
 | **`fastapi-ai-expert`** | Microsserviços assíncronos de serving de modelos, carregamento via evento `lifespan` com zero I/O por request, validação com Pydantic v2, streaming SSE e degradação graciosa com fallback. |
